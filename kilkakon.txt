@@ -1,0 +1,144 @@
+Kilkakon's notes:
+
+1.0.19:
+- Hotspots! XML defined areas that will go to specified behaviours instead of the usual drag.
+- The ability to pause and resume a shimeji's animations has been added
+- Shimeji works again on Japanese locale computers
+- Letting go of a shimeji no longer forces the shimeji to change to the landing animation when it's no longer appropriate to do so (for example, a shimeji that has resisted and broken free)
+- Some code cleanup
+- New translations: Arabic by Anas-dev, Traditional Chinese by Snowcat (thank you!)
+- Updates to Catalan, French, Japanese, Spanish and Polish translations (thank you!)
+
+See https://youtu.be/be7t4aI7xCE for details
+
+1.0.18:
+- BreedJump and BreedMove actions to allow Shimeji to clone while on the move.
+- Exposed velocity during Fall to xml files so artists can create dynamic falling actions.
+- Transient flag on breeding actions to categorise clones as normal or as a transient. I define transients as temporary shimeji like projectiles or other effects.
+- Added Transients to Allowed Behaviours menu. 
+- Fixed issue with Dragged OffsetX/Y that was preventing swing animations from playing.
+- Fixed issue with interactive windows not working on Windows 7.
+- Restored error message for icon.png being missing, made it non-fatal as per a suggestion from snek (thank you!)
+- Some code cleanup
+- Cassyz's updated French translation (thank you!)
+
+See https://www.youtube.com/watch?v=h4v21f2xFgg for more details
+
+1.0.17:
+
+- The shimeji chooser can now be made to appear each time Shimeji is run.
+- Changes made in the Shimeji chooser will not force still selected Shimeji to be reloaded.
+- Unused shimeji chooser check is now case insensitive, and also skips any folder starting with .
+- Invisible window glitch fixed. I admit this was a very difficult one to crack! On Windows 10, Metro apps that are closed or minimised would still be reported as visible by the operating system. I was able to come up with a solution, and now everything works, although it will mean that the minimum version of Windows supported is now Vista.
+- When "Move Between Screens" is off, Shimeji will be slightly better behaved in staying on the same screen (will not consider windows on another screen as valid interactive windows).
+- When "Move Between Screens" is off, Shimeji will no longer spawn on other monitors when initially spawning, or when running out of valid actions.
+- Restore Windows now actually works.
+- "Dismiss All Others" added to right-click menu. Dismisses shimejis of all types other than the one clicked
+- The Dragged action now has two new properties, OffsetX (default 0) and OffsetY (default 120). This allows an artist to change where the shimeji holds onto the mouse cursor!
+- Critical security fix. I can go into it more detail in private if you wish, part of me feels it might be best not to make the news too public.
+
+See https://www.youtube.com/watch?v=vDYrPBzbaAY for more details
+
+1.0.16:
+
+- "Move Between Screens" toggle to prevent shimeji changing screens unexpectedly for multiscreen users
+- "Transformation" behaviour toggle to stop Shimeji transforming
+- hqx scaling filter for scaling factors above 1, using Edu Garcia's version: https://github.com/Arcnor/hqx-java
+- Generic sound folder to allow different Shimeji to share the same sound files
+- Count variable exposed to xml conditions (number of shimeji of the current type as opposed to all types)
+- Muting action (stop a specific or all sounds)
+- Windows Lockscreen freezing shimeji bug fix
+- Plugging in another screen freezing shimeji bug fix
+
+See https://www.youtube.com/watch?v=fHzbW8glPMs for more details
+
+1.0.15:
+
+- Japanese Shimeji-e backwards compatability
+
+See https://www.youtube.com/watch?v=65p39FjbQPI for more details
+
+1.0.14:
+
+- Affordances
+
+See https://www.youtube.com/watch?v=24aPIWOOzfA for more details
+
+1.0.13:
+
+- Draggable property
+- SelfDestruct action
+- Scaling bug fix
+- Clarified missing imageRight error message
+
+See https://www.youtube.com/watch?v=Lcx2wVPiKUk for more details
+
+1.0.12:
+
+- Transform action
+- Shimeji scaling
+- Menu DPI awareness
+- Improved memory usage
+- 3 more languages
+
+See https://www.youtube.com/watch?v=nZ_IW5quK8g for more details
+
+1.0.11:
+
+- New menu system
+- Included nimrod theming
+- 5 more languages
+
+See https://www.youtube.com/watch?v=GUr-NiSyTM4 for more details
+
+1.0.10:
+
+- Internationalisation
+- Tweaked the build xml
+- Shimeji that fail to load will not abort the load sequence if there's other shimeji in the queue
+
+See https://www.youtube.com/watch?v=mZ0Za94i76A for more details
+
+1.0.9:
+
+- Sound and Volume attribute on Pose tags to allow playing sound files
+- Fix for Turn action
+- Improved error message dialog
+
+See https://www.youtube.com/watch?v=5CMy4xqdkrg for more details
+
+1.0.8:
+
+- Asymmetry support with new ImageRight attribute
+- New MoveWithTurn and Turn actions
+- Add Interactive Windows dialog no longer options twice
+
+See https://www.youtube.com/watch?v=RmkzZ3Shf24 for more details
+
+1.0.7:
+
+64-bit support
+BornMascot attribute for the Breed action
+Allowed Behaviour menu
+
+1.0.6:
+
+Added premultiplying to the images so translucent images work now, yay!
+
+Also did some regexing to the behaviour list so it looks nicer
+
+1.0.5:
+
+I did some basic changes to the program to make this new version. I did make an effort to contact
+the original group but they didn't reply--so I'm releasing this as is, with full credit to them. :)
+
+So cheers shimeji-ee group!
+
+I may have accidentally pressed Alt+Shift+F in Netbeans in a few of the files because I can't stand 
+if (...) { style brackets. Sorry if that offends anybody. :O
+
+The main changes I made in this version:
+
+- settings.properties instead of windows.txt and ActiveShimeji
+- New form and renamed captions and reworked menus
+- Not showing form on load
