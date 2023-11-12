@@ -49,13 +49,13 @@ Aug 16, 2010
 v 2.1.2
 
 - Fixed Shimeji in multi-monitor mirrored mode.
-· Windows 2000 environment fix.
+Â· Windows 2000 environment fix.
 
 December 23, 2009
 
 v 2.1.1
 
-• Fixed multi-monitor support
+â€¢ Fixed multi-monitor support
 
 Tuesday, December 01, 2009
 
