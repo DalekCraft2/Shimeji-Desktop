@@ -1,11 +1,6 @@
 package com.group_finity.mascot.environment;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,150 +12,149 @@ import java.util.Map;
 
 public abstract class Environment {
 
-	protected abstract Area getWorkArea();
+    protected abstract Area getWorkArea();
 
-	public abstract Area getActiveIE();
-        
-    public abstract String getActiveIETitle( );
+    public abstract Area getActiveIE();
 
-	public abstract void moveActiveIE(final Point point);
+    public abstract String getActiveIETitle();
 
-	public abstract void restoreIE();
-    
-    public abstract void refreshCache( );
+    public abstract void moveActiveIE(final Point point);
 
-	private static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
+    public abstract void restoreIE();
 
-	private static Map<String, Rectangle> screenRects = new HashMap<>();
+    public abstract void refreshCache();
 
-	static {
+    private static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
 
-		final Thread thread = new Thread(() -> {
+    private static Map<String, Rectangle> screenRects = new HashMap<>();
+
+    static {
+
+        final Thread thread = new Thread(() -> {
             try {
-                for (;;) {
+                for (; ; ) {
                     updateScreenRect();
                     Thread.sleep(5000);
                 }
             } catch (final InterruptedException ignored) {
             }
         });
-		thread.setDaemon(true);
-		thread.setPriority(Thread.MIN_PRIORITY);
-		thread.start();
-	}
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+    }
 
-	private static void updateScreenRect() {
+    private static void updateScreenRect() {
 
-		Rectangle virtualBounds = new Rectangle();
+        Rectangle virtualBounds = new Rectangle();
 
-		Map<String, Rectangle> screenRects = new HashMap<>();
+        Map<String, Rectangle> screenRects = new HashMap<>();
 
-		final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		final GraphicsDevice[] gs = ge.getScreenDevices();
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gs = ge.getScreenDevices();
 
         for (final GraphicsDevice gd : gs) {
             screenRects.put(gd.getIDstring(), gd.getDefaultConfiguration().getBounds());
             virtualBounds = virtualBounds.union(gd.getDefaultConfiguration().getBounds());
         }
 
-		Environment.screenRects = screenRects;
+        Environment.screenRects = screenRects;
 
-		screenRect = virtualBounds;
-	}
-
-	protected static Rectangle getScreenRect() {
-		return screenRect;
-	}
-
-    private static Point getCursorPos( )
-    {
-        java.awt.PointerInfo info = MouseInfo.getPointerInfo( );
-        return info != null ? info.getLocation( ) : new Point( 0, 0 );
+        screenRect = virtualBounds;
     }
 
-	public ComplexArea complexScreen = new ComplexArea();
+    protected static Rectangle getScreenRect() {
+        return screenRect;
+    }
 
-	public Area screen = new Area();
+    private static Point getCursorPos() {
+        java.awt.PointerInfo info = MouseInfo.getPointerInfo();
+        return info != null ? info.getLocation() : new Point(0, 0);
+    }
 
-	public Location cursor = new Location();
+    public ComplexArea complexScreen = new ComplexArea();
 
-	protected Environment() {
-		tick();
-	}
+    public Area screen = new Area();
 
-	public void tick() {
-		this.screen.set(Environment.getScreenRect());
-		this.complexScreen.set(screenRects);
-		this.cursor.set(Environment.getCursorPos());
-	}
+    public Location cursor = new Location();
 
-	public Area getScreen() {
-		return screen;
-	}
+    protected Environment() {
+        tick();
+    }
 
-	public Collection<Area> getScreens() {
-		return complexScreen.getAreas();
-	}
+    public void tick() {
+        this.screen.set(Environment.getScreenRect());
+        this.complexScreen.set(screenRects);
+        this.cursor.set(Environment.getCursorPos());
+    }
 
-	public ComplexArea getComplexScreen() {
-		return complexScreen;
-	}
+    public Area getScreen() {
+        return screen;
+    }
 
-	public Location getCursor() {
-		return cursor;
-	}
+    public Collection<Area> getScreens() {
+        return complexScreen.getAreas();
+    }
 
-	public boolean isScreenTopBottom(final Point location) {
+    public ComplexArea getComplexScreen() {
+        return complexScreen;
+    }
 
+    public Location getCursor() {
+        return cursor;
+    }
 
-		int count = 0;
-
-		for( Area area: getScreens() ) {
-			if ( area.getTopBorder().isOn(location)) {
-				++count;
-			}
-			if ( area.getBottomBorder().isOn(location)) {
-				++count;
-			}
-		}
+    public boolean isScreenTopBottom(final Point location) {
 
 
-		if ( count==0 ) {
-			if ( getWorkArea().getTopBorder().isOn(location) ) {
-				return true;
-			}
-			if ( getWorkArea().getBottomBorder().isOn(location) ) {
-				return true;
-			}
-		}
+        int count = 0;
 
-		return count==1;
-	}
-
-	public boolean isScreenLeftRight(final Point location) {
+        for (Area area : getScreens()) {
+            if (area.getTopBorder().isOn(location)) {
+                ++count;
+            }
+            if (area.getBottomBorder().isOn(location)) {
+                ++count;
+            }
+        }
 
 
-		int count = 0;
+        if (count == 0) {
+            if (getWorkArea().getTopBorder().isOn(location)) {
+                return true;
+            }
+            if (getWorkArea().getBottomBorder().isOn(location)) {
+                return true;
+            }
+        }
 
-		for( Area area: getScreens() ) {
-			if ( area.getLeftBorder().isOn(location)) {
-				++count;
-			}
-			if ( area.getRightBorder().isOn(location)) {
-				++count;
-			}
-		}
+        return count == 1;
+    }
 
-		if ( count==0 ) {
-			if ( getWorkArea().getLeftBorder().isOn(location) ) {
-				return true;
-			}
-			if ( getWorkArea().getRightBorder().isOn(location) ) {
-				return true;
-			}
-		}
+    public boolean isScreenLeftRight(final Point location) {
 
-		return count==1;
-	}
+
+        int count = 0;
+
+        for (Area area : getScreens()) {
+            if (area.getLeftBorder().isOn(location)) {
+                ++count;
+            }
+            if (area.getRightBorder().isOn(location)) {
+                ++count;
+            }
+        }
+
+        if (count == 0) {
+            if (getWorkArea().getLeftBorder().isOn(location)) {
+                return true;
+            }
+            if (getWorkArea().getRightBorder().isOn(location)) {
+                return true;
+            }
+        }
+
+        return count == 1;
+    }
 
 }

@@ -10,20 +10,19 @@ import com.group_finity.mascot.exception.VariableException;
  */
 public interface Action {
 
-	/**
-	 * @param mascot 
-	 */
+    /**
+     * @param mascot
+     */
     void init(Mascot mascot) throws VariableException;
 
-	/**
-	 * @return 
-	 */
+    /**
+     * @return
+     */
     boolean hasNext() throws VariableException;
-	
-	/**
-	 * 
-	 * @throws LostGroundException 
-	 */
+
+    /**
+     * @throws LostGroundException
+     */
     void next() throws LostGroundException, VariableException;
-	
+
 }

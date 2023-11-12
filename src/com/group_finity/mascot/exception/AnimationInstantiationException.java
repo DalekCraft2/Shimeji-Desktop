@@ -5,18 +5,18 @@ package com.group_finity.mascot.exception;
  * Currently developed by Shimeji-ee Group.
  */
 
-public class AnimationInstantiationException extends Exception{
+public class AnimationInstantiationException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public AnimationInstantiationException(final String message) {
-		super(message);
-	}
+    public AnimationInstantiationException(final String message) {
+        super(message);
+    }
 
-	public AnimationInstantiationException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+    public AnimationInstantiationException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }

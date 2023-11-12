@@ -9,25 +9,22 @@ import java.awt.*;
 
 public class ShimejiList extends JList<ImageSetChooserPanel> {
 
-  public ShimejiList() {
-    setCellRenderer(new CustomCellRenderer());
-  }
-
-  static class CustomCellRenderer implements ListCellRenderer {
-    public Component getListCellRendererComponent (JList list, Object value,
-			int index,boolean isSelected,boolean cellHasFocus) {
-      if (value instanceof ImageSetChooserPanel)
-      {
-        ImageSetChooserPanel component = (ImageSetChooserPanel) value;
-        component.setForeground (Color.white);
-        component.setBackground (isSelected ? SystemColor.controlHighlight : Color.white);
-        component.setCheckbox( isSelected );
-        return component;
-      }
-      else
-      {
-        return new JLabel("???");
-      }
+    public ShimejiList() {
+        setCellRenderer(new CustomCellRenderer());
     }
-  }
+
+    static class CustomCellRenderer implements ListCellRenderer {
+        public Component getListCellRendererComponent(JList list, Object value,
+                                                      int index, boolean isSelected, boolean cellHasFocus) {
+            if (value instanceof ImageSetChooserPanel) {
+                ImageSetChooserPanel component = (ImageSetChooserPanel) value;
+                component.setForeground(Color.white);
+                component.setBackground(isSelected ? SystemColor.controlHighlight : Color.white);
+                component.setCheckbox(isSelected);
+                return component;
+            } else {
+                return new JLabel("???");
+            }
+        }
+    }
 }

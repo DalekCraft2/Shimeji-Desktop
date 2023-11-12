@@ -10,13 +10,13 @@ import com.sun.jna.win32.StdCallLibrary;
  * Wraps up Dwmapi to get access to the new Cloaked variable.
  * <p>
  * Visit kilkakon.com/shimeji for updates
+ *
  * @author Kilkakon
  */
-public interface Dwmapi extends StdCallLibrary
-{
-    Dwmapi INSTANCE = (Dwmapi) Native.loadLibrary( "Dwmapi", Dwmapi.class );
-    
+public interface Dwmapi extends StdCallLibrary {
+    Dwmapi INSTANCE = (Dwmapi) Native.loadLibrary("Dwmapi", Dwmapi.class);
+
     int DWMWA_CLOAKED = 14;
-    
-    NativeLong DwmGetWindowAttribute( Pointer hwnd, int dwAttribute, LongByReference pvAttribute, int cbAttribute );
+
+    NativeLong DwmGetWindowAttribute(Pointer hwnd, int dwAttribute, LongByReference pvAttribute, int cbAttribute);
 }

@@ -7,8 +7,8 @@ import com.sun.jna.Structure;
  * Currently developed by Shimeji-ee Group.
  */
 
-public class POINT extends Structure{
+public class POINT extends Structure {
 
-	public int x;
-	public int y;
+    public int x;
+    public int y;
 }

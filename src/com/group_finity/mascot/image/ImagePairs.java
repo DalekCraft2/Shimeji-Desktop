@@ -10,44 +10,46 @@ import java.util.Hashtable;
 
 public class ImagePairs {
 
-	private static Hashtable<String,ImagePair> imagepairs = new Hashtable<>();
+    private static Hashtable<String, ImagePair> imagepairs = new Hashtable<>();
 
-	public static void load(final String filename, final ImagePair imagepair) {
-		if( !imagepairs.containsKey( filename ) )
-			imagepairs.put( filename, imagepair );
-	}
+    public static void load(final String filename, final ImagePair imagepair) {
+		if (!imagepairs.containsKey(filename)) {
+			imagepairs.put(filename, imagepair);
+		}
+    }
 
-	public static ImagePair getImagePair( String filename ) {
-		if( !imagepairs.containsKey( filename ) )
+    public static ImagePair getImagePair(String filename) {
+		if (!imagepairs.containsKey(filename)) {
 			return null;
-        return imagepairs.get( filename );
-	}	
-	
-	public static boolean contains( String filename ) {
-		return imagepairs.containsKey( filename );
-	}
-        
-        public static void clear( )
-        {
-            imagepairs.clear();
+		}
+        return imagepairs.get(filename);
+    }
+
+    public static boolean contains(String filename) {
+        return imagepairs.containsKey(filename);
+    }
+
+    public static void clear() {
+        imagepairs.clear();
+    }
+
+    public static void removeAll(String searchTerm) {
+		if (imagepairs.isEmpty()) {
+			return;
+		}
+
+        for (Enumeration<String> key = imagepairs.keys(); key.hasMoreElements(); ) {
+            String filename = key.nextElement();
+			if (searchTerm.equals(filename.split("/")[1])) {
+				imagepairs.remove(filename);
+			}
         }
-        
-        public static void removeAll( String searchTerm )
-        {
-            if( imagepairs.isEmpty( ) )
-                return;
-            
-            for( Enumeration<String> key = imagepairs.keys( ); key.hasMoreElements( ); )
-            {
-                String filename = key.nextElement( );
-                if( searchTerm.equals( filename.split( "/" )[ 1 ] ) )
-                    imagepairs.remove( filename );
-            }
-        }
-	
-	public static MascotImage getImage( String filename, boolean isLookRight ) {
-		if( !imagepairs.containsKey( filename ) )
+    }
+
+    public static MascotImage getImage(String filename, boolean isLookRight) {
+		if (!imagepairs.containsKey(filename)) {
 			return null;
-		return imagepairs.get( filename ).getImage( isLookRight );
-	}
+		}
+        return imagepairs.get(filename).getImage(isLookRight);
+    }
 }

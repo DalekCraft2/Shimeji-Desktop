@@ -11,17 +11,14 @@ import com.group_finity.mascot.script.VariableMap;
  * Currently developed by Shimeji-ee Group.
  */
 
-public class Animation
-{
+public class Animation {
     private Variable condition;
     private final Pose[] poses;
     private final Hotspot[] hotspots;
 
-    public Animation( final Variable condition, final Pose[ ] poses, final Hotspot[ ] hotspots )
-    {
-        if( poses.length == 0 )
-        {
-            throw new IllegalArgumentException( "poses.length==0" );
+    public Animation(final Variable condition, final Pose[] poses, final Hotspot[] hotspots) {
+        if (poses.length == 0) {
+            throw new IllegalArgumentException("poses.length==0");
         }
 
         this.condition = condition;
@@ -29,56 +26,55 @@ public class Animation
         this.hotspots = hotspots;
     }
 
-	public boolean isEffective(final VariableMap variables) throws VariableException {
-		return (Boolean) getCondition().get(variables);
-	}
+    public boolean isEffective(final VariableMap variables) throws VariableException {
+        return (Boolean) getCondition().get(variables);
+    }
 
-	public void init() {
-		getCondition().init();
-	}
+    public void init() {
+        getCondition().init();
+    }
 
-	public void initFrame() {
-		getCondition().initFrame();
-	}
+    public void initFrame() {
+        getCondition().initFrame();
+    }
 
-	public void next(final Mascot mascot, final int time) {
-		getPoseAt(time).next(mascot);
-	}
+    public void next(final Mascot mascot, final int time) {
+        getPoseAt(time).next(mascot);
+    }
 
-	public Pose getPoseAt(int time) {
+    public Pose getPoseAt(int time) {
 
-		time %= getDuration();
+        time %= getDuration();
 
-		for (final Pose pose : getPoses()) {
-			time -= pose.getDuration();
-			if (time < 0) {
-				return pose;
-			}
-		}
+        for (final Pose pose : getPoses()) {
+            time -= pose.getDuration();
+            if (time < 0) {
+                return pose;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public int getDuration() {
+    public int getDuration() {
 
-		int duration = 0;
-		for (final Pose pose : getPoses()) {
-			duration += pose.getDuration();
-		}
+        int duration = 0;
+        for (final Pose pose : getPoses()) {
+            duration += pose.getDuration();
+        }
 
-		return duration;
-	}
+        return duration;
+    }
 
-	private Variable getCondition() {
-		return this.condition;
-	}
+    private Variable getCondition() {
+        return this.condition;
+    }
 
-	private Pose[] getPoses() {
-		return this.poses;
-	}
+    private Pose[] getPoses() {
+        return this.poses;
+    }
 
-    public Hotspot[ ] getHotspots( )
-    {
+    public Hotspot[] getHotspots() {
         return hotspots;
     }
 }

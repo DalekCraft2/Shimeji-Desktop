@@ -9,11 +9,11 @@ import com.sun.jna.Structure;
  */
 
 public class BITMAP extends Structure {
-	  public int   bmType; 
-	  public int   bmWidth; 
-	  public int   bmHeight; 
-	  public int   bmWidthBytes; 
-	  public short   bmPlanes; 
-	  public short   bmBitsPixel; 
-	  public Pointer bmBits;
+    public int bmType;
+    public int bmWidth;
+    public int bmHeight;
+    public int bmWidthBytes;
+    public short bmPlanes;
+    public short bmBitsPixel;
+    public Pointer bmBits;
 }

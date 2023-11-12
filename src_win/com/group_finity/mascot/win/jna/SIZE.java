@@ -7,8 +7,8 @@ import com.sun.jna.Structure;
  * Currently developed by Shimeji-ee Group.
  */
 
-public class SIZE extends Structure{
+public class SIZE extends Structure {
 
-	public int cx;
-	public int cy;
+    public int cx;
+    public int cy;
 }

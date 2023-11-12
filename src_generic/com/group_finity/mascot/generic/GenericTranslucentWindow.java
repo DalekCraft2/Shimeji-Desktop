@@ -1,15 +1,11 @@
 package com.group_finity.mascot.generic;
 
-import java.awt.Component;
-import java.awt.Graphics;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JWindow;
-
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.examples.WindowUtils;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
@@ -17,90 +13,90 @@ import com.sun.jna.examples.WindowUtils;
  */
 
 class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
-    
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	/**
-	 * To view images.
-	 */
-	private GenericNativeImage image;
-	
-	private JPanel panel;
-	private float alpha = 1.0f;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public GenericTranslucentWindow() {
-		super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-		this.init();
+    /**
+     * To view images.
+     */
+    private GenericNativeImage image;
 
-		this.panel = new JPanel() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+    private JPanel panel;
+    private float alpha = 1.0f;
 
-			@Override
-			protected void paintComponent(final Graphics g) {
-				g.drawImage(getImage().getManagedImage(), 0, 0, null);
-			}
-		};
-		this.setContentPane(this.panel);
-	}
+    public GenericTranslucentWindow() {
+        super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
+        this.init();
 
-	private void init() {
-		System.setProperty("sun.java2d.noddraw", "true");
-		System.setProperty("sun.java2d.opengl", "true");
-	}
+        this.panel = new JPanel() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
 
-	@Override
-	public void setVisible(final boolean b) {
-		super.setVisible(b);
-		if (b) {
-			WindowUtils.setWindowTransparent(this, true);
-		}
-	}
+            @Override
+            protected void paintComponent(final Graphics g) {
+                g.drawImage(getImage().getManagedImage(), 0, 0, null);
+            }
+        };
+        this.setContentPane(this.panel);
+    }
 
-	@Override
-	protected void addImpl(final Component comp, final Object constraints, final int index) {
-		super.addImpl(comp, constraints, index);
-		if (comp instanceof JComponent) {
-			final JComponent jcomp = (JComponent) comp;
-			jcomp.setOpaque(false);
-		}
-	}
+    private void init() {
+        System.setProperty("sun.java2d.noddraw", "true");
+        System.setProperty("sun.java2d.opengl", "true");
+    }
 
-	public void setAlpha(final float alpha) {
-		WindowUtils.setWindowAlpha(this, alpha);
-	}
+    @Override
+    public void setVisible(final boolean b) {
+        super.setVisible(b);
+        if (b) {
+            WindowUtils.setWindowTransparent(this, true);
+        }
+    }
 
-	public float getAlpha() {
-		return this.alpha;
-	}
-	
-	@Override
-	public JWindow asJWindow() {
-		return this;
-	}
+    @Override
+    protected void addImpl(final Component comp, final Object constraints, final int index) {
+        super.addImpl(comp, constraints, index);
+        if (comp instanceof JComponent) {
+            final JComponent jcomp = (JComponent) comp;
+            jcomp.setOpaque(false);
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "LayeredWindow[hashCode="+hashCode()+",bounds="+getBounds()+"]";
-	}
-	
-	public GenericNativeImage getImage() {
-		return this.image;
-	}
+    public void setAlpha(final float alpha) {
+        WindowUtils.setWindowAlpha(this, alpha);
+    }
 
-	public void setImage(final NativeImage image) {
-		this.image = (GenericNativeImage)image;
-	}
+    public float getAlpha() {
+        return this.alpha;
+    }
 
-	public void updateImage() {
-		WindowUtils.setWindowMask(this, this.getImage().getIcon());
-		validate();
-		this.repaint();
-	}
+    @Override
+    public JWindow asJWindow() {
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+    }
+
+    public GenericNativeImage getImage() {
+        return this.image;
+    }
+
+    public void setImage(final NativeImage image) {
+        this.image = (GenericNativeImage) image;
+    }
+
+    public void updateImage() {
+        WindowUtils.setWindowMask(this, this.getImage().getIcon());
+        validate();
+        this.repaint();
+    }
 }

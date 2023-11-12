@@ -1,9 +1,9 @@
 package com.group_finity.mascot.generic;
 
-import java.awt.Point;
-
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.Environment;
+
+import java.awt.*;
 
 /**
  * Java Environmental information is difficult to get used to get in the JNI.
@@ -13,42 +13,40 @@ import com.group_finity.mascot.environment.Environment;
  */
 class GenericEnvironment extends Environment {
 
-	private Area activeIE = new Area();
+    private Area activeIE = new Area();
 
-	@Override
-	public void tick() {
-		super.tick();
-		this.activeIE.setVisible(false);
-	}
-
-	@Override
-	public void moveActiveIE(final Point point) {
-	}
-
-	@Override
-	public void restoreIE() {
-
-	}
-
-	@Override
-	public Area getWorkArea() {
-		return getScreen();
-	}
-
-	@Override
-	public Area getActiveIE() {
-		return this.activeIE;
-	}
-        
     @Override
-    public String getActiveIETitle( )
-    {
+    public void tick() {
+        super.tick();
+        this.activeIE.setVisible(false);
+    }
+
+    @Override
+    public void moveActiveIE(final Point point) {
+    }
+
+    @Override
+    public void restoreIE() {
+
+    }
+
+    @Override
+    public Area getWorkArea() {
+        return getScreen();
+    }
+
+    @Override
+    public Area getActiveIE() {
+        return this.activeIE;
+    }
+
+    @Override
+    public String getActiveIETitle() {
         return null;
     }
 
     @Override
-    public void refreshCache()
-    {
+    public void refreshCache() {
         // I feel so refreshed
     }
 }

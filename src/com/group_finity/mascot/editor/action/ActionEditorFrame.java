@@ -1,6 +1,6 @@
 package com.group_finity.mascot.editor.action;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
@@ -9,5 +9,5 @@ import javax.swing.JFrame;
 
 public class ActionEditorFrame extends JFrame {
 
-	
+
 }

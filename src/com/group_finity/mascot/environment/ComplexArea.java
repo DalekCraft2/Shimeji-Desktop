@@ -1,10 +1,8 @@
 package com.group_finity.mascot.environment;
 
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -14,112 +12,112 @@ import java.util.Map;
 
 public class ComplexArea {
 
-	private Map<String, Area> areas = new HashMap<>();
+    private Map<String, Area> areas = new HashMap<>();
 
-	public void set(Map<String, Rectangle> rectangles) {
-		retain(rectangles.keySet());
-		for (Map.Entry<String, Rectangle> e : rectangles.entrySet()) {
-			set(e.getKey(), e.getValue());
-		}
-	}
+    public void set(Map<String, Rectangle> rectangles) {
+        retain(rectangles.keySet());
+        for (Map.Entry<String, Rectangle> e : rectangles.entrySet()) {
+            set(e.getKey(), e.getValue());
+        }
+    }
 
-	public void set(String name, final Rectangle value) {
+    public void set(String name, final Rectangle value) {
 
-		for (Area area : areas.values()) {
-			if ( area.getLeft()==value.x &&
-					area.getTop()==value.y &&
-					area.getWidth()==value.width &&
-					area.getHeight()==value.height ) {
-				return;
-			}
-		}
+        for (Area area : areas.values()) {
+            if (area.getLeft() == value.x &&
+                    area.getTop() == value.y &&
+                    area.getWidth() == value.width &&
+                    area.getHeight() == value.height) {
+                return;
+            }
+        }
 
-		Area area = areas.get(name);
-		if (area == null) {
-			area = new Area();
-			areas.put(name, area);
-		}
-		area.set(value);
-	}
+        Area area = areas.get(name);
+        if (area == null) {
+            area = new Area();
+            areas.put(name, area);
+        }
+        area.set(value);
+    }
 
-	public void retain(Collection<String> deviceNames) {
+    public void retain(Collection<String> deviceNames) {
 
         areas.keySet().removeIf(key -> !deviceNames.contains(key));
-	}
+    }
 
-	public FloorCeiling getBottomBorder(Point location) {
+    public FloorCeiling getBottomBorder(Point location) {
 
-		FloorCeiling ret = null;
+        FloorCeiling ret = null;
 
-		for (Area area : areas.values()) {
-			if (area.getBottomBorder().isOn(location)) {
-				ret = area.getBottomBorder();
-			}
-		}
+        for (Area area : areas.values()) {
+            if (area.getBottomBorder().isOn(location)) {
+                ret = area.getBottomBorder();
+            }
+        }
 
-		for (Area area : areas.values()) {
-			if (area.getTopBorder().isOn(location)) {
-				ret = null;
-			}
-		}
+        for (Area area : areas.values()) {
+            if (area.getTopBorder().isOn(location)) {
+                ret = null;
+            }
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
-	public FloorCeiling getTopBorder(Point location) {
+    public FloorCeiling getTopBorder(Point location) {
 
-		FloorCeiling ret = null;
+        FloorCeiling ret = null;
 
-		for (Area area : areas.values()) {
-			if (area.getTopBorder().isOn(location)) {
-				ret = area.getTopBorder();
-			}
-		}
+        for (Area area : areas.values()) {
+            if (area.getTopBorder().isOn(location)) {
+                ret = area.getTopBorder();
+            }
+        }
 
-		for (Area area : areas.values()) {
-			if (area.getBottomBorder().isOn(location)) {
-				ret = null;
-			}
-		}
+        for (Area area : areas.values()) {
+            if (area.getBottomBorder().isOn(location)) {
+                ret = null;
+            }
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
-	public Wall getLeftBorder(Point location) {
+    public Wall getLeftBorder(Point location) {
 
-		Wall ret = null;
+        Wall ret = null;
 
-		for (Area area : areas.values()) {
-			if (area.getLeftBorder().isOn(location)) {
-				ret = area.getRightBorder();
-			}
-		}
-		for (Area area : areas.values()) {
-			if (area.getRightBorder().isOn(location)) {
-				ret = null;
-			}
-		}
-		return ret;
-	}
+        for (Area area : areas.values()) {
+            if (area.getLeftBorder().isOn(location)) {
+                ret = area.getRightBorder();
+            }
+        }
+        for (Area area : areas.values()) {
+            if (area.getRightBorder().isOn(location)) {
+                ret = null;
+            }
+        }
+        return ret;
+    }
 
-	public Wall getRightBorder(Point location) {
+    public Wall getRightBorder(Point location) {
 
-		Wall ret = null;
+        Wall ret = null;
 
-		for (Area area : areas.values()) {
-			if (area.getRightBorder().isOn(location)) {
-				ret = area.getRightBorder();
-			}
-		}
-		for (Area area : areas.values()) {
-			if (area.getLeftBorder().isOn(location)) {
-				ret = null;
-			}
-		}
-		return ret;
-	}
+        for (Area area : areas.values()) {
+            if (area.getRightBorder().isOn(location)) {
+                ret = area.getRightBorder();
+            }
+        }
+        for (Area area : areas.values()) {
+            if (area.getLeftBorder().isOn(location)) {
+                ret = null;
+            }
+        }
+        return ret;
+    }
 
-	public Collection<Area> getAreas() {
-		return areas.values();
-	}
+    public Collection<Area> getAreas() {
+        return areas.values();
+    }
 }

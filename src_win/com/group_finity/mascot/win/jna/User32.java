@@ -9,69 +9,75 @@ import com.sun.jna.win32.StdCallLibrary;
  * Currently developed by Shimeji-ee Group.
  */
 
-public interface User32 extends StdCallLibrary{
+public interface User32 extends StdCallLibrary {
 
-	User32 INSTANCE = (User32) Native.loadLibrary("User32", User32.class);
+    User32 INSTANCE = (User32) Native.loadLibrary("User32", User32.class);
 
-	int SM_CXSCREEN = 0;
-	int SM_CYSCREEN = 1;
+    int SM_CXSCREEN = 0;
+    int SM_CYSCREEN = 1;
 
-	int GetSystemMetrics(int nIndex);
+    int GetSystemMetrics(int nIndex);
 
-	int SPI_GETWORKAREA = 48;
+    int SPI_GETWORKAREA = 48;
 
-	int SystemParametersInfoW(int uiAction, int uiParam, RECT pvParam, int fWinIni);
+    int SystemParametersInfoW(int uiAction, int uiParam, RECT pvParam, int fWinIni);
 
-	Pointer GetForegroundWindow();
+    Pointer GetForegroundWindow();
 
-	int GW_HWNDFIRST = 0;
-	int GW_HWNDNEXT = 2;
+    int GW_HWNDFIRST = 0;
+    int GW_HWNDNEXT = 2;
 
-	Pointer GetWindow(Pointer hWnd, int uCmd );
+    Pointer GetWindow(Pointer hWnd, int uCmd);
 
-	int IsWindow(Pointer hWnd);
-	int IsWindowVisible(Pointer hWnd);
+    int IsWindow(Pointer hWnd);
 
-	int GWL_STYLE = -16;
-	int GWL_EXSTYLE = -20;
+    int IsWindowVisible(Pointer hWnd);
 
-	int GetWindowLongW(Pointer hWnd, int nIndex);
-	int SetWindowLongW(Pointer hWnd, int nIndex, int dwNewLong);
+    int GWL_STYLE = -16;
+    int GWL_EXSTYLE = -20;
 
-	int WS_MAXIMIZE = 0x01000000;
-	int WS_EX_LAYERED = 0x00080000;
+    int GetWindowLongW(Pointer hWnd, int nIndex);
 
-	int IsIconic(Pointer hWnd);
+    int SetWindowLongW(Pointer hWnd, int nIndex, int dwNewLong);
 
-	int GetWindowTextW(Pointer hWnd, char[] lpString, int nMaxCount);
-	int GetClassNameW(Pointer hWnd, char[] lpString, int nMaxCount);
+    int WS_MAXIMIZE = 0x01000000;
+    int WS_EX_LAYERED = 0x00080000;
 
-	int GetWindowRect(Pointer hWnd, RECT lpRect);
+    int IsIconic(Pointer hWnd);
 
-	int ERROR = 0;
+    int GetWindowTextW(Pointer hWnd, char[] lpString, int nMaxCount);
 
-	int GetWindowRgn(Pointer hWnd, Pointer hRgn);
+    int GetClassNameW(Pointer hWnd, char[] lpString, int nMaxCount);
 
-	int MoveWindow(Pointer hWnd, int X, int Y, int nWidth, int nHeight, int bRepaint);
+    int GetWindowRect(Pointer hWnd, RECT lpRect);
 
-	int BringWindowToTop(Pointer hWnd);
+    int ERROR = 0;
 
-	Pointer GetDC(Pointer hWnd);
-	int ReleaseDC(Pointer hWnd, Pointer hDC);
+    int GetWindowRgn(Pointer hWnd, Pointer hRgn);
 
-	int ULW_ALPHA = 2;
+    int MoveWindow(Pointer hWnd, int X, int Y, int nWidth, int nHeight, int bRepaint);
 
-	int UpdateLayeredWindow(Pointer hWnd, Pointer hdcDst,
-			POINT pptDst, SIZE psize,
-			Pointer hdcSrc, POINT pptSrc, int crKey,
-			BLENDFUNCTION pblend, int dwFlags );
+    int BringWindowToTop(Pointer hWnd);
+
+    Pointer GetDC(Pointer hWnd);
+
+    int ReleaseDC(Pointer hWnd, Pointer hDC);
+
+    int ULW_ALPHA = 2;
+
+    int UpdateLayeredWindow(Pointer hWnd, Pointer hdcDst,
+                            POINT pptDst, SIZE psize,
+                            Pointer hdcSrc, POINT pptSrc, int crKey,
+                            BLENDFUNCTION pblend, int dwFlags);
 
     interface WNDENUMPROC extends StdCallCallback {
-        /** Return whether to continue enumeration. */
+        /**
+         * Return whether to continue enumeration.
+         */
         boolean callback(Pointer hWnd, Pointer arg);
     }
 
     boolean EnumWindows(WNDENUMPROC lpEnumFunc, Pointer arg);
 
-    int SetProcessDPIAware( );
+    int SetProcessDPIAware();
 }
