@@ -10,7 +10,7 @@
 
 	<target name="compile" depends="clean">
 		<mkdir dir="target/classes" />
-		<javac destdir="target/classes" target="1.6" source="1.6" debug="yes" optimize="yes">
+		<javac destdir="target/classes" target="1.8" source="1.8" debug="yes" optimize="yes">
 			<src path="src"/>
 			<src path="src_win"/>
 			<src path="src_generic"/>
