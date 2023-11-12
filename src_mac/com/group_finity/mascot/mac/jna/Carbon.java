@@ -48,10 +48,10 @@ public interface Carbon extends Library {
 	Pointer kCurrentUser = nl.getGlobalVariableAddress("kCFPreferencesCurrentUser").getPointer(0);
 	Pointer kAnyHost = nl.getGlobalVariableAddress("kCFPreferencesAnyHost").getPointer(0);
 
-	static final long kAXErrorSuccess = 0;
-	static final long
+	long kAXErrorSuccess = 0;
+	long
 	  kAXValueCGPointType = 1,
 		kAXValueCGSizeType = 2;
-	static final long
+	long
   	kCFNumberInt32Type = 3;
 }

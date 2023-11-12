@@ -11,13 +11,13 @@ import com.group_finity.mascot.exception.CantBeAliveException;
  */
 public interface Behavior
 {
-    public void init( Mascot mascot ) throws CantBeAliveException;
+    void init(Mascot mascot) throws CantBeAliveException;
 
-    public void next( ) throws CantBeAliveException;
+    void next() throws CantBeAliveException;
 
-    public void mousePressed( MouseEvent e ) throws CantBeAliveException;
+    void mousePressed(MouseEvent e) throws CantBeAliveException;
 
-    public void mouseReleased( MouseEvent e ) throws CantBeAliveException;
+    void mouseReleased(MouseEvent e) throws CantBeAliveException;
     
-    public boolean isHidden( );
+    boolean isHidden();
 }

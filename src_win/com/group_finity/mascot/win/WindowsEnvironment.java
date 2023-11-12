@@ -24,7 +24,7 @@ import java.util.logging.*;
  */
 class WindowsEnvironment extends Environment
 {
-    private static HashMap<Pointer, Boolean> ieCache = new LinkedHashMap<Pointer, Boolean>();
+    private static HashMap<Pointer, Boolean> ieCache = new LinkedHashMap<>();
     
     public static Area workArea = new Area();
     
@@ -32,8 +32,8 @@ class WindowsEnvironment extends Environment
 
     private static String[ ] windowTitles = null;
     
-    private enum IEResult { INVALID, NOT_IE, IE_OUT_OF_BOUNDS, IE };
-    
+    private enum IEResult { INVALID, NOT_IE, IE_OUT_OF_BOUNDS, IE }
+
     private static final Logger log = Logger.getLogger( Environment.class.getName( ) );
         
     private static boolean isIE( final Pointer ie )
@@ -107,7 +107,7 @@ class WindowsEnvironment extends Environment
     private static Pointer findActiveIE()
     {
         Pointer ie = User32.INSTANCE.GetWindow( User32.INSTANCE.GetForegroundWindow(), User32.GW_HWNDFIRST );
-        Boolean continueFlag = true;
+        boolean continueFlag = true;
 
         while( continueFlag && User32.INSTANCE.IsWindow( ie ) != 0 )
         {
@@ -227,8 +227,8 @@ class WindowsEnvironment extends Environment
         workArea.set( getWorkAreaRect() );
 
         final Rectangle ieRect = getIERect( findActiveIE( ) );
-        activeIE.setVisible( ( ieRect != null ) && ieRect.intersects( getScreen().toRectangle() ) );
-        activeIE.set( ieRect == null ? new Rectangle( -1, -1, 0, 0 ) : ieRect );
+        activeIE.setVisible(ieRect.intersects( getScreen().toRectangle() ));
+        activeIE.set(ieRect);
     }
 
     @Override

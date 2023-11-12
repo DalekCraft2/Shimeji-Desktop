@@ -2,8 +2,6 @@ package com.group_finity.mascot.image;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
@@ -12,7 +10,7 @@ import java.util.Set;
 
 public class ImagePairs {
 
-	private static Hashtable<String,ImagePair> imagepairs = new Hashtable<String,ImagePair>(); 
+	private static Hashtable<String,ImagePair> imagepairs = new Hashtable<>();
 
 	public static void load(final String filename, final ImagePair imagepair) {
 		if( !imagepairs.containsKey( filename ) )
@@ -22,8 +20,7 @@ public class ImagePairs {
 	public static ImagePair getImagePair( String filename ) {
 		if( !imagepairs.containsKey( filename ) )
 			return null;
-		ImagePair ip = imagepairs.get( filename );
-		return ip;
+        return imagepairs.get( filename );
 	}	
 	
 	public static boolean contains( String filename ) {

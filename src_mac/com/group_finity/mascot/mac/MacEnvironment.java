@@ -9,7 +9,6 @@ import java.lang.management.ManagementFactory;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Memory;
-import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
@@ -23,7 +22,6 @@ import com.group_finity.mascot.mac.jna.CFTypeRef;
 import com.group_finity.mascot.mac.jna.CGPoint;
 import com.group_finity.mascot.mac.jna.CGSize;
 import com.group_finity.mascot.mac.jna.CFStringRef;
-import com.group_finity.mascot.mac.jna.CFNumberRef;
 import com.group_finity.mascot.mac.jna.CFArrayRef;
 
 /**
@@ -54,7 +52,7 @@ class MacEnvironment extends Environment {
 
 	private static long currentPID = myPID;
 
-	private static HashSet<Long> touchedProcesses = new HashSet<Long>();
+	private static HashSet<Long> touchedProcesses = new HashSet<>();
 
 	static final CFStringRef
   	kAXPosition = createCFString("AXPosition"),
@@ -134,7 +132,7 @@ class MacEnvironment extends Environment {
 					application, kAXFocusedWindow, windowp) == carbon.kAXErrorSuccess) {
 			AXUIElementRef window = new AXUIElementRef();
 			window.setPointer(windowp.getValue());
-			moveWindow(window, (int) point.x, (int) point.y);
+			moveWindow(window, point.x, point.y);
 		}
 
 		carbon.CFRelease(application);
@@ -161,7 +159,7 @@ class MacEnvironment extends Environment {
 
 	private static ArrayList<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
 		PointerByReference axWindowsp = new PointerByReference();
-		ArrayList<AXUIElementRef> ret = new ArrayList<AXUIElementRef>();
+		ArrayList<AXUIElementRef> ret = new ArrayList<>();
 
 		carbon.AXUIElementCopyAttributeValue(application, kAXChildren, axWindowsp);
 
@@ -189,7 +187,7 @@ class MacEnvironment extends Environment {
 	}
 
 	private static void moveWindow(AXUIElementRef window, int x, int y) {
-		CGPoint position = new CGPoint((double) x, (double) y);
+		CGPoint position = new CGPoint(x, y);
 		position.write();
 		AXValueRef axvalue = carbon.AXValueCreate(
 			carbon.kAXValueCGPointType, position.getPointer());
@@ -246,8 +244,7 @@ class MacEnvironment extends Environment {
 			width -= 2 * tilesize;
 		}
 
-		Rectangle r = new Rectangle(x, y, width, height);
-		return r;
+        return new Rectangle(x, y, width, height);
 	}
 
 	private static String getDockOrientation() {
@@ -271,7 +268,7 @@ class MacEnvironment extends Environment {
 	}
 
 	private static int getDockTileSize() {
-		/**
+		/*
 			 Dock の高さを監視する効率的な方法が見当たらないため、
 			 ひとまず Dock の最大サイズより大きい定数を返しておく。
 
@@ -330,13 +327,13 @@ class MacEnvironment extends Environment {
 	@Override
 	public void tick() {
 		super.tick();
-		this.updateFrontmostApp();
+		updateFrontmostApp();
     this.updateFrontmostWindow();
 	}
 
 	@Override
 	public void moveActiveIE(final Point point) {
-		/**
+		/*
 			前述のとおり、完全に画面外へ移動しようとすると押し返されるため、
 			そのような位置の指定に対しては可能なかぎりの移動に切り替える。
 		 */
@@ -380,7 +377,7 @@ class MacEnvironment extends Environment {
 
 	@Override
 	public Area getActiveIE() {
-		return this.activeIE;
+		return activeIE;
 	}
         
     @Override

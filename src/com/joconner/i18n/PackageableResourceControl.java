@@ -1,9 +1,5 @@
 package com.joconner.i18n;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -45,7 +41,7 @@ public class PackageableResourceControl extends ResourceBundle.Control {
             if (nBasePackage > 0) {
                 strBuilder.append(basePackageName).append(".");
             }
-            if (langSubPackage.length() > 0) {
+            if (!langSubPackage.isEmpty()) {
                 strBuilder.append(langSubPackage).append(".");
             }
             strBuilder.append(resName);

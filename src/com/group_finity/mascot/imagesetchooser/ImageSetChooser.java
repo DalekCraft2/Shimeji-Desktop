@@ -16,7 +16,7 @@ public class ImageSetChooser extends javax.swing.JDialog
 {
     private final String configFile = "./conf/settings.properties"; // Config file name
     private final String topDir = "./img"; // Top Level Directory
-    private ArrayList<String> imageSets = new ArrayList<String>( );
+    private ArrayList<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
 
@@ -28,22 +28,18 @@ public class ImageSetChooser extends javax.swing.JDialog
 
         ArrayList<String> activeImageSets = readConfigFile();
 
-        ArrayList<ImageSetChooserPanel> data1 = new ArrayList<ImageSetChooserPanel>();
-        ArrayList<ImageSetChooserPanel> data2 = new ArrayList<ImageSetChooserPanel>();
-        ArrayList<Integer> si1 = new ArrayList<Integer>();
-        ArrayList<Integer> si2 = new ArrayList<Integer>();
+        ArrayList<ImageSetChooserPanel> data1 = new ArrayList<>();
+        ArrayList<ImageSetChooserPanel> data2 = new ArrayList<>();
+        ArrayList<Integer> si1 = new ArrayList<>();
+        ArrayList<Integer> si2 = new ArrayList<>();
 
         // Get list of imagesets (directories under img)
-        FilenameFilter fileFilter = new FilenameFilter()
-        {
-            public boolean accept( File dir, String name )
+        FilenameFilter fileFilter = (dir, name) -> {
+            if( name.equalsIgnoreCase( "unused" ) || name.startsWith( "." ) )
             {
-                if( name.equalsIgnoreCase( "unused" ) || name.startsWith( "." ) )
-                {
-                    return false;
-                }
-                return new File( dir + "/" + name ).isDirectory();
+                return false;
             }
+            return new File( dir + "/" + name ).isDirectory();
         };
         File dir = new File( topDir );
         String[] children = dir.list( fileFilter );
@@ -162,11 +158,11 @@ public class ImageSetChooser extends javax.swing.JDialog
         }
 
         setUpList1();
-        jList1.setListData( data1.toArray() );
+        jList1.setListData( data1.toArray(new ImageSetChooserPanel[0]) );
         jList1.setSelectedIndices( convertIntegers( si1 ) );
 
         setUpList2();
-        jList2.setListData( data2.toArray() );
+        jList2.setListData( data2.toArray(new ImageSetChooserPanel[0]) );
         jList2.setSelectedIndices( convertIntegers( si2 ) );
     }
 
@@ -190,26 +186,16 @@ public class ImageSetChooser extends javax.swing.JDialog
     private ArrayList<String> readConfigFile()
     {
         // now with properties style loading!
-        ArrayList<String> activeImageSets = new ArrayList<String>( );
-        activeImageSets.addAll( Arrays.asList( Main.getInstance( ).getProperties( ).getProperty( "ActiveShimeji", "" ).split( "/" ) ) );
+        ArrayList<String> activeImageSets = new ArrayList<>(Arrays.asList(Main.getInstance().getProperties().getProperty("ActiveShimeji", "").split("/")));
         selectAllSets = activeImageSets.get( 0 ).trim( ).isEmpty( ); // if no active ones, activate them all!
         return activeImageSets;
     }
 
     private void updateConfigFile()
     {
-        try
-        {
-            FileOutputStream output = new FileOutputStream( configFile );
-            try
-            {
-                Main.getInstance( ).getProperties( ).setProperty( "ActiveShimeji", imageSets.toString( ).replace( "[", "" ).replace( "]", "" ).replace( ", ", "/" ) );
-                Main.getInstance( ).getProperties( ).store( output, "Shimeji-ee Configuration Options" );
-            }
-            finally
-            {
-                output.close( );
-            }
+        try (FileOutputStream output = new FileOutputStream(configFile)) {
+            Main.getInstance().getProperties().setProperty("ActiveShimeji", imageSets.toString().replace("[", "").replace("]", "").replace(", ", "/"));
+            Main.getInstance().getProperties().store(output, "Shimeji-ee Configuration Options");
         }
         catch( Exception e )
         {
@@ -268,39 +254,21 @@ public class ImageSetChooser extends javax.swing.JDialog
         useSelectedButton.setText( "Use Selected" );
         useSelectedButton.setMaximumSize( new java.awt.Dimension( 130, 26 ) );
         useSelectedButton.setPreferredSize( new java.awt.Dimension( 130, 26 ) );
-        useSelectedButton.addActionListener( new java.awt.event.ActionListener()
-        {
-            public void actionPerformed( java.awt.event.ActionEvent evt )
-            {
-                useSelectedButtonActionPerformed( evt );
-            }
-        } );
+        useSelectedButton.addActionListener(evt -> useSelectedButtonActionPerformed( evt ));
         jPanel1.add( useSelectedButton );
 
         useAllButton.setText( "Use All" );
         useAllButton.setMaximumSize( new java.awt.Dimension( 95, 23 ) );
         useAllButton.setMinimumSize( new java.awt.Dimension( 95, 23 ) );
         useAllButton.setPreferredSize( new java.awt.Dimension( 130, 26 ) );
-        useAllButton.addActionListener( new java.awt.event.ActionListener()
-        {
-            public void actionPerformed( java.awt.event.ActionEvent evt )
-            {
-                useAllButtonActionPerformed( evt );
-            }
-        } );
+        useAllButton.addActionListener(evt -> useAllButtonActionPerformed( evt ));
         jPanel1.add( useAllButton );
 
         cancelButton.setText( "Cancel" );
         cancelButton.setMaximumSize( new java.awt.Dimension( 95, 23 ) );
         cancelButton.setMinimumSize( new java.awt.Dimension( 95, 23 ) );
         cancelButton.setPreferredSize( new java.awt.Dimension( 130, 26 ) );
-        cancelButton.addActionListener( new java.awt.event.ActionListener()
-        {
-            public void actionPerformed( java.awt.event.ActionEvent evt )
-            {
-                cancelButtonActionPerformed( evt );
-            }
-        } );
+        cancelButton.addActionListener(evt -> cancelButtonActionPerformed( evt ));
         jPanel1.add( cancelButton );
 
         jPanel4.setLayout( new javax.swing.BoxLayout( jPanel4, javax.swing.BoxLayout.LINE_AXIS ) );
@@ -378,19 +346,19 @@ public class ImageSetChooser extends javax.swing.JDialog
     {
         imageSets.clear();
 
-        for( Object obj : jList1.getSelectedValues() )
+        for( ImageSetChooserPanel obj : jList1.getSelectedValuesList() )
         {
-            if( obj instanceof ImageSetChooserPanel )
+            if(obj != null)
             {
-                imageSets.add( ( ( ImageSetChooserPanel ) obj ).getImageSetName() );
+                imageSets.add( obj.getImageSetName() );
             }
         }
 
-        for( Object obj : jList2.getSelectedValues() )
+        for( ImageSetChooserPanel obj : jList2.getSelectedValuesList() )
         {
-            if( obj instanceof ImageSetChooserPanel )
+            if(obj != null)
             {
-                imageSets.add( ( ( ImageSetChooserPanel ) obj ).getImageSetName() );
+                imageSets.add( obj.getImageSetName() );
             }
         }
 
@@ -415,7 +383,7 @@ public class ImageSetChooser extends javax.swing.JDialog
         int[] ret = new int[ integers.size() ];
         for( int i = 0; i < ret.length; i++ )
         {
-            ret[i] = integers.get( i ).intValue();
+            ret[i] = integers.get(i);
         }
         return ret;
     }
@@ -461,23 +429,19 @@ public class ImageSetChooser extends javax.swing.JDialog
     /**
      * @param args the command line arguments
      */
-    public static void main( String args[] )
+    public static void main(String[] args)
     {
-        java.awt.EventQueue.invokeLater( new Runnable()
-        {
-            public void run()
-            {
-                new ImageSetChooser( new javax.swing.JFrame(), true ).display( );
-                System.exit( 0 );
-            }
-        } );
+        java.awt.EventQueue.invokeLater(() -> {
+            new ImageSetChooser( new javax.swing.JFrame(), true ).display( );
+            System.exit( 0 );
+        });
     }
     // Variables declaration - do not modify
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel clearAllLabel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
+    private javax.swing.JList<ImageSetChooserPanel> jList1;
+    private javax.swing.JList<ImageSetChooserPanel> jList2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;

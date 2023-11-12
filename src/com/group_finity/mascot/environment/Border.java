@@ -9,7 +9,7 @@ import java.awt.Point;
 
 public interface Border {
 
-	public boolean isOn(Point location);
+	boolean isOn(Point location);
 
-	public Point move(Point location);
+	Point move(Point location);
 }

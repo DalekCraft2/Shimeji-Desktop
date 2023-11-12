@@ -11,8 +11,6 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.action.ActionBase;
-import com.group_finity.mascot.action.Dragged;
-import com.group_finity.mascot.action.Regist;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
@@ -23,7 +21,7 @@ import com.group_finity.mascot.hotspot.Hotspot;
 
 /**
  * Simple Sample Behavior.
- *
+ * <p>
  * Original Author: Yuki Yamada of Group Finity
  * (http://www.group-finity.com/Shimeji/) Currently developed by Shimeji-ee
  * Group.
@@ -112,7 +110,7 @@ public class UserBehavior implements Behavior
 
     /**
      * On Mouse Pressed. Start dragging.
-     *
+     * <p>
      * @ Throws CantBeAliveException
      */
     public synchronized void mousePressed( final MouseEvent event ) throws CantBeAliveException
@@ -174,7 +172,7 @@ public class UserBehavior implements Behavior
 
     /**
      * On Mouse Release. End dragging.
-     *
+     * <p>
      * @ Throws CantBeAliveException
      */
     public synchronized void mouseReleased( final MouseEvent event ) throws CantBeAliveException

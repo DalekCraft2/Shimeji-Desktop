@@ -101,11 +101,7 @@ public class BreedJump extends Jump
 
                 getMascot().getManager().add(mascot);
 
-        } catch (final BehaviorInstantiationException e) {
-                log.log(Level.SEVERE, "Fatal Exception", e);
-                Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedCreateNewShimejiErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-                mascot.dispose();
-        } catch (final CantBeAliveException e) {
+        } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                 log.log(Level.SEVERE, "Fatal Exception", e);
                 Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedCreateNewShimejiErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
                 mascot.dispose();

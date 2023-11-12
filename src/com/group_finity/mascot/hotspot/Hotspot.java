@@ -6,7 +6,7 @@ import com.group_finity.mascot.Mascot;
 
 /**
  * Hotspot.
- * 
+ * <p>
  * Represents a clickable area on a shimeji, along with the behaviour to execute 
  * when the user interacts with the area.
  * 

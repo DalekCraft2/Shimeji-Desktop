@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class ComplexArea {
 
-	private Map<String, Area> areas = new HashMap<String, Area>();
+	private Map<String, Area> areas = new HashMap<>();
 
 	public void set(Map<String, Rectangle> rectangles) {
 		retain(rectangles.keySet());
@@ -44,12 +44,7 @@ public class ComplexArea {
 
 	public void retain(Collection<String> deviceNames) {
 
-		for (Iterator<String> i = areas.keySet().iterator(); i.hasNext();) {
-			String key = i.next();
-			if (!deviceNames.contains(key)) {
-				i.remove();
-			}
-		}
+        areas.keySet().removeIf(key -> !deviceNames.contains(key));
 	}
 
 	public FloorCeiling getBottomBorder(Point location) {

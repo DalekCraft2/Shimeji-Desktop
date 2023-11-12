@@ -33,14 +33,10 @@ public abstract class NativeFactory {
 
 			instance = impl.newInstance();
 
-		} catch (final ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (final InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (final IllegalAccessException e) {
+		} catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
-	}
+    }
 
 	public static NativeFactory getInstance() {
 		return instance;

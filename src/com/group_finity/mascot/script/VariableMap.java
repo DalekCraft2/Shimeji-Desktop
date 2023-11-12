@@ -19,7 +19,7 @@ import com.group_finity.mascot.exception.VariableException;
 
 public class VariableMap extends AbstractMap<String, Object> implements Bindings {
 
-	private final Map<String, Variable> rawMap = new LinkedHashMap<String, Variable>();
+	private final Map<String, Variable> rawMap = new LinkedHashMap<>();
 
 	public Map<String, Variable> getRawMap() {
 		return this.rawMap;
@@ -55,7 +55,7 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 				@Override
 				public Map.Entry<String, Object> next() {
 					final Map.Entry<String, Variable> rawKeyValue = this.rawIterator.next();
-					final Object value = rawKeyValue.getValue();
+					final Variable value = rawKeyValue.getValue();
 
 					return new Map.Entry<String, Object>() {
 
@@ -67,7 +67,7 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 						@Override
 						public Object getValue() {
 							try {
-								return ((Variable) value).get(VariableMap.this);
+								return value.get(VariableMap.this);
 							} catch (final VariableException e) {
 								throw new RuntimeException(e);
 							}

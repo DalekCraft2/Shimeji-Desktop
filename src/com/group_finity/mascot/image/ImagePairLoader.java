@@ -1,13 +1,9 @@
 package com.group_finity.mascot.image;
 
-import com.group_finity.mascot.Main;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.io.IOException;
-import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
 
 import javax.imageio.ImageIO;
 

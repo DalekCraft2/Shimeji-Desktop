@@ -17,7 +17,7 @@ public abstract class InstantAction extends ActionBase {
 	private static final Logger log = Logger.getLogger(InstantAction.class.getName());
 
 	public InstantAction( java.util.ResourceBundle schema, final VariableMap params) {
-		super( schema, new ArrayList<Animation>(), params);
+		super( schema, new ArrayList<>(), params);
 
 	}
 

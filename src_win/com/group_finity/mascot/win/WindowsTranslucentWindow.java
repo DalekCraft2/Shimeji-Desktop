@@ -17,10 +17,10 @@ import com.sun.jna.Pointer;
 
 /**
  * The image window with alpha.
- * {@link #setImage(WindowsNativeImage)} set in {@link WindowsNativeImage} can be displayed on the desktop.
- * 
+ * {@link #setImage(NativeImage)} set in {@link WindowsNativeImage} can be displayed on the desktop.
+ * <p>
  * {@link #setAlpha(int)} may be specified when the concentration of view.
- *
+ * <p>
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
  * Currently developed by Shimeji-ee Group.
  */

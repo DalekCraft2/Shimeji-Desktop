@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * A subclass of JMenu which adds a simple heuristic for ensuring
  * that the popup menu gets placed onscreen.
- *
+ * <p>
  * IMPORTANT: This only supports FIXED menus, that get only additions of JMenuItems!
  * If you like to remove items from the menu in run-time, or add other types of components,
  * it needs to be developed! (but this is good for most of the cases).
@@ -50,7 +50,7 @@ public class JLongMenu extends JMenu {
             isPopupMenuVisible();
             // Set location of popupMenu (pulldown or pullright)
             //  Perhaps this should be dictated by L&F
-            if ((b==true) && isShowing()) {
+            if (b && isShowing()) {
                 Point p = getPopupMenuOrigin();
                 getPopupMenu().show(this, p.x, p.y);
             } else {
@@ -62,7 +62,7 @@ public class JLongMenu extends JMenu {
     /**
      * Compute the origin for the JMenu's popup menu.
      *
-     * @returns a Point in the coordinate space of the menu instance
+     * @return a Point in the coordinate space of the menu instance
      * which should be used as the origin of the JMenu's popup menu.
      */
     protected Point getPopupMenuOrigin() {

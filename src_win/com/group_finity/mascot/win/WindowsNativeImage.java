@@ -17,10 +17,10 @@ import hqx.*;
 
 /**
  * (@link WindowsTranslucentWindow) a value that can be used with images.
- * 
+ * <p>
  * {@link WindowsTranslucentWindow} is available because only Windows bitmap
  * {@link BufferedImage} existing copy pixels from a Windows bitmap.
- * 
+ * <p>
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
  * Currently developed by Shimeji-ee Group.
  */
@@ -41,10 +41,8 @@ class WindowsNativeImage implements NativeImage {
 		bmi.biPlanes = 1;
 		bmi.biBitCount = 32;
 
-		final Pointer hBitmap = Gdi32.INSTANCE.CreateDIBSection(
+        return Gdi32.INSTANCE.CreateDIBSection(
 				Pointer.NULL, bmi, Gdi32.DIB_RGB_COLORS, Pointer.NULL, Pointer.NULL, 0 );
-
-		return hBitmap;
 	}
 
 	/**
@@ -74,7 +72,7 @@ class WindowsNativeImage implements NativeImage {
 				// UpdateLayeredWindow FFFFFF RGB value has the bug that it ignores the value of a,
 				// Photoshop is where a is an RGB value of 0 have the property value to 0.
 
-				bmp.bmBits.setInt(destIndex + x*4,
+				bmp.bmBits.setInt(destIndex + x* 4L,
 					(rgb[srcColIndex / scaling]&0xFF000000)==0 ? 0 : rgb[srcColIndex / scaling] );
 
 				++srcColIndex;
@@ -116,7 +114,7 @@ class WindowsNativeImage implements NativeImage {
 
 	public WindowsNativeImage(final BufferedImage image) {
             int scaling = Integer.parseInt( Main.getInstance( ).getProperties( ).getProperty( "Scaling", "1" ) );
-            Boolean filter = scaling > 1 && Boolean.parseBoolean( Main.getInstance( ).getProperties( ).getProperty( "Filter", "false" ) );
+            boolean filter = scaling > 1 && Boolean.parseBoolean( Main.getInstance( ).getProperties( ).getProperty( "Filter", "false" ) );
             int effectiveScaling = filter ? 1 : scaling;
             
 	    this.managedImage = image;

@@ -7,7 +7,7 @@ import com.group_finity.mascot.environment.Environment;
 
 /**
  * Java Environmental information is difficult to get used to get in the JNI.
- *
+ * <p>
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
  * Currently developed by Shimeji-ee Group.
  */

@@ -16,7 +16,7 @@ import java.awt.Point;
 /**
  * 
  * Maintains a list of mascot, the object to time.
- * 
+ * <p>
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
  * Currently developed by Shimeji-ee Group.
  */
@@ -32,19 +32,19 @@ public class Manager {
 	/**
 	 * A list of mascot.
 	 */
-	private final List<Mascot> mascots = new ArrayList<Mascot>();
+	private final List<Mascot> mascots = new ArrayList<>();
 
 	/**
 	* The mascot will be added later.
 	* (@Link ConcurrentModificationException) to prevent the addition of the mascot (@link # tick ()) are each simultaneously reflecting.
 	 */
-	private final Set<Mascot> added = new LinkedHashSet<Mascot>();
+	private final Set<Mascot> added = new LinkedHashSet<>();
 
 	/**
 	* The mascot will be added later.
 	* (@Link ConcurrentModificationException) to prevent the deletion of the mascot (@link # tick ()) are each simultaneously reflecting.
 	 */
-	private final Set<Mascot> removed = new LinkedHashSet<Mascot>();
+	private final Set<Mascot> removed = new LinkedHashSet<>();
 
 	private boolean exitOnLastRemoved = true;
 	
@@ -71,7 +71,7 @@ public class Manager {
 				while (true) {
 					try {
 						Thread.sleep(Integer.MAX_VALUE);
-					} catch (final InterruptedException ex) {
+					} catch (final InterruptedException ignored) {
 					}
 				}
 			}
@@ -83,32 +83,29 @@ public class Manager {
 			return;
 		}
 		
-		thread = new Thread() {
-			@Override
-			public void run() {
+		thread = new Thread(() -> {
 
-				long prev = System.nanoTime() / 1000000;
-				try {
-					for (;;) {
-						for (;;) {
-							final long cur = System.nanoTime() / 1000000;
-							if (cur - prev >= TICK_INTERVAL) {
-								if (cur > prev + TICK_INTERVAL * 2) {
-									prev = cur;
-								} else {
-									prev += TICK_INTERVAL;
-								}
-								break;
-							}
-							Thread.sleep(1, 0);
-						}
+            long prev = System.nanoTime() / 1000000;
+            try {
+                for (;;) {
+                    for (;;) {
+                        final long cur = System.nanoTime() / 1000000;
+                        if (cur - prev >= TICK_INTERVAL) {
+                            if (cur > prev + TICK_INTERVAL * 2) {
+                                prev = cur;
+                            } else {
+                                prev += TICK_INTERVAL;
+                            }
+                            break;
+                        }
+                        Thread.sleep(1, 0);
+                    }
 
-						tick();
-					}
-				} catch (final InterruptedException e) {
-				}
-			}
-		};
+                    tick();
+                }
+            } catch (final InterruptedException ignored) {
+            }
+        });
 		thread.setDaemon(false);
 		
 		thread.start();
@@ -121,7 +118,7 @@ public class Manager {
 		thread.interrupt();
 		try {
 			thread.join();
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ignored) {
 		}
 	}
 
@@ -156,7 +153,7 @@ public class Manager {
 		}
 
 		if (isExitOnLastRemoved()) {
-			if (this.getMascots().size() == 0) {
+			if (this.getMascots().isEmpty()) {
 				Main.getInstance().exit();
 			}
 		}
@@ -273,7 +270,7 @@ public class Manager {
         synchronized( this.getMascots( ) )
         {
             boolean isPaused = false;
-            if( getMascots( ).size( ) > 0 )
+            if(!getMascots().isEmpty())
                 isPaused = getMascots( ).get( 0 ).isPaused( );
             
             for( final Mascot mascot : this.getMascots( ) )
@@ -289,7 +286,7 @@ public class Manager {
         
         synchronized( this.getMascots( ) )
         {
-            if( getMascots( ).size( ) > 0 )
+            if(!getMascots().isEmpty())
                 isPaused = getMascots( ).get( 0 ).isPaused( );
         }
         
@@ -347,7 +344,7 @@ public class Manager {
                 for( final Mascot mascot : this.getMascots( ) )
                 {
                     if( mascot.getAffordances( ).contains( affordance ) )
-                        return new WeakReference<Mascot>( mascot );
+                        return new WeakReference<>(mascot);
                 }
             }
             

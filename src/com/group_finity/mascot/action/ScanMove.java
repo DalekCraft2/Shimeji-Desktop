@@ -109,17 +109,7 @@ public class ScanMove extends BorderedAction
                 getMascot( ).setBehavior( Main.getInstance( ).getConfiguration( getMascot( ).getImageSet( ) ).buildBehavior( getBehavior( ) ) );
                 target.get( ).setBehavior( Main.getInstance( ).getConfiguration( target.get( ).getImageSet( ) ).buildBehavior( getTargetBehavior( ) ) );
             }
-            catch( final NullPointerException e )
-            {
-                log.log( Level.SEVERE, "Fatal Exception", e );
-                Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-            }
-            catch( final BehaviorInstantiationException e )
-            {
-                log.log( Level.SEVERE, "Fatal Exception", e );
-                Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );
-            }
-            catch( final CantBeAliveException e )
+            catch( final NullPointerException | BehaviorInstantiationException | CantBeAliveException e )
             {
                 log.log( Level.SEVERE, "Fatal Exception", e );
                 Main.showError( Main.getInstance( ).getLanguageBundle( ).getString( "FailedSetBehaviourErrorMessage" ) + "\n" + e.getMessage( ) + "\n" + Main.getInstance( ).getLanguageBundle( ).getString( "SeeLogForDetails" ) );

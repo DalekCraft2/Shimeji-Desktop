@@ -7,13 +7,13 @@ import java.awt.*;
  * A JList that can be populated with ImageSetChooserPanel objects
  */
 
-public class ShimejiList extends JList {
+public class ShimejiList extends JList<ImageSetChooserPanel> {
 
   public ShimejiList() {
     setCellRenderer(new CustomCellRenderer());
   }
 
-  class CustomCellRenderer implements ListCellRenderer {
+  static class CustomCellRenderer implements ListCellRenderer {
     public Component getListCellRendererComponent (JList list, Object value,
 			int index,boolean isSelected,boolean cellHasFocus) {
       if (value instanceof ImageSetChooserPanel)

@@ -8,13 +8,13 @@ import javax.sound.sampled.Clip;
 
 /**
  * This static class contains all the sounds loaded by Shimeji-ee.
- * 
+ * <p>
  * Visit kilkakon.com/shimeji for updates
  * @author Kilkakon
  */
 public class Sounds
 {
-    private final static Hashtable<String,Clip> SOUNDS = new Hashtable<String,Clip>( );
+    private final static Hashtable<String,Clip> SOUNDS = new Hashtable<>();
 
     public static void load( final String filename, final Clip clip )
     {
@@ -36,7 +36,7 @@ public class Sounds
 
     public static ArrayList<Clip> getSoundsIgnoringVolume( String filename )
     {
-        ArrayList<Clip> sounds = new ArrayList( 5 );
+        ArrayList<Clip> sounds = new ArrayList<>( 5 );
         Enumeration<String> keys = SOUNDS.keys( );
         while( keys.hasMoreElements( ) )
         {

@@ -51,7 +51,7 @@ public class Hqx_4x extends Hqx {
 	 * Only the necessary methods were created, to leave the maximum code on the original one to avoid excessive calling.
 	 * However, this is a very bad design (too much code in the same method)
 	 */
-	private static final void case0(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case0(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -70,7 +70,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case2(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case2(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
@@ -89,7 +89,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case16(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case16(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
@@ -108,7 +108,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case64(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case64(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -127,7 +127,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case8(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case8(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -146,7 +146,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case3(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case3(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
@@ -165,7 +165,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case6(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case6(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
@@ -184,7 +184,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case20(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case20(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
@@ -203,7 +203,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case144(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case144(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
@@ -222,7 +222,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
 	}
 
-	private static final void case192(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case192(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -241,7 +241,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
 	}
 
-	private static final void case96(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case96(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -260,7 +260,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case40(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case40(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -279,7 +279,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case9(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case9(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
 		dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -298,7 +298,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case66(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case66(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
@@ -317,7 +317,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case24(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case24(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
@@ -336,7 +336,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case7(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case7(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
@@ -355,7 +355,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case148(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case148(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
@@ -374,7 +374,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
 	}
 
-	private static final void case224(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case224(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -393,7 +393,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
 	}
 
-	private static final void case41(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case41(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
 		dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
@@ -412,7 +412,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
 	}
 
-	private static final void case67(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case67(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
 		dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
 		dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
@@ -431,7 +431,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case70(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case70(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
@@ -450,7 +450,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case28(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case28(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
@@ -469,7 +469,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case152(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case152(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
@@ -488,7 +488,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
 	}
 
-	private static final void case194(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case194(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
@@ -507,7 +507,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
 	}
 
-	private static final void case98(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case98(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
@@ -526,7 +526,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case56(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case56(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
 		dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
@@ -545,7 +545,7 @@ public class Hqx_4x extends Hqx {
 		dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
 	}
 
-	private static final void case25(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+	private static void case25(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
 		dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
 		dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
 		dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);

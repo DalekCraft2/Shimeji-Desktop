@@ -13,17 +13,17 @@ public interface Action {
 	/**
 	 * @param mascot 
 	 */
-	public void init(Mascot mascot) throws VariableException;
+    void init(Mascot mascot) throws VariableException;
 
 	/**
 	 * @return 
 	 */
-	public boolean hasNext() throws VariableException;
+    boolean hasNext() throws VariableException;
 	
 	/**
 	 * 
 	 * @throws LostGroundException 
 	 */
-	public void next() throws LostGroundException, VariableException;
+    void next() throws LostGroundException, VariableException;
 	
 }

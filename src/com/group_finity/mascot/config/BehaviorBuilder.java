@@ -40,9 +40,9 @@ public class BehaviorBuilder {
 
 	private final boolean nextAdditive;
 
-	private final List<BehaviorBuilder> nextBehaviorBuilders = new ArrayList<BehaviorBuilder>();
+	private final List<BehaviorBuilder> nextBehaviorBuilders = new ArrayList<>();
 
-	private final Map<String, String> params = new LinkedHashMap<String, String>();
+	private final Map<String, String> params = new LinkedHashMap<>();
 
 	public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) {
 		this.configuration = configuration;
@@ -50,7 +50,7 @@ public class BehaviorBuilder {
 		this.actionName = behaviorNode.getAttribute( configuration.getSchema( ).getString( "Action" ) ) == null ? getName( ) : behaviorNode.getAttribute( configuration.getSchema( ).getString( "Action" ) );
 		this.frequency = Integer.parseInt( behaviorNode.getAttribute( configuration.getSchema( ).getString( "Frequency" ) ) );
                 this.hidden = Boolean.parseBoolean( behaviorNode.getAttribute( configuration.getSchema( ).getString( "Hidden" ) ) );
-		this.conditions = new ArrayList<String>(conditions);
+		this.conditions = new ArrayList<>(conditions);
 		this.getConditions().add(behaviorNode.getAttribute( configuration.getSchema( ).getString( "Condition" ) ) );
 
 		log.log(Level.INFO, "Start Reading({0})", this);
@@ -70,7 +70,7 @@ public class BehaviorBuilder {
 
 			nextAdditive = Boolean.parseBoolean( nextList.getAttribute( configuration.getSchema( ).getString( "Add"  ) ) );
 
-			loadBehaviors(nextList, new ArrayList<String>());
+			loadBehaviors(nextList, new ArrayList<>());
 		}
 		
 		this.nextAdditive = nextAdditive;
@@ -91,7 +91,7 @@ public class BehaviorBuilder {
 			if( node.getName( ).equals( configuration.getSchema( ).getString( "Condition" ) ) )
                         {
 
-				final List<String> newConditions = new ArrayList<String>(conditions);
+				final List<String> newConditions = new ArrayList<>(conditions);
 				newConditions.add( node.getAttribute( configuration.getSchema( ).getString( "Condition" ) ) );
 
 				loadBehaviors(node, newConditions);

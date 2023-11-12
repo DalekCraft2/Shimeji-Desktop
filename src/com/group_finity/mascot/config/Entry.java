@@ -25,7 +25,7 @@ public class Entry {
 	
 	private List<Entry> children;
 	
-	private Map<String, List<Entry> > selected = new HashMap<String, List<Entry>>();
+	private Map<String, List<Entry> > selected = new HashMap<>();
 	
 	public Entry(final Element element){
 		this.element = element;
@@ -40,7 +40,7 @@ public class Entry {
 			return this.attributes;
 		}
 		
-		this.attributes = new LinkedHashMap<String, String>();
+		this.attributes = new LinkedHashMap<>();
 		final NamedNodeMap attrs = this.element.getAttributes();
 		for(int i = 0; i<attrs.getLength(); ++i ) {
 			final Attr attr = (Attr)attrs.item(i);
@@ -81,7 +81,7 @@ public class Entry {
 		if ( children!=null ) {
 			return children;
 		}
-		children = new ArrayList<Entry>();
+		children = new ArrayList<>();
 		for( final Entry child : getChildren() ) {
 			if ( child.getName().equals(tagName)) {
 				children.add(child);
@@ -99,7 +99,7 @@ public class Entry {
 			return this.children;
 		}
 		
-		this.children = new ArrayList<Entry>();
+		this.children = new ArrayList<>();
 		final NodeList childNodes = this.element.getChildNodes();
 		for( int i = 0; i<childNodes.getLength(); ++i) {
 			final Node childNode = childNodes.item(i);

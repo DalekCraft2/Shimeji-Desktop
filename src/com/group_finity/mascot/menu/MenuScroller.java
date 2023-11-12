@@ -396,8 +396,7 @@ public class MenuScroller {
     if (item == null) {
       keepVisibleIndex = -1;
     } else {
-      int index = menu.getComponentIndex(item);
-      keepVisibleIndex = index;
+        keepVisibleIndex = menu.getComponentIndex(item);
     }
   }
 
@@ -427,12 +426,11 @@ public class MenuScroller {
   /**
    * Ensures that the <code>dispose</code> method of this MenuScroller is
    * called when there are no more refrences to it.
-   * 
-   * @exception  Throwable if an error occurs.
+   *
    * @see MenuScroller#dispose()
    */
   @Override
-  public void finalize() throws Throwable {
+  protected void finalize() {
     dispose();
   }
 
@@ -514,13 +512,9 @@ public class MenuScroller {
   private class MenuScrollTimer extends Timer {
 
     public MenuScrollTimer(final int increment, int interval) {
-      super(interval, new ActionListener() {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          firstIndex += increment;
-          refreshMenu();
-        }
+      super(interval, e -> {
+        firstIndex += increment;
+        refreshMenu();
       });
     }
   }
@@ -552,7 +546,7 @@ public class MenuScroller {
     }
   }
 
-  private static enum MenuIcon implements Icon {
+  private enum MenuIcon implements Icon {
 
     UP(9, 1, 9),
     DOWN(1, 9, 1);

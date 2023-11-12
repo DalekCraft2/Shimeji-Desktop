@@ -31,8 +31,8 @@ import java.util.ResourceBundle;
 public class Configuration
 {
     private static final Logger log = Logger.getLogger( Configuration.class.getName( ) );
-    private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<String, ActionBuilder>( );
-    private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<String, BehaviorBuilder>( );
+    private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
+    private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
     private ResourceBundle schema;
 
     public void load( final Entry configurationNode, final String imageSet ) throws IOException, ConfigurationException
@@ -79,7 +79,7 @@ public class Configuration
         {
             log.log( Level.INFO, "Behavior List..." );
 
-            loadBehaviors( list, new ArrayList<String>( ) );
+            loadBehaviors( list, new ArrayList<>() );
         }
 
         log.log( Level.INFO, "Configuration loaded successfully" );
@@ -91,7 +91,7 @@ public class Configuration
             {
                 if( node.getName( ).equals( schema.getString( "Condition" ) ) )
                 {
-                    final List<String> newConditions = new ArrayList<String>( conditions );
+                    final List<String> newConditions = new ArrayList<>(conditions);
                     newConditions.add( node.getAttribute( schema.getString( "Condition" ) ) );
 
                     loadBehaviors(node, newConditions);
@@ -129,7 +129,7 @@ public class Configuration
 		final VariableMap context = new VariableMap();
 		context.put("mascot", mascot);
 
-		final List<BehaviorBuilder> candidates = new ArrayList<BehaviorBuilder>();
+		final List<BehaviorBuilder> candidates = new ArrayList<>();
 		long totalFrequency = 0;
 		for (final BehaviorBuilder behaviorFactory : this.getBehaviorBuilders().values()) {
 			try {

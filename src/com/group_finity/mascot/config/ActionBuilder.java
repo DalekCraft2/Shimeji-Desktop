@@ -36,9 +36,9 @@ public class ActionBuilder implements IActionBuilder {
 	private final String type;
 	private final String name;
 	private final String className;
-	private final Map<String, String> params = new LinkedHashMap<String, String>( );
-	private final List<AnimationBuilder> animationBuilders = new ArrayList<AnimationBuilder>( );
-	private final List<IActionBuilder> actionRefs = new ArrayList<IActionBuilder>( );
+	private final Map<String, String> params = new LinkedHashMap<>();
+	private final List<AnimationBuilder> animationBuilders = new ArrayList<>();
+	private final List<IActionBuilder> actionRefs = new ArrayList<>();
         private final ResourceBundle schema;
 
 	public ActionBuilder( final Configuration configuration, final Entry actionNode, final String imageSet ) throws IOException
@@ -145,15 +145,15 @@ public class ActionBuilder implements IActionBuilder {
 	}
 	
 	private List<Action> createActions( ) throws ActionInstantiationException {
-		final List<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<>();
 		for (final IActionBuilder ref : this.getActionRefs()) {
-			actions.add( ref.buildAction( new HashMap<String, String>( ) ) );
+			actions.add( ref.buildAction(new HashMap<>() ) );
 		}
 		return actions;
 	}
 
 	private List<Animation> createAnimations() throws AnimationInstantiationException {
-		final List<Animation> animations = new ArrayList<Animation>();
+		final List<Animation> animations = new ArrayList<>();
 		for (final AnimationBuilder animationFactory : this.getAnimationBuilders()) {
 			animations.add(animationFactory.buildAnimation());
 		}

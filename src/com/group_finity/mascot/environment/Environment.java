@@ -31,23 +31,19 @@ public abstract class Environment {
 
 	private static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
 
-	private static Map<String, Rectangle> screenRects = new HashMap<String, Rectangle>();
+	private static Map<String, Rectangle> screenRects = new HashMap<>();
 
 	static {
 
-		final Thread thread = new Thread() {
-			@Override
-			public void run() {
-				try {
-					for (;;) {
-						updateScreenRect();
-						Thread.sleep(5000);
-					}
-				} catch (final InterruptedException e) {
-				}
-			}
-
-		};
+		final Thread thread = new Thread(() -> {
+            try {
+                for (;;) {
+                    updateScreenRect();
+                    Thread.sleep(5000);
+                }
+            } catch (final InterruptedException ignored) {
+            }
+        });
 		thread.setDaemon(true);
 		thread.setPriority(Thread.MIN_PRIORITY);
 		thread.start();
@@ -57,16 +53,15 @@ public abstract class Environment {
 
 		Rectangle virtualBounds = new Rectangle();
 
-		Map<String, Rectangle> screenRects = new HashMap<String, Rectangle>();
+		Map<String, Rectangle> screenRects = new HashMap<>();
 
 		final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		final GraphicsDevice[] gs = ge.getScreenDevices();
 
-		for (int j = 0; j < gs.length; j++) {
-			final GraphicsDevice gd = gs[j];
-			screenRects.put(gd.getIDstring(), gd.getDefaultConfiguration().getBounds());
-			virtualBounds = virtualBounds.union(gd.getDefaultConfiguration().getBounds());
-		}
+        for (final GraphicsDevice gd : gs) {
+            screenRects.put(gd.getIDstring(), gd.getDefaultConfiguration().getBounds());
+            virtualBounds = virtualBounds.union(gd.getDefaultConfiguration().getBounds());
+        }
 
 		Environment.screenRects = screenRects;
 

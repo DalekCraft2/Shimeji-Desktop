@@ -11,11 +11,11 @@ import javax.swing.ImageIcon;
 import com.group_finity.mascot.image.NativeImage;
 
 /**
- * (@ Link GenericTranslucentWindow) a value that can be used with images.
- *
- * (@ Link GenericTranslucentWindow) is available because only Windows bitmap
- * (@ Link BufferedImage) existing copy pixels from a Windows bitmap.
- *
+ * {@link GenericTranslucentWindow} a value that can be used with images.
+ * <p>
+ * {@link GenericTranslucentWindow} is available because only Windows bitmap
+ * {@link BufferedImage} existing copy pixels from a Windows bitmap.
+ * <p>
  * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
  * Currently developed by Shimeji-ee Group.
  */
@@ -33,10 +33,6 @@ class GenericNativeImage implements NativeImage{
 		this.icon = new ImageIcon(image);
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-	}
 
 	public void flush() {
 		this.getManagedImage().flush();

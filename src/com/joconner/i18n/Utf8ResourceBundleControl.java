@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -35,19 +36,15 @@ public class Utf8ResourceBundleControl extends PackageableResourceControl {
             if (resourceName == null) {
                 return bundle;
             }
-            final ClassLoader classLoader = loader;
             InputStream stream = null;
             if (reload) {
-                stream = reload(resourceName, classLoader);
+                stream = reload(resourceName, loader);
             } else {
-                stream = classLoader.getResourceAsStream(resourceName);
+                stream = loader.getResourceAsStream(resourceName);
             }
             if (stream != null) {
-                Reader reader = new InputStreamReader(stream, "UTF-8");
-                try {
+                try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
                     bundle = new PropertyResourceBundle(reader);
-                } finally {
-                    reader.close();
                 }
             }
         } else {

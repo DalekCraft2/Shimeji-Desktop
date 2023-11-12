@@ -23,7 +23,7 @@ public class ActionRef implements IActionBuilder {
 
 	private final String name;
 
-	private final Map<String, String> params = new LinkedHashMap<String, String>();
+	private final Map<String, String> params = new LinkedHashMap<>();
 
 	public ActionRef(final Configuration configuration, final Entry refNode) {
 		this.configuration = configuration;
@@ -60,7 +60,7 @@ public class ActionRef implements IActionBuilder {
 	}
 
 	public Action buildAction( final Map<String, String> params) throws ActionInstantiationException {
-		final Map<String, String> newParams = new LinkedHashMap<String, String>(params);
+		final Map<String, String> newParams = new LinkedHashMap<>(params);
 		newParams.putAll(getParams());
 		return this.getConfiguration().buildAction(getName(), newParams);
 	}

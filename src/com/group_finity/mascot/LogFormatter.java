@@ -13,7 +13,7 @@ public class LogFormatter extends SimpleFormatter {
 	private final static String format = "{0,date} {0,time}";
 	private MessageFormat formatter;
 
-	private Object args[] = new Object[1];
+	private Object[] args = new Object[1];
 
 	private String lineSeparator = System.getProperty("line.separator");
 
@@ -24,7 +24,7 @@ public class LogFormatter extends SimpleFormatter {
 	 */
 	@Override
 	public synchronized String format(final LogRecord record) {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		
 		// Minimize memory allocations here.
 		this.dat.setTime(record.getMillis());
@@ -61,8 +61,8 @@ public class LogFormatter extends SimpleFormatter {
 				final PrintWriter pw = new PrintWriter(sw);
 				record.getThrown().printStackTrace(pw);
 				pw.close();
-				sb.append(sw.toString());
-			} catch (final Exception ex) {
+				sb.append(sw);
+			} catch (final Exception ignored) {
 			}
 		}
 		return sb.toString();

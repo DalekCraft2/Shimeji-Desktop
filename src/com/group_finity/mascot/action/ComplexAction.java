@@ -22,7 +22,7 @@ public abstract class ComplexAction extends ActionBase {
 	private int currentAction;
 
 	public ComplexAction( java.util.ResourceBundle schema, final VariableMap params, final Action... actions) {
-		super( schema, new ArrayList<Animation>(), params);
+		super( schema, new ArrayList<>(), params);
 		if (actions.length == 0) {
 			throw new IllegalArgumentException("actions.length==0");
 		}

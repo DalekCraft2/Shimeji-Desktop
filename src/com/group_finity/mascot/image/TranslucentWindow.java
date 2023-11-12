@@ -9,9 +9,9 @@ import javax.swing.JWindow;
 
 public interface TranslucentWindow {
 
-	public JWindow asJWindow();
+	JWindow asJWindow();
 
-	public void setImage(NativeImage image);
+	void setImage(NativeImage image);
 
-	public void updateImage();
+	void updateImage();
 }

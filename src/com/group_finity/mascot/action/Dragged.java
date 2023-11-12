@@ -66,7 +66,7 @@ public class Dragged extends ActionBase
     }
 
     @Override
-    protected void tick( ) throws LostGroundException, VariableException
+    protected void tick( ) throws VariableException
     {
         getMascot( ).setLookRight( false );
         getMascot( ).setDragging( true );
