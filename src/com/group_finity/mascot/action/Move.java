@@ -59,7 +59,7 @@ public class Move extends BorderedAction {
 
         super.tick();
 
-        if ((getBorder() != null) && !getBorder().isOn(getMascot().getAnchor())) {
+        if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
             log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
@@ -81,14 +81,14 @@ public class Move extends BorderedAction {
         getAnimation().next(getMascot(), getTime());
 
         if (targetX != DEFAULT_TARGETX) {
-            if ((getMascot().isLookRight() && (getMascot().getAnchor().x >= targetX))
-                    || (!getMascot().isLookRight() && (getMascot().getAnchor().x <= targetX))) {
+            if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX
+                    || !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
                 getMascot().setAnchor(new Point(targetX, getMascot().getAnchor().y));
             }
         }
         if (targetY != DEFAULT_TARGETY) {
-            if ((down && (getMascot().getAnchor().y >= targetY)) ||
-                    (!down && (getMascot().getAnchor().y <= targetY))) {
+            if (down && getMascot().getAnchor().y >= targetY ||
+                    !down && getMascot().getAnchor().y <= targetY) {
                 getMascot().setAnchor(new Point(getMascot().getAnchor().x, targetY));
             }
         }

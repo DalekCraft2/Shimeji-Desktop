@@ -351,7 +351,7 @@ public class MenuScroller {
         if (firstIndex <= topFixedCount) {
             firstIndex = topFixedCount;
         } else {
-            firstIndex += (topFixedCount - this.topFixedCount);
+            firstIndex += topFixedCount - this.topFixedCount;
         }
         this.topFixedCount = topFixedCount;
     }

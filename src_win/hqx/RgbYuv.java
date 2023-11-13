@@ -52,7 +52,7 @@ public final class RgbYuv {
             y = (int) (+0.299d * r + 0.587d * g + 0.114d * b);
             u = (int) (-0.169d * r - 0.331d * g + 0.500d * b) + 128;
             v = (int) (+0.500d * r - 0.419d * g - 0.081d * b) + 128;
-            RGBtoYUV[c] = (y << 16) | (u << 8) | v;
+            RGBtoYUV[c] = y << 16 | u << 8 | v;
         }
     }
 

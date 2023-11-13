@@ -33,7 +33,8 @@ public abstract class InstantAction extends ActionBase {
 
     @Override
     public final boolean hasNext() throws VariableException {
-        return super.hasNext() && false;
+        super.hasNext();
+        return false;
     }
 
     @Override

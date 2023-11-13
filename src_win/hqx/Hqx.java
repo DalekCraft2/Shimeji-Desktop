@@ -45,12 +45,10 @@ abstract class Hqx {
         final int YUV1 = RgbYuv.getYuv(c1);
         final int YUV2 = RgbYuv.getYuv(c2);
 
-        return (
-                (Math.abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY) ||
-                        (Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU) ||
-                        (Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV) ||
-                        (Math.abs(((c1 >> 24) - (c2 >> 24))) > trA)
-        );
+        return Math.abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ||
+                Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ||
+                Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ||
+                Math.abs((c1 >> 24) - (c2 >> 24)) > trA;
     }
 
 }

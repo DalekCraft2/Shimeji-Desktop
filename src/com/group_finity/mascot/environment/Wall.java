@@ -56,8 +56,8 @@ public class Wall implements Border {
 
     @Override
     public boolean isOn(final Point location) {
-        return getArea().isVisible() && (getX() == location.x) && (getTop() <= location.y)
-                && (location.y <= getBottom());
+        return getArea().isVisible() && getX() == location.x && getTop() <= location.y
+                && location.y <= getBottom();
     }
 
     public Point move(final Point location) {
@@ -74,7 +74,7 @@ public class Wall implements Border {
         final Point newLocation = new Point(location.x + getDX(), (location.y - (getTop() - getDTop()))
                 * (getBottom() - getTop()) / d + getTop());
 
-        if ((Math.abs(newLocation.x - location.x) >= 80) || (Math.abs(newLocation.y - location.y) >= 80)) {
+        if (Math.abs(newLocation.x - location.x) >= 80 || Math.abs(newLocation.y - location.y) >= 80) {
             return location;
         }
         return newLocation;

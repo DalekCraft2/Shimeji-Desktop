@@ -61,7 +61,7 @@ class WindowsNativeImage implements NativeImage {
         // Copy at the pixel level. These dimensions are already scaled
         int width = bmp.bmWidth;
         int height = bmp.bmHeight;
-        final int destPitch = ((bmp.bmWidth * bmp.bmBitsPixel) + 31) / 32 * 4;
+        final int destPitch = (bmp.bmWidth * bmp.bmBitsPixel + 31) / 32 * 4;
         int destIndex = destPitch * (height - 1);
         int srcColIndex = 0;
         int srcRowIndex = 0;

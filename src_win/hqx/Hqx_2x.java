@@ -73,12 +73,12 @@ public class Hqx_2x extends Hqx {
         final int[] w = new int[9];
 
         for (int j = 0; j < Yres; j++) {
-            prevline = (j > 0)
+            prevline = j > 0
                     ? -Xres
                     : wrapY
                     ? Xres * (Yres - 1)
                     : 0;
-            nextline = (j < Yres - 1)
+            nextline = j < Yres - 1
                     ? Xres
                     : wrapY
                     ? -(Xres * (Yres - 1))

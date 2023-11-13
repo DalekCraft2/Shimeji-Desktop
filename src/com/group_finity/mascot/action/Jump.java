@@ -44,7 +44,7 @@ public class Jump extends ActionBase {
 
         final double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-        return super.hasNext() && (distance != 0);
+        return super.hasNext() && distance != 0;
     }
 
     @Override

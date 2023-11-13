@@ -28,7 +28,7 @@ public class MascotEnvironment {
 
     public Area getWorkArea(Boolean ignoreSettings) {
         if (currentWorkArea != null) {
-            if (ignoreSettings || (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true")))) {
+            if (ignoreSettings || Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
                 // NOTE Windows
                 if (currentWorkArea != impl.getWorkArea() && currentWorkArea.toRectangle().contains(impl.getWorkArea().toRectangle())) {
                     if (impl.getWorkArea().contains(mascot.getAnchor().x, mascot.getAnchor().y)) {

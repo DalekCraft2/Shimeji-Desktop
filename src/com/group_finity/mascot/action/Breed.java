@@ -74,11 +74,11 @@ public class Breed extends Animate {
         log.log(Level.INFO, "Breed Mascot ({0},{1},{2})", new Object[]{getMascot(), this, mascot});
 
         if (getMascot().isLookRight()) {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x - (getBornX() * scaling),
-                    getMascot().getAnchor().y + (getBornY() * scaling)));
+            mascot.setAnchor(new Point(getMascot().getAnchor().x - getBornX() * scaling,
+                    getMascot().getAnchor().y + getBornY() * scaling));
         } else {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x + (getBornX() * scaling),
-                    getMascot().getAnchor().y + (getBornY() * scaling)));
+            mascot.setAnchor(new Point(getMascot().getAnchor().x + getBornX() * scaling,
+                    getMascot().getAnchor().y + getBornY() * scaling));
         }
         mascot.setLookRight(getMascot().isLookRight());
 

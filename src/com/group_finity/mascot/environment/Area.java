@@ -146,7 +146,7 @@ public class Area {
 
     public boolean contains(final int x, final int y) {
 
-        return (getLeft() <= x) && (x <= getRight()) && (getTop() <= y) && (y <= getBottom());
+        return getLeft() <= x && x <= getRight() && getTop() <= y && y <= getBottom();
     }
 
     public Rectangle toRectangle() {

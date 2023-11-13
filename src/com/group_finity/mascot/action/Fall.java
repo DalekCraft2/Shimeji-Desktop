@@ -82,14 +82,14 @@ public class Fall extends ActionBase {
             getMascot().setLookRight(this.getVelocityX() > 0);
         }
 
-        this.setVelocityX(this.getVelocityX() - (this.getVelocityX() * getResistanceX()));
-        this.setVelocityY(this.getVelocityY() - (this.getVelocityY() * getResistanceY()) + getGravity());
+        this.setVelocityX(this.getVelocityX() - this.getVelocityX() * getResistanceX());
+        this.setVelocityY(this.getVelocityY() - this.getVelocityY() * getResistanceY() + getGravity());
 
         putVariable(getSchema().getString(VARIABLE_VELOCITYX), getVelocityX());
         putVariable(getSchema().getString(VARIABLE_VELOCITYY), getVelocityY());
 
-        this.setModX(this.getModX() + (this.getVelocityX() % 1));
-        this.setModY(this.getModY() + (this.getVelocityY() % 1));
+        this.setModX(this.getModX() + this.getVelocityX() % 1);
+        this.setModY(this.getModY() + this.getVelocityY() % 1);
 
         int dx = (int) this.getVelocityX() + (int) this.getModX();
         int dy = (int) this.getVelocityY() + (int) this.getModY();

@@ -74,7 +74,7 @@ public class Dragged extends ActionBase {
 
         final int newX = cursor.getX();
 
-        setFootDx((getFootDx() + ((newX - getFootX()) * 0.1)) * 0.8);
+        setFootDx((getFootDx() + (newX - getFootX()) * 0.1) * 0.8);
         setFootX(getFootX() + getFootDx());
 
         putVariable(getSchema().getString(VARIABLE_FOOTDX), getFootDx());

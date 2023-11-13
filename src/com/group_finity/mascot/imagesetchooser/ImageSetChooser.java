@@ -272,21 +272,21 @@ public class ImageSetChooser extends javax.swing.JDialog {
         useSelectedButton.setText("Use Selected");
         useSelectedButton.setMaximumSize(new java.awt.Dimension(130, 26));
         useSelectedButton.setPreferredSize(new java.awt.Dimension(130, 26));
-        useSelectedButton.addActionListener(evt -> useSelectedButtonActionPerformed(evt));
+        useSelectedButton.addActionListener(this::useSelectedButtonActionPerformed);
         jPanel1.add(useSelectedButton);
 
         useAllButton.setText("Use All");
         useAllButton.setMaximumSize(new java.awt.Dimension(95, 23));
         useAllButton.setMinimumSize(new java.awt.Dimension(95, 23));
         useAllButton.setPreferredSize(new java.awt.Dimension(130, 26));
-        useAllButton.addActionListener(evt -> useAllButtonActionPerformed(evt));
+        useAllButton.addActionListener(this::useAllButtonActionPerformed);
         jPanel1.add(useAllButton);
 
         cancelButton.setText("Cancel");
         cancelButton.setMaximumSize(new java.awt.Dimension(95, 23));
         cancelButton.setMinimumSize(new java.awt.Dimension(95, 23));
         cancelButton.setPreferredSize(new java.awt.Dimension(130, 26));
-        cancelButton.addActionListener(evt -> cancelButtonActionPerformed(evt));
+        cancelButton.addActionListener(this::cancelButtonActionPerformed);
         jPanel1.add(cancelButton);
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));

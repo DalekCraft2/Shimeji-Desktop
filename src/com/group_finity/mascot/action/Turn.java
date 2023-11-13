@@ -29,7 +29,7 @@ public class Turn extends BorderedAction {
 
         super.tick();
 
-        if ((getBorder() != null) && !getBorder().isOn(getMascot().getAnchor())) {
+        if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
             throw new LostGroundException();
         }
 

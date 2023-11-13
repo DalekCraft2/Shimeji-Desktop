@@ -300,7 +300,7 @@ class MacEnvironment extends Environment {
                 windowVisibleArea = getWindowVisibleArea();
 
         frontmostWindow.setVisible(
-                (frontmostWindowRect != null)
+                frontmostWindowRect != null
                         && frontmostWindowRect.intersects(windowVisibleArea)
                         && !frontmostWindowRect.contains(windowVisibleArea) // デスクトップを除外
         );

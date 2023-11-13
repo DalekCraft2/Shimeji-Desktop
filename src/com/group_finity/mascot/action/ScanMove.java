@@ -57,7 +57,7 @@ public class ScanMove extends BorderedAction {
     protected void tick() throws LostGroundException, VariableException {
         super.tick();
 
-        if ((getBorder() != null) && !getBorder().isOn(getMascot().getAnchor())) {
+        if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
             log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
@@ -72,12 +72,12 @@ public class ScanMove extends BorderedAction {
 
         getAnimation().next(getMascot(), getTime());
 
-        if ((getMascot().isLookRight() && (getMascot().getAnchor().x >= targetX)) ||
-                (!getMascot().isLookRight() && (getMascot().getAnchor().x <= targetX))) {
+        if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX ||
+                !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
             getMascot().setAnchor(new Point(targetX, getMascot().getAnchor().y));
         }
-        if ((down && (getMascot().getAnchor().y >= targetY)) ||
-                (!down && (getMascot().getAnchor().y <= targetY))) {
+        if (down && getMascot().getAnchor().y >= targetY ||
+                !down && getMascot().getAnchor().y <= targetY) {
             getMascot().setAnchor(new Point(getMascot().getAnchor().x, targetY));
         }
 

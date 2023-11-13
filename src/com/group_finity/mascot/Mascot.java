@@ -44,7 +44,7 @@ public class Mascot implements Serializable {
 
     private final int id;
 
-    private String imageSet = "";
+    private String imageSet;
     /**
      * A window that displays the mascot.
      */
@@ -255,7 +255,7 @@ public class Mascot implements Serializable {
         submenu.setAutoscrolls(true);
         JMenuItem item;
         com.group_finity.mascot.config.Configuration config = Main.getInstance().getConfiguration(getImageSet());
-        Behavior behaviour = null;
+        Behavior behaviour;
         for (String behaviorName : config.getBehaviorNames()) {
             final String command = behaviorName;
             try {

@@ -54,14 +54,14 @@ public class FallWithIE extends Fall {
         final int offsetY = getIEOffsetY();
 
         if (getMascot().isLookRight()) {
-            if ((getMascot().getAnchor().x - offsetX != activeIE.getLeft())
-                    || (getMascot().getAnchor().y + offsetY != activeIE.getBottom())) {
+            if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
+                    || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
                 log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
                 throw new LostGroundException();
             }
         } else {
-            if ((getMascot().getAnchor().x + offsetX != activeIE.getRight())
-                    || (getMascot().getAnchor().y + offsetY != activeIE.getBottom())) {
+            if (getMascot().getAnchor().x + offsetX != activeIE.getRight()
+                    || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
                 log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
                 throw new LostGroundException();
             }

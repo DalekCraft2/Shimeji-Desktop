@@ -30,9 +30,6 @@ public abstract class Variable {
         Object result = null;
 
         if (source != null) {
-            if (source.equals("null")) {
-                result = null;
-            }
             if (source.equals("true")) {
                 result = Boolean.TRUE;
             } else if (source.equals("false")) {

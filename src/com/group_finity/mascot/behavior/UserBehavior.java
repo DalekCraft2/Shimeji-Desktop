@@ -197,10 +197,10 @@ public class UserBehavior implements Behavior {
 
             if (!hotspotIsActive) {
                 if (getAction().hasNext()) {
-                    if ((getMascot().getBounds().getX() + getMascot().getBounds().getWidth()
-                            <= getEnvironment().getScreen().getLeft())
-                            || (getEnvironment().getScreen().getRight() <= getMascot().getBounds().getX())
-                            || (getEnvironment().getScreen().getBottom() <= getMascot().getBounds().getY())) {
+                    if (getMascot().getBounds().getX() + getMascot().getBounds().getWidth()
+                            <= getEnvironment().getScreen().getLeft()
+                            || getEnvironment().getScreen().getRight() <= getMascot().getBounds().getX()
+                            || getEnvironment().getScreen().getBottom() <= getMascot().getBounds().getY()) {
                         log.log(Level.INFO, "Out of the screen bounds({0},{1})", new Object[]
                                 {
                                         getMascot(), this

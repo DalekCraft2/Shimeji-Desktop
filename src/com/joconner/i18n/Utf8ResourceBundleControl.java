@@ -35,9 +35,9 @@ public class Utf8ResourceBundleControl extends PackageableResourceControl {
             final String resourceName = bundleName.contains("://") ? null :
                     toResourceName(bundleName, "properties");
             if (resourceName == null) {
-                return bundle;
+                return null;
             }
-            InputStream stream = null;
+            InputStream stream;
             if (reload) {
                 stream = reload(resourceName, loader);
             } else {

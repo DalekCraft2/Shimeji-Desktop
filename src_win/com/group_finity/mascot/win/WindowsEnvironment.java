@@ -90,7 +90,7 @@ class WindowsEnvironment extends Environment {
                 return IEResult.INVALID;
             }
 
-            if (isIE(ie) && (User32.INSTANCE.IsIconic(ie) == 0)) {
+            if (isIE(ie) && User32.INSTANCE.IsIconic(ie) == 0) {
                 Rectangle ieRect = getIERect(ie);
                 if (ieRect.intersects(getScreenRect())) {
                     return IEResult.IE;

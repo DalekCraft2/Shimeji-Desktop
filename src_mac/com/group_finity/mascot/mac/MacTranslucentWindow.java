@@ -29,7 +29,7 @@ class MacTranslucentWindow implements TranslucentWindow {
 
     @Override
     public void setImage(NativeImage image) {
-        this.imageChanged = (this.oldImage != null && image != oldImage);
+        this.imageChanged = this.oldImage != null && image != oldImage;
         this.oldImage = image;
         delegate.setImage(image);
     }

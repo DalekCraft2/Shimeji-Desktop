@@ -56,8 +56,8 @@ public class FloorCeiling implements Border {
 
     @Override
     public boolean isOn(final Point location) {
-        return getArea().isVisible() && (getY() == location.y) && (getLeft() <= location.x)
-                && (location.x <= getRight());
+        return getArea().isVisible() && getY() == location.y && getLeft() <= location.x
+                && location.x <= getRight();
     }
 
 
@@ -75,8 +75,8 @@ public class FloorCeiling implements Border {
         final Point newLocation = new Point((location.x - (getLeft() - getDLeft())) * ((getRight() - getLeft()) / d)
                 + getLeft(), location.y + getDY());
 
-        if ((Math.abs(newLocation.x - location.x) >= 80) || (newLocation.y - location.y > 20)
-                || (newLocation.y - location.y < -80)) {
+        if (Math.abs(newLocation.x - location.x) >= 80 || newLocation.y - location.y > 20
+                || newLocation.y - location.y < -80) {
             return location;
         }
 

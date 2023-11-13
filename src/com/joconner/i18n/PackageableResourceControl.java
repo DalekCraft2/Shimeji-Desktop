@@ -31,7 +31,7 @@ public class PackageableResourceControl extends ResourceBundle.Control {
      */
     @Override
     public String toBundleName(String baseName, Locale locale) {
-        String bundleName = null;
+        String bundleName;
         if (isPackageBased) {
             int nBasePackage = baseName.lastIndexOf(".");
             String basePackageName = nBasePackage > 0 ? baseName.substring(0, nBasePackage) : "";

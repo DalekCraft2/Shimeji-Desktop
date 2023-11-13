@@ -82,15 +82,15 @@ public class WindowsInteractiveWindowForm extends javax.swing.JDialog {
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         jButton1.setText("Add");
-        jButton1.addActionListener(evt -> jButton1ActionPerformed(evt));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
         jPanel2.add(jButton1);
 
         jButton3.setText("Remove");
-        jButton3.addActionListener(evt -> jButton3ActionPerformed(evt));
+        jButton3.addActionListener(this::jButton3ActionPerformed);
         jPanel2.add(jButton3);
 
         jButton2.setText("Done");
-        jButton2.addActionListener(evt -> jButton2ActionPerformed(evt));
+        jButton2.addActionListener(this::jButton2ActionPerformed);
         jPanel2.add(jButton2);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.PAGE_END);

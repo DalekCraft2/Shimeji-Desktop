@@ -68,8 +68,8 @@ public class JLongMenu extends JMenu {
      * which should be used as the origin of the JMenu's popup menu.
      */
     protected Point getPopupMenuOrigin() {
-        int x = 0;
-        int y = 0;
+        int x;
+        int y;
         JPopupMenu pm = getPopupMenu();
         // Figure out the sizes needed to caclulate the menu position
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -92,14 +92,14 @@ public class JLongMenu extends JMenu {
                 if (position.x + s.width + pmSize.width < screenSize.width) {
                     x = s.width;         // Prefer placement to the right
                 } else {
-                    x = 0 - pmSize.width;  // Otherwise place to the left
+                    x = -pmSize.width;  // Otherwise place to the left
                 }
             } else {
                 // First determine x:
                 if (position.x < pmSize.width) {
                     x = s.width;         // Prefer placement to the right
                 } else {
-                    x = 0 - pmSize.width;  // Otherwise place to the left
+                    x = -pmSize.width;  // Otherwise place to the left
                 }
             }
             // Then the y:
@@ -107,8 +107,8 @@ public class JLongMenu extends JMenu {
                 y = 0;                       // Prefer dropping down
             } else {
                 y = s.height - pmSize.height;  // Otherwise drop 'up'
-                if (y < 0 - position.y) {
-                    y = 0 - position.y;
+                if (y < -position.y) {
+                    y = -position.y;
                 }
             }
         } else {
@@ -134,9 +134,9 @@ public class JLongMenu extends JMenu {
             if (position.y + s.height + pmSize.height < screenSize.height) {
                 y = s.height;          // Prefer dropping down
             } else {
-                y = 0 - pmSize.height;   // Otherwise drop 'up'
-                if (y < 0 - position.y) {
-                    y = 0 - position.y;
+                y = -pmSize.height;   // Otherwise drop 'up'
+                if (y < -position.y) {
+                    y = -position.y;
                 }
             }
         }
