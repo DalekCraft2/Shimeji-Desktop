@@ -38,9 +38,9 @@ public class ThrowIE extends Animate {
     @Override
     public boolean hasNext() throws VariableException {
 
-		if (!Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Throwing", "true"))) {
-			return false;
-		}
+        if (!Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Throwing", "true"))) {
+            return false;
+        }
 
         final boolean ieVisible = getEnvironment().getActiveIE().isVisible();
 

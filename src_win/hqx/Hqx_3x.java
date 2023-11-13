@@ -124,14 +124,14 @@ public class Hqx_3x extends Hqx {
                 int flag = 1;
 
                 for (int k = 0; k < 9; k++) {
-					if (k == 4) {
-						continue;
-					}
+                    if (k == 4) {
+                        continue;
+                    }
 
                     if (w[k] != w[4]) {
-						if (diff(w[4], w[k], trY, trU, trV, trA)) {
-							pattern |= flag;
-						}
+                        if (diff(w[4], w[k], trY, trU, trV, trA)) {
+                            pattern |= flag;
+                        }
                     }
                     flag <<= 1;
                 }

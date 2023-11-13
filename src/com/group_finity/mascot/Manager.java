@@ -226,9 +226,9 @@ public class Manager {
         synchronized (this.getMascots()) {
             int totalMascots = this.getMascots().size();
             for (int i = totalMascots - 1; i >= 0; --i) {
-				if (!this.getMascots().get(i).equals(mascot)) {
-					this.getMascots().get(i).dispose();
-				}
+                if (!this.getMascots().get(i).equals(mascot)) {
+                    this.getMascots().get(i).dispose();
+                }
             }
         }
     }
@@ -253,9 +253,9 @@ public class Manager {
             int totalMascots = this.getMascots().size();
             for (int i = totalMascots - 1; i >= 0; --i) {
                 Mascot m = this.getMascots().get(i);
-				if (m.getImageSet().equals(imageSet)) {
-					m.dispose();
-				}
+                if (m.getImageSet().equals(imageSet)) {
+                    m.dispose();
+                }
             }
         }
     }
@@ -263,9 +263,9 @@ public class Manager {
     public void togglePauseAll() {
         synchronized (this.getMascots()) {
             boolean isPaused = false;
-			if (!getMascots().isEmpty()) {
-				isPaused = getMascots().get(0).isPaused();
-			}
+            if (!getMascots().isEmpty()) {
+                isPaused = getMascots().get(0).isPaused();
+            }
 
             for (final Mascot mascot : this.getMascots()) {
                 mascot.setPaused(!isPaused);
@@ -277,9 +277,9 @@ public class Manager {
         boolean isPaused = false;
 
         synchronized (this.getMascots()) {
-			if (!getMascots().isEmpty()) {
-				isPaused = getMascots().get(0).isPaused();
-			}
+            if (!getMascots().isEmpty()) {
+                isPaused = getMascots().get(0).isPaused();
+            }
         }
 
         return isPaused;
@@ -297,9 +297,9 @@ public class Manager {
                 int count = 0;
                 for (int index = 0; index < getMascots().size(); index++) {
                     Mascot m = getMascots().get(index);
-					if (m.getImageSet().equals(imageSet)) {
-						count++;
-					}
+                    if (m.getImageSet().equals(imageSet)) {
+                        count++;
+                    }
                 }
                 return count;
             }
@@ -327,9 +327,9 @@ public class Manager {
     public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
         synchronized (this.getMascots()) {
             for (final Mascot mascot : this.getMascots()) {
-				if (mascot.getAffordances().contains(affordance)) {
-					return new WeakReference<>(mascot);
-				}
+                if (mascot.getAffordances().contains(affordance)) {
+                    return new WeakReference<>(mascot);
+                }
             }
         }
 
@@ -341,12 +341,12 @@ public class Manager {
 
         synchronized (this.getMascots()) {
             for (final Mascot mascot : this.getMascots()) {
-				if (mascot.getAnchor().equals(anchor)) {
-					count++;
-				}
-				if (count > 1) {
-					return true;
-				}
+                if (mascot.getAnchor().equals(anchor)) {
+                    count++;
+                }
+                if (count > 1) {
+                    return true;
+                }
             }
         }
 

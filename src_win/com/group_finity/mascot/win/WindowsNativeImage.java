@@ -151,9 +151,9 @@ class WindowsNativeImage implements NativeImage {
                 rbgValues = buffer;
             }
 
-			if (scaling > 4) {
-				effectiveScaling = 2;
-			}
+            if (scaling > 4) {
+                effectiveScaling = 2;
+            }
         }
 
         flushNative(this.getNativeHandle(), rbgValues, effectiveScaling);

@@ -13,15 +13,15 @@ public class ImagePairs {
     private static Hashtable<String, ImagePair> imagepairs = new Hashtable<>();
 
     public static void load(final String filename, final ImagePair imagepair) {
-		if (!imagepairs.containsKey(filename)) {
-			imagepairs.put(filename, imagepair);
-		}
+        if (!imagepairs.containsKey(filename)) {
+            imagepairs.put(filename, imagepair);
+        }
     }
 
     public static ImagePair getImagePair(String filename) {
-		if (!imagepairs.containsKey(filename)) {
-			return null;
-		}
+        if (!imagepairs.containsKey(filename)) {
+            return null;
+        }
         return imagepairs.get(filename);
     }
 
@@ -34,22 +34,22 @@ public class ImagePairs {
     }
 
     public static void removeAll(String searchTerm) {
-		if (imagepairs.isEmpty()) {
-			return;
-		}
+        if (imagepairs.isEmpty()) {
+            return;
+        }
 
         for (Enumeration<String> key = imagepairs.keys(); key.hasMoreElements(); ) {
             String filename = key.nextElement();
-			if (searchTerm.equals(filename.split("/")[1])) {
-				imagepairs.remove(filename);
-			}
+            if (searchTerm.equals(filename.split("/")[1])) {
+                imagepairs.remove(filename);
+            }
         }
     }
 
     public static MascotImage getImage(String filename, boolean isLookRight) {
-		if (!imagepairs.containsKey(filename)) {
-			return null;
-		}
+        if (!imagepairs.containsKey(filename)) {
+            return null;
+        }
         return imagepairs.get(filename).getImage(isLookRight);
     }
 }
