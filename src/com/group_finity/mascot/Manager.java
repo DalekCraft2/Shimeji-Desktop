@@ -6,8 +6,8 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,56 +56,31 @@ public class Manager {
         return exitOnLastRemoved;
     }
 
-    public Manager() {
-
-        new Thread() {
-            {
-                this.setDaemon(true);
-                this.start();
-            }
-
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(Integer.MAX_VALUE);
-                    } catch (final InterruptedException ignored) {
-                    }
-                }
-            }
-        };
-    }
-
     public void start() {
         if (thread != null && thread.isAlive()) {
             return;
         }
 
         thread = new Thread(() -> {
-
             long prev = System.nanoTime() / 1000000;
             try {
-                for (; ; ) {
-                    for (; ; ) {
-                        final long cur = System.nanoTime() / 1000000;
-                        if (cur - prev >= TICK_INTERVAL) {
-                            if (cur > prev + TICK_INTERVAL * 2) {
-                                prev = cur;
-                            } else {
-                                prev += TICK_INTERVAL;
-                            }
-                            break;
+                while (true) {
+                    final long cur = System.nanoTime() / 1000000;
+                    if (cur - prev >= TICK_INTERVAL) {
+                        if (cur > prev + TICK_INTERVAL * 2) {
+                            prev = cur;
+                        } else {
+                            prev += TICK_INTERVAL;
                         }
-                        Thread.sleep(1, 0);
+                        tick();
+                        continue;
                     }
-
-                    tick();
+                    Thread.sleep(1, 0);
                 }
             } catch (final InterruptedException ignored) {
             }
         });
-        thread.setDaemon(false);
-
+        thread.setDaemon(true);
         thread.start();
     }
 

@@ -29,10 +29,9 @@ public abstract class Environment {
     private static Map<String, Rectangle> screenRects = new HashMap<>();
 
     static {
-
         final Thread thread = new Thread(() -> {
             try {
-                for (; ; ) {
+                while (true) {
                     updateScreenRect();
                     Thread.sleep(5000);
                 }
