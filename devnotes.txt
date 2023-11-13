@@ -16,4 +16,4 @@ Finally, the Shimeji-ee.exe is created using launch4j. The jar is not included i
 
 Run Shimeji-ee from command line from the Shimeji-ee directory with a command like: "C:\Program Files (x86)\Java\jre6\bin\java" -classpath Shimeji-ee.jar -Xmx256m com.group_finity.mascot.Main -Djava.util.logging.config.file=./conf/logging.properties
 
-See the readme for more details:http://code.google.com/p/shimeji-ee/wiki/Readme 
+See the readme for more details: http://code.google.com/p/shimeji-ee/wiki/Readme
