@@ -3,6 +3,7 @@ package com.group_finity.mascot.image;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -16,12 +17,12 @@ public class ImagePairLoader {
             return;
         }
 
-        final BufferedImage leftImage = premultiply(ImageIO.read(ImagePairLoader.class.getResource(name)));
+        final BufferedImage leftImage = premultiply(ImageIO.read(new File("./img/" + name)));
         final BufferedImage rightImage;
         if (rightName == null) {
             rightImage = flip(leftImage);
         } else {
-            rightImage = premultiply(ImageIO.read(ImagePairLoader.class.getResource(rightName)));
+            rightImage = premultiply(ImageIO.read(new File("./img/" + name)));
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point(center.x * scaling, center.y * scaling)),

@@ -45,140 +45,142 @@ public class ImageSetChooser extends javax.swing.JDialog {
         // Create ImageSetChooserPanels for ShimejiList
         boolean onList1 = true;    // Toggle adding between the two lists
         int row = 0;    // Current row
-        for (String imageSet : children) {
-            String imageFile = topDir + "/" + imageSet + "/shime1.png";
+        if (children != null) {
+            for (String imageSet : children) {
+                String imageFile = topDir + "/" + imageSet + "/shime1.png";
 
-            // Determine actions file
-            String filePath = "./conf/";
-            String actionsFile = filePath + "actions.xml";
-            if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
-                actionsFile = filePath + "\u52D5\u4F5C.xml";
-            }
-
-            filePath = "./conf/" + imageSet + "/";
-            if (new File(filePath + "actions.xml").exists()) {
-                actionsFile = filePath + "actions.xml";
-            }
-            if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
-                actionsFile = filePath + "\u52D5\u4F5C.xml";
-            }
-            if (new File(filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml").exists()) {
-                actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
-            }
-            if (new File(filePath + "\u00A6-\u00BA@.xml").exists()) {
-                actionsFile = filePath + "\u00A6-\u00BA@.xml";
-            }
-            if (new File(filePath + "\u00F4\u00AB\u00EC\u00FD.xml").exists()) {
-                actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
-            }
-            if (new File(filePath + "one.xml").exists()) {
-                actionsFile = filePath + "one.xml";
-            }
-            if (new File(filePath + "1.xml").exists()) {
-                actionsFile = filePath + "1.xml";
-            }
-
-            filePath = "./img/" + imageSet + "/conf/";
-            if (new File(filePath + "actions.xml").exists()) {
-                actionsFile = filePath + "actions.xml";
-            }
-            if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
-                actionsFile = filePath + "\u52D5\u4F5C.xml";
-            }
-            if (new File(filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml").exists()) {
-                actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
-            }
-            if (new File(filePath + "\u00A6-\u00BA@.xml").exists()) {
-                actionsFile = filePath + "\u00A6-\u00BA@.xml";
-            }
-            if (new File(filePath + "\u00F4\u00AB\u00EC\u00FD.xml").exists()) {
-                actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
-            }
-            if (new File(filePath + "one.xml").exists()) {
-                actionsFile = filePath + "one.xml";
-            }
-            if (new File(filePath + "1.xml").exists()) {
-                actionsFile = filePath + "1.xml";
-            }
-
-            // Determine behaviours file
-            filePath = "./conf/";
-            String behaviorsFile = filePath + "behaviors.xml";
-            if (new File(filePath + "\u884C\u52D5.xml").exists()) {
-                behaviorsFile = filePath + "\u884C\u52D5.xml";
-            }
-
-            filePath = "./conf/" + imageSet + "/";
-            if (new File(filePath + "behaviors.xml").exists()) {
-                behaviorsFile = filePath + "behaviors.xml";
-            }
-            if (new File(filePath + "behavior.xml").exists()) {
-                behaviorsFile = filePath + "behavior.xml";
-            }
-            if (new File(filePath + "\u884C\u52D5.xml").exists()) {
-                behaviorsFile = filePath + "\u884C\u52D5.xml";
-            }
-            if (new File(filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml").exists()) {
-                behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
-            }
-            if (new File(filePath + "\u00AA\u00B5\u00A6-.xml").exists()) {
-                behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
-            }
-            if (new File(filePath + "\u00ECs\u00F4\u00AB.xml").exists()) {
-                behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
-            }
-            if (new File(filePath + "two.xml").exists()) {
-                behaviorsFile = filePath + "two.xml";
-            }
-            if (new File(filePath + "2.xml").exists()) {
-                behaviorsFile = filePath + "2.xml";
-            }
-
-            filePath = "./img/" + imageSet + "/conf/";
-            if (new File(filePath + "behaviors.xml").exists()) {
-                behaviorsFile = filePath + "behaviors.xml";
-            }
-            if (new File(filePath + "behavior.xml").exists()) {
-                behaviorsFile = filePath + "behavior.xml";
-            }
-            if (new File(filePath + "\u884C\u52D5.xml").exists()) {
-                behaviorsFile = filePath + "\u884C\u52D5.xml";
-            }
-            if (new File(filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml").exists()) {
-                behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
-            }
-            if (new File(filePath + "\u00AA\u00B5\u00A6-.xml").exists()) {
-                behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
-            }
-            if (new File(filePath + "\u00ECs\u00F4\u00AB.xml").exists()) {
-                behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
-            }
-            if (new File(filePath + "two.xml").exists()) {
-                behaviorsFile = filePath + "two.xml";
-            }
-            if (new File(filePath + "2.xml").exists()) {
-                behaviorsFile = filePath + "2.xml";
-            }
-
-            if (onList1) {
-                onList1 = false;
-                data1.add(new ImageSetChooserPanel(imageSet, actionsFile,
-                        behaviorsFile, imageFile));
-                // Is this set initially selected?
-                if (activeImageSets.contains(imageSet) || selectAllSets) {
-                    si1.add(row);
+                // Determine actions file
+                String filePath = "./conf/";
+                String actionsFile = filePath + "actions.xml";
+                if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
+                    actionsFile = filePath + "\u52D5\u4F5C.xml";
                 }
-            } else {
-                onList1 = true;
-                data2.add(new ImageSetChooserPanel(imageSet, actionsFile,
-                        behaviorsFile, imageFile));
-                // Is this set initially selected?
-                if (activeImageSets.contains(imageSet) || selectAllSets) {
-                    si2.add(row);
+
+                filePath = "./conf/" + imageSet + "/";
+                if (new File(filePath + "actions.xml").exists()) {
+                    actionsFile = filePath + "actions.xml";
                 }
-                row++; // Only increment the row number after the second column
+                if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
+                    actionsFile = filePath + "\u52D5\u4F5C.xml";
+                }
+                if (new File(filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml").exists()) {
+                    actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
+                }
+                if (new File(filePath + "\u00A6-\u00BA@.xml").exists()) {
+                    actionsFile = filePath + "\u00A6-\u00BA@.xml";
+                }
+                if (new File(filePath + "\u00F4\u00AB\u00EC\u00FD.xml").exists()) {
+                    actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
+                }
+                if (new File(filePath + "one.xml").exists()) {
+                    actionsFile = filePath + "one.xml";
+                }
+                if (new File(filePath + "1.xml").exists()) {
+                    actionsFile = filePath + "1.xml";
+                }
+
+                filePath = "./img/" + imageSet + "/conf/";
+                if (new File(filePath + "actions.xml").exists()) {
+                    actionsFile = filePath + "actions.xml";
+                }
+                if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
+                    actionsFile = filePath + "\u52D5\u4F5C.xml";
+                }
+                if (new File(filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml").exists()) {
+                    actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
+                }
+                if (new File(filePath + "\u00A6-\u00BA@.xml").exists()) {
+                    actionsFile = filePath + "\u00A6-\u00BA@.xml";
+                }
+                if (new File(filePath + "\u00F4\u00AB\u00EC\u00FD.xml").exists()) {
+                    actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
+                }
+                if (new File(filePath + "one.xml").exists()) {
+                    actionsFile = filePath + "one.xml";
+                }
+                if (new File(filePath + "1.xml").exists()) {
+                    actionsFile = filePath + "1.xml";
+                }
+
+                // Determine behaviours file
+                filePath = "./conf/";
+                String behaviorsFile = filePath + "behaviors.xml";
+                if (new File(filePath + "\u884C\u52D5.xml").exists()) {
+                    behaviorsFile = filePath + "\u884C\u52D5.xml";
+                }
+
+                filePath = "./conf/" + imageSet + "/";
+                if (new File(filePath + "behaviors.xml").exists()) {
+                    behaviorsFile = filePath + "behaviors.xml";
+                }
+                if (new File(filePath + "behavior.xml").exists()) {
+                    behaviorsFile = filePath + "behavior.xml";
+                }
+                if (new File(filePath + "\u884C\u52D5.xml").exists()) {
+                    behaviorsFile = filePath + "\u884C\u52D5.xml";
+                }
+                if (new File(filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml").exists()) {
+                    behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
+                }
+                if (new File(filePath + "\u00AA\u00B5\u00A6-.xml").exists()) {
+                    behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
+                }
+                if (new File(filePath + "\u00ECs\u00F4\u00AB.xml").exists()) {
+                    behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
+                }
+                if (new File(filePath + "two.xml").exists()) {
+                    behaviorsFile = filePath + "two.xml";
+                }
+                if (new File(filePath + "2.xml").exists()) {
+                    behaviorsFile = filePath + "2.xml";
+                }
+
+                filePath = "./img/" + imageSet + "/conf/";
+                if (new File(filePath + "behaviors.xml").exists()) {
+                    behaviorsFile = filePath + "behaviors.xml";
+                }
+                if (new File(filePath + "behavior.xml").exists()) {
+                    behaviorsFile = filePath + "behavior.xml";
+                }
+                if (new File(filePath + "\u884C\u52D5.xml").exists()) {
+                    behaviorsFile = filePath + "\u884C\u52D5.xml";
+                }
+                if (new File(filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml").exists()) {
+                    behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
+                }
+                if (new File(filePath + "\u00AA\u00B5\u00A6-.xml").exists()) {
+                    behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
+                }
+                if (new File(filePath + "\u00ECs\u00F4\u00AB.xml").exists()) {
+                    behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
+                }
+                if (new File(filePath + "two.xml").exists()) {
+                    behaviorsFile = filePath + "two.xml";
+                }
+                if (new File(filePath + "2.xml").exists()) {
+                    behaviorsFile = filePath + "2.xml";
+                }
+
+                if (onList1) {
+                    onList1 = false;
+                    data1.add(new ImageSetChooserPanel(imageSet, actionsFile,
+                            behaviorsFile, imageFile));
+                    // Is this set initially selected?
+                    if (activeImageSets.contains(imageSet) || selectAllSets) {
+                        si1.add(row);
+                    }
+                } else {
+                    onList1 = true;
+                    data2.add(new ImageSetChooserPanel(imageSet, actionsFile,
+                            behaviorsFile, imageFile));
+                    // Is this set initially selected?
+                    if (activeImageSets.contains(imageSet) || selectAllSets) {
+                        si2.add(row);
+                    }
+                    row++; // Only increment the row number after the second column
+                }
+                imageSets.add(imageSet);
             }
-            imageSets.add(imageSet);
         }
 
         setUpList1();

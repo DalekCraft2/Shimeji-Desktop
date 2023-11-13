@@ -78,7 +78,7 @@ public class AnimationBuilder {
                     error += ", " + imageRightText;
                 }
                 log.log(Level.SEVERE, "Failed to load image: {0}", error);
-                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + error);
+                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + error, e);
             }
         }
 
@@ -101,7 +101,7 @@ public class AnimationBuilder {
                 soundText += Float.parseFloat(volumeText);
             } catch (Exception e) {
                 log.log(Level.SEVERE, "Failed to load sound: {0}", soundText);
-                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText);
+                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText, e);
             }
         }
 

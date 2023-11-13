@@ -13,7 +13,10 @@ import com.group_finity.mascot.script.VariableMap;
 import com.joconner.i18n.Utf8ResourceBundleControl;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.*;
 import java.util.logging.Level;
@@ -47,7 +50,11 @@ public class Configuration {
             locale = Locale.forLanguageTag("en-US");
         }
 
-        schema = ResourceBundle.getBundle("schema", locale, utf8Control);
+        File file = new File("./conf");
+        URL[] urls = {file.toURI().toURL()};
+        try (URLClassLoader loader = new URLClassLoader(urls)) {
+            schema = ResourceBundle.getBundle("schema", locale, loader, utf8Control);
+        }
 
         for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
             log.log(Level.INFO, "Action List...");

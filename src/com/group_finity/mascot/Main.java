@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -47,8 +49,8 @@ public class Main {
     static final String BEHAVIOR_GATHER = "ChaseMouse";
 
     static {
-        try {
-            LogManager.getLogManager().readConfiguration(Main.class.getResourceAsStream("/logging.properties"));
+        try (FileInputStream input = new FileInputStream("./conf/logging.properties")) {
+            LogManager.getLogManager().readConfiguration(input);
         } catch (final SecurityException | IOException e) {
             e.printStackTrace();
         } catch (OutOfMemoryError err) {
@@ -114,10 +116,14 @@ public class Main {
         } catch (IOException ignored) {
         }
 
-        // load langauges
+        // load languages
         try {
-            ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-            languageBundle = ResourceBundle.getBundle("language", Locale.forLanguageTag(properties.getProperty("Language", "en-GB")), utf8Control);
+            File file = new File("./conf");
+            URL[] urls = {file.toURI().toURL()};
+            try (URLClassLoader loader = new URLClassLoader(urls)) {
+                ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
+                languageBundle = ResourceBundle.getBundle("language", Locale.forLanguageTag(properties.getProperty("Language", "en-GB")), loader, utf8Control);
+            }
         } catch (Exception ex) {
             Main.showError("The default language file could not be loaded. Ensure that you have the latest shimeji language.properties in your conf directory.");
             exit();
@@ -366,7 +372,7 @@ public class Main {
         // get the tray icon image
         BufferedImage image = null;
         try {
-            image = ImageIO.read(Main.class.getResource("/icon.png"));
+            image = ImageIO.read(new File("./img/icon.png"));
         } catch (final Exception e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
             Main.showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
