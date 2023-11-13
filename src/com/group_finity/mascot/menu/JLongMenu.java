@@ -12,11 +12,11 @@ import java.awt.*;
  * IMPORTANT: This only supports FIXED menus, that get only additions of JMenuItems!
  * If you like to remove items from the menu in run-time, or add other types of components,
  * it needs to be developed! (but this is good for most of the cases).
- *
- * @author Moti Pinhassi, 10-Apr-2002.
+ * <p>
  * Location change is based on Sun's workaround for bug 4236438.
+ *
+ * @author Moti Pinhassi, 10-Apr-2002
  */
-
 public class JLongMenu extends JMenu {
     JLongMenu moreMenu = null;
     int maxItems = 15; // default
@@ -62,7 +62,7 @@ public class JLongMenu extends JMenu {
     }
 
     /**
-     * Compute the origin for the JMenu's popup menu.
+     * Computes the origin for the JMenu's popup menu.
      *
      * @return a Point in the coordinate space of the menu instance
      * which should be used as the origin of the JMenu's popup menu.

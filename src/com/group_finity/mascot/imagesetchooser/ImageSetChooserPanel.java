@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * Displays information about an image set.  Used by ImageSetChooser
+ * Displays information about an image set. Used by ImageSetChooser
  */
 public class ImageSetChooserPanel extends javax.swing.JPanel {
 

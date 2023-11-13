@@ -17,12 +17,13 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
 /**
- * (@link WindowsTranslucentWindow) a value that can be used with images.
+ * {@link WindowsTranslucentWindow} a value that can be used with images.
  * <p>
  * {@link WindowsTranslucentWindow} is available because only Windows bitmap
  * {@link BufferedImage} existing copy pixels from a Windows bitmap.
  * <p>
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
 class WindowsNativeImage implements NativeImage {
@@ -30,9 +31,9 @@ class WindowsNativeImage implements NativeImage {
     /**
      * Windows to create a bitmap.
      *
-     * @ Param width width of the bitmap.
-     * @ Param height the height of the bitmap.
-     * @ Return the handle of a bitmap that you create.
+     * @param width width of the bitmap.
+     * @param height the height of the bitmap.
+     * @return the handle of a bitmap that you create.
      */
     private static Pointer createNative(final int width, final int height) {
 
@@ -95,7 +96,7 @@ class WindowsNativeImage implements NativeImage {
     /**
      * Windows to open a bitmap.
      *
-     * @ Param nativeHandle bitmap handle.
+     * @param nativeHandle bitmap handle.
      */
     private static void freeNative(final Pointer nativeHandle) {
         Gdi32.INSTANCE.DeleteObject(nativeHandle);
@@ -107,7 +108,7 @@ class WindowsNativeImage implements NativeImage {
     private final BufferedImage managedImage;
 
     /**
-     * Windows Bittomappuhandoru.
+     * Windows bitmap handle.
      */
     private final Pointer nativeHandle;
 

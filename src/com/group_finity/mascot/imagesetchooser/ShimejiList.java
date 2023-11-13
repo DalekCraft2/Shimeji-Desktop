@@ -6,7 +6,6 @@ import java.awt.*;
 /**
  * A JList that can be populated with ImageSetChooserPanel objects
  */
-
 public class ShimejiList extends JList<ImageSetChooserPanel> {
 
     public ShimejiList() {

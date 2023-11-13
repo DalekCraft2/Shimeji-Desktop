@@ -30,7 +30,7 @@ public final class RgbYuv {
     private static int[] RGBtoYUV = new int[0x1000000];
 
     /**
-     * Returns the 24bit YUV equivalent of the provided 24bit RGB color.<b>Any alpha component is dropped</b>
+     * Returns the 24bit YUV equivalent of the provided 24bit RGB color. <b>Any alpha component is dropped</b>
      *
      * @param rgb a 24bit rgb color
      * @return the corresponding 24bit YUV color
@@ -40,7 +40,7 @@ public final class RgbYuv {
     }
 
     /**
-     * Calculates the lookup table. <b>MUST</b> be called (only once) before doing anything else
+     * Calculates the lookup table. <b>MUST</b> be called (only once) before doing anything else.
      */
     public static void hqxInit() {
         /* Initalize RGB to YUV lookup table */

@@ -6,15 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
-
 public class TranslucentFrame extends JWindow {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private float alpha = 1.0f;
 

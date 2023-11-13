@@ -14,7 +14,8 @@ import java.awt.image.ImageProducer;
  * {@link GenericTranslucentWindow} is available because only Windows bitmap
  * {@link BufferedImage} existing copy pixels from a Windows bitmap.
  * <p>
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
 class GenericNativeImage implements NativeImage {

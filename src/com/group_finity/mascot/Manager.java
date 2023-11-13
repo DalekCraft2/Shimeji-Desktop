@@ -6,17 +6,16 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Maintains a list of mascot, the object to time.
  * <p>
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
 public class Manager {
@@ -29,19 +28,19 @@ public class Manager {
     public static final int TICK_INTERVAL = 40;
 
     /**
-     * A list of mascot.
+     * A list of mascots.
      */
     private final List<Mascot> mascots = new ArrayList<>();
 
     /**
      * The mascot will be added later.
-     * (@Link ConcurrentModificationException) to prevent the addition of the mascot (@link # tick ()) are each simultaneously reflecting.
+     * {@link ConcurrentModificationException} to prevent the addition of the mascot {@link #tick()} are each simultaneously reflecting.
      */
     private final Set<Mascot> added = new LinkedHashSet<>();
 
     /**
      * The mascot will be added later.
-     * (@Link ConcurrentModificationException) to prevent the deletion of the mascot (@link # tick ()) are each simultaneously reflecting.
+     * {@link ConcurrentModificationException} to prevent the deletion of the mascot {@link #tick()} are each simultaneously reflecting.
      */
     private final Set<Mascot> removed = new LinkedHashSet<>();
 

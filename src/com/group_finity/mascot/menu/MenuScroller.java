@@ -1,7 +1,3 @@
-/**
- * @(#)MenuScroller.java 1.4.0 14/09/10
- */
-
 package com.group_finity.mascot.menu;
 
 import com.group_finity.mascot.Main;
@@ -15,12 +11,13 @@ import java.awt.*;
 
 /**
  * A class that provides scrolling capabilities to a long menu dropdown or
- * popup menu.  A number of items can optionally be frozen at the top and/or
+ * popup menu. A number of items can optionally be frozen at the top and/or
  * bottom of the menu.
  * <p>
- * <B>Implementation note:</B>  The default number of items to display
+ * <B>Implementation note:</B> The default number of items to display
  * at a time is 15, and the default scrolling interval is 125 milliseconds.
  * <p>
+ * MenuScroller.java 1.4.0 14/09/10
  *
  * @author Darryl
  */
@@ -158,7 +155,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a menu with the
+     * Constructs a {@code MenuScroller} that scrolls a menu with the
      * default number of items to display at a time, and default scrolling
      * interval.
      *
@@ -169,7 +166,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a popup menu with the
+     * Constructs a {@code MenuScroller} that scrolls a popup menu with the
      * default number of items to display at a time, and default scrolling
      * interval.
      *
@@ -180,7 +177,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a menu with the
+     * Constructs a {@code MenuScroller} that scrolls a menu with the
      * specified number of items to display at a time, and default scrolling
      * interval.
      *
@@ -193,7 +190,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a popup menu with the
+     * Constructs a {@code MenuScroller} that scrolls a popup menu with the
      * specified number of items to display at a time, and default scrolling
      * interval.
      *
@@ -206,7 +203,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a menu with the
+     * Constructs a {@code MenuScroller} that scrolls a menu with the
      * specified number of items to display at a time, and specified scrolling
      * interval.
      *
@@ -220,7 +217,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a popup menu with the
+     * Constructs a {@code MenuScroller} that scrolls a popup menu with the
      * specified number of items to display at a time, and specified scrolling
      * interval.
      *
@@ -234,7 +231,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a menu with the
+     * Constructs a {@code MenuScroller} that scrolls a menu with the
      * specified number of items to display in the scrolling region, the
      * specified scrolling interval, and the specified numbers of items fixed at
      * the top and bottom of the menu.
@@ -253,7 +250,7 @@ public class MenuScroller {
     }
 
     /**
-     * Constructs a <code>MenuScroller</code> that scrolls a popup menu with the
+     * Constructs a {@code MenuScroller} that scrolls a popup menu with the
      * specified number of items to display in the scrolling region, the
      * specified scrolling interval, and the specified numbers of items fixed at
      * the top and bottom of the popup menu.
@@ -315,7 +312,7 @@ public class MenuScroller {
      *
      * @return the number of items to display at a time
      */
-    public int getscrollCount() {
+    public int getScrollCount() {
         return scrollCount;
     }
 
@@ -375,8 +372,8 @@ public class MenuScroller {
     }
 
     /**
-     * Scrolls the specified item into view each time the menu is opened.  Call this method with
-     * <code>null</code> to restore the default behavior, which is to show the menu as it last
+     * Scrolls the specified item into view each time the menu is opened. Call this method with
+     * {@code null} to restore the default behavior, which is to show the menu as it last
      * appeared.
      *
      * @param item the item to keep visible
@@ -391,8 +388,8 @@ public class MenuScroller {
     }
 
     /**
-     * Scrolls the item at the specified index into view each time the menu is opened.  Call this
-     * method with <code>-1</code> to restore the default behavior, which is to show the menu as
+     * Scrolls the item at the specified index into view each time the menu is opened. Call this
+     * method with {@code -1} to restore the default behavior, which is to show the menu as
      * it last appeared.
      *
      * @param index the index of the item to keep visible
@@ -414,10 +411,10 @@ public class MenuScroller {
     }
 
     /**
-     * Ensures that the <code>dispose</code> method of this MenuScroller is
-     * called when there are no more refrences to it.
+     * Ensures that the {@code dispose} method of this MenuScroller is
+     * called when there are no more references to it.
      *
-     * @see MenuScroller#dispose()
+     * @see #dispose()
      */
     @Override
     protected void finalize() {

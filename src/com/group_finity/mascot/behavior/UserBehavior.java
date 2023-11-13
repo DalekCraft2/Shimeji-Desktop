@@ -21,9 +21,9 @@ import java.util.logging.Logger;
 /**
  * Simple Sample Behavior.
  * <p>
- * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/) Currently developed by Shimeji-ee
- * Group.
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
+ * Currently developed by Shimeji-ee Group.
  */
 public class UserBehavior implements Behavior {
     private static final Logger log = Logger.getLogger(UserBehavior.class.getName());
@@ -95,9 +95,8 @@ public class UserBehavior implements Behavior {
 
     /**
      * On Mouse Pressed. Start dragging.
-     * <p>
      *
-     * @ Throws CantBeAliveException
+     * @throws CantBeAliveException
      */
     public synchronized void mousePressed(final MouseEvent event) throws CantBeAliveException {
         if (SwingUtilities.isLeftMouseButton(event)) {
@@ -142,9 +141,8 @@ public class UserBehavior implements Behavior {
 
     /**
      * On Mouse Release. End dragging.
-     * <p>
      *
-     * @ Throws CantBeAliveException
+     * @throws CantBeAliveException
      */
     public synchronized void mouseReleased(final MouseEvent event) throws CantBeAliveException {
         if (SwingUtilities.isLeftMouseButton(event)) {

@@ -19,20 +19,22 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import com.group_finity.mascot.action.Action;
+// TODO Correct the many translation errors in this doc comment (and all others), and then fix the broken method link by figuring out what replaced the animate() method
 /**
  * Mascot object.
  * <p>
- * The mascot represents the long-term, complex behavior and (@link Behavior),
- * Represents a short-term movements in the monotonous work with (@link Action).
+ * The mascot represents the long-term, complex behavior and {@link Behavior},
+ * Represents a short-term movements in the monotonous work with {@link Action}.
  * <p>
- * The mascot they have an internal timer, at a constant interval to call (@link Action).
- * (@link Action) is (@link #animate (Point, MascotImage, boolean)) method or by calling
+ * The mascot they have an internal timer, at a constant interval to call {@link Action}.
+ * {@link Action} is {@link #animate(Point, MascotImage, boolean)} method or by calling
  * To animate the mascot.
  * <p>
- * (@link Action) or exits, the other at a certain time is called (@link Behavior), the next move to (@link Action).
+ * {@link Action} or exits, the other at a certain time is called {@link Behavior}, the next move to {@link Action}.
  * <p>
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
 public class Mascot implements Serializable {

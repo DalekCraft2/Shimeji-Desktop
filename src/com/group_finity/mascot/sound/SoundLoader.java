@@ -8,7 +8,7 @@ import java.io.IOException;
  * Loads in new Clip objects into the Sounds collection. It will not duplicate
  * sounds already in the collection.
  * <p>
- * Visit kilkakon.com/shimeji for updates
+ * Visit <a href="https://kilkakon.com/shimeji">kilkakon.com/shimeji</a> for updates
  *
  * @author Kilkakon
  */

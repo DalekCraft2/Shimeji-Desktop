@@ -18,7 +18,7 @@ public class LogFormatter extends SimpleFormatter {
     private String lineSeparator = System.getProperty("line.separator");
 
     /**
-     * Format the given LogRecord.
+     * Formats the given LogRecord.
      *
      * @param record the log record to be formatted.
      * @return a formatted log record

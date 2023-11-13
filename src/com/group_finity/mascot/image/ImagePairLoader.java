@@ -6,14 +6,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
-
 public class ImagePairLoader {
-    /**
-     *
-     */
     public static void load(final String name, final String rightName, final Point center, final int scaling) throws IOException {
         if (ImagePairs.contains(name + (rightName == null ? "" : rightName))) {
             return;
@@ -32,9 +29,6 @@ public class ImagePairLoader {
         ImagePairs.load(name + (rightName == null ? "" : rightName), ip);
     }
 
-    /**
-     *
-     */
     private static BufferedImage flip(final BufferedImage src) {
 
         final BufferedImage copy = new BufferedImage(src.getWidth(), src.getHeight(),

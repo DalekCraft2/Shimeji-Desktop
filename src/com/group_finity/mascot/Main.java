@@ -37,7 +37,8 @@ import java.util.logging.Logger;
 /**
  * Program entry point.
  * <p>
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
 public class Main {
@@ -357,10 +358,7 @@ public class Main {
     }
 
     /**
-     * Create a tray icon.
-     *
-     * @ Throws AWTException
-     * @ Throws IOException
+     * Creates a tray icon.
      */
     private void createTrayIcon() {
         log.log(Level.INFO, "create a tray icon");
@@ -1164,7 +1162,7 @@ public class Main {
     }
 
     /**
-     * Create a mascot
+     * Creates a mascot.
      */
     public void createMascot(String imageSet) {
         log.log(Level.INFO, "create a mascot");
@@ -1247,7 +1245,8 @@ public class Main {
      * are null
      *
      * @param newImageSets All the imageSets that should now be active
-     * @author snek, with some tweaks by Kilkakon
+     * @author snek
+     * @author Kilkakon (did some tweaks)
      */
     private void setActiveImageSets(ArrayList<String> newImageSets) {
         if (newImageSets == null) {

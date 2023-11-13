@@ -9,7 +9,7 @@ import com.sun.jna.win32.StdCallLibrary;
 /**
  * Wraps up Dwmapi to get access to the new Cloaked variable.
  * <p>
- * Visit kilkakon.com/shimeji for updates
+ * Visit <a href="https://kilkakon.com/shimeji">kilkakon.com/shimeji</a> for updates
  *
  * @author Kilkakon
  */

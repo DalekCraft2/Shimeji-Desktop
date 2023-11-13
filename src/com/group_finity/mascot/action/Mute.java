@@ -10,7 +10,9 @@ import java.util.logging.Logger;
 
 /**
  * By Kilkakon
- * Go to kilkakon.com for all the best milkshakes and chocolate sundaes
+ * <p>
+ * Go to <a href="https://kilkakon.com">kilkakon.com</a> for all the best milkshakes and chocolate sundaes
+ * <p>
  * Now I'm hungry
  */
 public class Mute extends InstantAction {

@@ -5,10 +5,10 @@ import com.sun.jna.Pointer;
 import com.sun.jna.win32.StdCallLibrary;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
-
 public interface Gdi32 extends StdCallLibrary {
 
     Gdi32 INSTANCE = (Gdi32) Native.loadLibrary("Gdi32", Gdi32.class);

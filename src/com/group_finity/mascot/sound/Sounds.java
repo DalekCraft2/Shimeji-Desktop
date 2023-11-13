@@ -10,7 +10,7 @@ import java.util.Hashtable;
 /**
  * This static class contains all the sounds loaded by Shimeji-ee.
  * <p>
- * Visit kilkakon.com/shimeji for updates
+ * Visit <a href="https://kilkakon.com/shimeji">kilkakon.com/shimeji</a> for updates
  *
  * @author Kilkakon
  */

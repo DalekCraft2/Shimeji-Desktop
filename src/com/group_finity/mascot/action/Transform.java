@@ -13,9 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of Group Finity
- * (http://www.group-finity.com/Shimeji/) Currently developed by Shimeji-ee
- * Group.
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
+ * Currently developed by Shimeji-ee Group.
  */
 public class Transform extends Animate {
     private static final Logger log = Logger.getLogger(Transform.class.getName());

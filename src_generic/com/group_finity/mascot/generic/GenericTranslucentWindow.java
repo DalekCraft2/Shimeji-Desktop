@@ -8,16 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Original Author: Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/)
+ * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * <p>
  * Currently developed by Shimeji-ee Group.
  */
-
 class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -33,9 +29,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
         this.init();
 
         this.panel = new JPanel() {
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
 
             @Override
