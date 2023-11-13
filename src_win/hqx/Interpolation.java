@@ -34,9 +34,9 @@ final class Interpolation {
     private static final int Mask13 = 0x00FF00FF;
 
     // return statements:
-    //	 1. line: green
-    //	 2. line: red and blue
-    //	 3. line: alpha
+    //   1. line: green
+    //   2. line: red and blue
+    //   3. line: alpha
 
     static int Mix3To1(final int c1, final int c2) {
         // return (c1*3+c2) >> 2;

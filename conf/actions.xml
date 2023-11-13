@@ -294,18 +294,16 @@
                 <Pose Image="/shime6.png" ImageAnchor="64,128" Velocity="0,0" Duration="2"/>
             </Animation>
         </Action>
-
     </ActionList>
 
     <!-- Actual Behavior -->
     <ActionList>
-
         <!-- ALWAYS REQUIRED -->
         <Action Name="Fall" Type="Sequence" Loop="false">
             <ActionReference Name="Falling"/>
             <Action Type="Select">
                 <Action Type="Sequence" Condition="${mascot.environment.floor.isOn(mascot.anchor) ||
-					mascot.environment.activeIE.topBorder.isOn(mascot.anchor) }">
+                    mascot.environment.activeIE.topBorder.isOn(mascot.anchor) }">
                     <ActionReference Name="Bouncing"/>
                     <ActionReference Name="Stand" Duration="${100+Math.random()*100}"/>
                 </Action>
@@ -658,10 +656,10 @@
             <Action Type="Select">
                 <ActionReference Name="DashIeCeilingLeftEdgeFromJump"
                                  Condition="${mascot.environment.activeIE.topBorder.isOn(mascot.anchor) &amp;&amp;
-					mascot.anchor.x &lt; (mascot.environment.activeIE.left+mascot.environment.activeIE.right)/2}"/>
+                    mascot.anchor.x &lt; (mascot.environment.activeIE.left+mascot.environment.activeIE.right)/2}"/>
                 <ActionReference Name="DashIeCeilingRightEdgeFromJump"
                                  Condition="${mascot.environment.activeIE.topBorder.isOn(mascot.anchor) &amp;&amp;
-					mascot.anchor.x &gt;= (mascot.environment.activeIE.left+mascot.environment.activeIE.right)/2}"/>
+                    mascot.anchor.x &gt;= (mascot.environment.activeIE.left+mascot.environment.activeIE.right)/2}"/>
             </Action>
             <ActionReference Name="Dash"
                              TargetX="${ mascot.anchor.x+(mascot.environment.cursor.x-mascot.anchor.x)*Math.random()/2 }"/>
@@ -671,8 +669,8 @@
             <ActionReference Name="Tripping" Condition="${Math.random() &lt; 0.05}"/>
             <ActionReference Name="Dash" TargetX="#{mascot.environment.cursor.x+Gap}"
                              Gap="${ mascot.anchor.x &lt; mascot.environment.cursor.x ?
-					-Math.min( mascot.environment.cursor.x-mascot.anchor.x, Math.random()*200) :
-					Math.min( mascot.anchor.x-mascot.environment.cursor.x, Math.random()*200 ) }"/>
+                    -Math.min( mascot.environment.cursor.x-mascot.anchor.x, Math.random()*200) :
+                    Math.min( mascot.anchor.x-mascot.environment.cursor.x, Math.random()*200 ) }"/>
             <ActionReference Name="Look" LookRight="${mascot.anchor.x &lt; mascot.environment.cursor.x}"/>
         </Action>
 
@@ -752,5 +750,4 @@
             <ActionReference Name="Bouncing"/>
         </Action>
     </ActionList>
-
 </Mascot>

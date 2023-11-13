@@ -257,21 +257,21 @@ class MacEnvironment extends Environment {
     }
 
     private static int getDockTileSize() {
-		/*
-			 Dock の高さを監視する効率的な方法が見当たらないため、
-			 ひとまず Dock の最大サイズより大きい定数を返しておく。
-
-			 CFPreferencesCopyValue で得られる値は、
-			 AppleScript で得られる値とは異なっていて、
-			 AppleScript のほうが正しい値。
-
-			 pid 取得して Accessibility API を使うと正しい値は取れるが、
-			 killall Dock されると SEGV してしまう。
-			 SEGV しないためには毎回 pid を取り直す必要があるが、
-			 プロセスのリストをたぐってさがす以外の方法が見当たらない。
-			 呼ばれる頻度を考えると AppleScript は使いたくない。
-			 このトレードオフはあとで考えることにする。
-		 */
+        /*
+         * Dock の高さを監視する効率的な方法が見当たらないため、
+         * ひとまず Dock の最大サイズより大きい定数を返しておく。
+         *
+         * CFPreferencesCopyValue で得られる値は、
+         * AppleScript で得られる値とは異なっていて、
+         * AppleScript のほうが正しい値。
+         *
+         * pid 取得して Accessibility API を使うと正しい値は取れるが、
+         * killall Dock されると SEGV してしまう。
+         * SEGV しないためには毎回 pid を取り直す必要があるが、
+         * プロセスのリストをたぐってさがす以外の方法が見当たらない。
+         * 呼ばれる頻度を考えると AppleScript は使いたくない。
+         * このトレードオフはあとで考えることにする。
+         */
         return 100;
     }
 
@@ -322,10 +322,10 @@ class MacEnvironment extends Environment {
 
     @Override
     public void moveActiveIE(final Point point) {
-		/*
-			前述のとおり、完全に画面外へ移動しようとすると押し返されるため、
-			そのような位置の指定に対しては可能なかぎりの移動に切り替える。
-		 */
+        /*
+         * 前述のとおり、完全に画面外へ移動しようとすると押し返されるため、
+         * そのような位置の指定に対しては可能なかぎりの移動に切り替える。
+         */
         final Rectangle
                 visibleRect = getWindowVisibleArea(),
                 windowRect = getFrontmostAppRect();
