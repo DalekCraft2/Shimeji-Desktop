@@ -15,7 +15,6 @@ build
 dist
 distribution
 java-repository
-logs
 out
 patch.tar.gz
 patch.txt
@@ -25,6 +24,8 @@ lib/optional/*.jar
 src/tests/antunit/core/output
 .idea
 *.iml
+**/*.log
+**/*.log.lck
 /src/GPATH
 /src/GRTAGS
 /src/GSYMS
