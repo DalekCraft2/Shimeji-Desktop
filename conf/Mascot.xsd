@@ -32,7 +32,7 @@
         <attribute name="Gap" type="tns:Parameter"/>
         <attribute name="BornX" type="tns:Parameter"/>
         <attribute name="BornY" type="tns:Parameter"/>
-        <attribute name="BornBehavior" type="tns:Parameter"/>
+        <attribute name="BornBehavior" type="string"/>
         <attribute name="VelocityParam" type="tns:Parameter"/>
         <attribute name="RegistanceX" type="tns:Parameter"/>
         <attribute name="RegistanceY" type="tns:Parameter"/>
@@ -54,12 +54,15 @@
                 <attribute name="Type" use="required">
                     <simpleType>
                         <restriction base="string">
-                            <enumeration value="Embedded"></enumeration>
-                            <enumeration value="Move"></enumeration>
-                            <enumeration value="Pause"></enumeration>
-                            <enumeration value="Fixed"></enumeration>
-                            <enumeration value="Composite"></enumeration>
-                            <enumeration value="Select"></enumeration>
+                            <enumeration value="Embedded"/>
+                            <enumeration value="Move"/>
+                            <enumeration value="Stay"/>
+                            <enumeration value="Animate"/>
+                            <enumeration value="Sequence"/>
+                            <enumeration value="Pause"/>
+                            <enumeration value="Fixed"/>
+                            <enumeration value="Composite"/>
+                            <enumeration value="Select"/>
                         </restriction>
                     </simpleType>
                 </attribute>
@@ -73,9 +76,9 @@
                 <attribute name="BorderType">
                     <simpleType>
                         <restriction base="string">
-                            <enumeration value="Floor"></enumeration>
-                            <enumeration value="Wall"></enumeration>
-                            <enumeration value="Ceiling"></enumeration>
+                            <enumeration value="Floor"/>
+                            <enumeration value="Wall"/>
+                            <enumeration value="Ceiling"/>
                         </restriction>
                     </simpleType>
                 </attribute>
@@ -181,6 +184,7 @@
         <attribute name="Name" type="string" use="required"/>
         <attribute name="Frequency" type="int" use="required"/>
         <attribute name="Condition" type="tns:Parameter"/>
+        <attribute name="Hidden" type="boolean"/>
     </complexType>
 
     <complexType name="BehaviorCondition">
