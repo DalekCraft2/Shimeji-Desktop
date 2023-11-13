@@ -377,6 +377,7 @@ public class ImageSetChooser extends javax.swing.JDialog {
     }
 
     private void useAllButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        updateConfigFile();
         closeProgram = false;
         this.dispose();
     }
