@@ -120,7 +120,6 @@ public class ActionBuilder implements IActionBuilder {
     }
 
     public void validate() throws ConfigurationException {
-
         for (final IActionBuilder ref : this.getActionRefs()) {
             ref.validate();
         }

@@ -20,11 +20,11 @@ public class Jump extends ActionBase {
 
     public static final String PARAMETER_TARGETX = "TargetX";
 
-    private static final int DEFAULT_PARAMETERX = 0;
+    private static final int DEFAULT_TARGETX = 0;
 
     public static final String PARAMETER_TARGETY = "TargetY";
 
-    private static final int DEFAULT_PARAMETERY = 0;
+    private static final int DEFAULT_TARGETY = 0;
 
     // An Action Attribute is already named Velocity
     public static final String PARAMETER_VELOCITY = "VelocityParam";
@@ -83,10 +83,10 @@ public class Jump extends ActionBase {
     }
 
     private int getTargetX() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_TARGETX), Number.class, DEFAULT_PARAMETERX).intValue();
+        return eval(getSchema().getString(PARAMETER_TARGETX), Number.class, DEFAULT_TARGETX).intValue();
     }
 
     private int getTargetY() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_TARGETY), Number.class, DEFAULT_PARAMETERY).intValue();
+        return eval(getSchema().getString(PARAMETER_TARGETY), Number.class, DEFAULT_TARGETY).intValue();
     }
 }

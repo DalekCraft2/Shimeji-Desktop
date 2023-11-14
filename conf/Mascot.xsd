@@ -18,25 +18,48 @@
     </complexType>
 
     <complexType name="ActionArguments" abstract="true">
-        <attribute name="Condition" type="tns:Parameter"/>
-        <attribute name="Duration" type="tns:Parameter"/>
-        <attribute name="TargetX" type="tns:Parameter"/>
-        <attribute name="TargetY" type="tns:Parameter"/>
-        <attribute name="InitialVX" type="tns:Parameter"/>
-        <attribute name="InitialVY" type="tns:Parameter"/>
-        <attribute name="X" type="tns:Parameter"/>
-        <attribute name="Y" type="tns:Parameter"/>
-        <attribute name="LookRight" type="tns:Parameter"/>
-        <attribute name="IeOffsetX" type="tns:Parameter"/>
-        <attribute name="IeOffsetY" type="tns:Parameter"/>
+        <attribute name="Duration" type="tns:IntParameter"/>
+        <attribute name="Condition" type="tns:BooleanParameter" default="true"/>
+        <attribute name="Draggable" type="tns:BooleanParameter" default="true"/>
+        <attribute name="TargetX" type="tns:IntParameter"/>
+        <attribute name="TargetY" type="tns:IntParameter"/>
+        <attribute name="InitialVX" type="tns:IntParameter"/>
+        <attribute name="InitialVY" type="tns:IntParameter"/>
+        <attribute name="X" type="tns:IntParameter" default="0"/>
+        <attribute name="Y" type="tns:IntParameter" default="0"/>
+        <attribute name="LookRight" type="tns:BooleanParameter"/>
+        <attribute name="IeOffsetX" type="tns:IntParameter" default="0"/>
+        <attribute name="IeOffsetY" type="tns:IntParameter" default="0"/>
+        <attribute name="OffsetX" type="tns:IntParameter" default="0"/>
+        <attribute name="OffsetY" type="tns:IntParameter" default="120"/>
+        <attribute name="Affordance" type="tns:StringParameter" default=""/>
+        <attribute name="BornX" type="tns:IntParameter" default="0"/>
+        <attribute name="BornY" type="tns:IntParameter" default="0"/>
+        <attribute name="BornBehavior" type="tns:StringParameter" default=""/>
+        <attribute name="BornMascot" type="tns:StringParameter" default=""/>
+        <attribute name="BornInterval" type="tns:IntParameter" default="1"/>
+        <attribute name="BornTransient" type="tns:BooleanParameter" default="false"/>
+        <attribute name="VelocityParam" type="tns:DoubleParameter" default="20"/>
+        <attribute name="RegistanceX" type="tns:DoubleParameter" default="0.05"/>
+        <attribute name="RegistanceY" type="tns:DoubleParameter" default="0.1"/>
+        <attribute name="Gravity" type="tns:DoubleParameter"/>
+        <attribute name="TransformMascot" type="tns:StringParameter" default=""/>
+        <attribute name="TransformBehavior" type="tns:StringParameter" default=""/>
+        <attribute name="Behavior" type="tns:StringParameter" default=""/>
+        <attribute name="TargetBehavior" type="tns:StringParameter" default=""/>
+        <attribute name="Sound" type="tns:StringParameter"/>
+        <attribute name="BorderType">
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="Floor"/>
+                    <enumeration value="Wall"/>
+                    <enumeration value="Ceiling"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="Loop" type="tns:BooleanParameter" default="false"/>
+
         <attribute name="Gap" type="tns:Parameter"/>
-        <attribute name="BornX" type="tns:Parameter"/>
-        <attribute name="BornY" type="tns:Parameter"/>
-        <attribute name="BornBehavior" type="string"/>
-        <attribute name="VelocityParam" type="tns:Parameter"/>
-        <attribute name="RegistanceX" type="tns:Parameter"/>
-        <attribute name="RegistanceY" type="tns:Parameter"/>
-        <attribute name="Gravity" type="tns:Parameter"/>
     </complexType>
 
     <complexType name="Action">
@@ -73,16 +96,6 @@
                         </restriction>
                     </simpleType>
                 </attribute>
-                <attribute name="BorderType">
-                    <simpleType>
-                        <restriction base="string">
-                            <enumeration value="Floor"/>
-                            <enumeration value="Wall"/>
-                            <enumeration value="Ceiling"/>
-                        </restriction>
-                    </simpleType>
-                </attribute>
-                <attribute name="Loop" type="tns:Parameter"/>
             </extension>
         </complexContent>
     </complexType>
@@ -197,8 +210,27 @@
 
     <simpleType name="Parameter">
         <restriction base="string">
-            <pattern value="([$#]\{.+\})|(\-?[0-9]+(\.[0-9]+)?)|true|false"/>
+            <pattern value="([$#]\{.+\})|(-?[0-9]+(\.[0-9]+)?)|true|false"/>
         </restriction>
     </simpleType>
-
+    <simpleType name="BooleanParameter">
+        <restriction base="string">
+            <pattern value="([$#]\{.+\})|true|false"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="IntParameter">
+        <restriction base="string">
+            <pattern value="([$#]\{.+\})|(-?[0-9]+)"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="DoubleParameter">
+        <restriction base="string">
+            <pattern value="([$#]\{.+\})|(-?[0-9]+(\.[0-9]+)?)"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="StringParameter">
+        <restriction base="string">
+            <!-- <pattern value="([$#]\{.+\})|(-?[0-9]+(\.[0-9]+)?)"/> -->
+        </restriction>
+    </simpleType>
 </schema>

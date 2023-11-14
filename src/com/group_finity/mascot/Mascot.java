@@ -1,5 +1,6 @@
 package com.group_finity.mascot;
 
+import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.MascotEnvironment;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.group_finity.mascot.action.Action;
 // TODO Correct the many translation errors in this doc comment (and all others), and then fix the broken method link by figuring out what replaced the animate() method
+
 /**
  * Mascot object.
  * <p>
@@ -298,6 +299,7 @@ public class Mascot implements Serializable {
         popup.add(onlyOneMenu);
         popup.add(closeMenu);
 
+        // TODO Get the popup to close when clicking outside of it
         getWindow().asJWindow().requestFocus();
 
         // lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window boundary
