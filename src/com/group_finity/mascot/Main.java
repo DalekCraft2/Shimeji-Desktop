@@ -103,10 +103,10 @@ public class Main {
 
     public void run() {
         // test operating system
-        if (!System.getProperty("sun.arch.data.model").equals("64")) {
-            platform = Platform.x86;
-        } else {
+        if (System.getProperty("sun.arch.data.model").equals("64")) {
             platform = Platform.x86_64;
+        } else {
+            platform = Platform.x86;
         }
 
         // load properties

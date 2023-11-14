@@ -58,7 +58,6 @@ public class Animation {
     }
 
     public int getDuration() {
-
         int duration = 0;
         for (final Pose pose : getPoses()) {
             duration += pose.getDuration();

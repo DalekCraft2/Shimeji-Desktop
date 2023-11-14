@@ -24,8 +24,6 @@ lib/optional/*.jar
 src/tests/antunit/core/output
 .idea
 *.iml
-**/*.log
-**/*.log.lck
 /src/GPATH
 /src/GRTAGS
 /src/GSYMS
@@ -33,3 +31,8 @@ src/tests/antunit/core/output
 /log.xml
 lib/optional/license.txt
 /release/distrib/
+
+# Shimeji-specific
+conf/settings.properties
+**/*.log
+**/*.log.lck

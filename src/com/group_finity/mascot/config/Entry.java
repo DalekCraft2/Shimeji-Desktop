@@ -50,18 +50,12 @@ public class Entry {
         return attribute.getValue();
     }
 
-//        public boolean hasAttribute( final String tagName )
-//        {
-//            return element.hasAttribute( tagName );
-//        }
+    /* public boolean hasAttribute(final String tagName) {
+        return element.hasAttribute(tagName);
+    } */
 
     public boolean hasChild(final String tagName) {
-        for (final Entry child : getChildren()) {
-            if (child.getName().equals(tagName)) {
-                return true;
-            }
-        }
-        return false;
+        return getChildren().stream().anyMatch(child -> child.getName().equals(tagName));
     }
 
     public List<Entry> selectChildren(final String tagName) {

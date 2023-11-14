@@ -44,28 +44,8 @@ public class ImagePairLoader {
     }
 
     private static BufferedImage premultiply(final BufferedImage source) {
-        // int scaling = Integer.parseInt( Main.getInstance( ).getProperties( ).getProperty( "Scaling", "1" ) );
-//        final BufferedImage returnImage = new BufferedImage( source.getWidth( ) * scaling, source.getHeight( ) * scaling,
-//                                                             source.getType( ) == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB_PRE : source.getType( ) );
-//        Color colour;
-//        float[ ] components;
-//        
-//        for( int y = 0; y < returnImage.getHeight( ); ++y )
-//        {
-//            for( int x = 0; x < returnImage.getWidth( ); ++x )
-//            {
-//                colour = new Color( source.getRGB( x / scaling, y / scaling ), true );
-//                components = colour.getComponents( null );
-//                components[ 0 ] = components[ 3 ] * components[ 0 ];
-//                components[ 1 ] = components[ 3 ] * components[ 1 ];
-//                components[ 2 ] = components[ 3 ] * components[ 2 ];
-//                colour = new Color( components[ 0 ], components[ 1 ], components[ 2 ], components[ 3 ] );
-//                returnImage.setRGB( x, y, colour.getRGB( ) );
-//            }
-//        }
-//        
-//        return returnImage;
-
+        // int scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
+        // final BufferedImage returnImage = new BufferedImage(source.getWidth() * scaling, source.getHeight() * scaling,
         final BufferedImage returnImage = new BufferedImage(source.getWidth(), source.getHeight(),
                 source.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB_PRE : source.getType());
         Color colour;
@@ -73,6 +53,7 @@ public class ImagePairLoader {
 
         for (int y = 0; y < returnImage.getHeight(); ++y) {
             for (int x = 0; x < returnImage.getWidth(); ++x) {
+                // colour = new Color(source.getRGB(x / scaling, y / scaling), true);
                 colour = new Color(source.getRGB(x, y), true);
                 components = colour.getComponents(null);
                 components[0] = components[3] * components[0];

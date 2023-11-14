@@ -84,10 +84,10 @@ class WindowsNativeImage implements NativeImage {
 
             // resets the srcColIndex to re-use the same indexes and stretch horizontally
             ++srcRowIndex;
-            if (srcRowIndex != scaling) {
-                srcColIndex -= width;
-            } else {
+            if (srcRowIndex == scaling) {
                 srcRowIndex = 0;
+            } else {
+                srcColIndex -= width;
             }
         }
 

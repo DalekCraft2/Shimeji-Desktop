@@ -65,15 +65,8 @@ public class Fall extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
-
         Point pos = getMascot().getAnchor();
-        boolean onBorder = false;
-        if (getEnvironment().getFloor().isOn(pos)) {
-            onBorder = true;
-        }
-        if (getEnvironment().getWall().isOn(pos)) {
-            onBorder = true;
-        }
+        boolean onBorder = getEnvironment().getFloor().isOn(pos) || getEnvironment().getWall().isOn(pos);
         return super.hasNext() && !onBorder;
     }
 

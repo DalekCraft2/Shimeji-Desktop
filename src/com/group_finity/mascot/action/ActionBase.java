@@ -24,11 +24,11 @@ public abstract class ActionBase implements Action {
 
     public static final String PARAMETER_DURATION = "Duration";
 
-    private static final boolean DEFAULT_CONDITION = true;
+    private static final int DEFAULT_DURATION = Integer.MAX_VALUE;
 
     public static final String PARAMETER_CONDITION = "Condition";
 
-    private static final int DEFAULT_DURATION = Integer.MAX_VALUE;
+    private static final boolean DEFAULT_CONDITION = true;
 
     public static final String PARAMETER_DRAGGABLE = "Draggable";
 

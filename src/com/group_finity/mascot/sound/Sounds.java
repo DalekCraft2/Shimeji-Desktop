@@ -4,8 +4,8 @@ import com.group_finity.mascot.Main;
 
 import javax.sound.sampled.Clip;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.stream.Collectors;
 
 /**
  * This static class contains all the sounds loaded by Shimeji-ee.
@@ -35,15 +35,7 @@ public class Sounds {
     }
 
     public static ArrayList<Clip> getSoundsIgnoringVolume(String filename) {
-        ArrayList<Clip> sounds = new ArrayList<>(5);
-        Enumeration<String> keys = SOUNDS.keys();
-        while (keys.hasMoreElements()) {
-            String soundName = keys.nextElement();
-            if (soundName.startsWith(filename)) {
-                sounds.add(SOUNDS.get(soundName));
-            }
-        }
-        return sounds;
+        return SOUNDS.keySet().stream().filter(soundName -> soundName.startsWith(filename)).map(SOUNDS::get).collect(Collectors.toCollection(() -> new ArrayList<>(5)));
     }
 
     public static boolean isMuted() {
@@ -53,9 +45,8 @@ public class Sounds {
     public static void setMuted(boolean mutedFlag) {
         if (mutedFlag) {
             // mute everything
-            Enumeration<String> keys = SOUNDS.keys();
-            while (keys.hasMoreElements()) {
-                SOUNDS.get(keys.nextElement()).stop();
+            for (String s : SOUNDS.keySet()) {
+                SOUNDS.get(s).stop();
             }
         }
     }

@@ -31,26 +31,26 @@ public class Mute extends InstantAction {
         String soundName = getSound();
         if (soundName != null) {
             ArrayList<Clip> clips = Sounds.getSoundsIgnoringVolume("./sound" + soundName);
-            if (!clips.isEmpty()) {
-                for (Clip clip : clips) {
-                    if (clip != null && clip.isRunning()) {
-                        clip.stop();
-                    }
-                }
-            } else {
+            if (clips.isEmpty()) {
                 clips = Sounds.getSoundsIgnoringVolume("./sound/" + getMascot().getImageSet() + soundName);
-                if (!clips.isEmpty()) {
+                if (clips.isEmpty()) {
+                    clips = Sounds.getSoundsIgnoringVolume("./img/" + getMascot().getImageSet() + "/sound" + soundName);
                     for (Clip clip : clips) {
                         if (clip != null && clip.isRunning()) {
                             clip.stop();
                         }
                     }
                 } else {
-                    clips = Sounds.getSoundsIgnoringVolume("./img/" + getMascot().getImageSet() + "/sound" + soundName);
                     for (Clip clip : clips) {
                         if (clip != null && clip.isRunning()) {
                             clip.stop();
                         }
+                    }
+                }
+            } else {
+                for (Clip clip : clips) {
+                    if (clip != null && clip.isRunning()) {
+                        clip.stop();
                     }
                 }
             }

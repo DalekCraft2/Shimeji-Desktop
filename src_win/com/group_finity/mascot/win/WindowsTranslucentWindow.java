@@ -36,7 +36,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private void paint(final Pointer imageHandle, final int alpha) {
 
-        // this.setSize( WIDTH, HEIGHT );
+        // this.setSize(WIDTH, HEIGHT);
 
         final Pointer hWnd = Native.getComponentPointer(this);
 
@@ -82,11 +82,9 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
             Gdi32.INSTANCE.DeleteDC(memDC);
 
             // Bring to front
-//            if( alwaysOnTop )
-//            {
-//                User32.INSTANCE.BringWindowToTop( hWnd );
-//            }
-
+            // if (alwaysOnTop) {
+            //     User32.INSTANCE.BringWindowToTop(hWnd);
+            // }
         }
     }
 
