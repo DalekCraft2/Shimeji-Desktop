@@ -18,7 +18,7 @@ You are welcome to use this work in your own projects if you credit Kilkakon and
 
 --------
 
-Shout out to TigerHix's work on github, I incorporated some of the work that was done there
+Shout out to TigerHix's work on GitHub, I incorporated some of the work that was done there
 
 --------
 i18n classes:

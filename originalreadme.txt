@@ -11,7 +11,7 @@ Original Readme File by Group-Finity
 
 ==== How to Start ==== 
 
-Double Click the Shimeji icon (Shimeji.exe).
+Double-click the Shimeji icon (Shimeji.exe).
 
 ==== How to quit ==== 
 

@@ -117,17 +117,17 @@ class WindowsNativeImage implements NativeImage {
         boolean filter = scaling > 1 && Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Filter", "false"));
         int effectiveScaling = filter ? 1 : scaling;
 
-        this.managedImage = image;
-        this.nativeHandle = createNative(this.getManagedImage().getWidth() * scaling, this.getManagedImage().getHeight() * scaling);
+        managedImage = image;
+        nativeHandle = createNative(getManagedImage().getWidth() * scaling, getManagedImage().getHeight() * scaling);
 
-        int[] rbgValues = new int[this.getManagedImage().getWidth() * this.getManagedImage().getHeight() * effectiveScaling * effectiveScaling];
-        this.getManagedImage().getRGB(0, 0, this.getManagedImage().getWidth(), this.getManagedImage().getHeight(), rbgValues, 0,
-                this.getManagedImage().getWidth());
+        int[] rbgValues = new int[getManagedImage().getWidth() * getManagedImage().getHeight() * effectiveScaling * effectiveScaling];
+        getManagedImage().getRGB(0, 0, getManagedImage().getWidth(), getManagedImage().getHeight(), rbgValues, 0,
+                getManagedImage().getWidth());
 
         // apply filter here
         if (filter) {
-            int width = this.getManagedImage().getWidth();
-            int height = this.getManagedImage().getHeight();
+            int width = getManagedImage().getWidth();
+            int height = getManagedImage().getHeight();
             int[] buffer;
 
             if (scaling == 4 || scaling == 8) {
@@ -157,13 +157,13 @@ class WindowsNativeImage implements NativeImage {
             }
         }
 
-        flushNative(this.getNativeHandle(), rbgValues, effectiveScaling);
+        flushNative(getNativeHandle(), rbgValues, effectiveScaling);
     }
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        freeNative(this.getNativeHandle());
+        freeNative(getNativeHandle());
     }
 
     /**
@@ -174,46 +174,46 @@ class WindowsNativeImage implements NativeImage {
     }
 
     public void flush() {
-        this.getManagedImage().flush();
+        getManagedImage().flush();
     }
 
     public Pointer getHandle() {
-        return this.getNativeHandle();
+        return getNativeHandle();
     }
 
     public Graphics getGraphics() {
-        return this.getManagedImage().createGraphics();
+        return getManagedImage().createGraphics();
     }
 
     public int getHeight() {
-        return this.getManagedImage().getHeight();
+        return getManagedImage().getHeight();
     }
 
     public int getWidth() {
-        return this.getManagedImage().getWidth();
+        return getManagedImage().getWidth();
     }
 
     public int getHeight(final ImageObserver observer) {
-        return this.getManagedImage().getHeight(observer);
+        return getManagedImage().getHeight(observer);
     }
 
     public Object getProperty(final String name, final ImageObserver observer) {
-        return this.getManagedImage().getProperty(name, observer);
+        return getManagedImage().getProperty(name, observer);
     }
 
     public ImageProducer getSource() {
-        return this.getManagedImage().getSource();
+        return getManagedImage().getSource();
     }
 
     public int getWidth(final ImageObserver observer) {
-        return this.getManagedImage().getWidth(observer);
+        return getManagedImage().getWidth(observer);
     }
 
     private BufferedImage getManagedImage() {
-        return this.managedImage;
+        return managedImage;
     }
 
     private Pointer getNativeHandle() {
-        return this.nativeHandle;
+        return nativeHandle;
     }
 }

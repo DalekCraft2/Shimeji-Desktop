@@ -6,6 +6,7 @@ import com.group_finity.mascot.sound.Sounds;
 
 import javax.sound.sampled.Clip;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -22,8 +23,8 @@ public class Mute extends InstantAction {
 
     private static final String DEFAULT_SOUND = null;
 
-    public Mute(java.util.ResourceBundle schema, final VariableMap params) {
-        super(schema, params);
+    public Mute(ResourceBundle schema, final VariableMap context) {
+        super(schema, context);
     }
 
     @Override

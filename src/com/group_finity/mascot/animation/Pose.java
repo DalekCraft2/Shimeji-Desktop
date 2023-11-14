@@ -73,7 +73,7 @@ public class Pose {
     }
 
     public ImagePair getImage() {
-        return ImagePairs.getImagePair(this.getImageName());
+        return ImagePairs.getImagePair(getImageName());
     }
 
     public int getDx() {

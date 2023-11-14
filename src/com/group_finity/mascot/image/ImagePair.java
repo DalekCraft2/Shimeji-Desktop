@@ -18,14 +18,14 @@ public class ImagePair {
     }
 
     public MascotImage getImage(final boolean lookRight) {
-        return lookRight ? this.getRightImage() : this.getLeftImage();
+        return lookRight ? getRightImage() : getLeftImage();
     }
 
     private MascotImage getLeftImage() {
-        return this.leftImage;
+        return leftImage;
     }
 
     private MascotImage getRightImage() {
-        return this.rightImage;
+        return rightImage;
     }
 }

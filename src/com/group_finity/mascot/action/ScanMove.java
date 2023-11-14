@@ -12,6 +12,7 @@ import com.group_finity.mascot.script.VariableMap;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,8 +38,8 @@ public class ScanMove extends BorderedAction {
 
     private WeakReference<Mascot> target;
 
-    public ScanMove(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap params) {
-        super(schema, animations, params);
+    public ScanMove(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+        super(schema, animations, context);
     }
 
     @Override

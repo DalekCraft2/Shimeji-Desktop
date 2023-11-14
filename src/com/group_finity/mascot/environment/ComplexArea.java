@@ -41,7 +41,6 @@ public class ComplexArea {
     }
 
     public void retain(Collection<String> deviceNames) {
-
         areas.keySet().removeIf(key -> !deviceNames.contains(key));
     }
 

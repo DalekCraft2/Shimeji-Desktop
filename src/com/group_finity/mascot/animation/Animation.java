@@ -6,6 +6,8 @@ import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 
+import java.util.Arrays;
+
 /**
  * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * <p>
@@ -44,7 +46,6 @@ public class Animation {
     }
 
     public Pose getPoseAt(int time) {
-
         time %= getDuration();
 
         for (final Pose pose : getPoses()) {
@@ -58,20 +59,15 @@ public class Animation {
     }
 
     public int getDuration() {
-        int duration = 0;
-        for (final Pose pose : getPoses()) {
-            duration += pose.getDuration();
-        }
-
-        return duration;
+        return Arrays.stream(getPoses()).mapToInt(Pose::getDuration).sum();
     }
 
     private Variable getCondition() {
-        return this.condition;
+        return condition;
     }
 
     private Pose[] getPoses() {
-        return this.poses;
+        return poses;
     }
 
     public Hotspot[] getHotspots() {

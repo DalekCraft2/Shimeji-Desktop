@@ -6,6 +6,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -20,8 +21,8 @@ public class Turn extends BorderedAction {
 
     private boolean turning = false;
 
-    public Turn(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap params) {
-        super(schema, animations, params);
+    public Turn(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+        super(schema, animations, context);
     }
 
     @Override

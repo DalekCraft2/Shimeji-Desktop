@@ -15,17 +15,17 @@ public class RECT extends Structure {
     public int bottom;
 
     public int Width() {
-        return this.right - this.left;
+        return right - left;
     }
 
     public int Height() {
-        return this.bottom - this.top;
+        return bottom - top;
     }
 
     public void OffsetRect(final int dx, final int dy) {
-        this.left += dx;
-        this.right += dx;
-        this.top += dy;
-        this.bottom += dy;
+        left += dx;
+        right += dx;
+        top += dy;
+        bottom += dy;
     }
 }

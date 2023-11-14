@@ -24,26 +24,26 @@ public class Entry {
     }
 
     public String getName() {
-        return this.element.getTagName();
+        return element.getTagName();
     }
 
     public Map<String, String> getAttributes() {
-        if (this.attributes != null) {
-            return this.attributes;
+        if (attributes != null) {
+            return attributes;
         }
 
-        this.attributes = new LinkedHashMap<>();
-        final NamedNodeMap attrs = this.element.getAttributes();
+        attributes = new LinkedHashMap<>();
+        final NamedNodeMap attrs = element.getAttributes();
         for (int i = 0; i < attrs.getLength(); ++i) {
             final Attr attr = (Attr) attrs.item(i);
-            this.attributes.put(attr.getName(), attr.getValue());
+            attributes.put(attr.getName(), attr.getValue());
         }
 
-        return this.attributes;
+        return attributes;
     }
 
     public String getAttribute(final String attributeName) {
-        final Attr attribute = this.element.getAttributeNode(attributeName);
+        final Attr attribute = element.getAttributeNode(attributeName);
         if (attribute == null) {
             return null;
         }
@@ -60,7 +60,7 @@ public class Entry {
 
     public List<Entry> selectChildren(final String tagName) {
 
-        List<Entry> children = this.selected.get(tagName);
+        List<Entry> children = selected.get(tagName);
         if (children != null) {
             return children;
         }
@@ -71,26 +71,26 @@ public class Entry {
             }
         }
 
-        this.selected.put(tagName, children);
+        selected.put(tagName, children);
 
         return children;
     }
 
     public List<Entry> getChildren() {
 
-        if (this.children != null) {
-            return this.children;
+        if (children != null) {
+            return children;
         }
 
-        this.children = new ArrayList<>();
-        final NodeList childNodes = this.element.getChildNodes();
+        children = new ArrayList<>();
+        final NodeList childNodes = element.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); ++i) {
             final Node childNode = childNodes.item(i);
             if (childNode instanceof Element) {
-                this.children.add(new Entry((Element) childNode));
+                children.add(new Entry((Element) childNode));
             }
         }
 
-        return this.children;
+        return children;
     }
 }

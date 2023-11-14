@@ -19,11 +19,11 @@ public class Wall implements Border {
     }
 
     public Area getArea() {
-        return this.area;
+        return area;
     }
 
     public boolean isRight() {
-        return this.right;
+        return right;
     }
 
     public int getX() {
@@ -60,6 +60,7 @@ public class Wall implements Border {
                 && location.y <= getBottom();
     }
 
+    @Override
     public Point move(final Point location) {
 
         if (!getArea().isVisible()) {

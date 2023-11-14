@@ -9,6 +9,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -39,7 +40,7 @@ public class Dragged extends ActionBase {
 
     private int scaling;
 
-    public Dragged(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public Dragged(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 
@@ -70,7 +71,7 @@ public class Dragged extends ActionBase {
         final Location cursor = getEnvironment().getCursor();
 
         if (Math.abs(cursor.getX() - getMascot().getAnchor().x + getOffsetX() * scaling) >= 5) {
-            this.setTime(0);
+            setTime(0);
         }
 
         final int newX = cursor.getX();

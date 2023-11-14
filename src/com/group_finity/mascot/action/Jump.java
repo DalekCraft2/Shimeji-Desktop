@@ -7,6 +7,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -31,7 +32,7 @@ public class Jump extends ActionBase {
 
     private static final double DEFAULT_VELOCITY = 20.0;
 
-    public Jump(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public Jump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 

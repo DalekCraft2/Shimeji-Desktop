@@ -3,6 +3,7 @@ package com.group_finity.mascot.action;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -15,8 +16,8 @@ public class Look extends InstantAction {
 
     public static final String PARAMETER_LOOKRIGHT = "LookRight";
 
-    public Look(java.util.ResourceBundle schema, final VariableMap params) {
-        super(schema, params);
+    public Look(ResourceBundle schema, final VariableMap context) {
+        super(schema, context);
     }
 
     @Override

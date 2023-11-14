@@ -3,6 +3,7 @@ package com.group_finity.mascot.action;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -18,8 +19,8 @@ public class Sequence extends ComplexAction {
 
     private static final boolean DEFAULT_LOOP = false;
 
-    public Sequence(java.util.ResourceBundle schema, final VariableMap params, final Action... actions) {
-        super(schema, params, actions);
+    public Sequence(ResourceBundle schema, final VariableMap context, final Action... actions) {
+        super(schema, context, actions);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class Main {
             log.log(Level.SEVERE, "Out of Memory Exception.  There are probably have too many "
                     + "Shimeji mascots in the image folder for your computer to handle.  Select fewer"
                     + " image sets or move some to the img/unused folder and try again.", err);
-            Main.showError("Out of Memory.  There are probably have too many \n"
+            showError("Out of Memory.  There are probably have too many \n"
                     + "Shimeji mascots for your computer to handle.\n"
                     + "Select fewer image sets or move some to the \n"
                     + "img/unused folder and try again.");
@@ -80,7 +80,7 @@ public class Main {
         return instance;
     }
 
-    private static JFrame frame = new javax.swing.JFrame();
+    private static JFrame frame = new JFrame();
 
     public static void showError(String message) {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -93,7 +93,7 @@ public class Main {
             log.log(Level.SEVERE, "Out of Memory Exception.  There are probably have too many "
                     + "Shimeji mascots in the image folder for your computer to handle.  Select fewer"
                     + " image sets or move some to the img/unused folder and try again.", err);
-            Main.showError("Out of Memory.  There are probably have too many \n"
+            showError("Out of Memory.  There are probably have too many \n"
                     + "Shimeji mascots for your computer to handle.\n"
                     + "Select fewer image sets or move some to the \n"
                     + "img/unused folder and try again.");
@@ -125,7 +125,7 @@ public class Main {
                 languageBundle = ResourceBundle.getBundle("language", Locale.forLanguageTag(properties.getProperty("Language", "en-GB")), loader, utf8Control);
             }
         } catch (Exception ex) {
-            Main.showError("The default language file could not be loaded. Ensure that you have the latest shimeji language.properties in your conf directory.");
+            showError("The default language file could not be loaded. Ensure that you have the latest shimeji language.properties in your conf directory.");
             exit();
         }
 
@@ -159,11 +159,11 @@ public class Main {
 
             // handle menu size
             if (!properties.containsKey("MenuDPI")) {
-                properties.setProperty("MenuDPI", Math.max(java.awt.Toolkit.getDefaultToolkit().getScreenResolution(), 96) + "");
+                properties.setProperty("MenuDPI", Math.max(Toolkit.getDefaultToolkit().getScreenResolution(), 96) + "");
                 updateConfigFile();
             }
             float menuScaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
-            java.awt.Font font = theme.getUserTextFont().deriveFont(theme.getUserTextFont().getSize() * menuScaling);
+            Font font = theme.getUserTextFont().deriveFont(theme.getUserTextFont().getSize() * menuScaling);
             theme.setFont(font);
 
             NimRODLookAndFeel.setCurrentTheme(theme);
@@ -357,7 +357,7 @@ public class Main {
             return true;
         } catch (final Exception e) {
             log.log(Level.SEVERE, "Failed to load configuration files", e);
-            Main.showError(languageBundle.getString("FailedLoadConfigErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedLoadConfigErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
         }
 
         return false;
@@ -375,7 +375,7 @@ public class Main {
             image = ImageIO.read(new File("./img/icon.png"));
         } catch (final Exception e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
-            Main.showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
         } finally {
             if (image == null) {
                 image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
@@ -389,7 +389,7 @@ public class Main {
             // attach menu
             icon.addMouseListener(new MouseListener() {
                 @Override
-                public void mouseClicked(MouseEvent event) {
+                public void mouseClicked(MouseEvent e) {
                 }
 
                 @Override
@@ -616,7 +616,7 @@ public class Main {
                                     createMascot(imageSet);
                                 }
 
-                                Main.this.getManager().setExitOnLastRemoved(isExit);
+                                getManager().setExitOnLastRemoved(isExit);
                             });
 
                             final JCheckBoxMenuItem scaling1x = new JCheckBoxMenuItem("1x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 1);
@@ -644,7 +644,7 @@ public class Main {
                                     createMascot(imageSet);
                                 }
 
-                                Main.this.getManager().setExitOnLastRemoved(isExit);
+                                getManager().setExitOnLastRemoved(isExit);
                             });
                             final JCheckBoxMenuItem scaling2x = new JCheckBoxMenuItem("2x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 2);
                             scaling2x.addActionListener(e126 -> {
@@ -671,7 +671,7 @@ public class Main {
                                     createMascot(imageSet);
                                 }
 
-                                Main.this.getManager().setExitOnLastRemoved(isExit);
+                                getManager().setExitOnLastRemoved(isExit);
                             });
                             final JCheckBoxMenuItem scaling3x = new JCheckBoxMenuItem("3x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 3);
                             scaling3x.addActionListener(e125 -> {
@@ -698,7 +698,7 @@ public class Main {
                                     createMascot(imageSet);
                                 }
 
-                                Main.this.getManager().setExitOnLastRemoved(isExit);
+                                getManager().setExitOnLastRemoved(isExit);
                             });
                             final JCheckBoxMenuItem scaling4x = new JCheckBoxMenuItem("4x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 4);
                             scaling4x.addActionListener(e124 -> {
@@ -725,7 +725,7 @@ public class Main {
                                     createMascot(imageSet);
                                 }
 
-                                Main.this.getManager().setExitOnLastRemoved(isExit);
+                                getManager().setExitOnLastRemoved(isExit);
                             });
                             final JCheckBoxMenuItem scaling6x = new JCheckBoxMenuItem("6x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 6);
                             scaling6x.addActionListener(e123 -> {
@@ -752,7 +752,7 @@ public class Main {
                                     createMascot(imageSet);
                                 }
 
-                                Main.this.getManager().setExitOnLastRemoved(isExit);
+                                getManager().setExitOnLastRemoved(isExit);
                             });
                             final JCheckBoxMenuItem scaling8x = new JCheckBoxMenuItem("8x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 8);
                             scaling8x.addActionListener(e122 -> {
@@ -779,7 +779,7 @@ public class Main {
                                     createMascot(imageSet);
                                 }
 
-                                Main.this.getManager().setExitOnLastRemoved(isExit);
+                                getManager().setExitOnLastRemoved(isExit);
                             });
                             scalingMenu.add(filterMenu);
                             scalingMenu.add(new JSeparator());
@@ -1073,7 +1073,7 @@ public class Main {
 
                         // layout
                         float scaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
-                        panel.setLayout(new java.awt.GridBagLayout());
+                        panel.setLayout(new GridBagLayout());
                         GridBagConstraints gridBag = new GridBagConstraints();
                         gridBag.fill = GridBagConstraints.HORIZONTAL;
                         gridBag.gridx = 0;
@@ -1103,11 +1103,11 @@ public class Main {
 
                         form.setIconImage(icon.getImage());
                         form.setTitle(languageBundle.getString("ShimejiEE"));
-                        form.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+                        form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                         form.setAlwaysOnTop(true);
 
                         // set the form dimensions
-                        java.awt.FontMetrics metrics = btnCallShimeji.getFontMetrics(btnCallShimeji.getFont());
+                        FontMetrics metrics = btnCallShimeji.getFontMetrics(btnCallShimeji.getFont());
                         int width = metrics.stringWidth(btnCallShimeji.getText());
                         width = Math.max(metrics.stringWidth(btnFollowCursor.getText()), width);
                         width = Math.max(metrics.stringWidth(btnReduceToOne.getText()), width);
@@ -1128,7 +1128,7 @@ public class Main {
                         form.setLocation(event.getPoint().x - form.getWidth(), event.getPoint().y - form.getHeight());
 
                         // make sure that it is on the screen if people are using exotic taskbar locations
-                        Rectangle screen = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+                        Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
                         if (form.getX() < screen.getX()) {
                             form.setLocation(event.getPoint().x, form.getY());
                         }
@@ -1155,7 +1155,7 @@ public class Main {
             SystemTray.getSystemTray().add(icon);
         } catch (final AWTException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
-            Main.showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
             exit();
         }
     }
@@ -1184,18 +1184,18 @@ public class Main {
 
         try {
             mascot.setBehavior(getConfiguration(imageSet).buildBehavior(null, mascot));
-            this.getManager().add(mascot);
+            getManager().add(mascot);
         } catch (final BehaviorInstantiationException e) {
             log.log(Level.SEVERE, "Failed to initialize the first action", e);
-            Main.showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
         } catch (final CantBeAliveException e) {
             log.log(Level.SEVERE, "Fatal Error", e);
-            Main.showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
         } catch (Exception e) {
             log.log(Level.SEVERE, imageSet + " fatal error, can not be started.", e);
-            Main.showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + imageSet + ".\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + imageSet + ".\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
         }
     }
@@ -1260,7 +1260,7 @@ public class Main {
         }
 
         // I don't think there would be enough imageSets chosen at any given
-        // time for it to be worth using HashSet but i might be wrong
+        // time for it to be worth using HashSet but I might be wrong
         ArrayList<String> toRemove = new ArrayList<>(imageSets);
         toRemove.removeAll(newImageSets);
 
@@ -1276,8 +1276,8 @@ public class Main {
             populateArrayListWithChildSets(set, toRetain);
         }
 
-        boolean isExit = Main.this.getManager().isExitOnLastRemoved();
-        Main.this.getManager().setExitOnLastRemoved(false);
+        boolean isExit = getManager().isExitOnLastRemoved();
+        getManager().setExitOnLastRemoved(false);
 
         for (String r : toRemove)
             removeLoadedImageSet(r, toRetain);
@@ -1285,7 +1285,7 @@ public class Main {
         for (String a : toAdd)
             addImageSet(a);
 
-        Main.this.getManager().setExitOnLastRemoved(isExit);
+        getManager().setExitOnLastRemoved(isExit);
     }
 
     private void populateArrayListWithChildSets(String imageSet, ArrayList<String> childList) {
@@ -1341,7 +1341,7 @@ public class Main {
     }
 
     private Manager getManager() {
-        return this.manager;
+        return manager;
     }
 
     public Platform getPlatform() {
@@ -1357,8 +1357,8 @@ public class Main {
     }
 
     public void exit() {
-        this.getManager().disposeAll();
-        this.getManager().stop();
+        getManager().disposeAll();
+        getManager().stop();
         System.exit(0);
     }
 }

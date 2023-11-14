@@ -46,21 +46,21 @@ public class BehaviorBuilder {
 
     public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) {
         this.configuration = configuration;
-        this.name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
-        this.actionName = behaviorNode.getAttribute(configuration.getSchema().getString("Action")) == null ? getName() : behaviorNode.getAttribute(configuration.getSchema().getString("Action"));
-        this.frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
-        this.hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
+        name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
+        actionName = behaviorNode.getAttribute(configuration.getSchema().getString("Action")) == null ? getName() : behaviorNode.getAttribute(configuration.getSchema().getString("Action"));
+        frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
+        hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
         this.conditions = new ArrayList<>(conditions);
-        this.getConditions().add(behaviorNode.getAttribute(configuration.getSchema().getString("Condition")));
+        getConditions().add(behaviorNode.getAttribute(configuration.getSchema().getString("Condition")));
 
         log.log(Level.INFO, "Start Reading({0})", this);
 
-        this.getParams().putAll(behaviorNode.getAttributes());
-        this.getParams().remove(configuration.getSchema().getString("Name"));
-        this.getParams().remove(configuration.getSchema().getString("Action"));
-        this.getParams().remove(configuration.getSchema().getString("Frequency"));
-        this.getParams().remove(configuration.getSchema().getString("Hidden"));
-        this.getParams().remove(configuration.getSchema().getString("Condition"));
+        getParams().putAll(behaviorNode.getAttributes());
+        getParams().remove(configuration.getSchema().getString("Name"));
+        getParams().remove(configuration.getSchema().getString("Action"));
+        getParams().remove(configuration.getSchema().getString("Frequency"));
+        getParams().remove(configuration.getSchema().getString("Hidden"));
+        getParams().remove(configuration.getSchema().getString("Condition"));
 
         boolean nextAdditive = true;
 
@@ -139,38 +139,38 @@ public class BehaviorBuilder {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public int getFrequency() {
-        return this.frequency;
+        return frequency;
     }
 
     public boolean isHidden() {
-        return this.hidden;
+        return hidden;
     }
 
     private String getActionName() {
-        return this.actionName;
+        return actionName;
     }
 
     private Map<String, String> getParams() {
-        return this.params;
+        return params;
     }
 
     private List<String> getConditions() {
-        return this.conditions;
+        return conditions;
     }
 
     private Configuration getConfiguration() {
-        return this.configuration;
+        return configuration;
     }
 
     public boolean isNextAdditive() {
-        return this.nextAdditive;
+        return nextAdditive;
     }
 
     public List<BehaviorBuilder> getNextBehaviorBuilders() {
-        return this.nextBehaviorBuilders;
+        return nextBehaviorBuilders;
     }
 }

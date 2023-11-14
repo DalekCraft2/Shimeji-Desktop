@@ -11,6 +11,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +47,7 @@ public class BreedJump extends Jump {
 
     private int scaling;
 
-    public BreedJump(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public BreedJump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 

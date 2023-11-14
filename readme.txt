@@ -26,11 +26,11 @@ Homepage: http://kilkakon.com/shimeji
 
 ==== How to Start ==== 
 
-Double Click the Shimeji-ee file (Shimeji-ee.jar).
+Double-click the Shimeji-ee file (Shimeji-ee.jar).
 
-Right click the tray icon for general options.
+Right-click the tray icon for general options.
 
-Right click a Shimeji for options relating to it.
+Right-click a Shimeji for options relating to it.
 
 For a tutorial on how to get Shimeji running, watch this video: https://www.youtube.com/watch?v=S7fPCGh5xxo
 
@@ -56,7 +56,7 @@ For more information, read through the configuration files in conf/.  Most optio
 
 ==== Advanced Configuration ==== 
 
-All configuration files are located in the in the conf folders.  In general, none of these should need to be touched.
+All configuration files are located in the conf folders.  In general, none of these should need to be touched.
 
 The logging.properties file defines how logging errors is done.
 The actions.xml file specifies the different actions Shimeji can do.  When listing images, only include the file name.  More detail on this file will hopefully be added later.
@@ -75,7 +75,7 @@ Shimeji-ee will ignore all the image sets that are in the img/unused folder, so 
 
 The Image Set Chooser looks for the shime1.png image.  If it's not found, no image set preview will be shown.  Even if you're not using an image named shime1.png in your image set, you should include one for the Image Set Chooser's sake.
 
-Editing an existing configuration is fairly straightforward.  But writing a brand new configuration file is very time consuming and requires a lot of trial and error.  Hopefully someone will write a guide for it someday, but until then, you'll have to look at the existing conf files to figure it out.  Basically, for every Behavior, there must be a corresponding action.  Actions and Behaviors can be a sequence of other actions or behaviors.
+Editing an existing configuration is fairly straightforward.  But writing a brand-new configuration file is very time-consuming and requires a lot of trial and error.  Hopefully someone will write a guide for it someday, but until then, you'll have to look at the existing conf files to figure it out.  Basically, for every Behavior, there must be a corresponding action.  Actions and Behaviors can be a sequence of other actions or behaviors.
 
 The following actions must be present for the actions.xml to be valid:
 

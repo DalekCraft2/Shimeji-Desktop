@@ -47,7 +47,7 @@ public abstract class ActionBase implements Action {
     public ActionBase(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         this.schema = schema;
         this.animations = animations;
-        this.variables = context;
+        variables = context;
     }
 
     @Override
@@ -61,15 +61,15 @@ public abstract class ActionBase implements Action {
 
     @Override
     public void init(final Mascot mascot) throws VariableException {
-        this.setMascot(mascot);
-        this.setTime(0);
+        setMascot(mascot);
+        setTime(0);
 
-        this.getVariables().put("mascot", mascot);
-        this.getVariables().put("action", this);
+        getVariables().put("mascot", mascot);
+        getVariables().put("action", this);
 
         getVariables().init();
 
-        for (final Animation animation : this.animations) {
+        for (final Animation animation : animations) {
             animation.init();
         }
     }
@@ -93,7 +93,7 @@ public abstract class ActionBase implements Action {
     }
 
     protected List<Animation> getAnimations() {
-        return this.animations;
+        return animations;
     }
 
     protected abstract void tick() throws LostGroundException, VariableException;
@@ -102,9 +102,9 @@ public abstract class ActionBase implements Action {
     public boolean hasNext() throws VariableException {
 
         final boolean effective = isEffective();
-        final boolean intime = getTime() < getDuration();
+        final boolean inTime = getTime() < getDuration();
 
-        return effective && intime;
+        return effective && inTime;
     }
 
     protected void refreshHotspots() {
@@ -136,19 +136,19 @@ public abstract class ActionBase implements Action {
     }
 
     protected Mascot getMascot() {
-        return this.mascot;
+        return mascot;
     }
 
     protected int getTime() {
-        return getMascot().getTime() - this.startTime;
+        return getMascot().getTime() - startTime;
     }
 
     protected void setTime(final int time) {
-        this.startTime = getMascot().getTime() - time;
+        startTime = getMascot().getTime() - time;
     }
 
     private String getName() throws VariableException {
-        return this.eval(schema.getString("Name"), String.class, null);
+        return eval(schema.getString("Name"), String.class, null);
     }
 
     protected Animation getAnimation() throws VariableException {
@@ -162,7 +162,7 @@ public abstract class ActionBase implements Action {
     }
 
     protected VariableMap getVariables() {
-        return this.variables;
+        return variables;
     }
 
     protected void putVariable(final String key, final Object value) {

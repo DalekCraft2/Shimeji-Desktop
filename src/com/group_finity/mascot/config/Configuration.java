@@ -88,14 +88,14 @@ public class Configuration {
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(schema.getString("Behaviour"))) {
                 final BehaviorBuilder behavior = new BehaviorBuilder(this, node, conditions);
-                this.getBehaviorBuilders().put(behavior.getName(), behavior);
+                getBehaviorBuilders().put(behavior.getName(), behavior);
             }
         }
     }
 
     public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
 
-        final ActionBuilder factory = this.actionBuilders.get(name);
+        final ActionBuilder factory = actionBuilders.get(name);
         if (factory == null) {
             throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage") + ": " + name);
         }
@@ -120,7 +120,7 @@ public class Configuration {
 
         final List<BehaviorBuilder> candidates = new ArrayList<>();
         long totalFrequency = 0;
-        for (final BehaviorBuilder behaviorFactory : this.getBehaviorBuilders().values()) {
+        for (final BehaviorBuilder behaviorFactory : getBehaviorBuilders().values()) {
             try {
                 if (behaviorFactory.isEffective(context)) {
                     candidates.add(behaviorFactory);
@@ -132,7 +132,7 @@ public class Configuration {
         }
 
         if (previousName != null) {
-            final BehaviorBuilder previousBehaviorFactory = this.getBehaviorBuilders().get(previousName);
+            final BehaviorBuilder previousBehaviorFactory = getBehaviorBuilders().get(previousName);
             if (!previousBehaviorFactory.isNextAdditive()) {
                 totalFrequency = 0;
                 candidates.clear();
@@ -174,25 +174,25 @@ public class Configuration {
 
     public Behavior buildBehavior(final String name) throws BehaviorInstantiationException {
         if (behaviorBuilders.containsKey(name)) {
-            return this.getBehaviorBuilders().get(name).buildBehavior();
+            return getBehaviorBuilders().get(name).buildBehavior();
         } else {
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + name + ")");
         }
     }
 
     Map<String, ActionBuilder> getActionBuilders() {
-        return this.actionBuilders;
+        return actionBuilders;
     }
 
     private Map<String, BehaviorBuilder> getBehaviorBuilders() {
-        return this.behaviorBuilders;
+        return behaviorBuilders;
     }
 
-    public java.util.Set<String> getBehaviorNames() {
+    public Set<String> getBehaviorNames() {
         return behaviorBuilders.keySet();
     }
 
-    public java.util.ResourceBundle getSchema() {
+    public ResourceBundle getSchema() {
         return schema;
     }
 }

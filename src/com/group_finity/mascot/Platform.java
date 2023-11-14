@@ -1,7 +1,7 @@
 package com.group_finity.mascot;
 
 /**
- * The fix is so simple but it has taken us all 5 years. *facepalm*
+ * The fix is so simple, but it has taken us all 5 years. *facepalm*
  *
  * @author TigerHix
  */

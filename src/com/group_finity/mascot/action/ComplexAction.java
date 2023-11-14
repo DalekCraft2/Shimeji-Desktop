@@ -6,6 +6,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -21,8 +22,8 @@ public abstract class ComplexAction extends ActionBase {
 
     private int currentAction;
 
-    public ComplexAction(java.util.ResourceBundle schema, final VariableMap params, final Action... actions) {
-        super(schema, new ArrayList<>(), params);
+    public ComplexAction(ResourceBundle schema, final VariableMap context, final Action... actions) {
+        super(schema, new ArrayList<>(), context);
         if (actions.length == 0) {
             throw new IllegalArgumentException("actions.length==0");
         }
@@ -53,7 +54,7 @@ public abstract class ComplexAction extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
-        final boolean inrange = this.getCurrentAction() < this.getActions().length;
+        final boolean inrange = getCurrentAction() < getActions().length;
 
         return super.hasNext() && inrange && getAction().hasNext();
     }
@@ -77,22 +78,22 @@ public abstract class ComplexAction extends ActionBase {
     protected void setCurrentAction(final int currentAction) throws VariableException {
         this.currentAction = currentAction;
         if (super.hasNext()) {
-            if (this.getCurrentAction() < getActions().length) {
+            if (getCurrentAction() < getActions().length) {
                 getAction().init(getMascot());
             }
         }
     }
 
     protected int getCurrentAction() {
-        return this.currentAction;
+        return currentAction;
     }
 
     protected Action[] getActions() {
-        return this.actions;
+        return actions;
     }
 
     protected Action getAction() {
-        return this.getActions()[this.getCurrentAction()];
+        return getActions()[getCurrentAction()];
     }
 
 }

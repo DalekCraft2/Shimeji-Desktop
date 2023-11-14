@@ -1,5 +1,8 @@
 package com.group_finity.mascot.imagesetchooser;
 
+import org.netbeans.lib.awtextra.AbsoluteConstraints;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +12,7 @@ import java.io.File;
 /**
  * Displays information about an image set. Used by ImageSetChooser
  */
-public class ImageSetChooserPanel extends javax.swing.JPanel {
+public class ImageSetChooserPanel extends JPanel {
 
     public ImageSetChooserPanel() {
         initComponents();
@@ -20,11 +23,11 @@ public class ImageSetChooserPanel extends javax.swing.JPanel {
         initComponents();
 
         this.name.setText(name);
-        this.actionsFile.setText(actions);
-        this.behaviorsFile.setText(behaviors);
+        actionsFile.setText(actions);
+        behaviorsFile.setText(behaviors);
         try {
             BufferedImage img = ImageIO.read(new File(imageLocation));
-            this.image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
+            image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
         } catch (Exception e) {
             // Doesn't matter, the image just won't show
         }
@@ -35,7 +38,7 @@ public class ImageSetChooserPanel extends javax.swing.JPanel {
     }
 
     public String getImageSetName() {
-        return this.name.getText();
+        return name.getText();
     }
 
     /**
@@ -47,40 +50,40 @@ public class ImageSetChooserPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        checkbox = new javax.swing.JCheckBox();
-        name = new javax.swing.JLabel();
-        actionsFile = new javax.swing.JLabel();
-        behaviorsFile = new javax.swing.JLabel();
-        image = new javax.swing.JLabel();
+        checkbox = new JCheckBox();
+        name = new JLabel();
+        actionsFile = new JLabel();
+        behaviorsFile = new JLabel();
+        image = new JLabel();
 
-        setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        setMinimumSize(new java.awt.Dimension(248, 80));
-        setPreferredSize(new java.awt.Dimension(248, 80));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setBorder(BorderFactory.createEtchedBorder());
+        setMinimumSize(new Dimension(248, 80));
+        setPreferredSize(new Dimension(248, 80));
+        setLayout(new AbsoluteLayout());
 
         checkbox.setOpaque(false);
-        add(checkbox, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
+        add(checkbox, new AbsoluteConstraints(10, 30, -1, -1));
 
         name.setText("Builder");
-        add(name, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, -1, -1));
+        add(name, new AbsoluteConstraints(110, 10, -1, -1));
 
         actionsFile.setText("img/Builder/conf/actionsxml");
-        add(actionsFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, -1, -1));
+        add(actionsFile, new AbsoluteConstraints(110, 30, -1, -1));
 
         behaviorsFile.setText("img/Builder/conf/behaviors.xml");
-        add(behaviorsFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, -1, -1));
+        add(behaviorsFile, new AbsoluteConstraints(110, 50, -1, -1));
 
-        image.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 60, 60));
+        image.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        add(image, new AbsoluteConstraints(40, 10, 60, 60));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel actionsFile;
-    private javax.swing.JLabel behaviorsFile;
-    private javax.swing.JCheckBox checkbox;
-    private javax.swing.JLabel image;
-    private javax.swing.JLabel name;
+    private JLabel actionsFile;
+    private JLabel behaviorsFile;
+    private JCheckBox checkbox;
+    private JLabel image;
+    private JLabel name;
     // End of variables declaration//GEN-END:variables
 
 }

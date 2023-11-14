@@ -106,21 +106,22 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     @Override
     public void paint(final Graphics g) {
         if (getImage() != null) {
-            // JNI with drawing images using the a value.
+            // JNI with drawing images using the alpha value.
             paint(getImage().getHandle(), getAlpha());
         }
     }
 
     private WindowsNativeImage getImage() {
-        return this.image;
+        return image;
     }
 
+    @Override
     public void setImage(final NativeImage image) {
         this.image = (WindowsNativeImage) image;
     }
 
     public int getAlpha() {
-        return this.alpha;
+        return alpha;
     }
 
     public void setAlpha(final int alpha) {

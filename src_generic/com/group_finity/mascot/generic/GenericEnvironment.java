@@ -19,7 +19,7 @@ class GenericEnvironment extends Environment {
     @Override
     public void tick() {
         super.tick();
-        this.activeIE.setVisible(false);
+        activeIE.setVisible(false);
     }
 
     @Override
@@ -38,7 +38,7 @@ class GenericEnvironment extends Environment {
 
     @Override
     public Area getActiveIE() {
-        return this.activeIE;
+        return activeIE;
     }
 
     @Override

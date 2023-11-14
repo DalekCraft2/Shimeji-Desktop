@@ -31,7 +31,7 @@ public class Script extends Variable {
         this.source = source;
         this.clearAtInitFrame = clearAtInitFrame;
         try {
-            this.compiled = ((Compilable) engine).compile(this.source);
+            compiled = ((Compilable) engine).compile(this.source);
         } catch (final ScriptException e) {
             throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptCompilationErrorMessage") + ": " + this.source, e);
         }
@@ -39,7 +39,7 @@ public class Script extends Variable {
 
     @Override
     public String toString() {
-        return this.isClearAtInitFrame() ? "#{" + this.getSource() + "}" : "${" + this.getSource() + "}";
+        return isClearAtInitFrame() ? "#{" + getSource() + "}" : "${" + getSource() + "}";
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Script extends Variable {
 
     @Override
     public void initFrame() {
-        if (this.isClearAtInitFrame()) {
+        if (isClearAtInitFrame()) {
             setValue(null);
         }
     }
@@ -64,7 +64,7 @@ public class Script extends Variable {
         try {
             setValue(getCompiled().eval(variables));
         } catch (final ScriptException e) {
-            throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptEvaluationErrorMessage") + ": " + this.source, e);
+            throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptEvaluationErrorMessage") + ": " + source, e);
         }
 
         return getValue();
@@ -75,18 +75,18 @@ public class Script extends Variable {
     }
 
     private Object getValue() {
-        return this.value;
+        return value;
     }
 
     private boolean isClearAtInitFrame() {
-        return this.clearAtInitFrame;
+        return clearAtInitFrame;
     }
 
     private CompiledScript getCompiled() {
-        return this.compiled;
+        return compiled;
     }
 
     private String getSource() {
-        return this.source;
+        return source;
     }
 }

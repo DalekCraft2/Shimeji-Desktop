@@ -36,7 +36,7 @@ public class Area {
     private final FloorCeiling bottomBorder = new FloorCeiling(this, true);
 
     public boolean isVisible() {
-        return this.visible;
+        return visible;
     }
 
     public void setVisible(final boolean visible) {
@@ -44,7 +44,7 @@ public class Area {
     }
 
     public int getLeft() {
-        return this.left;
+        return left;
     }
 
     public void setLeft(final int left) {
@@ -52,7 +52,7 @@ public class Area {
     }
 
     public int getTop() {
-        return this.top;
+        return top;
     }
 
     public void setTop(final int top) {
@@ -60,7 +60,7 @@ public class Area {
     }
 
     public int getRight() {
-        return this.right;
+        return right;
     }
 
     public void setRight(final int right) {
@@ -68,7 +68,7 @@ public class Area {
     }
 
     public int getBottom() {
-        return this.bottom;
+        return bottom;
     }
 
     public void setBottom(final int bottom) {
@@ -76,7 +76,7 @@ public class Area {
     }
 
     public int getDleft() {
-        return this.dleft;
+        return dleft;
     }
 
     public void setDleft(final int dleft) {
@@ -84,7 +84,7 @@ public class Area {
     }
 
     public int getDtop() {
-        return this.dtop;
+        return dtop;
     }
 
     public void setDtop(final int dtop) {
@@ -92,7 +92,7 @@ public class Area {
     }
 
     public int getDright() {
-        return this.dright;
+        return dright;
     }
 
     public void setDright(final int dright) {
@@ -100,7 +100,7 @@ public class Area {
     }
 
     public int getDbottom() {
-        return this.dbottom;
+        return dbottom;
     }
 
     public void setDbottom(final int dbottom) {
@@ -108,19 +108,19 @@ public class Area {
     }
 
     public Wall getLeftBorder() {
-        return this.leftBorder;
+        return leftBorder;
     }
 
     public FloorCeiling getTopBorder() {
-        return this.topBorder;
+        return topBorder;
     }
 
     public Wall getRightBorder() {
-        return this.rightBorder;
+        return rightBorder;
     }
 
     public FloorCeiling getBottomBorder() {
-        return this.bottomBorder;
+        return bottomBorder;
     }
 
     public int getWidth() {

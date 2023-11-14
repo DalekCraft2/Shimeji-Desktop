@@ -6,11 +6,11 @@ public class CGSize extends Structure {
     public double width, height;
 
     public int getWidth() {
-        return (int) Math.round(this.width);
+        return (int) Math.round(width);
     }
 
     public int getHeight() {
-        return (int) Math.round(this.height);
+        return (int) Math.round(height);
     }
 }
 

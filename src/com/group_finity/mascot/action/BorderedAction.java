@@ -8,6 +8,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -31,7 +32,7 @@ public abstract class BorderedAction extends ActionBase {
 
     private Border border;
 
-    public BorderedAction(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public BorderedAction(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 
@@ -42,11 +43,11 @@ public abstract class BorderedAction extends ActionBase {
         final String borderType = getBorderType();
 
         if (getSchema().getString(BORDERTYPE_CEILING).equals(borderType)) {
-            this.setBorder(getEnvironment().getCeiling());
+            setBorder(getEnvironment().getCeiling());
         } else if (getSchema().getString(BORDERTYPE_WALL).equals(borderType)) {
-            this.setBorder(getEnvironment().getWall());
+            setBorder(getEnvironment().getWall());
         } else if (getSchema().getString(BORDERTYPE_FLOOR).equals(borderType)) {
-            this.setBorder(getEnvironment().getFloor());
+            setBorder(getEnvironment().getFloor());
         }
     }
 
@@ -66,7 +67,7 @@ public abstract class BorderedAction extends ActionBase {
     }
 
     protected Border getBorder() {
-        return this.border;
+        return border;
     }
 
 }

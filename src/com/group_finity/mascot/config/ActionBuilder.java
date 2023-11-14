@@ -60,7 +60,7 @@ public class ActionBuilder implements IActionBuilder {
         return "Action(" + getName() + "," + getType() + "," + getClassName() + ")";
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
 
         try {
@@ -73,9 +73,9 @@ public class ActionBuilder implements IActionBuilder {
             // Create Child Actions
             final List<Action> actions = createActions();
 
-            if (this.type.equals(schema.getString("Embedded"))) {
+            if (type.equals(schema.getString("Embedded"))) {
                 try {
-                    final Class<? extends Action> cls = (Class<? extends Action>) Class.forName(this.getClassName());
+                    @SuppressWarnings("unchecked") final Class<? extends Action> cls = (Class<? extends Action>) Class.forName(getClassName());
                     try {
 
                         try {
@@ -98,15 +98,15 @@ public class ActionBuilder implements IActionBuilder {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage") + "(" + this + ")", e);
                 }
 
-            } else if (this.type.equals(schema.getString("Move"))) {
+            } else if (type.equals(schema.getString("Move"))) {
                 return new Move(schema, animations, variables);
-            } else if (this.type.equals(schema.getString("Stay"))) {
+            } else if (type.equals(schema.getString("Stay"))) {
                 return new Stay(schema, animations, variables);
-            } else if (this.type.equals(schema.getString("Animate"))) {
+            } else if (type.equals(schema.getString("Animate"))) {
                 return new Animate(schema, animations, variables);
-            } else if (this.type.equals(schema.getString("Sequence"))) {
+            } else if (type.equals(schema.getString("Sequence"))) {
                 return new Sequence(schema, variables, actions.toArray(new Action[0]));
-            } else if (this.type.equals(schema.getString("Select"))) {
+            } else if (type.equals(schema.getString("Select"))) {
                 return new Select(schema, variables, actions.toArray(new Action[0]));
             } else {
                 throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage") + "(" + this + ")");
@@ -119,15 +119,16 @@ public class ActionBuilder implements IActionBuilder {
         }
     }
 
+    @Override
     public void validate() throws ConfigurationException {
-        for (final IActionBuilder ref : this.getActionRefs()) {
+        for (final IActionBuilder ref : getActionRefs()) {
             ref.validate();
         }
     }
 
     private List<Action> createActions() throws ActionInstantiationException {
         final List<Action> actions = new ArrayList<>();
-        for (final IActionBuilder ref : this.getActionRefs()) {
+        for (final IActionBuilder ref : getActionRefs()) {
             actions.add(ref.buildAction(new HashMap<>()));
         }
         return actions;
@@ -135,7 +136,7 @@ public class ActionBuilder implements IActionBuilder {
 
     private List<Animation> createAnimations() throws AnimationInstantiationException {
         final List<Animation> animations = new ArrayList<>();
-        for (final AnimationBuilder animationFactory : this.getAnimationBuilders()) {
+        for (final AnimationBuilder animationFactory : getAnimationBuilders()) {
             animations.add(animationFactory.buildAnimation());
         }
         return animations;
@@ -143,7 +144,7 @@ public class ActionBuilder implements IActionBuilder {
 
     private VariableMap createVariables(final Map<String, String> params) throws VariableException {
         final VariableMap variables = new VariableMap();
-        for (final Map.Entry<String, String> param : this.getParams().entrySet()) {
+        for (final Map.Entry<String, String> param : getParams().entrySet()) {
             variables.put(param.getKey(), Variable.parse(param.getValue()));
         }
         for (final Map.Entry<String, String> param : params.entrySet()) {
@@ -153,27 +154,27 @@ public class ActionBuilder implements IActionBuilder {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getType() {
-        return this.type;
+        return type;
     }
 
     private String getClassName() {
-        return this.className;
+        return className;
     }
 
     private Map<String, String> getParams() {
-        return this.params;
+        return params;
     }
 
     private List<AnimationBuilder> getAnimationBuilders() {
-        return this.animationBuilders;
+        return animationBuilders;
     }
 
     private List<IActionBuilder> getActionRefs() {
-        return this.actionRefs;
+        return actionRefs;
     }
 
 

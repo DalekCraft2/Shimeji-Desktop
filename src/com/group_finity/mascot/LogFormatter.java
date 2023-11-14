@@ -28,13 +28,13 @@ public class LogFormatter extends SimpleFormatter {
         final StringBuilder sb = new StringBuilder();
 
         // Minimize memory allocations here.
-        this.dat.setTime(record.getMillis());
-        this.args[0] = this.dat;
+        dat.setTime(record.getMillis());
+        args[0] = dat;
         final StringBuffer text = new StringBuffer();
-        if (this.formatter == null) {
-            this.formatter = new MessageFormat(format);
+        if (formatter == null) {
+            formatter = new MessageFormat(format);
         }
-        this.formatter.format(this.args, text, null);
+        formatter.format(args, text, null);
         sb.append(text);
         sb.append(" ");
 
@@ -55,7 +55,7 @@ public class LogFormatter extends SimpleFormatter {
 
         final String message = formatMessage(record);
         sb.append(message);
-        sb.append(this.lineSeparator);
+        sb.append(lineSeparator);
         if (record.getThrown() != null) {
             try {
                 final StringWriter sw = new StringWriter();

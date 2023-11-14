@@ -16,7 +16,7 @@ public class Location {
     private int dy;
 
     public int getX() {
-        return this.x;
+        return x;
     }
 
     public void setX(final int x) {
@@ -24,7 +24,7 @@ public class Location {
     }
 
     public int getY() {
-        return this.y;
+        return y;
     }
 
     public void setY(final int y) {
@@ -32,7 +32,7 @@ public class Location {
     }
 
     public int getDx() {
-        return this.dx;
+        return dx;
     }
 
     public void setDx(final int dx) {
@@ -40,7 +40,7 @@ public class Location {
     }
 
     public int getDy() {
-        return this.dy;
+        return dy;
     }
 
     public void setDy(final int dy) {

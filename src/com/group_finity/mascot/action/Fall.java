@@ -8,6 +8,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -51,7 +52,7 @@ public class Fall extends ActionBase {
 
     private double modY;
 
-    public Fall(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public Fall(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 
@@ -59,8 +60,8 @@ public class Fall extends ActionBase {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        this.setVelocityX(getInitialVx());
-        this.setVelocityY(getInitialVy());
+        setVelocityX(getInitialVx());
+        setVelocityY(getInitialVy());
     }
 
     @Override
@@ -72,24 +73,24 @@ public class Fall extends ActionBase {
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-        if (this.getVelocityX() != 0) {
-            getMascot().setLookRight(this.getVelocityX() > 0);
+        if (getVelocityX() != 0) {
+            getMascot().setLookRight(getVelocityX() > 0);
         }
 
-        this.setVelocityX(this.getVelocityX() - this.getVelocityX() * getResistanceX());
-        this.setVelocityY(this.getVelocityY() - this.getVelocityY() * getResistanceY() + getGravity());
+        setVelocityX(getVelocityX() - getVelocityX() * getResistanceX());
+        setVelocityY(getVelocityY() - getVelocityY() * getResistanceY() + getGravity());
 
         putVariable(getSchema().getString(VARIABLE_VELOCITYX), getVelocityX());
         putVariable(getSchema().getString(VARIABLE_VELOCITYY), getVelocityY());
 
-        this.setModX(this.getModX() + this.getVelocityX() % 1);
-        this.setModY(this.getModY() + this.getVelocityY() % 1);
+        setModX(getModX() + getVelocityX() % 1);
+        setModY(getModY() + getVelocityY() % 1);
 
-        int dx = (int) this.getVelocityX() + (int) this.getModX();
-        int dy = (int) this.getVelocityY() + (int) this.getModY();
+        int dx = (int) getVelocityX() + (int) getModX();
+        int dy = (int) getVelocityY() + (int) getModY();
 
-        this.setModX(this.getModX() % 1);
-        this.setModY(this.getModY() % 1);
+        setModX(getModX() % 1);
+        setModY(getModY() % 1);
 
         int dev = Math.max(1, Math.max(Math.abs(dx), Math.abs(dy)));
 
@@ -143,7 +144,7 @@ public class Fall extends ActionBase {
     }
 
     private double getVelocityY() {
-        return this.velocityY;
+        return velocityY;
     }
 
     private void setVelocityX(final double velocityX) {
@@ -151,7 +152,7 @@ public class Fall extends ActionBase {
     }
 
     private double getVelocityX() {
-        return this.velocityX;
+        return velocityX;
     }
 
     private void setModX(final double modX) {
@@ -159,7 +160,7 @@ public class Fall extends ActionBase {
     }
 
     private double getModX() {
-        return this.modX;
+        return modX;
     }
 
     private void setModY(final double modY) {
@@ -167,7 +168,7 @@ public class Fall extends ActionBase {
     }
 
     private double getModY() {
-        return this.modY;
+        return modY;
     }
 
 }

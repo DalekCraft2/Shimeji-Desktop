@@ -18,7 +18,7 @@ public class NativeFactoryImpl extends NativeFactory {
 
     @Override
     public Environment getEnvironment() {
-        return this.environment;
+        return environment;
     }
 
     @Override

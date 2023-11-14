@@ -6,6 +6,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +21,7 @@ public class Broadcast extends Animate {
 
     private static final String DEFAULT_AFFORDANCE = "";
 
-    public Broadcast(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public Broadcast(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 

@@ -19,11 +19,11 @@ public class FloorCeiling implements Border {
     }
 
     public Area getArea() {
-        return this.area;
+        return area;
     }
 
     public boolean isBottom() {
-        return this.bottom;
+        return bottom;
     }
 
     public int getY() {
@@ -61,6 +61,7 @@ public class FloorCeiling implements Border {
     }
 
 
+    @Override
     public Point move(final Point location) {
 
         if (!getArea().isVisible()) {

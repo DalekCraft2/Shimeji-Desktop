@@ -28,49 +28,49 @@ class GenericNativeImage implements NativeImage {
     private final Icon icon;
 
     public GenericNativeImage(final BufferedImage image) {
-        this.managedImage = image;
-        this.icon = new ImageIcon(image);
+        managedImage = image;
+        icon = new ImageIcon(image);
     }
 
 
     public void flush() {
-        this.getManagedImage().flush();
+        getManagedImage().flush();
     }
 
     public Graphics getGraphics() {
-        return this.getManagedImage().createGraphics();
+        return getManagedImage().createGraphics();
     }
 
     public int getHeight() {
-        return this.getManagedImage().getHeight();
+        return getManagedImage().getHeight();
     }
 
     public int getWidth() {
-        return this.getManagedImage().getWidth();
+        return getManagedImage().getWidth();
     }
 
     public int getHeight(final ImageObserver observer) {
-        return this.getManagedImage().getHeight(observer);
+        return getManagedImage().getHeight(observer);
     }
 
     public Object getProperty(final String name, final ImageObserver observer) {
-        return this.getManagedImage().getProperty(name, observer);
+        return getManagedImage().getProperty(name, observer);
     }
 
     public ImageProducer getSource() {
-        return this.getManagedImage().getSource();
+        return getManagedImage().getSource();
     }
 
     public int getWidth(final ImageObserver observer) {
-        return this.getManagedImage().getWidth(observer);
+        return getManagedImage().getWidth(observer);
     }
 
     BufferedImage getManagedImage() {
-        return this.managedImage;
+        return managedImage;
     }
 
     public Icon getIcon() {
-        return this.icon;
+        return icon;
     }
 
 }

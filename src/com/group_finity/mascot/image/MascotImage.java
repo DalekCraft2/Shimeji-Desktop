@@ -29,15 +29,15 @@ public class MascotImage {
     }
 
     public NativeImage getImage() {
-        return this.image;
+        return image;
     }
 
     public Point getCenter() {
-        return this.center;
+        return center;
     }
 
     public Dimension getSize() {
-        return this.size;
+        return size;
     }
 
 }

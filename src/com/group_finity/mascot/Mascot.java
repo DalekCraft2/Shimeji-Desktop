@@ -2,12 +2,14 @@ package com.group_finity.mascot;
 
 import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.behavior.Behavior;
+import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.image.TranslucentWindow;
+import com.group_finity.mascot.menu.JLongMenu;
 import com.group_finity.mascot.sound.Sounds;
 
 import javax.swing.*;
@@ -218,7 +220,7 @@ public class Mascot implements Serializable {
         final JMenuItem disposeMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("Dismiss"));
         disposeMenu.addActionListener(e -> dispose());
 
-        // "Follow Mouse!" Menu item
+        // "Follow Mouse!" menu item
         final JMenuItem gatherMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("FollowCursor"));
         gatherMenu.addActionListener(event -> getManager().setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER, imageSet));
 
@@ -228,7 +230,7 @@ public class Mascot implements Serializable {
 
         // "Reduce to One!" menu item
         final JMenuItem onlyOneMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("DismissAllOthers"));
-        onlyOneMenu.addActionListener(event -> getManager().remainOne(Mascot.this));
+        onlyOneMenu.addActionListener(event -> getManager().remainOne(this));
 
         // "Restore IE!" menu item
         final JMenuItem restoreMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("RestoreWindows"));
@@ -249,15 +251,15 @@ public class Mascot implements Serializable {
 
         // "Paused" Menu item
         final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? Main.getInstance().getLanguageBundle().getString("PauseAnimations") : Main.getInstance().getLanguageBundle().getString("ResumeAnimations"));
-        pauseMenu.addActionListener(event -> Mascot.this.setPaused(!Mascot.this.isPaused()));
+        pauseMenu.addActionListener(event -> setPaused(!isPaused()));
 
-        // Add the Behaviors submenu.  Currently slightly buggy, sometimes the menu ghosts.
-        com.group_finity.mascot.menu.JLongMenu submenu = new com.group_finity.mascot.menu.JLongMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"), 30);
+        // Add the Behaviors submenu. Currently slightly buggy, sometimes the menu ghosts.
+        JLongMenu submenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"), 30);
         // The MenuScroller would look better than the JLongMenu, but the initial positioning is not working correctly.
         // MenuScroller.setScrollerFor(submenu, 30, 125);
         submenu.setAutoscrolls(true);
         JMenuItem item;
-        com.group_finity.mascot.config.Configuration config = Main.getInstance().getConfiguration(getImageSet());
+        Configuration config = Main.getInstance().getConfiguration(getImageSet());
         Behavior behaviour;
         for (String behaviorName : config.getBehaviorNames()) {
             final String command = behaviorName;
@@ -268,6 +270,7 @@ public class Mascot implements Serializable {
                             Main.getInstance().getLanguageBundle().getString(behaviorName) :
                             behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll("  ", " "));
                     item.addActionListener(new ActionListener() {
+                        @Override
                         public void actionPerformed(final ActionEvent e) {
                             try {
                                 setBehavior(Main.getInstance().getConfiguration(getImageSet()).buildBehavior(command));
@@ -385,18 +388,12 @@ public class Mascot implements Serializable {
         animating = false;
         getWindow().asJWindow().dispose();
         if (getManager() != null) {
-            getManager().remove(Mascot.this);
+            getManager().remove(this);
         }
     }
 
     private void refreshCursor(Point position) {
-        boolean useHand = false;
-        for (final Hotspot hotspot : hotspots) {
-            if (hotspot.contains(this, position)) {
-                useHand = true;
-                break;
-            }
-        }
+        boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position));
 
         refreshCursor(useHand);
     }
@@ -486,7 +483,7 @@ public class Mascot implements Serializable {
     }
 
     private TranslucentWindow getWindow() {
-        return this.window;
+        return window;
     }
 
     public MascotEnvironment getEnvironment() {

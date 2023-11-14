@@ -9,6 +9,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,7 @@ public class FallWithIE extends Fall {
 
     private static final int DEFAULT_IEOFFSETY = 0;
 
-    public FallWithIE(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public FallWithIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 

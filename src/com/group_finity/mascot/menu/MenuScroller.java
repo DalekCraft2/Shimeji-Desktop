@@ -393,7 +393,7 @@ public class MenuScroller {
      * it last appeared.
      *
      * @param index the index of the item to keep visible
-     * @see #keepVisible(javax.swing.JMenuItem)
+     * @see #keepVisible(JMenuItem)
      */
     public void keepVisible(int index) {
         keepVisibleIndex = index;
@@ -498,8 +498,8 @@ public class MenuScroller {
 
     private class MenuScrollTimer extends Timer {
 
-        public MenuScrollTimer(final int increment, int interval) {
-            super(interval, e -> {
+        public MenuScrollTimer(final int increment, int delay) {
+            super(delay, e -> {
                 firstIndex += increment;
                 refreshMenu();
             });

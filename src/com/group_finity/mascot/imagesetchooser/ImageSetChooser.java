@@ -3,6 +3,15 @@ package com.group_finity.mascot.imagesetchooser;
 import com.group_finity.mascot.Main;
 
 import javax.swing.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -13,15 +22,15 @@ import java.util.List;
 /**
  * Chooser used to select the Shimeji image sets in use.
  */
-public class ImageSetChooser extends javax.swing.JDialog {
-    private final String configFile = "./conf/settings.properties"; // Config file name
-    private final String topDir = "./img"; // Top Level Directory
-    private ArrayList<String> imageSets = new ArrayList<>();
+public class ImageSetChooser extends JDialog {
+    private static final String configFile = "./conf/settings.properties"; // Config file name
+    private static final String topDir = "./img"; // Top Level Directory
+    private final ArrayList<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
 
-    public ImageSetChooser(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public ImageSetChooser(Frame owner, boolean modal) {
+        super(owner, modal);
         initComponents();
         setLocationRelativeTo(null);
 
@@ -232,73 +241,74 @@ public class ImageSetChooser extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new JScrollPane();
+        jPanel2 = new JPanel();
         jList1 = new ShimejiList();
         jList2 = new ShimejiList();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        useSelectedButton = new javax.swing.JButton();
-        useAllButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        clearAllLabel = new javax.swing.JLabel();
-        slashLabel = new javax.swing.JLabel();
-        selectAllLabel = new javax.swing.JLabel();
+        jLabel1 = new JLabel();
+        jPanel1 = new JPanel();
+        useSelectedButton = new JButton();
+        useAllButton = new JButton();
+        cancelButton = new JButton();
+        jPanel4 = new JPanel();
+        clearAllLabel = new JLabel();
+        slashLabel = new JLabel();
+        selectAllLabel = new JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Shimeji-ee Image Set Chooser");
-        setMinimumSize(new java.awt.Dimension(670, 495));
+        setMinimumSize(new Dimension(670, 495));
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(518, 100));
+        jScrollPane1.setPreferredSize(new Dimension(518, 100));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jList1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                                .addComponent(jList1, GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
-                                .addComponent(jList2, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)));
+                                .addComponent(jList2, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)));
         jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jList2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                        .addComponent(jList1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE));
+                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(jList2, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                        .addComponent(jList1, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE));
 
         jScrollPane1.setViewportView(jPanel2);
 
         jLabel1.setText("Select Image Sets to Use:");
 
-        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
+        jPanel1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
         useSelectedButton.setText("Use Selected");
-        useSelectedButton.setMaximumSize(new java.awt.Dimension(130, 26));
-        useSelectedButton.setPreferredSize(new java.awt.Dimension(130, 26));
+        useSelectedButton.setMaximumSize(new Dimension(130, 26));
+        useSelectedButton.setPreferredSize(new Dimension(130, 26));
         useSelectedButton.addActionListener(this::useSelectedButtonActionPerformed);
         jPanel1.add(useSelectedButton);
 
         useAllButton.setText("Use All");
-        useAllButton.setMaximumSize(new java.awt.Dimension(95, 23));
-        useAllButton.setMinimumSize(new java.awt.Dimension(95, 23));
-        useAllButton.setPreferredSize(new java.awt.Dimension(130, 26));
+        useAllButton.setMaximumSize(new Dimension(95, 23));
+        useAllButton.setMinimumSize(new Dimension(95, 23));
+        useAllButton.setPreferredSize(new Dimension(130, 26));
         useAllButton.addActionListener(this::useAllButtonActionPerformed);
         jPanel1.add(useAllButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.setMaximumSize(new java.awt.Dimension(95, 23));
-        cancelButton.setMinimumSize(new java.awt.Dimension(95, 23));
-        cancelButton.setPreferredSize(new java.awt.Dimension(130, 26));
+        cancelButton.setMaximumSize(new Dimension(95, 23));
+        cancelButton.setMinimumSize(new Dimension(95, 23));
+        cancelButton.setPreferredSize(new Dimension(130, 26));
         cancelButton.addActionListener(this::cancelButtonActionPerformed);
         jPanel1.add(cancelButton);
 
-        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel4.setLayout(new BoxLayout(jPanel4, BoxLayout.LINE_AXIS));
 
-        clearAllLabel.setForeground(new java.awt.Color(0, 0, 204));
+        clearAllLabel.setForeground(new Color(0, 0, 204));
         clearAllLabel.setText("Clear All");
-        clearAllLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        clearAllLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                clearAllLabelMouseClicked(evt);
+        clearAllLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        clearAllLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                clearAllLabelMouseClicked(e);
             }
         });
         jPanel4.add(clearAllLabel);
@@ -306,57 +316,58 @@ public class ImageSetChooser extends javax.swing.JDialog {
         slashLabel.setText(" / ");
         jPanel4.add(slashLabel);
 
-        selectAllLabel.setForeground(new java.awt.Color(0, 0, 204));
+        selectAllLabel.setForeground(new Color(0, 0, 204));
         selectAllLabel.setText("Select All");
-        selectAllLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        selectAllLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                selectAllLabelMouseClicked(evt);
+        selectAllLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        selectAllLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                selectAllLabelMouseClicked(e);
             }
         });
         jPanel4.add(selectAllLabel);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel1)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 384, Short.MAX_VALUE)
-                                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 384, Short.MAX_VALUE)
+                                                .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
                                 .addContainerGap()));
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel1)
-                                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addGap(11, 11, 11)));
 
         pack();
     }// </editor-fold>
 
-    private void clearAllLabelMouseClicked(java.awt.event.MouseEvent evt) {
+    private void clearAllLabelMouseClicked(MouseEvent evt) {
         jList1.clearSelection();
         jList2.clearSelection();
     }
 
-    private void selectAllLabelMouseClicked(java.awt.event.MouseEvent evt) {
+    private void selectAllLabelMouseClicked(MouseEvent evt) {
         jList1.setSelectionInterval(0, jList1.getModel().getSize() - 1);
         jList2.setSelectionInterval(0, jList2.getModel().getSize() - 1);
     }
 
-    private void useSelectedButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void useSelectedButtonActionPerformed(ActionEvent evt) {
         imageSets.clear();
 
         for (ImageSetChooserPanel obj : jList1.getSelectedValuesList()) {
@@ -373,25 +384,21 @@ public class ImageSetChooser extends javax.swing.JDialog {
 
         updateConfigFile();
         closeProgram = false;
-        this.dispose();
+        dispose();
     }
 
-    private void useAllButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void useAllButtonActionPerformed(ActionEvent evt) {
         updateConfigFile();
         closeProgram = false;
-        this.dispose();
+        dispose();
     }
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.dispose();
+    private void cancelButtonActionPerformed(ActionEvent evt) {
+        dispose();
     }
 
     private int[] convertIntegers(List<Integer> integers) {
-        int[] ret = new int[integers.size()];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = integers.get(i);
-        }
-        return ret;
+        return integers.stream().mapToInt(integer -> integer).toArray();
     }
 
     private void setUpList1() {
@@ -399,9 +406,9 @@ public class ImageSetChooser extends javax.swing.JDialog {
             @Override
             public void setSelectionInterval(int index0, int index1) {
                 if (isSelectedIndex(index0)) {
-                    super.removeSelectionInterval(index0, index1);
+                    removeSelectionInterval(index0, index1);
                 } else {
-                    super.addSelectionInterval(index0, index1);
+                    addSelectionInterval(index0, index1);
                 }
             }
         });
@@ -412,9 +419,9 @@ public class ImageSetChooser extends javax.swing.JDialog {
             @Override
             public void setSelectionInterval(int index0, int index1) {
                 if (isSelectedIndex(index0)) {
-                    super.removeSelectionInterval(index0, index1);
+                    removeSelectionInterval(index0, index1);
                 } else {
-                    super.addSelectionInterval(index0, index1);
+                    addSelectionInterval(index0, index1);
                 }
             }
         });
@@ -424,25 +431,25 @@ public class ImageSetChooser extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new ImageSetChooser(new javax.swing.JFrame(), true).display();
+        EventQueue.invokeLater(() -> {
+            new ImageSetChooser(new JFrame(), true).display();
             System.exit(0);
         });
     }
 
     // Variables declaration - do not modify
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel clearAllLabel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JList<ImageSetChooserPanel> jList1;
-    private javax.swing.JList<ImageSetChooserPanel> jList2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel selectAllLabel;
-    private javax.swing.JLabel slashLabel;
-    private javax.swing.JButton useAllButton;
-    private javax.swing.JButton useSelectedButton;
+    private JButton cancelButton;
+    private JLabel clearAllLabel;
+    private JLabel jLabel1;
+    private JList<ImageSetChooserPanel> jList1;
+    private JList<ImageSetChooserPanel> jList2;
+    private JPanel jPanel1;
+    private JPanel jPanel2;
+    private JPanel jPanel4;
+    private JScrollPane jScrollPane1;
+    private JLabel selectAllLabel;
+    private JLabel slashLabel;
+    private JButton useAllButton;
+    private JButton useSelectedButton;
     // End of variables declaration
 }

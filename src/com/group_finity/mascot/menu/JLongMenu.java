@@ -33,7 +33,7 @@ public class JLongMenu extends JMenu {
 
     public JLongMenu(String label, int maxitems) {
         super(label);
-        this.maxItems = maxitems;
+        maxItems = maxitems;
         // leave one for the "more" menu and one for the windows task bar.
     }
 
@@ -41,18 +41,19 @@ public class JLongMenu extends JMenu {
     // getPopupMenuOrigin. It is pretty much just a copy of
     // JMenu.setPopupMenuVisible
 
-    public void setPopupMenuVisible(boolean b) {
+    @Override
+    public void setPopupMenuVisible(boolean visible) {
         if (!isEnabled()) {
             return;
         }
         boolean isVisible = isPopupMenuVisible();
-        if (b != isVisible) {
+        if (visible != isVisible) {
             // We can't call ensurePopupMenuCreated() since it is private so
             // we call a method that calls it. (Sneaky huh?).
             isPopupMenuVisible();
             // Set location of popupMenu (pulldown or pullright)
             //  Perhaps this should be dictated by L&F
-            if (b && isShowing()) {
+            if (visible && isShowing()) {
                 Point p = getPopupMenuOrigin();
                 getPopupMenu().show(this, p.x, p.y);
             } else {
@@ -67,6 +68,7 @@ public class JLongMenu extends JMenu {
      * @return a Point in the coordinate space of the menu instance
      * which should be used as the origin of the JMenu's popup menu.
      */
+    @Override
     protected Point getPopupMenuOrigin() {
         int x;
         int y;
@@ -143,23 +145,24 @@ public class JLongMenu extends JMenu {
         return new Point(x, y);
     }
 
-    public JMenuItem add(JMenuItem item) {
+    @Override
+    public JMenuItem add(JMenuItem menuItem) {
         if (moreMenu != null) {
             // We already have a more menu - add it there.
-            return moreMenu.add(item);
+            return moreMenu.add(menuItem);
         }
 
         if (getItemCount() < maxItems) {
             // We don't go over the limit - just add it.
-            return super.add(item);
+            return super.add(menuItem);
         }
 
         // If we reached here, we reached the limit and we don't have a more menu.
-        // Lets create it and add the item there.
+        // Let's create it and add the item there.
         moreMenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("More"), maxItems);
 
         super.add(moreMenu);
-        return moreMenu.add(item);
+        return moreMenu.add(menuItem);
     }
 
 }

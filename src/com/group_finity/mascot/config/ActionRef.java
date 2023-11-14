@@ -28,8 +28,8 @@ public class ActionRef implements IActionBuilder {
     public ActionRef(final Configuration configuration, final Entry refNode) {
         this.configuration = configuration;
 
-        this.name = refNode.getAttribute(configuration.getSchema().getString("Name"));
-        this.getParams().putAll(refNode.getAttributes());
+        name = refNode.getAttribute(configuration.getSchema().getString("Name"));
+        getParams().putAll(refNode.getAttributes());
 
         log.log(Level.INFO, "Read Action Reference({0})", this);
     }
@@ -40,15 +40,15 @@ public class ActionRef implements IActionBuilder {
     }
 
     private String getName() {
-        return this.name;
+        return name;
     }
 
     private Map<String, String> getParams() {
-        return this.params;
+        return params;
     }
 
     private Configuration getConfiguration() {
-        return this.configuration;
+        return configuration;
     }
 
     @Override
@@ -59,9 +59,10 @@ public class ActionRef implements IActionBuilder {
         }
     }
 
+    @Override
     public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
         final Map<String, String> newParams = new LinkedHashMap<>(params);
         newParams.putAll(getParams());
-        return this.getConfiguration().buildAction(getName(), newParams);
+        return getConfiguration().buildAction(getName(), newParams);
     }
 }

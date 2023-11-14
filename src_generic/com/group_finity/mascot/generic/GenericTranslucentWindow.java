@@ -26,9 +26,9 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
     public GenericTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-        this.init();
+        init();
 
-        this.panel = new JPanel() {
+        panel = new JPanel() {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -36,7 +36,7 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
                 g.drawImage(getImage().getManagedImage(), 0, 0, null);
             }
         };
-        this.setContentPane(this.panel);
+        setContentPane(panel);
     }
 
     private void init() {
@@ -63,10 +63,11 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
     public void setAlpha(final float alpha) {
         WindowUtils.setWindowAlpha(this, alpha);
+        this.alpha = alpha;
     }
 
     public float getAlpha() {
-        return this.alpha;
+        return alpha;
     }
 
     @Override
@@ -80,16 +81,18 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     public GenericNativeImage getImage() {
-        return this.image;
+        return image;
     }
 
+    @Override
     public void setImage(final NativeImage image) {
         this.image = (GenericNativeImage) image;
     }
 
+    @Override
     public void updateImage() {
-        WindowUtils.setWindowMask(this, this.getImage().getIcon());
+        WindowUtils.setWindowMask(this, getImage().getIcon());
         validate();
-        this.repaint();
+        repaint();
     }
 }

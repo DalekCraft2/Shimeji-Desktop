@@ -39,7 +39,7 @@ public class AnimationBuilder {
         }
 
         this.schema = schema;
-        this.condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
+        condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
 
         log.log(Level.INFO, "Start Reading Animations");
 

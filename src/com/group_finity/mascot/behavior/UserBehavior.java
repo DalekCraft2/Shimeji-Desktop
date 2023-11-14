@@ -59,18 +59,18 @@ public class UserBehavior implements Behavior {
     @Override
     public synchronized void init(final Mascot mascot) throws CantBeAliveException {
 
-        this.setMascot(mascot);
+        setMascot(mascot);
 
         log.log(Level.INFO, "Default Behavior({0},{1})", new Object[]
                 {
-                        this.getMascot(), this
+                        getMascot(), this
                 });
 
         try {
             getAction().init(mascot);
             if (!getAction().hasNext()) {
                 try {
-                    mascot.setBehavior(this.getConfiguration().buildBehavior(getName(), mascot));
+                    mascot.setBehavior(getConfiguration().buildBehavior(getName(), mascot));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e);
                 }
@@ -82,15 +82,15 @@ public class UserBehavior implements Behavior {
     }
 
     private Configuration getConfiguration() {
-        return this.configuration;
+        return configuration;
     }
 
     private Action getAction() {
-        return this.action;
+        return action;
     }
 
     private String getName() {
-        return this.name;
+        return name;
     }
 
     /**
@@ -98,6 +98,7 @@ public class UserBehavior implements Behavior {
      *
      * @throws CantBeAliveException
      */
+    @Override
     public synchronized void mousePressed(final MouseEvent event) throws CantBeAliveException {
         if (SwingUtilities.isLeftMouseButton(event)) {
             boolean handled = false;
@@ -144,6 +145,7 @@ public class UserBehavior implements Behavior {
      *
      * @throws CantBeAliveException
      */
+    @Override
     public synchronized void mouseReleased(final MouseEvent event) throws CantBeAliveException {
         if (SwingUtilities.isLeftMouseButton(event)) {
             if (getMascot().isHotspotClicked()) {
@@ -213,7 +215,7 @@ public class UserBehavior implements Behavior {
                         }
 
                         try {
-                            getMascot().setBehavior(this.getConfiguration().buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
+                            getMascot().setBehavior(getConfiguration().buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
                         } catch (final BehaviorInstantiationException e) {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
                         }
@@ -226,7 +228,7 @@ public class UserBehavior implements Behavior {
                             });
 
                     try {
-                        getMascot().setBehavior(this.getConfiguration().buildBehavior(getName(), getMascot()));
+                        getMascot().setBehavior(getConfiguration().buildBehavior(getName(), getMascot()));
                     } catch (final BehaviorInstantiationException e) {
                         throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingActionsErrorMessage"), e);
                     }
@@ -255,7 +257,7 @@ public class UserBehavior implements Behavior {
     }
 
     private Mascot getMascot() {
-        return this.mascot;
+        return mascot;
     }
 
     protected MascotEnvironment getEnvironment() {

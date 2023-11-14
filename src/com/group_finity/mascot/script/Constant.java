@@ -15,11 +15,11 @@ public class Constant extends Variable {
 
     @Override
     public String toString() {
-        return this.value == null ? "null" : this.value.toString();
+        return value == null ? "null" : value.toString();
     }
 
     private Object getValue() {
-        return this.value;
+        return value;
     }
 
     @Override

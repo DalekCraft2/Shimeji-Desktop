@@ -7,6 +7,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,7 @@ public class Move extends BorderedAction {
 
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
-    public Move(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public Move(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 

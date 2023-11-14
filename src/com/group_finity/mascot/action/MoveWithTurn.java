@@ -7,6 +7,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,8 +30,8 @@ public class MoveWithTurn extends BorderedAction {
 
     private boolean turning = false;
 
-    public MoveWithTurn(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap params) {
-        super(schema, animations, params);
+    public MoveWithTurn(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+        super(schema, animations, context);
         if (animations.size() < 2) {
             throw new IllegalArgumentException("animations.size<2");
         }
@@ -112,11 +113,11 @@ public class MoveWithTurn extends BorderedAction {
     protected Animation getAnimation() throws VariableException {
         // force to last animation if turning
         if (turning) {
-            return super.getAnimations().get(super.getAnimations().size() - 1);
+            return getAnimations().get(getAnimations().size() - 1);
         } else {
-            // had to expose both animations and varibles for this
+            // had to expose both animations and variables for this
             // is there a better way?
-            List<Animation> animations = super.getAnimations();
+            List<Animation> animations = getAnimations();
             for (int index = 0; index < animations.size() - 1; index++) {
                 if (animations.get(index).isEffective(getVariables())) {
                     return animations.get(index);

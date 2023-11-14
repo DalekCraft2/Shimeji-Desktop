@@ -17,7 +17,7 @@ public class TranslucentFrame extends JWindow {
 
     public TranslucentFrame() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-        this.init();
+        init();
     }
 
     private void init() {
@@ -44,10 +44,11 @@ public class TranslucentFrame extends JWindow {
 
     public void setAlpha(final float alpha) {
         WindowUtils.setWindowAlpha(this, alpha);
+        this.alpha = alpha;
     }
 
     public float getAlpha() {
-        return this.alpha;
+        return alpha;
     }
 
 }

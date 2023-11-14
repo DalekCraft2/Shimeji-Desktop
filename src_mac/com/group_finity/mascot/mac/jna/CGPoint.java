@@ -16,10 +16,10 @@ public class CGPoint extends Structure {
     }
 
     public int getX() {
-        return (int) Math.round(this.x);
+        return (int) Math.round(x);
     }
 
     public int getY() {
-        return (int) Math.round(this.y);
+        return (int) Math.round(y);
     }
 }

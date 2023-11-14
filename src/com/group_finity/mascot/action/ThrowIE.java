@@ -9,6 +9,7 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -32,8 +33,8 @@ public class ThrowIE extends Animate {
 
     private static final double DEFAULT_GRAVITY = 0.5;
 
-    public ThrowIE(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap params) {
-        super(schema, animations, params);
+    public ThrowIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+        super(schema, animations, context);
     }
 
     @Override

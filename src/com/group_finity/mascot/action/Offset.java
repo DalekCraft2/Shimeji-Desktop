@@ -4,6 +4,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -23,8 +24,8 @@ public class Offset extends InstantAction {
 
     private static final int DEFAULT_OFFSETY = 0;
 
-    public Offset(java.util.ResourceBundle schema, final VariableMap params) {
-        super(schema, params);
+    public Offset(ResourceBundle schema, final VariableMap context) {
+        super(schema, context);
     }
 
     @Override

@@ -13,6 +13,7 @@ public class ShimejiList extends JList<ImageSetChooserPanel> {
     }
 
     static class CustomCellRenderer implements ListCellRenderer {
+        @Override
         public Component getListCellRendererComponent(JList list, Object value,
                                                       int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof ImageSetChooserPanel) {

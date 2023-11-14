@@ -67,7 +67,7 @@ public abstract class Environment {
     }
 
     private static Point getCursorPos() {
-        java.awt.PointerInfo info = MouseInfo.getPointerInfo();
+        PointerInfo info = MouseInfo.getPointerInfo();
         return info != null ? info.getLocation() : new Point(0, 0);
     }
 
@@ -82,9 +82,9 @@ public abstract class Environment {
     }
 
     public void tick() {
-        this.screen.set(Environment.getScreenRect());
-        this.complexScreen.set(screenRects);
-        this.cursor.set(Environment.getCursorPos());
+        screen.set(getScreenRect());
+        complexScreen.set(screenRects);
+        cursor.set(getCursorPos());
     }
 
     public Area getScreen() {

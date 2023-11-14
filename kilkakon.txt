@@ -28,7 +28,7 @@ See https://www.youtube.com/watch?v=h4v21f2xFgg for more details
 
 - The shimeji chooser can now be made to appear each time Shimeji is run.
 - Changes made in the Shimeji chooser will not force still selected Shimeji to be reloaded.
-- Unused shimeji chooser check is now case insensitive, and also skips any folder starting with .
+- Unused shimeji chooser check is now case-insensitive, and also skips any folder starting with .
 - Invisible window glitch fixed. I admit this was a very difficult one to crack! On Windows 10, Metro apps that are closed or minimised would still be reported as visible by the operating system. I was able to come up with a solution, and now everything works, although it will mean that the minimum version of Windows supported is now Vista.
 - When "Move Between Screens" is off, Shimeji will be slightly better behaved in staying on the same screen (will not consider windows on another screen as valid interactive windows).
 - When "Move Between Screens" is off, Shimeji will no longer spawn on other monitors when initially spawning, or when running out of valid actions.

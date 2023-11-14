@@ -100,57 +100,57 @@ public class Manager {
         // Update the first environmental information
         NativeFactory.getInstance().getEnvironment().tick();
 
-        synchronized (this.getMascots()) {
+        synchronized (getMascots()) {
 
             // Add the mascot if it should be added
-            for (final Mascot mascot : this.getAdded()) {
-                this.getMascots().add(mascot);
+            for (final Mascot mascot : getAdded()) {
+                getMascots().add(mascot);
             }
-            this.getAdded().clear();
+            getAdded().clear();
 
             // Remove the mascot if it should be removed
-            for (final Mascot mascot : this.getRemoved()) {
-                this.getMascots().remove(mascot);
+            for (final Mascot mascot : getRemoved()) {
+                getMascots().remove(mascot);
             }
-            this.getRemoved().clear();
+            getRemoved().clear();
 
             // Advance mascot's time
-            for (final Mascot mascot : this.getMascots()) {
+            for (final Mascot mascot : getMascots()) {
                 mascot.tick();
             }
 
             // Advance mascot's time
-            for (final Mascot mascot : this.getMascots()) {
+            for (final Mascot mascot : getMascots()) {
                 mascot.apply();
             }
         }
 
         if (isExitOnLastRemoved()) {
-            if (this.getMascots().isEmpty()) {
+            if (getMascots().isEmpty()) {
                 Main.getInstance().exit();
             }
         }
     }
 
     public void add(final Mascot mascot) {
-        synchronized (this.getAdded()) {
-            this.getAdded().add(mascot);
-            this.getRemoved().remove(mascot);
+        synchronized (getAdded()) {
+            getAdded().add(mascot);
+            getRemoved().remove(mascot);
         }
         mascot.setManager(this);
     }
 
     public void remove(final Mascot mascot) {
-        synchronized (this.getAdded()) {
-            this.getAdded().remove(mascot);
-            this.getRemoved().add(mascot);
+        synchronized (getAdded()) {
+            getAdded().remove(mascot);
+            getRemoved().add(mascot);
         }
         mascot.setManager(null);
     }
 
     public void setBehaviorAll(final String name) {
-        synchronized (this.getMascots()) {
-            for (final Mascot mascot : this.getMascots()) {
+        synchronized (getMascots()) {
+            for (final Mascot mascot : getMascots()) {
                 try {
                     Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name)));
@@ -168,8 +168,8 @@ public class Manager {
     }
 
     public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
-        synchronized (this.getMascots()) {
-            for (final Mascot mascot : this.getMascots()) {
+        synchronized (getMascots()) {
+            for (final Mascot mascot : getMascots()) {
                 try {
                     if (mascot.getImageSet().equals(imageSet)) {
                         mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name)));
@@ -188,31 +188,31 @@ public class Manager {
     }
 
     public void remainOne() {
-        synchronized (this.getMascots()) {
-            int totalMascots = this.getMascots().size();
+        synchronized (getMascots()) {
+            int totalMascots = getMascots().size();
             for (int i = totalMascots - 1; i > 0; --i) {
-                this.getMascots().get(i).dispose();
+                getMascots().get(i).dispose();
             }
         }
     }
 
     public void remainOne(Mascot mascot) {
-        synchronized (this.getMascots()) {
-            int totalMascots = this.getMascots().size();
+        synchronized (getMascots()) {
+            int totalMascots = getMascots().size();
             for (int i = totalMascots - 1; i >= 0; --i) {
-                if (!this.getMascots().get(i).equals(mascot)) {
-                    this.getMascots().get(i).dispose();
+                if (!getMascots().get(i).equals(mascot)) {
+                    getMascots().get(i).dispose();
                 }
             }
         }
     }
 
     public void remainOne(String imageSet) {
-        synchronized (this.getMascots()) {
-            int totalMascots = this.getMascots().size();
+        synchronized (getMascots()) {
+            int totalMascots = getMascots().size();
             boolean isFirst = true;
             for (int i = totalMascots - 1; i >= 0; --i) {
-                Mascot m = this.getMascots().get(i);
+                Mascot m = getMascots().get(i);
                 if (m.getImageSet().equals(imageSet) && isFirst) {
                     isFirst = false;
                 } else if (m.getImageSet().equals(imageSet) && !isFirst) {
@@ -223,10 +223,10 @@ public class Manager {
     }
 
     public void remainNone(String imageSet) {
-        synchronized (this.getMascots()) {
-            int totalMascots = this.getMascots().size();
+        synchronized (getMascots()) {
+            int totalMascots = getMascots().size();
             for (int i = totalMascots - 1; i >= 0; --i) {
-                Mascot m = this.getMascots().get(i);
+                Mascot m = getMascots().get(i);
                 if (m.getImageSet().equals(imageSet)) {
                     m.dispose();
                 }
@@ -235,13 +235,13 @@ public class Manager {
     }
 
     public void togglePauseAll() {
-        synchronized (this.getMascots()) {
+        synchronized (getMascots()) {
             boolean isPaused = false;
             if (!getMascots().isEmpty()) {
                 isPaused = getMascots().get(0).isPaused();
             }
 
-            for (final Mascot mascot : this.getMascots()) {
+            for (final Mascot mascot : getMascots()) {
                 mascot.setPaused(!isPaused);
             }
         }
@@ -250,7 +250,7 @@ public class Manager {
     public boolean isPaused() {
         boolean isPaused = false;
 
-        synchronized (this.getMascots()) {
+        synchronized (getMascots()) {
             if (!getMascots().isEmpty()) {
                 isPaused = getMascots().get(0).isPaused();
             }
@@ -268,28 +268,21 @@ public class Manager {
             if (imageSet == null) {
                 return getMascots().size();
             } else {
-                int count = 0;
-                for (int index = 0; index < getMascots().size(); index++) {
-                    Mascot m = getMascots().get(index);
-                    if (m.getImageSet().equals(imageSet)) {
-                        count++;
-                    }
-                }
-                return count;
+                return (int) getMascots().stream().filter(m -> m.getImageSet().equals(imageSet)).count();
             }
         }
     }
 
     private List<Mascot> getMascots() {
-        return this.mascots;
+        return mascots;
     }
 
     private Set<Mascot> getAdded() {
-        return this.added;
+        return added;
     }
 
     private Set<Mascot> getRemoved() {
-        return this.removed;
+        return removed;
     }
 
     /**
@@ -299,8 +292,8 @@ public class Manager {
      * @return A WeakReference to a mascot with the required affordance, or null
      */
     public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
-        synchronized (this.getMascots()) {
-            for (final Mascot mascot : this.getMascots()) {
+        synchronized (getMascots()) {
+            for (final Mascot mascot : getMascots()) {
                 if (mascot.getAffordances().contains(affordance)) {
                     return new WeakReference<>(mascot);
                 }
@@ -313,8 +306,8 @@ public class Manager {
     public boolean hasOverlappingMascotsAtPoint(Point anchor) {
         int count = 0;
 
-        synchronized (this.getMascots()) {
-            for (final Mascot mascot : this.getMascots()) {
+        synchronized (getMascots()) {
+            for (final Mascot mascot : getMascots()) {
                 if (mascot.getAnchor().equals(anchor)) {
                     count++;
                 }
@@ -328,9 +321,9 @@ public class Manager {
     }
 
     public void disposeAll() {
-        synchronized (this.getMascots()) {
-            for (int i = this.getMascots().size() - 1; i >= 0; --i) {
-                this.getMascots().get(i).dispose();
+        synchronized (getMascots()) {
+            for (int i = getMascots().size() - 1; i >= 0; --i) {
+                getMascots().get(i).dispose();
             }
         }
     }

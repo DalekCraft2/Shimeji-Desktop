@@ -9,6 +9,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,8 +29,8 @@ public class Transform extends Animate {
 
     private static final String DEFAULT_TRANSFORMMASCOT = "";
 
-    public Transform(java.util.ResourceBundle schema, final List<Animation> animations, final VariableMap params) {
-        super(schema, animations, params);
+    public Transform(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+        super(schema, animations, context);
     }
 
     @Override

@@ -16,17 +16,17 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
     private final Map<String, Variable> rawMap = new LinkedHashMap<>();
 
     public Map<String, Variable> getRawMap() {
-        return this.rawMap;
+        return rawMap;
     }
 
     public void init() {
-        for (final Variable o : this.getRawMap().values()) {
+        for (final Variable o : getRawMap().values()) {
             o.init();
         }
     }
 
     public void initFrame() {
-        for (final Variable o : this.getRawMap().values()) {
+        for (final Variable o : getRawMap().values()) {
             o.initFrame();
         }
     }
@@ -38,17 +38,17 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 
             return new Iterator<Entry<String, Object>>() {
 
-                private Iterator<Map.Entry<String, Variable>> rawIterator = VariableMap.this.getRawMap().entrySet()
+                private Iterator<Map.Entry<String, Variable>> rawIterator = getRawMap().entrySet()
                         .iterator();
 
                 @Override
                 public boolean hasNext() {
-                    return this.rawIterator.hasNext();
+                    return rawIterator.hasNext();
                 }
 
                 @Override
                 public Map.Entry<String, Object> next() {
-                    final Map.Entry<String, Variable> rawKeyValue = this.rawIterator.next();
+                    final Map.Entry<String, Variable> rawKeyValue = rawIterator.next();
                     final Variable value = rawKeyValue.getValue();
 
                     return new Map.Entry<String, Object>() {
@@ -77,7 +77,7 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 
                 @Override
                 public void remove() {
-                    this.rawIterator.remove();
+                    rawIterator.remove();
                 }
 
             };
@@ -85,14 +85,14 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 
         @Override
         public int size() {
-            return VariableMap.this.getRawMap().size();
+            return getRawMap().size();
         }
 
     };
 
     @Override
     public Set<Map.Entry<String, Object>> entrySet() {
-        return this.entrySet;
+        return entrySet;
     }
 
     @Override
@@ -100,9 +100,9 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         Object result;
 
         if (value instanceof Variable) {
-            result = this.getRawMap().put(key, (Variable) value);
+            result = getRawMap().put(key, (Variable) value);
         } else {
-            result = this.getRawMap().put(key, new Constant(value));
+            result = getRawMap().put(key, new Constant(value));
         }
 
         return result;
