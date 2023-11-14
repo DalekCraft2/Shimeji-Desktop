@@ -35,7 +35,8 @@ public abstract class Environment {
                     updateScreenRect();
                     Thread.sleep(5000);
                 }
-            } catch (final InterruptedException ignored) {
+            } catch (final InterruptedException e) {
+                e.printStackTrace();
             }
         });
         thread.setDaemon(true);

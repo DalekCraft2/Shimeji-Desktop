@@ -7,6 +7,7 @@ import com.sun.jna.Structure;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+@Structure.FieldOrder({"left", "top", "right", "bottom"})
 public class RECT extends Structure {
 
     public int left;

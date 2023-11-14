@@ -2,6 +2,7 @@ package com.group_finity.mascot.mac.jna;
 
 import com.sun.jna.Structure;
 
+@Structure.FieldOrder({"width", "height"})
 public class CGSize extends Structure {
     public double width, height;
 

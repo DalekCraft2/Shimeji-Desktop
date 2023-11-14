@@ -8,6 +8,7 @@ import com.sun.jna.Structure;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+@Structure.FieldOrder({"bmType", "bmWidth", "bmHeight", "bmWidthBytes", "bmPlanes", "bmBitsPixel", "bmBits"})
 public class BITMAP extends Structure {
     public int bmType;
     public int bmWidth;

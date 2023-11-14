@@ -7,6 +7,7 @@ import com.sun.jna.Structure;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+@Structure.FieldOrder({"cx", "cy"})
 public class SIZE extends Structure {
 
     public int cx;

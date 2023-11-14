@@ -113,7 +113,8 @@ public class Main {
         properties = new Properties();
         try (FileInputStream input = new FileInputStream("./conf/settings.properties")) {
             properties.load(input);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // load languages
@@ -1241,7 +1242,8 @@ public class Main {
     private void updateConfigFile() {
         try (FileOutputStream output = new FileOutputStream("./conf/settings.properties")) {
             properties.store(output, "Shimeji-ee Configuration Options");
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

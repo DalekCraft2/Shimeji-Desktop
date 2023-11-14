@@ -7,6 +7,7 @@ import com.sun.jna.Structure;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+@Structure.FieldOrder({"x", "y"})
 public class POINT extends Structure {
 
     public int x;

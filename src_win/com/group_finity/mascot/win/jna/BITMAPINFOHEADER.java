@@ -7,6 +7,7 @@ import com.sun.jna.Structure;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+@Structure.FieldOrder({"biSize", "biWidth", "biHeight", "biPlanes", "biBitCount", "biCompression", "biSizeImage", "biXPelsPerMeter", "biYPelsPerMeter", "biClrUsed", "biClrImportant"})
 public class BITMAPINFOHEADER extends Structure {
     public int biSize;
     public int biWidth;

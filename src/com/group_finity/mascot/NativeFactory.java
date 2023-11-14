@@ -6,6 +6,7 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.Platform;
 
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 
 public abstract class NativeFactory {
 
@@ -27,9 +28,10 @@ public abstract class NativeFactory {
         try {
             @SuppressWarnings("unchecked") final Class<? extends NativeFactory> impl = (Class<? extends NativeFactory>) Class.forName(basepkg + "." + subpkg + ".NativeFactoryImpl");
 
-            instance = impl.newInstance();
+            instance = impl.getDeclaredConstructor().newInstance();
 
-        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException |
+                       InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }

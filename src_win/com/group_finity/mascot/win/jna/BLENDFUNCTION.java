@@ -7,6 +7,7 @@ import com.sun.jna.Structure;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+@Structure.FieldOrder({"BlendOp", "BlendFlags", "SourceConstantAlpha", "AlphaFormat"})
 public class BLENDFUNCTION extends Structure {
     public static final byte AC_SRC_OVER = 0;
     public static final byte AC_SRC_ALPHA = 1;

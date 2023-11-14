@@ -63,7 +63,8 @@ public class LogFormatter extends SimpleFormatter {
                 record.getThrown().printStackTrace(pw);
                 pw.close();
                 sb.append(sw);
-            } catch (final Exception ignored) {
+            } catch (final Exception e) {
+                e.printStackTrace();
             }
         }
         return sb.toString();

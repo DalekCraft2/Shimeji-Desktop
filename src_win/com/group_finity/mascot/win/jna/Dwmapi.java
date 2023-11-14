@@ -14,7 +14,7 @@ import com.sun.jna.win32.StdCallLibrary;
  * @author Kilkakon
  */
 public interface Dwmapi extends StdCallLibrary {
-    Dwmapi INSTANCE = (Dwmapi) Native.loadLibrary("Dwmapi", Dwmapi.class);
+    Dwmapi INSTANCE = Native.load("Dwmapi", Dwmapi.class);
 
     int DWMWA_CLOAKED = 14;
 

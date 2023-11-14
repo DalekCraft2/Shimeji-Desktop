@@ -251,7 +251,7 @@ class MacEnvironment extends Environment {
         carbon.CFStringGetCString(
                 orientationRef, buf, bufsize, carbon.CFStringGetSystemEncoding());
         carbon.CFRelease(orientationRef);
-        String ret = buf.getString(0, false);
+        String ret = buf.getString(0);
         buf.clear();
         return ret;
     }
