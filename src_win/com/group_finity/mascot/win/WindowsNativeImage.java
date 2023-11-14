@@ -31,7 +31,7 @@ class WindowsNativeImage implements NativeImage {
     /**
      * Windows to create a bitmap.
      *
-     * @param width width of the bitmap.
+     * @param width  width of the bitmap.
      * @param height the height of the bitmap.
      * @return the handle of a bitmap that you create.
      */

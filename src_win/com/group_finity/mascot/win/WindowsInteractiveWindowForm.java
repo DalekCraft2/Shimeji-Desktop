@@ -3,10 +3,7 @@ package com.group_finity.mascot.win;
 import com.group_finity.mascot.Main;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.FileOutputStream;
 import java.util.ArrayList;

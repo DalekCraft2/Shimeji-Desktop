@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 /**
  * Created by joconner on 1/11/17.
+ *
  * @author joconner
  */
 public class Utf8ResourceBundleControl extends PackageableResourceControl {

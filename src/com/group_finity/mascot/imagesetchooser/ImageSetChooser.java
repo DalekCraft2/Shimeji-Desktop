@@ -3,12 +3,7 @@ package com.group_finity.mascot.imagesetchooser;
 import com.group_finity.mascot.Main;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
