@@ -111,10 +111,13 @@ public class Main {
 
         // load properties
         properties = new Properties();
-        try (FileInputStream input = new FileInputStream("./conf/settings.properties")) {
-            properties.load(input);
-        } catch (IOException e) {
-            e.printStackTrace();
+        File settingsFile = new File("./conf/settings.properties");
+        if (settingsFile.isFile()) {
+            try (FileInputStream input = new FileInputStream(settingsFile)) {
+                properties.load(input);
+            } catch (IOException e) {
+                log.log(Level.SEVERE, "Failed to load settings", e);
+            }
         }
 
         // load languages
@@ -126,6 +129,7 @@ public class Main {
                 languageBundle = ResourceBundle.getBundle("language", Locale.forLanguageTag(properties.getProperty("Language", "en-GB")), loader, utf8Control);
             }
         } catch (Exception ex) {
+            log.log(Level.SEVERE, "Failed to load default language file", ex);
             showError("The default language file could not be loaded. Ensure that you have the latest shimeji language.properties in your conf directory.");
             exit();
         }
@@ -142,7 +146,7 @@ public class Main {
                     theme = new NimRODTheme("./conf/theme.properties");
                 }
             } catch (Exception exc) {
-                theme = null;
+                log.log(Level.SEVERE, "Failed to load theme properties", exc);
             }
 
             if (theme == null) {
