@@ -77,8 +77,7 @@ public class Manager {
                     }
                     Thread.sleep(1, 0);
                 }
-            } catch (final InterruptedException e) {
-                e.printStackTrace();
+            } catch (final InterruptedException ignored) {
             }
         });
         thread.setDaemon(false);
@@ -92,8 +91,7 @@ public class Manager {
         thread.interrupt();
         try {
             thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException ignored) {
         }
     }
 
