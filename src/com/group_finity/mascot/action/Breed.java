@@ -43,7 +43,7 @@ public class Breed extends Animate {
 
     private static final boolean DEFAULT_BORNTRANSIENT = false;
 
-    private int scaling;
+    private double scaling;
 
     public Breed(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
@@ -53,7 +53,7 @@ public class Breed extends Animate {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
     }
 
     @Override
@@ -76,11 +76,11 @@ public class Breed extends Animate {
         log.log(Level.INFO, "Breed Mascot ({0},{1},{2})", new Object[]{getMascot(), this, mascot});
 
         if (getMascot().isLookRight()) {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x - getBornX() * scaling,
-                    getMascot().getAnchor().y + getBornY() * scaling));
+            mascot.setAnchor(new Point(getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
+                    getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
         } else {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x + getBornX() * scaling,
-                    getMascot().getAnchor().y + getBornY() * scaling));
+            mascot.setAnchor(new Point(getMascot().getAnchor().x + (int) Math.round(getBornX() * scaling),
+                    getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
         }
         mascot.setLookRight(getMascot().isLookRight());
 

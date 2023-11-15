@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage;
  * Currently developed by Shimeji-ee Group.
  */
 public class NativeFactoryImpl extends NativeFactory {
-
     private Environment environment = new WindowsEnvironment();
 
     @Override
@@ -30,5 +29,4 @@ public class NativeFactoryImpl extends NativeFactory {
     public TranslucentWindow newTransparentWindow() {
         return new WindowsTranslucentWindow();
     }
-
 }

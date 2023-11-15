@@ -5,6 +5,7 @@ import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 
 import javax.swing.*;
+import java.awt.*;
 
 class MacTranslucentWindow implements TranslucentWindow {
     private TranslucentWindow delegate;
@@ -13,7 +14,7 @@ class MacTranslucentWindow implements TranslucentWindow {
 
     MacTranslucentWindow(NativeFactory factory) {
         delegate = factory.newTransparentWindow();
-        JRootPane rootPane = delegate.asJWindow().getRootPane();
+        JRootPane rootPane = ((JWindow) delegate.asComponent()).getRootPane();
 
         // ウィンドウの影がずれるので、影を描画しないようにする
         rootPane.putClientProperty("Window.shadow", Boolean.FALSE);
@@ -23,8 +24,8 @@ class MacTranslucentWindow implements TranslucentWindow {
     }
 
     @Override
-    public JWindow asJWindow() {
-        return delegate.asJWindow();
+    public Component asComponent() {
+        return delegate.asComponent();
     }
 
     @Override
@@ -40,5 +41,15 @@ class MacTranslucentWindow implements TranslucentWindow {
             delegate.updateImage();
             imageChanged = false;
         }
+    }
+
+    @Override
+    public void dispose() {
+        delegate.dispose();
+    }
+
+    @Override
+    public void setAlwaysOnTop(boolean onTop) {
+        ((JWindow) delegate.asComponent()).setAlwaysOnTop(onTop);
     }
 }

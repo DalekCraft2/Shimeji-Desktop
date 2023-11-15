@@ -23,6 +23,10 @@ class GenericEnvironment extends Environment {
     }
 
     @Override
+    public void dispose() {
+    }
+
+    @Override
     public void moveActiveIE(final Point point) {
     }
 

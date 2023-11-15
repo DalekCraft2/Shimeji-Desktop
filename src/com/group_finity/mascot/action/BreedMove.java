@@ -45,7 +45,7 @@ public class BreedMove extends Move {
 
     private static final boolean DEFAULT_BORNTRANSIENT = false;
 
-    private int scaling;
+    private double scaling;
 
     public BreedMove(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
@@ -58,7 +58,7 @@ public class BreedMove extends Move {
         if (getBornInterval() < 1) {
             throw new VariableException("BornInterval must be positive");
         }
-        scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
     }
 
     @Override
@@ -81,11 +81,11 @@ public class BreedMove extends Move {
         log.log(Level.INFO, "Breed Mascot ({0},{1},{2})", new Object[]{getMascot(), this, mascot});
 
         if (getMascot().isLookRight()) {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x - getBornX() * scaling,
-                    getMascot().getAnchor().y + getBornY() * scaling));
+            mascot.setAnchor(new Point(getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
+                    getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
         } else {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x + getBornX() * scaling,
-                    getMascot().getAnchor().y + getBornY() * scaling));
+            mascot.setAnchor(new Point(getMascot().getAnchor().x + (int) Math.round(getBornX() * scaling),
+                    getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
         }
         mascot.setLookRight(getMascot().isLookRight());
 

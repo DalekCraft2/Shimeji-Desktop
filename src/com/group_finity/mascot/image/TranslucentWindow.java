@@ -1,6 +1,6 @@
 package com.group_finity.mascot.image;
 
-import javax.swing.*;
+import java.awt.*;
 
 /**
  * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
@@ -8,10 +8,13 @@ import javax.swing.*;
  * Currently developed by Shimeji-ee Group.
  */
 public interface TranslucentWindow {
-
-    JWindow asJWindow();
+    Component asComponent();
 
     void setImage(NativeImage image);
 
     void updateImage();
+
+    void dispose();
+
+    void setAlwaysOnTop(boolean onTop);
 }

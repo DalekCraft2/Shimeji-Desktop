@@ -73,7 +73,7 @@ public class JLongMenu extends JMenu {
         int x;
         int y;
         JPopupMenu pm = getPopupMenu();
-        // Figure out the sizes needed to caclulate the menu position
+        // Figure out the sizes needed to calculate the menu position
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension s = getSize();
         Dimension pmSize = pm.getSize();

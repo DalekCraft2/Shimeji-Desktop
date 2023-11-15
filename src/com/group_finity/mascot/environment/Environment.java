@@ -11,7 +11,6 @@ import java.util.Map;
  * Currently developed by Shimeji-ee Group.
  */
 public abstract class Environment {
-
     protected abstract Area getWorkArea();
 
     public abstract Area getActiveIE();
@@ -24,28 +23,30 @@ public abstract class Environment {
 
     public abstract void refreshCache();
 
-    private static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
+    public abstract void dispose();
 
-    private static Map<String, Rectangle> screenRects = new HashMap<>();
+    protected static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
 
-    static {
-        final Thread thread = new Thread(() -> {
-            try {
-                while (true) {
-                    updateScreenRect();
-                    Thread.sleep(5000);
-                }
-            } catch (final InterruptedException e) {
-                e.printStackTrace();
+    protected static Map<String, Rectangle> screenRects = new HashMap<>();
+
+    private static final Thread thread = new Thread(() -> {
+        try {
+            while (true) {
+                updateScreenRect();
+                Thread.sleep(5000);
             }
-        });
-        thread.setDaemon(true);
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.start();
-    }
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        }
+    });
+
+    public ComplexArea complexScreen = new ComplexArea();
+
+    public Area screen = new Area();
+
+    public Location cursor = new Location();
 
     private static void updateScreenRect() {
-
         Rectangle virtualBounds = new Rectangle();
 
         Map<String, Rectangle> screenRects = new HashMap<>();
@@ -72,13 +73,13 @@ public abstract class Environment {
         return info != null ? info.getLocation() : new Point(0, 0);
     }
 
-    public ComplexArea complexScreen = new ComplexArea();
+    public void init() {
+        if (!thread.isAlive()) {
+            thread.setDaemon(true);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
+        }
 
-    public Area screen = new Area();
-
-    public Location cursor = new Location();
-
-    protected Environment() {
         tick();
     }
 
@@ -105,8 +106,6 @@ public abstract class Environment {
     }
 
     public boolean isScreenTopBottom(final Point location) {
-
-
         int count = 0;
 
         for (Area area : getScreens()) {
@@ -117,7 +116,6 @@ public abstract class Environment {
                 ++count;
             }
         }
-
 
         if (count == 0) {
             if (getWorkArea().getTopBorder().isOn(location)) {
@@ -132,8 +130,6 @@ public abstract class Environment {
     }
 
     public boolean isScreenLeftRight(final Point location) {
-
-
         int count = 0;
 
         for (Area area : getScreens()) {
@@ -156,5 +152,4 @@ public abstract class Environment {
 
         return count == 1;
     }
-
 }

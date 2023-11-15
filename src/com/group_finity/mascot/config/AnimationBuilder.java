@@ -7,6 +7,7 @@ import com.group_finity.mascot.exception.AnimationInstantiationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.ImagePairLoader;
+import com.group_finity.mascot.image.ImagePairLoader.Filter;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
 
@@ -63,15 +64,22 @@ public class AnimationBuilder {
         String soundText = frameNode.getAttribute(schema.getString("Sound")) != null ? frameNode.getAttribute(schema.getString("Sound")) : null;
         final String volumeText = frameNode.getAttribute(schema.getString("Volume")) != null ? frameNode.getAttribute(schema.getString("Volume")) : "0";
 
-        final int scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
+        final double scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
-        if (imageText != null) // if you don't have anchor text defined as well you're going to have a bad time
-        {
-            final String[] anchorCoordinates = anchorText.split(",");
-            final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
+        String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
+        Filter filter = Filter.NEAREST_NEIGHBOUR;
+        if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
+            filter = ImagePairLoader.Filter.HQX;
+        } else if (filterText.equalsIgnoreCase("bicubic")) {
+            filter = ImagePairLoader.Filter.BICUBIC;
+        }
 
+        if (imageText != null) {
             try {
-                ImagePairLoader.load(imageText, imageRightText, anchor, scaling);
+                final String[] anchorCoordinates = anchorText.split(",");
+                final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
+
+                ImagePairLoader.load(imageText, imageRightText, anchor, scaling, filter);
             } catch (Exception e) {
                 String error = imageText;
                 if (imageRightText != null) {
@@ -83,7 +91,8 @@ public class AnimationBuilder {
         }
 
         final String[] moveCoordinates = moveText.split(",");
-        final Point move = new Point(Integer.parseInt(moveCoordinates[0]) * scaling, Integer.parseInt(moveCoordinates[1]) * scaling);
+        final Point move = new Point((int) Math.round(Integer.parseInt(moveCoordinates[0]) * scaling),
+                (int) Math.round(Integer.parseInt(moveCoordinates[1]) * scaling));
 
         final int duration = Integer.parseInt(durationText);
 
@@ -117,13 +126,15 @@ public class AnimationBuilder {
         final String originText = frameNode.getAttribute(schema.getString("Origin"));
         final String sizeText = frameNode.getAttribute(schema.getString("Size"));
         final String behaviourText = frameNode.getAttribute(schema.getString("Behaviour"));
-        final int scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
+        final double scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
         final String[] originCoordinates = originText.split(",");
         final String[] sizeCoordinates = sizeText.split(",");
 
-        final Point origin = new Point(Integer.parseInt(originCoordinates[0]) * scaling, Integer.parseInt(originCoordinates[1]) * scaling);
-        final Dimension size = new Dimension(Integer.parseInt(sizeCoordinates[0]) * scaling, Integer.parseInt(sizeCoordinates[1]) * scaling);
+        final Point origin = new Point((int) Math.round(Integer.parseInt(originCoordinates[0]) * scaling),
+                (int) Math.round(Integer.parseInt(originCoordinates[1]) * scaling));
+        final Dimension size = new Dimension((int) Math.round(Integer.parseInt(sizeCoordinates[0]) * scaling),
+                (int) Math.round(Integer.parseInt(sizeCoordinates[1]) * scaling));
 
         Shape shape;
         if (shapeText.equalsIgnoreCase("Rectangle")) {

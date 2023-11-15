@@ -24,7 +24,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public JWindow asJWindow() {
+    public Component asComponent() {
         return this;
     }
 

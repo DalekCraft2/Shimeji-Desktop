@@ -45,6 +45,8 @@ public interface User32 extends StdCallLibrary {
 
     int IsIconic(Pointer hWnd);
 
+    int IsZoomed(Pointer hWnd);
+
     int GetWindowTextW(Pointer hWnd, char[] lpString, int nMaxCount);
 
     int GetClassNameW(Pointer hWnd, char[] lpString, int nMaxCount);
@@ -80,4 +82,6 @@ public interface User32 extends StdCallLibrary {
     boolean EnumWindows(WNDENUMPROC lpEnumFunc, Pointer arg);
 
     int SetProcessDPIAware();
+
+    // boolean GetMonitorInfoA() // TODO look into for future patches
 }

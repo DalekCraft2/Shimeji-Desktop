@@ -81,7 +81,7 @@ public class Manager {
                 e.printStackTrace();
             }
         });
-        thread.setDaemon(true);
+        thread.setDaemon(false);
         thread.start();
     }
 
@@ -98,7 +98,6 @@ public class Manager {
     }
 
     private void tick() {
-
         // Update the first environmental information
         NativeFactory.getInstance().getEnvironment().tick();
 

@@ -32,7 +32,6 @@ class GenericNativeImage implements NativeImage {
         icon = new ImageIcon(image);
     }
 
-
     public void flush() {
         getManagedImage().flush();
     }

@@ -14,7 +14,7 @@ import java.awt.*;
  * popup menu. A number of items can optionally be frozen at the top and/or
  * bottom of the menu.
  * <p>
- * <B>Implementation note:</B> The default number of items to display
+ * <b>Implementation note:</b> The default number of items to display
  * at a time is 15, and the default scrolling interval is 125 milliseconds.
  * <p>
  * MenuScroller.java 1.4.0 14/09/10

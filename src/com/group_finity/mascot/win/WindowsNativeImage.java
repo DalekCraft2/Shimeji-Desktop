@@ -7,9 +7,6 @@ import com.group_finity.mascot.win.jna.BITMAPINFOHEADER;
 import com.group_finity.mascot.win.jna.Gdi32;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import hqx.Hqx_2x;
-import hqx.Hqx_3x;
-import hqx.Hqx_4x;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -54,7 +51,7 @@ class WindowsNativeImage implements NativeImage {
      * @param nativeHandle bitmap handle.
      * @param rgb          ARGB of the picture.
      */
-    private static void flushNative(final Pointer nativeHandle, final int[] rgb, final int scaling) {
+    private static void flushNative(final Pointer nativeHandle, final int[] rgb) {
 
         final BITMAP bmp = new BITMAP();
         Gdi32.INSTANCE.GetObjectW(nativeHandle, Main.getInstance().getPlatform().getBitmapSize() + Native.POINTER_SIZE, bmp);
@@ -65,7 +62,6 @@ class WindowsNativeImage implements NativeImage {
         final int destPitch = (bmp.bmWidth * bmp.bmBitsPixel + 31) / 32 * 4;
         int destIndex = destPitch * (height - 1);
         int srcColIndex = 0;
-        int srcRowIndex = 0;
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
@@ -75,20 +71,12 @@ class WindowsNativeImage implements NativeImage {
                 // Photoshop is where a is an RGB value of 0 have the property value to 0.
 
                 bmp.bmBits.setInt(destIndex + x * 4L,
-                        (rgb[srcColIndex / scaling] & 0xFF000000) == 0 ? 0 : rgb[srcColIndex / scaling]);
+                        (rgb[srcColIndex] & 0xFF000000) == 0 ? 0 : rgb[srcColIndex]);
 
                 ++srcColIndex;
             }
 
             destIndex -= destPitch;
-
-            // resets the srcColIndex to re-use the same indexes and stretch horizontally
-            ++srcRowIndex;
-            if (srcRowIndex == scaling) {
-                srcRowIndex = 0;
-            } else {
-                srcColIndex -= width;
-            }
         }
 
     }
@@ -113,51 +101,13 @@ class WindowsNativeImage implements NativeImage {
     private final Pointer nativeHandle;
 
     public WindowsNativeImage(final BufferedImage image) {
-        int scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
-        boolean filter = scaling > 1 && Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Filter", "false"));
-        int effectiveScaling = filter ? 1 : scaling;
 
         managedImage = image;
-        nativeHandle = createNative(getManagedImage().getWidth() * scaling, getManagedImage().getHeight() * scaling);
+        nativeHandle = createNative(image.getWidth(), image.getHeight());
 
-        int[] rbgValues = new int[getManagedImage().getWidth() * getManagedImage().getHeight() * effectiveScaling * effectiveScaling];
-        getManagedImage().getRGB(0, 0, getManagedImage().getWidth(), getManagedImage().getHeight(), rbgValues, 0,
-                getManagedImage().getWidth());
+        int[] rbgValues = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
 
-        // apply filter here
-        if (filter) {
-            int width = getManagedImage().getWidth();
-            int height = getManagedImage().getHeight();
-            int[] buffer;
-
-            if (scaling == 4 || scaling == 8) {
-                width *= 4;
-                height *= 4;
-                buffer = new int[width * height];
-                Hqx_4x.hq4x_32_rb(rbgValues, buffer, width / 4, height / 4);
-                rbgValues = buffer;
-            }
-            if (scaling == 3 || scaling == 6) {
-                width *= 3;
-                height *= 3;
-                buffer = new int[width * height];
-                Hqx_3x.hq3x_32_rb(rbgValues, buffer, width / 3, height / 3);
-                rbgValues = buffer;
-            }
-            if (scaling == 2) {
-                width *= 2;
-                height *= 2;
-                buffer = new int[width * height];
-                Hqx_2x.hq2x_32_rb(rbgValues, buffer, width / 2, height / 2);
-                rbgValues = buffer;
-            }
-
-            if (scaling > 4) {
-                effectiveScaling = 2;
-            }
-        }
-
-        flushNative(getNativeHandle(), rbgValues, effectiveScaling);
+        flushNative(getNativeHandle(), rbgValues);
     }
 
     @Override
@@ -174,39 +124,39 @@ class WindowsNativeImage implements NativeImage {
     }
 
     public void flush() {
-        getManagedImage().flush();
-    }
-
-    public Pointer getHandle() {
-        return getNativeHandle();
+        managedImage.flush();
     }
 
     public Graphics getGraphics() {
-        return getManagedImage().createGraphics();
+        return managedImage.createGraphics();
+    }
+
+    public Pointer getHandle() {
+        return nativeHandle;
     }
 
     public int getHeight() {
-        return getManagedImage().getHeight();
+        return managedImage.getHeight();
     }
 
     public int getWidth() {
-        return getManagedImage().getWidth();
+        return managedImage.getWidth();
     }
 
     public int getHeight(final ImageObserver observer) {
-        return getManagedImage().getHeight(observer);
+        return managedImage.getHeight(observer);
     }
 
     public Object getProperty(final String name, final ImageObserver observer) {
-        return getManagedImage().getProperty(name, observer);
+        return managedImage.getProperty(name, observer);
     }
 
     public ImageProducer getSource() {
-        return getManagedImage().getSource();
+        return managedImage.getSource();
     }
 
     public int getWidth(final ImageObserver observer) {
-        return getManagedImage().getWidth(observer);
+        return managedImage.getWidth(observer);
     }
 
     private BufferedImage getManagedImage() {

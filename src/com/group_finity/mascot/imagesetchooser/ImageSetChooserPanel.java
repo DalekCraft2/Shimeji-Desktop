@@ -67,7 +67,7 @@ public class ImageSetChooserPanel extends JPanel {
         name.setText("Builder");
         add(name, new AbsoluteConstraints(110, 10, -1, -1));
 
-        actionsFile.setText("img/Builder/conf/actionsxml");
+        actionsFile.setText("img/Builder/conf/actions.xml");
         add(actionsFile, new AbsoluteConstraints(110, 30, -1, -1));
 
         behaviorsFile.setText("img/Builder/conf/behaviors.xml");

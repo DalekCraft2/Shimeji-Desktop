@@ -38,7 +38,7 @@ public class Dragged extends ActionBase {
 
     private int timeToRegist;
 
-    private int scaling;
+    private double scaling;
 
     public Dragged(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
@@ -48,9 +48,9 @@ public class Dragged extends ActionBase {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
-        setFootX(getEnvironment().getCursor().getX() + getOffsetX() * scaling);
+        setFootX(getEnvironment().getCursor().getX() + (int) Math.round(getOffsetX() * scaling));
         setTimeToRegist(250);
     }
 
@@ -70,7 +70,7 @@ public class Dragged extends ActionBase {
 
         final Location cursor = getEnvironment().getCursor();
 
-        if (Math.abs(cursor.getX() - getMascot().getAnchor().x + getOffsetX() * scaling) >= 5) {
+        if (Math.abs(cursor.getX() - getMascot().getAnchor().x + (int) Math.round(getOffsetX() * scaling)) >= 5) {
             setTime(0);
         }
 
@@ -84,7 +84,7 @@ public class Dragged extends ActionBase {
 
         getAnimation().next(getMascot(), getTime());
 
-        getMascot().setAnchor(new Point(cursor.getX() + getOffsetX() * scaling, cursor.getY() + getOffsetY() * scaling));
+        getMascot().setAnchor(new Point(cursor.getX() + (int) Math.round(getOffsetX() * scaling), cursor.getY() + (int) Math.round(getOffsetY() * scaling)));
     }
 
     @Override

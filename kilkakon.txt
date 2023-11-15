@@ -1,5 +1,22 @@
 Kilkakon's notes:
 
+1.0.20:
+- Window Mode - run Shimeji in a Window! Ideal for streaming
+- Added ScanJump and BroadcastJump actions
+- "Boss mode" - double middle click on tray icon to quickly hide shimeji
+- Incorporated snek's XML constant support (often used for cloning limit in japanese image sets)
+- Allow hotspot with no behaviour set for click-hold style animations to work (e.g. now possible to make animated headpats)
+- New Settings screen, along with new filtering and scaling options
+- Reworked tray icon menu to include Shimeji Chooser and new Settings buttons
+- Improved interactive window detection for greater accuracy and better Windows 11 support
+- Better error messages for poses that don't have an image anchor
+- Readdressed rare freezing issue when two shimeji play the same sound at exactly the same time
+- Paused shimeji now can't be grabbed or have hotspots in a weird delayed fashion anymore
+- General under the hood code cleanup
+- Updates to Arabic, Catalan, French, Spanish and Polish translations (thank you!)
+
+See https://youtu.be/paJLzf4hxnM for details
+
 1.0.19:
 - Hotspots! XML defined areas that will go to specified behaviours instead of the usual drag.
 - The ability to pause and resume a shimeji's animations has been added
@@ -54,7 +71,7 @@ See https://www.youtube.com/watch?v=fHzbW8glPMs for more details
 
 1.0.15:
 
-- Japanese Shimeji-e backwards compatability
+- Japanese Shimeji-ee backwards compatibility
 
 See https://www.youtube.com/watch?v=65p39FjbQPI for more details
 

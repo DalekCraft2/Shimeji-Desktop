@@ -34,6 +34,12 @@ public class UserBehavior implements Behavior {
 
     public static final String BEHAVIOURNAME_THROWN = "Thrown";
 
+    private enum HotspotResult {
+        INACTIVE,
+        ACTIVE_NULL,
+        ACTIVE
+    }
+
     private final String name;
 
     private final Configuration configuration;
@@ -61,10 +67,7 @@ public class UserBehavior implements Behavior {
 
         setMascot(mascot);
 
-        log.log(Level.INFO, "Default Behavior({0},{1})", new Object[]
-                {
-                        getMascot(), this
-                });
+        log.log(Level.INFO, "Default Behavior({0},{1})", new Object[]{getMascot(), this});
 
         try {
             getAction().init(mascot);
@@ -111,7 +114,9 @@ public class UserBehavior implements Behavior {
                         handled = true;
                         try {
                             getMascot().setCursorPosition(event.getPoint());
-                            getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour()));
+                            if (hotspot.getBehaviour() != null) {
+                                getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour()));
+                            }
                         } catch (final BehaviorInstantiationException e) {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
                         }
@@ -171,17 +176,21 @@ public class UserBehavior implements Behavior {
                 getAction().next();
             }
 
-            boolean hotspotIsActive = false;
+            // TODO Rename this to "hotspotResult" after merging all of the 1.0.20 changes... or rename this and the enum to "HotspotState".
+            HotspotResult hotspotIsActive = HotspotResult.INACTIVE;
             if (getMascot().isHotspotClicked()) {
                 // activate any hotspots that emerge while mouse is held down
                 if (!mascot.getHotspots().isEmpty()) {
                     for (final Hotspot hotspot : mascot.getHotspots()) {
                         if (hotspot.contains(mascot, mascot.getCursorPosition())) {
                             // activate hotspot
-                            hotspotIsActive = true;
+                            hotspotIsActive = HotspotResult.ACTIVE_NULL;
                             try {
                                 // no need to set cursor position, it's already set
-                                getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour()));
+                                if (hotspot.getBehaviour() != null) {
+                                    hotspotIsActive = HotspotResult.ACTIVE;
+                                    getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour()));
+                                }
                             } catch (final BehaviorInstantiationException e) {
                                 throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
                             }
@@ -190,21 +199,18 @@ public class UserBehavior implements Behavior {
                     }
                 }
 
-                if (!hotspotIsActive) {
+                if (hotspotIsActive == HotspotResult.INACTIVE) {
                     getMascot().setCursorPosition(null);
                 }
             }
 
-            if (!hotspotIsActive) {
+            if (hotspotIsActive != HotspotResult.ACTIVE) {
                 if (getAction().hasNext()) {
                     if (getMascot().getBounds().getX() + getMascot().getBounds().getWidth()
                             <= getEnvironment().getScreen().getLeft()
                             || getEnvironment().getScreen().getRight() <= getMascot().getBounds().getX()
                             || getEnvironment().getScreen().getBottom() <= getMascot().getBounds().getY()) {
-                        log.log(Level.INFO, "Out of the screen bounds({0},{1})", new Object[]
-                                {
-                                        getMascot(), this
-                                });
+                        log.log(Level.INFO, "Out of the screen bounds({0},{1})", new Object[]{getMascot(), this});
 
                         if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
                             getMascot().setAnchor(new Point((int) (Math.random() * (getEnvironment().getScreen().getRight() - getEnvironment().getScreen().getLeft())) + getEnvironment().getScreen().getLeft(),
@@ -220,7 +226,6 @@ public class UserBehavior implements Behavior {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
                         }
                     }
-
                 } else {
                     log.log(Level.INFO, "Completed Behavior ({0},{1})", new Object[]
                             {

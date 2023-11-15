@@ -13,7 +13,6 @@ import java.util.Arrays;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
-
 public class Animation {
     private Variable condition;
     private final Pose[] poses;

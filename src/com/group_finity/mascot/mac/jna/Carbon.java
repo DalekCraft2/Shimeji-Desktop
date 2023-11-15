@@ -8,7 +8,6 @@ import com.sun.jna.ptr.ByReference;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
-
 public interface Carbon extends Library {
     Carbon INSTANCE = Native.load("Carbon", Carbon.class);
 

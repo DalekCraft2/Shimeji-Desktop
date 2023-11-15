@@ -7,7 +7,6 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.sound.Sounds;
-import com.group_finity.mascot.win.WindowsInteractiveWindowForm;
 import com.joconner.i18n.Utf8ResourceBundleControl;
 import com.nilo.plaf.nimrod.NimRODLookAndFeel;
 import com.nilo.plaf.nimrod.NimRODTheme;
@@ -31,7 +30,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -67,8 +70,8 @@ public class Main {
 
     private final Manager manager = new Manager();
     private ArrayList<String> imageSets = new ArrayList<>();
-    private Hashtable<String, Configuration> configurations = new Hashtable<>();
-    private Hashtable<String, ArrayList<String>> childImageSets = new Hashtable<>();
+    private ConcurrentHashMap<String, Configuration> configurations = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
     private static Main instance = new Main();
     private Properties properties = new Properties();
     private Platform platform;
@@ -370,6 +373,9 @@ public class Main {
 
     /**
      * Creates a tray icon.
+     *
+     * @throws AWTException
+     * @throws IOException
      */
     private void createTrayIcon() {
         log.log(Level.INFO, "create a tray icon");
@@ -417,25 +423,25 @@ public class Main {
 
                         // buttons and action handling
                         JButton btnCallShimeji = new JButton(languageBundle.getString("CallShimeji"));
-                        btnCallShimeji.addActionListener(event15 -> {
+                        btnCallShimeji.addActionListener(event17 -> {
                             createMascot();
                             form.dispose();
                         });
 
                         JButton btnFollowCursor = new JButton(languageBundle.getString("FollowCursor"));
-                        btnFollowCursor.addActionListener(event14 -> {
+                        btnFollowCursor.addActionListener(event16 -> {
                             getManager().setBehaviorAll(BEHAVIOR_GATHER);
                             form.dispose();
                         });
 
                         JButton btnReduceToOne = new JButton(languageBundle.getString("ReduceToOne"));
-                        btnReduceToOne.addActionListener(event13 -> {
+                        btnReduceToOne.addActionListener(event15 -> {
                             getManager().remainOne();
                             form.dispose();
                         });
 
                         JButton btnRestoreWindows = new JButton(languageBundle.getString("RestoreWindows"));
-                        btnRestoreWindows.addActionListener(event12 -> {
+                        btnRestoreWindows.addActionListener(event14 -> {
                             NativeFactory.getInstance().getEnvironment().restoreIE();
                             form.dispose();
                         });
@@ -463,7 +469,7 @@ public class Main {
                             public void mouseExited(MouseEvent e) {
                             }
                         });
-                        btnAllowedBehaviours.addActionListener(event1 -> {
+                        btnAllowedBehaviours.addActionListener(event13 -> {
                             // "Disable Breeding" menu item
                             final JCheckBoxMenuItem breedingMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingCloning"), Boolean.parseBoolean(properties.getProperty("Breeding", "true")));
                             breedingMenu.addItemListener(e -> {
@@ -546,285 +552,50 @@ public class Main {
                             btnAllowedBehaviours.requestFocusInWindow();
                         });
 
-                        final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
-                        btnSettings.addMouseListener(new MouseListener() {
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mouseReleased(MouseEvent e) {
-                                btnSettings.setEnabled(true);
-                            }
-
-                            @Override
-                            public void mouseEntered(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mouseExited(MouseEvent e) {
-                            }
+                        final JButton btnChooseShimeji = new JButton(languageBundle.getString("ChooseShimeji"));
+                        btnChooseShimeji.addActionListener(event12 -> {
+                            form.dispose();
+                            ImageSetChooser chooser = new ImageSetChooser(frame, true);
+                            chooser.setIconImage(icon.getImage());
+                            setActiveImageSets(chooser.display());
                         });
-                        btnSettings.addActionListener(e -> {
-                            JMenuItem chooseShimejiMenu = new JMenuItem(languageBundle.getString("ChooseShimeji"));
-                            chooseShimejiMenu.addActionListener(e131 -> {
-                                form.dispose();
-                                setActiveImageSets(new ImageSetChooser(frame, true).display());
-                            });
 
-                            // "Interactive Windows" menu item
-                            JMenuItem interactiveMenu = new JMenuItem(languageBundle.getString("ChooseInteractiveWindows"));
-                            interactiveMenu.addActionListener(e130 -> {
-                                form.dispose();
-                                new WindowsInteractiveWindowForm(frame, true).display();
+                        final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
+                        btnSettings.addActionListener(event1 -> {
+                            form.dispose();
+                            SettingsWindow dialog = new SettingsWindow(frame, true);
+                            dialog.setIconImage(icon.getImage());
+                            dialog.display();
+
+                            if (dialog.getEnvironmentReloadRequired()) {
+                                NativeFactory.getInstance().getEnvironment().dispose();
+                                NativeFactory.resetInstance();
+                            }
+                            if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
+                                // need to reload the shimeji as the images have rescaled
+                                boolean isExit = getManager().isExitOnLastRemoved();
+                                getManager().setExitOnLastRemoved(false);
+                                getManager().disposeAll();
+
+                                // Wipe all loaded data
+                                ImagePairs.clear();
+                                configurations.clear();
+
+                                // Load settings
+                                for (String imageSet : imageSets) {
+                                    loadConfiguration(imageSet);
+                                }
+
+                                // Create the first mascot
+                                for (String imageSet : imageSets) {
+                                    createMascot(imageSet);
+                                }
+
+                                getManager().setExitOnLastRemoved(isExit);
+                            }
+                            if (dialog.getInteractiveWindowReloadRequired()) {
                                 NativeFactory.getInstance().getEnvironment().refreshCache();
-                            });
-
-                            // "Always Show Shimeji Chooser" menu item
-                            final JCheckBoxMenuItem shimejiChooserMenu = new JCheckBoxMenuItem(languageBundle.getString("AlwaysShowShimejiChooser"), Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false")));
-                            shimejiChooserMenu.addItemListener(e129 -> {
-                                shimejiChooserMenu.setState(toggleBooleanSetting("AlwaysShowShimejiChooser", false));
-                                updateConfigFile();
-                                btnAllowedBehaviours.setEnabled(true);
-                            });
-
-                            // "Scaling" menu
-                            JMenu scalingMenu = new JMenu(languageBundle.getString("Scaling"));
-
-                            // "hqx Filter" menu item
-                            final JCheckBoxMenuItem filterMenu = new JCheckBoxMenuItem(languageBundle.getString("Filter"), Boolean.parseBoolean(properties.getProperty("Filter", "false")));
-                            filterMenu.addActionListener(e128 -> {
-                                form.dispose();
-                                filterMenu.setState(toggleBooleanSetting("Filter", false));
-                                updateConfigFile();
-
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            });
-
-                            final JCheckBoxMenuItem scaling1x = new JCheckBoxMenuItem("1x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 1);
-                            scaling1x.addActionListener(e127 -> {
-                                form.dispose();
-                                properties.setProperty("Scaling", "1");
-                                updateConfigFile();
-
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            });
-                            final JCheckBoxMenuItem scaling2x = new JCheckBoxMenuItem("2x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 2);
-                            scaling2x.addActionListener(e126 -> {
-                                form.dispose();
-                                properties.setProperty("Scaling", "2");
-                                updateConfigFile();
-
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            });
-                            final JCheckBoxMenuItem scaling3x = new JCheckBoxMenuItem("3x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 3);
-                            scaling3x.addActionListener(e125 -> {
-                                form.dispose();
-                                properties.setProperty("Scaling", "3");
-                                updateConfigFile();
-
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            });
-                            final JCheckBoxMenuItem scaling4x = new JCheckBoxMenuItem("4x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 4);
-                            scaling4x.addActionListener(e124 -> {
-                                form.dispose();
-                                properties.setProperty("Scaling", "4");
-                                updateConfigFile();
-
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            });
-                            final JCheckBoxMenuItem scaling6x = new JCheckBoxMenuItem("6x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 6);
-                            scaling6x.addActionListener(e123 -> {
-                                form.dispose();
-                                properties.setProperty("Scaling", "6");
-                                updateConfigFile();
-
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            });
-                            final JCheckBoxMenuItem scaling8x = new JCheckBoxMenuItem("8x", Integer.parseInt(properties.getProperty("Scaling", "1")) == 8);
-                            scaling8x.addActionListener(e122 -> {
-                                form.dispose();
-                                properties.setProperty("Scaling", "8");
-                                updateConfigFile();
-
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            });
-                            scalingMenu.add(filterMenu);
-                            scalingMenu.add(new JSeparator());
-                            scalingMenu.add(scaling1x);
-                            scalingMenu.add(scaling2x);
-                            scalingMenu.add(scaling3x);
-                            scalingMenu.add(scaling4x);
-                            scalingMenu.add(scaling6x);
-                            scalingMenu.add(scaling8x);
-
-                            JPopupMenu settingsPopup = new JPopupMenu();
-                            settingsPopup.add(chooseShimejiMenu);
-                            settingsPopup.add(interactiveMenu);
-                            settingsPopup.add(new JSeparator());
-                            settingsPopup.add(shimejiChooserMenu);
-                            settingsPopup.add(new JSeparator());
-                            settingsPopup.add(scalingMenu);
-                            settingsPopup.addPopupMenuListener(new PopupMenuListener() {
-                                @Override
-                                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                                }
-
-                                @Override
-                                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                                    if (panel.getMousePosition() != null) {
-                                        btnSettings.setEnabled(!(panel.getMousePosition().x > btnSettings.getX() &&
-                                                panel.getMousePosition().x < btnSettings.getX() + btnSettings.getWidth() &&
-                                                panel.getMousePosition().y > btnSettings.getY() &&
-                                                panel.getMousePosition().y < btnSettings.getY() + btnSettings.getHeight()));
-                                    } else {
-                                        btnSettings.setEnabled(true);
-                                    }
-                                }
-
-                                @Override
-                                public void popupMenuCanceled(PopupMenuEvent e) {
-                                }
-                            });
-                            settingsPopup.show(btnSettings, 0, btnSettings.getHeight());
-                            btnSettings.requestFocusInWindow();
+                            }
                         });
 
                         final JButton btnLanguage = new JButton(languageBundle.getString("Language"));
@@ -1096,6 +867,8 @@ public class Main {
                         gridBag.gridy++;
                         panel.add(btnAllowedBehaviours, gridBag);
                         gridBag.gridy++;
+                        panel.add(btnChooseShimeji, gridBag);
+                        gridBag.gridy++;
                         panel.add(btnSettings, gridBag);
                         gridBag.gridy++;
                         panel.add(btnLanguage, gridBag);
@@ -1118,14 +891,15 @@ public class Main {
                         width = Math.max(metrics.stringWidth(btnReduceToOne.getText()), width);
                         width = Math.max(metrics.stringWidth(btnRestoreWindows.getText()), width);
                         width = Math.max(metrics.stringWidth(btnAllowedBehaviours.getText()), width);
+                        width = Math.max(metrics.stringWidth(btnChooseShimeji.getText()), width);
                         width = Math.max(metrics.stringWidth(btnSettings.getText()), width);
                         width = Math.max(metrics.stringWidth(btnLanguage.getText()), width);
                         width = Math.max(metrics.stringWidth(btnPauseAll.getText()), width);
                         width = Math.max(metrics.stringWidth(btnDismissAll.getText()), width);
                         panel.setPreferredSize(new Dimension(width + 64,
                                 (int) (24 * scaling) + // 12 padding on top and bottom
-                                        (int) (60 * scaling) + // 10 insets of 5 height normally
-                                        9 * metrics.getHeight() + // 9 button faces
+                                        (int) (75 * scaling) + // 13 insets of 5 height normally
+                                        10 * metrics.getHeight() + // 10 button faces
                                         84));
                         form.pack();
 
@@ -1144,6 +918,16 @@ public class Main {
                         form.setMinimumSize(form.getSize());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
                         createMascot();
+                    } else if (event.getButton() == MouseEvent.BUTTON2 && event.getClickCount() == 2) {
+                        if (getManager().isExitOnLastRemoved()) {
+                            getManager().setExitOnLastRemoved(false);
+                            getManager().disposeAll();
+                        } else {
+                            for (String imageSet : imageSets) {
+                                createMascot(imageSet);
+                            }
+                            getManager().setExitOnLastRemoved(true);
+                        }
                     }
                 }
 
@@ -1165,7 +949,9 @@ public class Main {
         }
     }
 
-    // Randomly creates a mascot
+    /**
+     * Randomly creates a mascot.
+     */
     public void createMascot() {
         int length = imageSets.size();
         int random = (int) (length * Math.random());
@@ -1200,7 +986,7 @@ public class Main {
             mascot.dispose();
         } catch (Exception e) {
             log.log(Level.SEVERE, imageSet + " fatal error, can not be started.", e);
-            showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + imageSet + ".\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + " " + imageSet + ".\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
         }
     }

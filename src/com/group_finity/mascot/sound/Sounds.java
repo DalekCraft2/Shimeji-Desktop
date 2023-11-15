@@ -4,8 +4,8 @@ import com.group_finity.mascot.Main;
 
 import javax.sound.sampled.Clip;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This static class contains all the sounds loaded by Shimeji-ee.
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author Kilkakon
  */
 public class Sounds {
-    private final static Hashtable<String, Clip> SOUNDS = new Hashtable<>();
+    private final static ConcurrentHashMap<String, Clip> SOUNDS = new ConcurrentHashMap<>();
 
     public static void load(final String filename, final Clip clip) {
         if (!SOUNDS.containsKey(filename)) {
@@ -35,7 +35,15 @@ public class Sounds {
     }
 
     public static ArrayList<Clip> getSoundsIgnoringVolume(String filename) {
-        return SOUNDS.keySet().stream().filter(soundName -> soundName.startsWith(filename)).map(SOUNDS::get).collect(Collectors.toCollection(() -> new ArrayList<>(5)));
+        ArrayList<Clip> sounds = new ArrayList<>(5);
+        for (Map.Entry<String, Clip> entry : SOUNDS.entrySet()) {
+            String soundName = entry.getKey();
+            Clip soundClip = entry.getValue();
+            if (soundName.startsWith(filename)) {
+                sounds.add(soundClip);
+            }
+        }
+        return sounds;
     }
 
     public static boolean isMuted() {
@@ -45,8 +53,8 @@ public class Sounds {
     public static void setMuted(boolean mutedFlag) {
         if (mutedFlag) {
             // mute everything
-            for (String s : SOUNDS.keySet()) {
-                SOUNDS.get(s).stop();
+            for (Clip clip : SOUNDS.values()) {
+                clip.stop();
             }
         }
     }

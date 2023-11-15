@@ -1,6 +1,5 @@
 package com.group_finity.mascot;
 
-import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.Area;
@@ -12,6 +11,7 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import com.group_finity.mascot.menu.JLongMenu;
 import com.group_finity.mascot.sound.Sounds;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -124,10 +124,10 @@ public class Mascot implements Serializable {
         log.log(Level.INFO, "Created a mascot ({0})", this);
 
         // Always show on top
-        getWindow().asJWindow().setAlwaysOnTop(true);
+        getWindow().setAlwaysOnTop(true);
 
         // Register the mouse handler
-        getWindow().asJWindow().addMouseListener(new MouseAdapter() {
+        getWindow().asComponent().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
                 Mascot.this.mousePressed(e);
@@ -138,22 +138,30 @@ public class Mascot implements Serializable {
                 Mascot.this.mouseReleased(e);
             }
         });
-        getWindow().asJWindow().addMouseMotionListener(new MouseMotionListener() {
+        getWindow().asComponent().addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseMoved(final MouseEvent e) {
-                if (isHotspotClicked()) {
-                    setCursorPosition(e.getPoint());
+                if (paused) {
+                    refreshCursor(false);
                 } else {
-                    refreshCursor(e.getPoint());
+                    if (isHotspotClicked()) {
+                        setCursorPosition(e.getPoint());
+                    } else {
+                        refreshCursor(e.getPoint());
+                    }
                 }
             }
 
             @Override
             public void mouseDragged(final MouseEvent e) {
-                if (isHotspotClicked()) {
-                    setCursorPosition(e.getPoint());
+                if (paused) {
+                    refreshCursor(false);
                 } else {
-                    refreshCursor(e.getPoint());
+                    if (isHotspotClicked()) {
+                        setCursorPosition(e.getPoint());
+                    } else {
+                        refreshCursor(e.getPoint());
+                    }
                 }
             }
         });
@@ -166,7 +174,7 @@ public class Mascot implements Serializable {
 
     private void mousePressed(final MouseEvent event) {
         // Switch to drag the animation when the mouse is down
-        if (getBehavior() != null) {
+        if (!isPaused() && getBehavior() != null) {
             try {
                 getBehavior().mousePressed(event);
             } catch (final CantBeAliveException e) {
@@ -181,7 +189,7 @@ public class Mascot implements Serializable {
         if (event.isPopupTrigger()) {
             SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
         } else {
-            if (getBehavior() != null) {
+            if (!isPaused() && getBehavior() != null) {
                 try {
                     getBehavior().mouseReleased(event);
                 } catch (final CantBeAliveException e) {
@@ -303,12 +311,12 @@ public class Mascot implements Serializable {
         popup.add(closeMenu);
 
         // TODO Get the popup to close when clicking outside of it
-        getWindow().asJWindow().requestFocus();
+        getWindow().asComponent().requestFocus();
 
         // lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window boundary
         // as the shimeji window can't support this we need to set them to heavyweight
         popup.setLightWeightPopupEnabled(false);
-        popup.show(getWindow().asJWindow(), x, y);
+        popup.show(getWindow().asComponent(), x, y);
     }
 
     void tick() {
@@ -351,28 +359,34 @@ public class Mascot implements Serializable {
             // Make sure there's an image
             if (getImage() != null) {
                 // Set the window region
-                getWindow().asJWindow().setBounds(getBounds());
+                getWindow().asComponent().setBounds(getBounds());
 
                 // Set Images
                 getWindow().setImage(getImage().getImage());
 
                 // Display
-                if (!getWindow().asJWindow().isVisible()) {
-                    getWindow().asJWindow().setVisible(true);
+                if (!getWindow().asComponent().isVisible()) {
+                    getWindow().asComponent().setVisible(true);
                 }
 
                 // Redraw
                 getWindow().updateImage();
             } else {
-                if (getWindow().asJWindow().isVisible()) {
-                    getWindow().asJWindow().setVisible(false);
+                if (getWindow().asComponent().isVisible()) {
+                    getWindow().asComponent().setVisible(false);
                 }
             }
 
             // play sound if requested
-            if (sound != null && !Sounds.getSound(sound).isRunning() && !Sounds.isMuted()) {
-                Sounds.getSound(sound).setMicrosecondPosition(0);
-                Sounds.getSound(sound).start();
+            if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
+                synchronized (log) {
+                    Clip clip = Sounds.getSound(sound);
+                    if (!clip.isRunning()) {
+                        clip.stop();
+                        clip.setMicrosecondPosition(0);
+                        clip.start();
+                    }
+                }
             }
         }
     }
@@ -386,7 +400,7 @@ public class Mascot implements Serializable {
         }
 
         animating = false;
-        getWindow().asJWindow().dispose();
+        getWindow().dispose();
         if (getManager() != null) {
             getManager().remove(this);
         }
@@ -399,7 +413,7 @@ public class Mascot implements Serializable {
     }
 
     private void refreshCursor(Boolean useHand) {
-        getWindow().asJWindow().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+        getWindow().asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
     }
 
     public Manager getManager() {
@@ -440,12 +454,10 @@ public class Mascot implements Serializable {
             final int top = getAnchor().y - getImage().getCenter().y;
             final int left = getAnchor().x - getImage().getCenter().x;
 
-            final int scaling = Integer.parseInt(Main.getInstance().getProperties().getProperty("Scaling", "1"));
-
-            return new Rectangle(left, top, getImage().getSize().width * scaling, getImage().getSize().height * scaling);
+            return new Rectangle(left, top, getImage().getSize().width, getImage().getSize().height);
         } else {
             // as we have no image let's return what we were last frame
-            return getWindow().asJWindow().getBounds();
+            return getWindow().asComponent().getBounds();
         }
     }
 

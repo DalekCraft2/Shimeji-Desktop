@@ -29,6 +29,7 @@ import java.util.logging.Logger;
  */
 public class Configuration {
     private static final Logger log = Logger.getLogger(Configuration.class.getName());
+    private final Map<String, String> constants = new LinkedHashMap<>(2);
     private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
     private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
     private ResourceBundle schema;
@@ -54,6 +55,11 @@ public class Configuration {
         URL[] urls = {file.toURI().toURL()};
         try (URLClassLoader loader = new URLClassLoader(urls)) {
             schema = ResourceBundle.getBundle("schema", locale, loader, utf8Control);
+        }
+
+        for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
+            getConstants().put(constant.getAttribute(schema.getString("Name")),
+                    constant.getAttribute(schema.getString("Value")));
         }
 
         for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
@@ -116,6 +122,7 @@ public class Configuration {
     public Behavior buildBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
 
         final VariableMap context = new VariableMap();
+        context.putAll(getConstants()); // put first so they can't override mascot
         context.put("mascot", mascot);
 
         final List<BehaviorBuilder> candidates = new ArrayList<>();
@@ -178,6 +185,10 @@ public class Configuration {
         } else {
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + name + ")");
         }
+    }
+
+    private Map<String, String> getConstants() {
+        return constants;
     }
 
     Map<String, ActionBuilder> getActionBuilders() {

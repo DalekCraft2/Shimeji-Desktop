@@ -11,7 +11,6 @@ import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,16 +89,14 @@ public class ActionBuilder implements IActionBuilder {
                         // NOTE There's no constructor
                     }
 
-                    return cls.getDeclaredConstructor().newInstance();
+                    // TODO Check whether anything changes when Class#getDeclaredConstructor().newInstance() is used instead of Class#newInstance()
+                    return cls.newInstance();
                 } catch (final InstantiationException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage") + "(" + this + ")", e);
                 } catch (final IllegalAccessException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("CannotAccessClassActionErrorMessage") + "(" + this + ")", e);
                 } catch (final ClassNotFoundException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage") + "(" + this + ")", e);
-                } catch (InvocationTargetException | NoSuchMethodException e) {
-                    // TODO Create language properties for these two exceptions
-                    throw new RuntimeException(e);
                 }
 
             } else if (type.equals(schema.getString("Move"))) {

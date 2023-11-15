@@ -1,6 +1,6 @@
 package com.group_finity.mascot.image;
 
-import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
@@ -8,8 +8,7 @@ import java.util.Hashtable;
  * Currently developed by Shimeji-ee Group.
  */
 public class ImagePairs {
-
-    private static Hashtable<String, ImagePair> imagePairs = new Hashtable<>();
+    private static ConcurrentHashMap<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
 
     public static void load(final String filename, final ImagePair imagepair) {
         if (!imagePairs.containsKey(filename)) {
@@ -37,6 +36,13 @@ public class ImagePairs {
             return;
         }
 
+        // TODO Confirm that these two function identically
+        // for (Enumeration<String> key = imagePairs.keys(); key.hasMoreElements(); ) {
+        //     String filename = key.nextElement();
+        //     if (searchTerm.equals(filename.split("/")[1])) {
+        //         imagePairs.remove(filename);
+        //     }
+        // }
         imagePairs.keySet().removeIf(key -> searchTerm.equals(key.split("/")[1]));
     }
 

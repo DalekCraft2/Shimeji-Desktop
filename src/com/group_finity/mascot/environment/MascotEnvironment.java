@@ -12,14 +12,16 @@ import java.awt.*;
  * Currently developed by Shimeji-ee Group.
  */
 public class MascotEnvironment {
-    private Environment impl = NativeFactory.getInstance().getEnvironment();
+    private final Environment impl;
 
-    private Mascot mascot;
+    private final Mascot mascot;
 
     private Area currentWorkArea;
 
     public MascotEnvironment(Mascot mascot) {
         this.mascot = mascot;
+        impl = NativeFactory.getInstance().getEnvironment();
+        impl.init();
     }
 
     public Area getWorkArea() {

@@ -60,10 +60,8 @@ public class FloorCeiling implements Border {
                 && location.x <= getRight();
     }
 
-
     @Override
     public Point move(final Point location) {
-
         if (!getArea().isVisible()) {
             return location;
         }

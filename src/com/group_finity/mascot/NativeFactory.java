@@ -6,32 +6,30 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.Platform;
 
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
 
 public abstract class NativeFactory {
-
-    private static final NativeFactory instance;
+    private static NativeFactory instance;
 
     static {
-        Class<? extends NativeFactory> impl;
-        if (Platform.isWindows()) {
-            impl = com.group_finity.mascot.win.NativeFactoryImpl.class;
-        } else if (Platform.isMac()) {
-            impl = com.group_finity.mascot.mac.NativeFactoryImpl.class;
-        } else {
-            impl = com.group_finity.mascot.generic.NativeFactoryImpl.class;
-        }
-
-        try {
-            instance = impl.getDeclaredConstructor().newInstance();
-        } catch (final InstantiationException | IllegalAccessException |
-                       InvocationTargetException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        resetInstance();
     }
 
     public static NativeFactory getInstance() {
         return instance;
+    }
+
+    public static void resetInstance() {
+        String environment = Main.getInstance().getProperties().getProperty("Environment", "generic");
+
+        if (environment.equals("generic")) {
+            if (Platform.isWindows()) {
+                instance = new com.group_finity.mascot.win.NativeFactoryImpl();
+            } else if (Platform.isMac()) {
+                instance = new com.group_finity.mascot.mac.NativeFactoryImpl();
+            }
+        } else if (environment.equals("virtual")) {
+            instance = new com.group_finity.mascot.virtual.NativeFactoryImpl();
+        }
     }
 
     public abstract Environment getEnvironment();
