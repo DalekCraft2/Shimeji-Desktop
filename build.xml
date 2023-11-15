@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="Shimeji-ee" basedir="." default="zip">
 
-    <property name="version" value="1.0.9"/>
+    <property name="version" value="1.0.20"/>
 
     <target name="clean">
         <delete dir="target"/>
