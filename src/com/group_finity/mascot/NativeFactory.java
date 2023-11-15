@@ -13,24 +13,18 @@ public abstract class NativeFactory {
     private static final NativeFactory instance;
 
     static {
-        String subpkg = "generic";
-
+        Class<? extends NativeFactory> impl;
         if (Platform.isWindows()) {
-            subpkg = "win";
+            impl = com.group_finity.mascot.win.NativeFactoryImpl.class;
         } else if (Platform.isMac()) {
-            subpkg = "mac";
+            impl = com.group_finity.mascot.mac.NativeFactoryImpl.class;
+        } else {
+            impl = com.group_finity.mascot.generic.NativeFactoryImpl.class;
         }
 
-        String basepkg = NativeFactory.class.getName();
-        // Remove a class name
-        basepkg = basepkg.substring(0, basepkg.lastIndexOf('.'));
-
         try {
-            @SuppressWarnings("unchecked") final Class<? extends NativeFactory> impl = (Class<? extends NativeFactory>) Class.forName(basepkg + "." + subpkg + ".NativeFactoryImpl");
-
             instance = impl.getDeclaredConstructor().newInstance();
-
-        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException |
+        } catch (final InstantiationException | IllegalAccessException |
                        InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
