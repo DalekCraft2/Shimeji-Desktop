@@ -56,7 +56,7 @@ public class BreedJump extends Jump {
         super.init(mascot);
 
         if (getBornInterval() < 1) {
-            throw new VariableException("BornInterval must be positive");
+            throw new VariableException("BornInterval must be greater than 0");
         }
         scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
     }

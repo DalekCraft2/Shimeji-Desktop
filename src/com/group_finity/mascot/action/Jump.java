@@ -1,5 +1,7 @@
 package com.group_finity.mascot.action;
 
+import com.group_finity.mascot.Main;
+import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
@@ -32,8 +34,17 @@ public class Jump extends ActionBase {
 
     private static final double DEFAULT_VELOCITY = 20.0;
 
+    private double scaling;
+
     public Jump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
+    }
+
+    @Override
+    public void init(final Mascot mascot) throws VariableException {
+        super.init(mascot);
+
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
     }
 
     @Override
@@ -62,7 +73,7 @@ public class Jump extends ActionBase {
 
         final double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-        final double velocity = getVelocity();
+        final double velocity = getVelocity() * scaling;
 
         if (distance != 0) {
             final int velocityX = (int) (velocity * distanceX / distance);

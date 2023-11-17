@@ -1,6 +1,7 @@
 package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Main;
+import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.LostGroundException;
@@ -30,9 +31,18 @@ public class WalkWithIE extends Move {
 
     private static final int DEFAULT_IEOFFSETY = 0;
 
+    // private double scaling;
+
     public WalkWithIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
+
+    // @Override
+    // public void init(final Mascot mascot) throws VariableException {
+    //     super.init(mascot);
+    //
+    //     scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+    // }
 
     @Override
     public boolean hasNext() throws VariableException {
@@ -52,6 +62,9 @@ public class WalkWithIE extends Move {
             throw new LostGroundException();
         }
 
+        // Can't use scaling here yet because it doesn't work for scales other than 1; the Shimejis will just release the window immediately.
+        // final int offsetX = (int) (getIEOffsetX() * scaling);
+        // final int offsetY = (int) (getIEOffsetY() * scaling);
         final int offsetX = getIEOffsetX();
         final int offsetY = getIEOffsetY();
 

@@ -23,7 +23,7 @@ public abstract class InstantAction extends ActionBase {
     }
 
     @Override
-    public final void init(final Mascot mascot) throws VariableException {
+    public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
         if (super.hasNext()) {

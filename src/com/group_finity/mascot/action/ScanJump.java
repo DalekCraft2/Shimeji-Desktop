@@ -42,8 +42,17 @@ public class ScanJump extends ActionBase {
 
     private WeakReference<Mascot> target;
 
+    private double scaling;
+
     public ScanJump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
+    }
+
+    @Override
+    public void init(final Mascot mascot) throws VariableException {
+        super.init(mascot);
+
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
     }
 
     @Override
@@ -73,7 +82,7 @@ public class ScanJump extends ActionBase {
 
         double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-        double velocity = getVelocity();
+        double velocity = getVelocity() * scaling;
 
         if (distance != 0) {
             int velocityX = (int) (velocity * distanceX / distance);

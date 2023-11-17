@@ -1,5 +1,6 @@
 package com.group_finity.mascot.action;
 
+import com.group_finity.mascot.Main;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
@@ -52,6 +53,8 @@ public class Fall extends ActionBase {
 
     private double modY;
 
+    protected double scaling;
+
     public Fall(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
@@ -60,8 +63,10 @@ public class Fall extends ActionBase {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        setVelocityX(getInitialVx());
-        setVelocityY(getInitialVy());
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+
+        setVelocityX(getInitialVx() * scaling);
+        setVelocityY(getInitialVy() * scaling);
     }
 
     @Override
@@ -84,8 +89,8 @@ public class Fall extends ActionBase {
             getMascot().setLookRight(getVelocityX() > 0);
         }
 
-        setVelocityX(getVelocityX() - getVelocityX() * getResistanceX());
-        setVelocityY(getVelocityY() - getVelocityY() * getResistanceY() + getGravity());
+        setVelocityX((getVelocityX() / scaling - getVelocityX() * getResistanceX() / scaling) * scaling);
+        setVelocityY((getVelocityY() / scaling - getVelocityY() * getResistanceY() / scaling + getGravity()) * scaling);
 
         putVariable(getSchema().getString(VARIABLE_VELOCITYX), getVelocityX());
         putVariable(getSchema().getString(VARIABLE_VELOCITYY), getVelocityY());

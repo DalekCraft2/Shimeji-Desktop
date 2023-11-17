@@ -1,6 +1,7 @@
 package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Main;
+import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.LostGroundException;
@@ -33,8 +34,17 @@ public class ThrowIE extends Animate {
 
     private static final double DEFAULT_GRAVITY = 0.5;
 
+    private double scaling;
+
     public ThrowIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
+    }
+
+    @Override
+    public void init(final Mascot mascot) throws VariableException {
+        super.init(mascot);
+
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
     }
 
     @Override
@@ -58,11 +68,11 @@ public class ThrowIE extends Animate {
 
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() + getInitialVx(), activeIE.getTop()
-                        + getInitialVy() + (int) (getTime() * getGravity())));
+                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() + (int) (getInitialVx() * scaling), activeIE.getTop()
+                        + (int) (getInitialVy() * scaling + getTime() * getGravity() * scaling)));
             } else {
-                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() - getInitialVx(), activeIE.getTop()
-                        + getInitialVy() + (int) (getTime() * getGravity())));
+                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() - (int) (getInitialVx() * scaling), activeIE.getTop()
+                        + (int) (getInitialVy() * scaling + getTime() * getGravity() * scaling)));
             }
         }
 
