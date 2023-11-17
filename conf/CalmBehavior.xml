@@ -37,8 +37,8 @@
         <Behavior Name="Divided" Frequency="0"/>
 
         <!-- On the Floor -->
-        <Condition
-                Condition="#{mascot.environment.floor.isOn(mascot.anchor) || mascot.environment.activeIE.topBorder.isOn(mascot.anchor)}">
+        <Condition Condition="#{mascot.environment.floor.isOn(mascot.anchor) ||
+                    mascot.environment.activeIE.topBorder.isOn(mascot.anchor)}">
             <Behavior Name="StandUp" Frequency="200"/>
             <Behavior Name="SitDown" Frequency="100">
                 <NextBehaviorList Add="true">
@@ -71,8 +71,8 @@
         </Condition>
 
         <!-- On the Ceiling -->
-        <Condition
-                Condition="#{mascot.environment.ceiling.isOn(mascot.anchor) || mascot.environment.activeIE.bottomBorder.isOn(mascot.anchor)}">
+        <Condition Condition="#{mascot.environment.ceiling.isOn(mascot.anchor) ||
+                    mascot.environment.activeIE.bottomBorder.isOn(mascot.anchor)}">
             <Behavior Name="HoldOntoCeiling" Frequency="100"/>
             <Behavior Name="FallFromCeiling" Frequency="0"/>
         </Condition>

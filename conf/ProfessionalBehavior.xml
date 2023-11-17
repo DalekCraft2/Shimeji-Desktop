@@ -62,9 +62,9 @@
 
         <!-- On the Wall -->
         <Condition Condition="#{ mascot.lookRight ? (
-                    mascot.environment.workArea.rightBorder.isOn(mascot.anchor) || 
+                    mascot.environment.workArea.rightBorder.isOn(mascot.anchor) ||
                     mascot.environment.activeIE.leftBorder.isOn(mascot.anchor) ) : (
-                    mascot.environment.workArea.leftBorder.isOn(mascot.anchor) || 
+                    mascot.environment.workArea.leftBorder.isOn(mascot.anchor) ||
                     mascot.environment.activeIE.rightBorder.isOn(mascot.anchor) ) }">
             <Behavior Name="HoldOntoWall" Frequency="100"/>
             <Behavior Name="FallFromWall" Frequency="50" Condition="${!mascot.environment.floor.isOn(mascot.anchor)}"/>
