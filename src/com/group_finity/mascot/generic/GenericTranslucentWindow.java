@@ -2,7 +2,7 @@ package com.group_finity.mascot.generic;
 
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
-import com.sun.jna.examples.WindowUtils;
+import com.sun.jna.platform.WindowUtils;
 
 import javax.swing.*;
 import java.awt.*;
