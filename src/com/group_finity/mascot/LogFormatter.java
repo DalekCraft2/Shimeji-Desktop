@@ -57,11 +57,8 @@ public class LogFormatter extends SimpleFormatter {
         sb.append(message);
         sb.append(lineSeparator);
         if (record.getThrown() != null) {
-            try {
-                final StringWriter sw = new StringWriter();
-                final PrintWriter pw = new PrintWriter(sw);
+            try (final StringWriter sw = new StringWriter(); final PrintWriter pw = new PrintWriter(sw)) {
                 record.getThrown().printStackTrace(pw);
-                pw.close();
                 sb.append(sw);
             } catch (final Exception e) {
                 e.printStackTrace();

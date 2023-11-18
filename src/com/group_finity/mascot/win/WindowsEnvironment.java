@@ -299,11 +299,10 @@ class WindowsEnvironment extends Environment {
             return true;
         }, null);
 
-        try {
-            PrintWriter out = new PrintWriter("window-debug-information.txt");
-            out.println(text.toString());
-            out.close();
+        try (PrintWriter out = new PrintWriter("window-debug-information.txt")) {
+            out.println(text);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     } */
 }
