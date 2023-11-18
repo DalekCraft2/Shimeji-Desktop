@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class WalkWithIE extends Move {
 
-    private static final Logger log = Logger.getLogger(Stay.class.getName());
+    private static final Logger log = Logger.getLogger(WalkWithIE.class.getName());
 
     public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
 

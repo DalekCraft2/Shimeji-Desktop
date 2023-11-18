@@ -39,7 +39,7 @@ class WindowsEnvironment extends Environment {
         IE
     }
 
-    private static final Logger log = Logger.getLogger(Environment.class.getName());
+    private static final Logger log = Logger.getLogger(WindowsEnvironment.class.getName());
 
     private static boolean isIE(final Pointer ie) {
         final Boolean cachedValue = ieCache.get(ie);

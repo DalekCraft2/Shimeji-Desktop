@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * Now I'm hungry
  */
 public class Mute extends InstantAction {
-    private static final Logger log = Logger.getLogger(Offset.class.getName());
+    private static final Logger log = Logger.getLogger(Mute.class.getName());
 
     public static final String PARAMETER_SOUND = "Sound";
 
