@@ -186,6 +186,9 @@ public class Manager {
         }
     }
 
+    /**
+     * Dismisses mascots until one remains.
+     */
     public void remainOne() {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
@@ -195,6 +198,11 @@ public class Manager {
         }
     }
 
+    /**
+     * Dismisses all mascots except for the one specified.
+     *
+     * @param mascot the mascot to not dismiss
+     */
     public void remainOne(Mascot mascot) {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
@@ -206,6 +214,11 @@ public class Manager {
         }
     }
 
+    /**
+     * Dismisses mascots which use the specified image set until one mascot remains.
+     *
+     * @param imageSet the image set for which to check
+     */
     public void remainOne(String imageSet) {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
@@ -221,6 +234,29 @@ public class Manager {
         }
     }
 
+    /**
+     * Dismisses mascots which use the specified image set until only the specified mascot remains.
+     *
+     * @param imageSet the image set for which to check
+     * @param mascot   the mascot to not dismiss
+     */
+    public void remainOne(String imageSet, Mascot mascot) {
+        synchronized (getMascots()) {
+            int totalMascots = getMascots().size();
+            for (int i = totalMascots - 1; i >= 0; --i) {
+                Mascot m = getMascots().get(i);
+                if (m.getImageSet().equals(imageSet) && !m.equals(mascot)) {
+                    m.dispose();
+                }
+            }
+        }
+    }
+
+    /**
+     * Dismisses all mascots which use the specified image set.
+     *
+     * @param imageSet the image set for which to check
+     */
     public void remainNone(String imageSet) {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();

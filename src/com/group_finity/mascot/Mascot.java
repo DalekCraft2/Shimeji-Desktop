@@ -27,12 +27,12 @@ import java.util.logging.Logger;
 /**
  * Mascot object.
  * <p>
- * The mascot represents the long-term, complex behavior and {@link Behavior},
- * Represents a short-term movements in the monotonous work with {@link Action}.
+ * Mascots' long-term, complex behaviors are represented by {@link Behavior Behaviors},
+ * and their short-term, simple actions are represented by {@link Action Actions}.
  * <p>
- * The mascot they have an internal timer, at a constant interval to call {@link Action}.
- * {@link Action} is {@link #animate(Point, MascotImage, boolean)} method or by calling
- * To animate the mascot.
+ * Mascots have an internal timer which calls {@link Action} at a constant interval.
+ * {@link Action}'s {@link #animate(Point, MascotImage, boolean)} method is called
+ * to animate the mascot.
  * <p>
  * {@link Action} or exits, the other at a certain time is called {@link Behavior}, the next move to {@link Action}.
  * <p>
@@ -234,7 +234,7 @@ public class Mascot implements Serializable {
 
         // "Reduce to One!" menu item
         final JMenuItem oneMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("DismissOthers"));
-        oneMenu.addActionListener(event -> getManager().remainOne(imageSet));
+        oneMenu.addActionListener(event -> getManager().remainOne(imageSet, this));
 
         // "Reduce to One!" menu item
         final JMenuItem onlyOneMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("DismissAllOthers"));
@@ -261,7 +261,7 @@ public class Mascot implements Serializable {
         final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? Main.getInstance().getLanguageBundle().getString("PauseAnimations") : Main.getInstance().getLanguageBundle().getString("ResumeAnimations"));
         pauseMenu.addActionListener(event -> setPaused(!isPaused()));
 
-        // Add the Behaviors submenu. Currently slightly buggy, sometimes the menu ghosts.
+        // Add the Behaviors submenu. It is currently slightly buggy; sometimes the menu ghosts.
         JLongMenu submenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"), 30);
         // The MenuScroller would look better than the JLongMenu, but the initial positioning is not working correctly.
         // MenuScroller.setScrollerFor(submenu, 30, 125);
