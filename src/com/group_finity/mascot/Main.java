@@ -170,9 +170,6 @@ public class Main {
                 properties.setProperty("MenuDPI", Math.max(Toolkit.getDefaultToolkit().getScreenResolution(), 96) + "");
                 updateConfigFile();
             }
-            float menuScaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
-            Font font = theme.getUserTextFont().deriveFont(theme.getUserTextFont().getSize() * menuScaling);
-            theme.setFont(font);
 
             NimRODLookAndFeel.setCurrentTheme(theme);
             JFrame.setDefaultLookAndFeelDecorated(true);
@@ -373,9 +370,6 @@ public class Main {
 
     /**
      * Creates a tray icon.
-     *
-     * @throws AWTException
-     * @throws IOException
      */
     private void createTrayIcon() {
         log.log(Level.INFO, "create a tray icon");
@@ -848,14 +842,13 @@ public class Main {
                         btnDismissAll.addActionListener(e -> exit());
 
                         // layout
-                        float scaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
                         panel.setLayout(new GridBagLayout());
                         GridBagConstraints gridBag = new GridBagConstraints();
                         gridBag.fill = GridBagConstraints.HORIZONTAL;
                         gridBag.gridx = 0;
                         gridBag.gridy = 0;
                         panel.add(btnCallShimeji, gridBag);
-                        gridBag.insets = new Insets((int) (5 * scaling), 0, 0, 0);
+                        gridBag.insets = new Insets(5, 0, 0, 0);
                         gridBag.gridy++;
                         panel.add(btnFollowCursor, gridBag);
                         gridBag.gridy++;
@@ -897,25 +890,33 @@ public class Main {
                         width = Math.max(metrics.stringWidth(btnPauseAll.getText()), width);
                         width = Math.max(metrics.stringWidth(btnDismissAll.getText()), width);
                         panel.setPreferredSize(new Dimension(width + 64,
-                                (int) (24 * scaling) + // 12 padding on top and bottom
-                                        (int) (75 * scaling) + // 13 insets of 5 height normally
+                                24 + // 12 padding on top and bottom
+                                        75 + // 13 insets of 5 height normally
                                         10 * metrics.getHeight() + // 10 button faces
                                         84));
                         form.pack();
+                        form.setMinimumSize(form.getSize());
+
+                        // log.info("getX(): " + event.getX() + ", getPoint().x: " + event.getPoint().x);
+                        // log.info("getY(): " + event.getY() + ", getPoint().y: " + event.getPoint().y);
+
+                        float scaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
 
                         // setting location of the form
-                        form.setLocation(event.getPoint().x - form.getWidth(), event.getPoint().y - form.getHeight());
+                        form.setLocation((int) (event.getX() / scaling) - form.getWidth(), (int) (event.getY() / scaling) - form.getHeight());
 
                         // make sure that it is on the screen if people are using exotic taskbar locations
                         Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
                         if (form.getX() < screen.getX()) {
-                            form.setLocation(event.getPoint().x, form.getY());
+                            form.setLocation((int) (event.getX() / scaling), form.getY());
                         }
                         if (form.getY() < screen.getY()) {
-                            form.setLocation(form.getX(), event.getPoint().y);
+                            form.setLocation(form.getX(), (int) (event.getY() / scaling));
                         }
+
                         form.setVisible(true);
-                        form.setMinimumSize(form.getSize());
+
+                        // log.info("Final position: " + form.getX() + ", " + form.getY());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
                         createMascot();
                     } else if (event.getButton() == MouseEvent.BUTTON2 && event.getClickCount() == 2) {

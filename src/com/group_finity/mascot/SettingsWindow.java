@@ -116,27 +116,26 @@ public class SettingsWindow extends JDialog {
         btnCancel.setText(language.getString("Cancel"));
 
         // scale controls to fit
-        float menuScaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
-        getContentPane().setPreferredSize(new Dimension((int) (500 * menuScaling), (int) (360 * menuScaling)));
-        sldScaling.setPreferredSize(new Dimension((int) (sldScaling.getPreferredSize().width * menuScaling), (int) (sldScaling.getPreferredSize().height * menuScaling)));
-        btnAddInteractiveWindow.setPreferredSize(new Dimension((int) (btnAddInteractiveWindow.getPreferredSize().width * menuScaling), (int) (btnAddInteractiveWindow.getPreferredSize().height * menuScaling)));
-        btnRemoveInteractiveWindow.setPreferredSize(new Dimension((int) (btnRemoveInteractiveWindow.getPreferredSize().width * menuScaling), (int) (btnRemoveInteractiveWindow.getPreferredSize().height * menuScaling)));
+        getContentPane().setPreferredSize(new Dimension(500, 360));
+        sldScaling.setPreferredSize(new Dimension(sldScaling.getPreferredSize().width, sldScaling.getPreferredSize().height));
+        btnAddInteractiveWindow.setPreferredSize(new Dimension(btnAddInteractiveWindow.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height));
+        btnRemoveInteractiveWindow.setPreferredSize(new Dimension(btnRemoveInteractiveWindow.getPreferredSize().width, btnRemoveInteractiveWindow.getPreferredSize().height));
         pnlInteractiveButtons.setPreferredSize(new Dimension(pnlInteractiveButtons.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height + 6));
-        spnWindowWidth.setPreferredSize(new Dimension((int) (spnWindowWidth.getPreferredSize().width * menuScaling), (int) (spnWindowWidth.getPreferredSize().height * menuScaling)));
-        spnWindowHeight.setPreferredSize(new Dimension((int) (spnWindowHeight.getPreferredSize().width * menuScaling), (int) (spnWindowHeight.getPreferredSize().height * menuScaling)));
-        txtBackground.setPreferredSize(new Dimension((int) (txtBackground.getPreferredSize().width * menuScaling), (int) (txtBackground.getPreferredSize().height * menuScaling)));
-        pnlBackgroundPreview.setPreferredSize(new Dimension((int) (pnlBackgroundPreview.getPreferredSize().width * menuScaling), (int) (pnlBackgroundPreview.getPreferredSize().height * menuScaling)));
-        lblIcon.setPreferredSize(new Dimension((int) (lblIcon.getPreferredSize().width * menuScaling), (int) (lblIcon.getPreferredSize().height * menuScaling)));
+        spnWindowWidth.setPreferredSize(new Dimension(spnWindowWidth.getPreferredSize().width, spnWindowWidth.getPreferredSize().height));
+        spnWindowHeight.setPreferredSize(new Dimension(spnWindowHeight.getPreferredSize().width, spnWindowHeight.getPreferredSize().height));
+        txtBackground.setPreferredSize(new Dimension(txtBackground.getPreferredSize().width, txtBackground.getPreferredSize().height));
+        pnlBackgroundPreview.setPreferredSize(new Dimension(pnlBackgroundPreview.getPreferredSize().width, pnlBackgroundPreview.getPreferredSize().height));
+        lblIcon.setPreferredSize(new Dimension(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height));
         lblIcon.setMaximumSize(lblIcon.getPreferredSize());
         if (!getIconImages().isEmpty()) {
             lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_DEFAULT)));
         }
-        btnWebsite.setPreferredSize(new Dimension((int) (btnWebsite.getPreferredSize().width * menuScaling), (int) (btnWebsite.getPreferredSize().height * menuScaling)));
-        btnDiscord.setPreferredSize(new Dimension((int) (btnDiscord.getPreferredSize().width * menuScaling), (int) (btnDiscord.getPreferredSize().height * menuScaling)));
-        btnPatreon.setPreferredSize(new Dimension((int) (btnPatreon.getPreferredSize().width * menuScaling), (int) (btnPatreon.getPreferredSize().height * menuScaling)));
+        btnWebsite.setPreferredSize(new Dimension(btnWebsite.getPreferredSize().width, btnWebsite.getPreferredSize().height));
+        btnDiscord.setPreferredSize(new Dimension(btnDiscord.getPreferredSize().width, btnDiscord.getPreferredSize().height));
+        btnPatreon.setPreferredSize(new Dimension(btnPatreon.getPreferredSize().width, btnPatreon.getPreferredSize().height));
         pnlAboutButtons.setPreferredSize(new Dimension(pnlAboutButtons.getPreferredSize().width, btnWebsite.getPreferredSize().height + 6));
-        btnDone.setPreferredSize(new Dimension((int) (btnDone.getPreferredSize().width * menuScaling), (int) (btnDone.getPreferredSize().height * menuScaling)));
-        btnCancel.setPreferredSize(new Dimension((int) (btnCancel.getPreferredSize().width * menuScaling), (int) (btnCancel.getPreferredSize().height * menuScaling)));
+        btnDone.setPreferredSize(new Dimension(btnDone.getPreferredSize().width, btnDone.getPreferredSize().height));
+        btnCancel.setPreferredSize(new Dimension(btnCancel.getPreferredSize().width, btnCancel.getPreferredSize().height));
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnDone.getPreferredSize().height + 6));
         pack();
         setVisible(true);
