@@ -65,6 +65,21 @@ public class Fall extends ActionBase {
 
         scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
+        // TODO Deal with the below issue.
+        // Shimejis start falling much more quickly than they should when released by the cursor, due to the scaling being used here.
+        // However, other things besides being thrown use the Fall action, so I am kind of in a dilemma here.
+        // This is a hotfix which does not use scaling if the initial velocities equal the dX or dY of the cursor.
+        // if (getInitialVx() == getEnvironment().getCursor().getDx()) {
+        //     setVelocityX(getInitialVx());
+        // } else {
+        //     setVelocityX(getInitialVx() * scaling);
+        // }
+        // if (getInitialVy() == getEnvironment().getCursor().getDy()) {
+        //     setVelocityY(getInitialVy());
+        // } else {
+        //     setVelocityY(getInitialVy() * scaling);
+        // }
+
         setVelocityX(getInitialVx() * scaling);
         setVelocityY(getInitialVy() * scaling);
     }
