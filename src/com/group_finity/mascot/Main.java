@@ -55,14 +55,15 @@ public class Main {
         try (FileInputStream input = new FileInputStream("./conf/logging.properties")) {
             LogManager.getLogManager().readConfiguration(input);
         } catch (final SecurityException | IOException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Failed to load log properties", e);
         } catch (OutOfMemoryError err) {
-            log.log(Level.SEVERE, "Out of Memory Exception.  There are probably have too many "
-                    + "Shimeji mascots in the image folder for your computer to handle.  Select fewer"
-                    + " image sets or move some to the img/unused folder and try again.", err);
-            showError("Out of Memory.  There are probably have too many \n"
+            log.log(Level.SEVERE, "Out of Memory Error. There are probably too many "
+                    + "Shimeji mascots in the image folder for your computer to handle. "
+                    + "Select fewer image sets or move some to the "
+                    + "img/unused folder and try again.", err);
+            showError("Out of Memory. There are probably too many\n"
                     + "Shimeji mascots for your computer to handle.\n"
-                    + "Select fewer image sets or move some to the \n"
+                    + "Select fewer image sets or move some to the\n"
                     + "img/unused folder and try again.");
             System.exit(0);
         }
@@ -93,12 +94,13 @@ public class Main {
         try {
             getInstance().run();
         } catch (OutOfMemoryError err) {
-            log.log(Level.SEVERE, "Out of Memory Exception.  There are probably have too many "
-                    + "Shimeji mascots in the image folder for your computer to handle.  Select fewer"
-                    + " image sets or move some to the img/unused folder and try again.", err);
-            showError("Out of Memory.  There are probably have too many \n"
+            log.log(Level.SEVERE, "Out of Memory Error. There are probably too many "
+                    + "Shimeji mascots in the image folder for your computer to handle. "
+                    + "Select fewer image sets or move some to the "
+                    + "img/unused folder and try again.", err);
+            showError("Out of Memory. There are probably too many\n"
                     + "Shimeji mascots for your computer to handle.\n"
-                    + "Select fewer image sets or move some to the \n"
+                    + "Select fewer image sets or move some to the\n"
                     + "img/unused folder and try again.");
             System.exit(0);
         }
@@ -1034,7 +1036,7 @@ public class Main {
         try (FileOutputStream output = new FileOutputStream("./conf/settings.properties")) {
             properties.store(output, "Shimeji-ee Configuration Options");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Failed to save settings", e);
         }
     }
 

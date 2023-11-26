@@ -13,6 +13,8 @@ import java.awt.event.ItemEvent;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -20,6 +22,7 @@ import java.util.stream.IntStream;
  * @author Monolith
  */
 public class SettingsWindow extends JDialog {
+    private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
     private static final String configFile = "./conf/settings.properties";    // Config file name
     private final ArrayList<String> listData = new ArrayList<>();
     private Boolean alwaysShowShimejiChooser = false;
@@ -562,7 +565,7 @@ public class SettingsWindow extends JDialog {
 
             properties.store(output, "Shimeji-ee Configuration Options");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Failed to save settings", e);
         }
         dispose();
     }// GEN-LAST:event_btnDoneActionPerformed
