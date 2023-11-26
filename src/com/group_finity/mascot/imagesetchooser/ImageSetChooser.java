@@ -3,12 +3,7 @@ package com.group_finity.mascot.imagesetchooser;
 import com.group_finity.mascot.Main;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,14 +30,14 @@ public class ImageSetChooser extends JDialog {
         initComponents();
         setLocationRelativeTo(null);
 
-        ArrayList<String> activeImageSets = readConfigFile();
+        List<String> activeImageSets = readConfigFile();
 
-        ArrayList<ImageSetChooserPanel> data1 = new ArrayList<>();
-        ArrayList<ImageSetChooserPanel> data2 = new ArrayList<>();
-        ArrayList<Integer> si1 = new ArrayList<>();
-        ArrayList<Integer> si2 = new ArrayList<>();
+        List<ImageSetChooserPanel> data1 = new ArrayList<>();
+        List<ImageSetChooserPanel> data2 = new ArrayList<>();
+        Collection<Integer> si1 = new ArrayList<>();
+        Collection<Integer> si2 = new ArrayList<>();
 
-        // Get list of imagesets (directories under img)
+        // Get list of image sets (directories under img)
         FilenameFilter fileFilter = (dir, name) -> {
             if (name.equalsIgnoreCase("unused") || name.startsWith(".")) {
                 return false;
@@ -216,9 +212,9 @@ public class ImageSetChooser extends JDialog {
         return imageSets;
     }
 
-    private ArrayList<String> readConfigFile() {
+    private List<String> readConfigFile() {
         // now with properties style loading!
-        ArrayList<String> activeImageSets = new ArrayList<>(Arrays.asList(Main.getInstance().getProperties().getProperty("ActiveShimeji", "").split("/")));
+        List<String> activeImageSets = new ArrayList<>(Arrays.asList(Main.getInstance().getProperties().getProperty("ActiveShimeji", "").split("/")));
         selectAllSets = activeImageSets.get(0).trim().isEmpty(); // if no active ones, activate them all!
         return activeImageSets;
     }
@@ -397,7 +393,7 @@ public class ImageSetChooser extends JDialog {
         dispose();
     }
 
-    private int[] convertIntegers(List<Integer> integers) {
+    private int[] convertIntegers(Collection<Integer> integers) {
         return integers.stream().mapToInt(Integer::intValue).toArray();
     }
 

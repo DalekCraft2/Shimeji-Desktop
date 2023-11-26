@@ -11,7 +11,9 @@ import com.sun.jna.ptr.PointerByReference;
 import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Java では取得が難しい環境情報をAccessibility APIを使用して取得する.
@@ -41,7 +43,7 @@ class MacEnvironment extends Environment {
 
     private static long currentPID = myPID;
 
-    private static HashSet<Long> touchedProcesses = new HashSet<>();
+    private static Set<Long> touchedProcesses = new HashSet<>();
 
     static final CFStringRef
             kAXPosition = createCFString("AXPosition"),
@@ -146,9 +148,9 @@ class MacEnvironment extends Environment {
         }
     }
 
-    private static ArrayList<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
+    private static Iterable<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
         PointerByReference axWindowsp = new PointerByReference();
-        ArrayList<AXUIElementRef> ret = new ArrayList<>();
+        Collection<AXUIElementRef> ret = new ArrayList<>();
 
         carbon.AXUIElementCopyAttributeValue(application, kAXChildren, axWindowsp);
 
@@ -290,7 +292,7 @@ class MacEnvironment extends Environment {
         }
     }
 
-    private static HashSet<Long> getTouchedProcesses() {
+    private static Set<Long> getTouchedProcesses() {
         return touchedProcesses;
     }
 

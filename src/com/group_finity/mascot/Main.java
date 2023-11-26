@@ -30,10 +30,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -1049,17 +1046,17 @@ public class Main {
      * @author snek
      * @author Kilkakon (did some tweaks)
      */
-    private void setActiveImageSets(ArrayList<String> newImageSets) {
+    private void setActiveImageSets(Collection<String> newImageSets) {
         if (newImageSets == null) {
             return;
         }
 
         // I don't think there would be enough imageSets chosen at any given
-        // time for it to be worth using HashSet but I might be wrong
-        ArrayList<String> toRemove = new ArrayList<>(imageSets);
+        // time for it to be worth using HashSet, but I might be wrong
+        Collection<String> toRemove = new ArrayList<>(imageSets);
         toRemove.removeAll(newImageSets);
 
-        ArrayList<String> toAdd = new ArrayList<>();
+        Collection<String> toAdd = new ArrayList<>();
         ArrayList<String> toRetain = new ArrayList<>();
         for (String set : newImageSets) {
             if (!imageSets.contains(set)) {

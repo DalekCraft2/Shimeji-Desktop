@@ -6,6 +6,7 @@ import com.group_finity.mascot.sound.Sounds;
 
 import javax.sound.sampled.Clip;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -31,7 +32,7 @@ public class Mute extends InstantAction {
     protected void apply() throws VariableException {
         String soundName = getSound();
         if (soundName != null) {
-            ArrayList<Clip> clips = Sounds.getSoundsIgnoringVolume("./sound" + soundName);
+            List<Clip> clips = Sounds.getSoundsIgnoringVolume("./sound" + soundName);
             if (clips.isEmpty()) {
                 clips = Sounds.getSoundsIgnoringVolume("./sound/" + getMascot().getImageSet() + soundName);
                 if (clips.isEmpty()) {

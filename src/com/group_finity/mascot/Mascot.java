@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,9 +107,9 @@ public class Mascot implements Serializable {
 
     protected DebugWindow debugWindow = null;
 
-    private ArrayList<String> affordances = new ArrayList<>(5);
+    private List<String> affordances = new ArrayList<>(5);
 
-    private ArrayList<Hotspot> hotspots = new ArrayList<>(5);
+    private List<Hotspot> hotspots = new ArrayList<>(5);
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this shimeji,
@@ -502,11 +503,11 @@ public class Mascot implements Serializable {
         return environment;
     }
 
-    public ArrayList<String> getAffordances() {
+    public List<String> getAffordances() {
         return affordances;
     }
 
-    public ArrayList<Hotspot> getHotspots() {
+    public List<Hotspot> getHotspots() {
         return hotspots;
     }
 

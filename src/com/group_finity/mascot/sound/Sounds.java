@@ -4,6 +4,7 @@ import com.group_finity.mascot.Main;
 
 import javax.sound.sampled.Clip;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,8 +35,8 @@ public class Sounds {
         return SOUNDS.get(filename);
     }
 
-    public static ArrayList<Clip> getSoundsIgnoringVolume(String filename) {
-        ArrayList<Clip> sounds = new ArrayList<>(5);
+    public static List<Clip> getSoundsIgnoringVolume(String filename) {
+        List<Clip> sounds = new ArrayList<>(5);
         for (Map.Entry<String, Clip> entry : SOUNDS.entrySet()) {
             String soundName = entry.getKey();
             Clip soundClip = entry.getValue();

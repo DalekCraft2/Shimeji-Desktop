@@ -125,7 +125,7 @@ public class Configuration {
         context.putAll(getConstants()); // put first so they can't override mascot
         context.put("mascot", mascot);
 
-        final List<BehaviorBuilder> candidates = new ArrayList<>();
+        final Collection<BehaviorBuilder> candidates = new ArrayList<>();
         long totalFrequency = 0;
         for (final BehaviorBuilder behaviorFactory : getBehaviorBuilders().values()) {
             try {
