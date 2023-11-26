@@ -199,12 +199,12 @@ class MacEnvironment extends Environment {
 
     /**
      * min < max のとき、
-     * min <= x <= max ならば x を返す
-     * x < min ならば min を返す
-     * x > max ならば max を返す
+     * min <= a <= max ならば a を返す
+     * a < min ならば min を返す
+     * a > max ならば max を返す
      */
-    private static double betweenOrLimit(double x, double min, double max) {
-        return Math.min(Math.max(x, min), max);
+    private static double betweenOrLimit(double a, double min, double max) {
+        return Math.min(Math.max(a, min), max);
     }
 
     /**

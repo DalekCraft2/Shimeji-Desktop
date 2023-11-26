@@ -5,7 +5,6 @@ import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
 
 import javax.sound.sampled.Clip;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
