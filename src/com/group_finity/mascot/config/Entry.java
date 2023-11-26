@@ -27,6 +27,10 @@ public class Entry {
         return element.getTagName();
     }
 
+    public boolean hasAttribute(final String attributeName) {
+        return element.hasAttribute(attributeName);
+    }
+
     public Map<String, String> getAttributes() {
         if (attributes != null) {
             return attributes;
@@ -49,10 +53,6 @@ public class Entry {
         }
         return attribute.getValue();
     }
-
-    /* public boolean hasAttribute(final String tagName) {
-        return element.hasAttribute(tagName);
-    } */
 
     public boolean hasChild(final String tagName) {
         return getChildren().stream().anyMatch(child -> child.getName().equals(tagName));

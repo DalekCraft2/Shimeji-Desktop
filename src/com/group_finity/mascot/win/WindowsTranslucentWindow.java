@@ -82,9 +82,9 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
             Gdi32.INSTANCE.DeleteDC(memDC);
 
             // Bring to front
-            // if (alwaysOnTop) {
-            //     User32.INSTANCE.BringWindowToTop(hWnd);
-            // }
+            /* if (alwaysOnTop) {
+                User32.INSTANCE.BringWindowToTop(hWnd);
+            } */
         }
     }
 

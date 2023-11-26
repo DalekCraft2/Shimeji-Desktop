@@ -36,13 +36,6 @@ public class ImagePairs {
             return;
         }
 
-        // TODO Confirm that these two function identically
-        // for (Enumeration<String> key = imagePairs.keys(); key.hasMoreElements(); ) {
-        //     String filename = key.nextElement();
-        //     if (searchTerm.equals(filename.split("/")[1])) {
-        //         imagePairs.remove(filename);
-        //     }
-        // }
         imagePairs.keySet().removeIf(key -> searchTerm.equals(key.split("/")[1]));
     }
 

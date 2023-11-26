@@ -37,12 +37,12 @@ public class WalkWithIE extends Move {
         super(schema, animations, context);
     }
 
-    // @Override
-    // public void init(final Mascot mascot) throws VariableException {
-    //     super.init(mascot);
-    //
-    //     scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
-    // }
+    /* @Override
+    public void init(final Mascot mascot) throws VariableException {
+        super.init(mascot);
+
+        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+    } */
 
     @Override
     public boolean hasNext() throws VariableException {
