@@ -80,7 +80,14 @@ public class SettingsWindow extends JDialog {
             radFilterNearest.setSelected(true);
         }
         sldScaling.setValue((int) (scaling * 10));
-        listData.addAll(Arrays.asList(properties.getProperty("InteractiveWindows", "").split("/")));
+        // Need to wrap Arrays.asList() in an ArrayList constructor, because, otherwise, add() and remove() operations are not supported
+        Collection<String> interactiveWindows = new ArrayList<>(Arrays.asList(properties.getProperty("InteractiveWindows", "").split("/")));
+        // This prevents the UI list from having an empty entry,
+        // and prevents that empty entry from being saved to settings.properties
+        while (interactiveWindows.contains("")) {
+            interactiveWindows.remove("");
+        }
+        listData.addAll(interactiveWindows);
         lstInteractiveWindows.setListData(listData.toArray(new String[0]));
         chkWindowModeEnabled.setSelected(windowedMode);
         spnWindowWidth.setBackground(txtBackground.getBackground());
