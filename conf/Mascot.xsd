@@ -210,7 +210,7 @@
 
     <simpleType name="Parameter">
         <restriction base="string">
-            <pattern value="([$#]\{.+\})|(-?[0-9]+(\.[0-9]+)?)|true|false"/>
+            <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)|true|false"/>
         </restriction>
     </simpleType>
     <simpleType name="BooleanParameter">
@@ -220,17 +220,17 @@
     </simpleType>
     <simpleType name="IntParameter">
         <restriction base="string">
-            <pattern value="([$#]\{.+\})|(-?[0-9]+)"/>
+            <pattern value="([$#]\{.+\})|(-?\d+)"/>
         </restriction>
     </simpleType>
     <simpleType name="DoubleParameter">
         <restriction base="string">
-            <pattern value="([$#]\{.+\})|(-?[0-9]+(\.[0-9]+)?)"/>
+            <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)"/>
         </restriction>
     </simpleType>
     <simpleType name="StringParameter">
         <restriction base="string">
-            <!-- <pattern value="([$#]\{.+\})|(-?[0-9]+(\.[0-9]+)?)"/> -->
+            <!-- <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)"/> -->
         </restriction>
     </simpleType>
 </schema>
