@@ -10,7 +10,7 @@ import java.util.logging.SimpleFormatter;
 public class LogFormatter extends SimpleFormatter {
 
     private final Date dat = new Date();
-    private final static String format = "{0,date} {0,time}";
+    private static final String format = "{0,date} {0,time}";
     private MessageFormat formatter;
 
     private Object[] args = new Object[1];
