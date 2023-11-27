@@ -79,7 +79,7 @@ public class Manager {
                 }
             } catch (final InterruptedException ignored) {
             }
-        });
+        }, "Ticker");
         thread.setDaemon(false);
         thread.start();
     }

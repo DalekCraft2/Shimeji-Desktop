@@ -29,7 +29,6 @@ public abstract class Environment {
 
     protected static Map<String, Rectangle> screenRects = new HashMap<>();
 
-    // TODO Name threads to make error logs more specific
     private static final Thread thread = new Thread(() -> {
         try {
             while (true) {
@@ -38,7 +37,7 @@ public abstract class Environment {
             }
         } catch (final InterruptedException ignored) {
         }
-    });
+    }, "ScreenRectUpdater");
 
     public ComplexArea complexScreen = new ComplexArea();
 
