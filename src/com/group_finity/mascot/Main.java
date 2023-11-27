@@ -4,6 +4,7 @@ import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.config.Entry;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
+import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.sound.Sounds;
@@ -11,6 +12,7 @@ import com.joconner.i18n.Utf8ResourceBundleControl;
 import com.nilo.plaf.nimrod.NimRODLookAndFeel;
 import com.nilo.plaf.nimrod.NimRODTheme;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,14 +20,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -130,8 +130,8 @@ public class Main {
                 ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
                 languageBundle = ResourceBundle.getBundle("language", Locale.forLanguageTag(properties.getProperty("Language", "en-GB")), loader, utf8Control);
             }
-        } catch (Exception ex) {
-            log.log(Level.SEVERE, "Failed to load default language file", ex);
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Failed to load default language file", e);
             showError("The default language file could not be loaded. Ensure that you have the latest shimeji language.properties in your conf directory.");
             exit();
         }
@@ -147,7 +147,7 @@ public class Main {
                 if (new File("./conf/theme.properties").isFile()) {
                     theme = new NimRODTheme("./conf/theme.properties");
                 }
-            } catch (Exception exc) {
+            } catch (RuntimeException exc) {
                 log.log(Level.SEVERE, "Failed to load theme properties", exc);
             }
 
@@ -176,11 +176,12 @@ public class Main {
             // all done
             lookAndFeel.initialize();
             UIManager.setLookAndFeel(lookAndFeel);
-        } catch (Exception ex) {
+        } catch (HeadlessException | NumberFormatException | UnsupportedLookAndFeelException ex) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            } catch (Exception ex1) {
-                log.log(Level.SEVERE, "Look & Feel unsupported.", ex1);
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
+                     UnsupportedLookAndFeelException ex1) {
+                log.log(Level.SEVERE, "Failed to set Look & Feel", ex1);
                 exit();
             }
         }
@@ -359,7 +360,7 @@ public class Main {
             childImageSets.put(imageSet, childMascots);
 
             return true;
-        } catch (final Exception e) {
+        } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException e) {
             log.log(Level.SEVERE, "Failed to load configuration files", e);
             showError(languageBundle.getString("FailedLoadConfigErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
         }
@@ -377,7 +378,7 @@ public class Main {
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File("./img/icon.png"));
-        } catch (final Exception e) {
+        } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
             showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
         } finally {
@@ -984,7 +985,7 @@ public class Main {
             log.log(Level.SEVERE, "Fatal Error", e);
             showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.log(Level.SEVERE, imageSet + " fatal error, can not be started.", e);
             showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + " " + imageSet + ".\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
@@ -1032,7 +1033,7 @@ public class Main {
     private void updateConfigFile() {
         try (FileOutputStream output = new FileOutputStream("./conf/settings.properties")) {
             properties.store(output, "Shimeji-ee Configuration Options");
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to save settings", e);
         }
     }

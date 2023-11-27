@@ -1,5 +1,6 @@
 package com.group_finity.mascot;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
@@ -60,7 +61,7 @@ public class LogFormatter extends SimpleFormatter {
             try (final StringWriter sw = new StringWriter(); final PrintWriter pw = new PrintWriter(sw)) {
                 record.getThrown().printStackTrace(pw);
                 sb.append(sw);
-            } catch (final Exception e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         }

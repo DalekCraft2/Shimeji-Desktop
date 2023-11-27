@@ -4,6 +4,7 @@ import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.MascotEnvironment;
+import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
@@ -283,7 +284,7 @@ public class Mascot implements Serializable {
                         public void actionPerformed(final ActionEvent e) {
                             try {
                                 setBehavior(Main.getInstance().getConfiguration(getImageSet()).buildBehavior(command));
-                            } catch (Exception err) {
+                            } catch (BehaviorInstantiationException | CantBeAliveException err) {
                                 log.log(Level.SEVERE, "Error ({0})", this);
                                 Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotSetBehaviourErrorMessage") + "\n" + err.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                             }
@@ -291,7 +292,7 @@ public class Mascot implements Serializable {
                     });
                     submenu.add(item);
                 }
-            } catch (Exception err) {
+            } catch (BehaviorInstantiationException e) {
                 // just skip if something goes wrong
             }
         }

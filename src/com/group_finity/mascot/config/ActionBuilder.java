@@ -11,6 +11,7 @@ import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,15 +78,16 @@ public class ActionBuilder implements IActionBuilder {
                 try {
                     @SuppressWarnings("unchecked") final Class<? extends Action> cls = (Class<? extends Action>) Class.forName(getClassName());
                     try {
-
                         try {
                             return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
-                        } catch (final Exception e) {
+                        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException |
+                                 NoSuchMethodException | SecurityException | InvocationTargetException e) {
                             // NOTE There's no constructor
                         }
 
                         return cls.getConstructor(ResourceBundle.class, VariableMap.class).newInstance(schema, variables);
-                    } catch (final Exception e) {
+                    } catch (IllegalAccessException | IllegalArgumentException | InstantiationException |
+                             NoSuchMethodException | SecurityException | InvocationTargetException e) {
                         // NOTE There's no constructor
                     }
 

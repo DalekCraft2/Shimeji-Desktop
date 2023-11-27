@@ -11,7 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,14 +82,15 @@ public class SettingsWindow extends JDialog {
             radFilterNearest.setSelected(true);
         }
         sldScaling.setValue((int) (scaling * 10));
-        // Need to wrap Arrays.asList() in an ArrayList constructor, because, otherwise, add() and remove() operations are not supported
-        Collection<String> interactiveWindows = new ArrayList<>(Arrays.asList(properties.getProperty("InteractiveWindows", "").split("/")));
-        // This prevents the UI list from having an empty entry,
-        // and prevents that empty entry from being saved to settings.properties
-        while (interactiveWindows.contains("")) {
-            interactiveWindows.remove("");
+        listData.addAll(Arrays.asList(properties.getProperty("InteractiveWindows", "").split("/")));
+        // This prevents the UI list from having empty entries,
+        // and prevents those empty entries from being saved to settings.properties
+        for (int i = 0; i < listData.size(); i++) {
+            if (listData.get(i).trim().isEmpty()) {
+                listData.remove(i);
+                i--;
+            }
         }
-        listData.addAll(interactiveWindows);
         lstInteractiveWindows.setListData(listData.toArray(new String[0]));
         chkWindowModeEnabled.setSelected(windowedMode);
         spnWindowWidth.setBackground(txtBackground.getBackground());
@@ -161,7 +164,7 @@ public class SettingsWindow extends JDialog {
             } else {
                 throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url);
             }
-        } catch (Exception e) {
+        } catch (IOException | UnsupportedOperationException | URISyntaxException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.PLAIN_MESSAGE);
         }
     }
@@ -571,7 +574,7 @@ public class SettingsWindow extends JDialog {
             }
 
             properties.store(output, "Shimeji-ee Configuration Options");
-        } catch (Exception e) {
+        } catch (IOException | NumberFormatException e) {
             log.log(Level.SEVERE, "Failed to save settings", e);
         }
         dispose();

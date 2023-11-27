@@ -129,6 +129,13 @@
                 </restriction>
             </simpleType>
         </attribute>
+        <attribute name="ImageRight">
+            <simpleType>
+                <restriction base="string">
+                    <pattern value=".+\.(png|gif|jpeg|jpg|bmp|PNG|GIF|JPEG|JPG|BMP)"/>
+                </restriction>
+            </simpleType>
+        </attribute>
         <attribute name="ImageAnchor" use="required">
             <simpleType>
                 <restriction base="string">
@@ -144,6 +151,14 @@
             </simpleType>
         </attribute>
         <attribute name="Duration" type="int" use="required"/>
+        <attribute name="Sound">
+            <simpleType>
+                <restriction base="string">
+                    <pattern value=".+\.(aiff|au|wav|wave|mid|midi|rmf|AIFF|AU|WAV|WAVE|MID|MIDI|RMF)"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="Volume" type="float"/>
     </complexType>
 
     <complexType name="ActionReference">

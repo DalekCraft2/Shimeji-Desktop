@@ -250,7 +250,7 @@ public class UserBehavior implements Behavior {
                 getMascot().setDragging(false);
                 getMascot().setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
             } catch (final BehaviorInstantiationException ex) {
-                throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
+                throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), ex);
             }
         } catch (final VariableException e) {
             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);

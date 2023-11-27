@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Displays information about an image set. Used by ImageSetChooser
@@ -28,7 +29,7 @@ public class ImageSetChooserPanel extends JPanel {
         try {
             BufferedImage img = ImageIO.read(new File(imageLocation));
             image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
-        } catch (Exception e) {
+        } catch (IOException e) {
             // Doesn't matter, the image just won't show
         }
     }

@@ -11,6 +11,8 @@ import com.group_finity.mascot.image.ImagePairLoader.Filter;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
@@ -58,10 +60,10 @@ public class AnimationBuilder {
     private Pose loadPose(final Entry frameNode) throws IOException {
         final String imageText = frameNode.getAttribute(schema.getString("Image")) != null ? imageSet + frameNode.getAttribute(schema.getString("Image")) : null;
         final String imageRightText = frameNode.getAttribute(schema.getString("ImageRight")) != null ? imageSet + frameNode.getAttribute(schema.getString("ImageRight")) : null;
-        final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor")) != null ? frameNode.getAttribute(schema.getString("ImageAnchor")) : null;
+        final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor"));
         final String moveText = frameNode.getAttribute(schema.getString("Velocity"));
         final String durationText = frameNode.getAttribute(schema.getString("Duration"));
-        String soundText = frameNode.getAttribute(schema.getString("Sound")) != null ? frameNode.getAttribute(schema.getString("Sound")) : null;
+        String soundText = frameNode.getAttribute(schema.getString("Sound"));
         final String volumeText = frameNode.getAttribute(schema.getString("Volume")) != null ? frameNode.getAttribute(schema.getString("Volume")) : "0";
 
         final double scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
@@ -80,11 +82,12 @@ public class AnimationBuilder {
                 final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
 
                 ImagePairLoader.load(imageText, imageRightText, anchor, scaling, filter);
-            } catch (Exception e) {
+            } catch (IOException | NumberFormatException e) {
                 String error = imageText;
                 if (imageRightText != null) {
                     error += ", " + imageRightText;
                 }
+                // TODO Have all log messages include exceptions whenever possible
                 log.log(Level.SEVERE, "Failed to load image: {0}", error);
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + error, e);
             }
@@ -106,9 +109,10 @@ public class AnimationBuilder {
                     soundText = "./img" + imageSet + "/sound" + soundText;
                 }
 
-                SoundLoader.load(soundText, Float.parseFloat(volumeText));
-                soundText += Float.parseFloat(volumeText);
-            } catch (Exception e) {
+                float volume = Float.parseFloat(volumeText);
+                SoundLoader.load(soundText, volume);
+                soundText += volume;
+            } catch (IOException | NumberFormatException | LineUnavailableException | UnsupportedAudioFileException e) {
                 log.log(Level.SEVERE, "Failed to load sound: {0}", soundText);
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText, e);
             }

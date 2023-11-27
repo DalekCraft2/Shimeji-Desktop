@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Virtual desktop environment by Kilkakon
@@ -97,7 +98,7 @@ class VirtualEnvironment extends Environment {
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File("./img/icon.png"));
-        } catch (Exception ex) {
+        } catch (IOException e) {
             // not bothering reporting errors with loading the tray icon as it would have already been reported to the user by now
         } finally {
             if (image == null) {

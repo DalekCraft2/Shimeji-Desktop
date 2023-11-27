@@ -29,6 +29,7 @@ public abstract class Environment {
 
     protected static Map<String, Rectangle> screenRects = new HashMap<>();
 
+    // TODO Name threads to make error logs more specific
     private static final Thread thread = new Thread(() -> {
         try {
             while (true) {
