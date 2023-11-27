@@ -34,7 +34,7 @@ public class UserBehavior implements Behavior {
 
     public static final String BEHAVIOURNAME_THROWN = "Thrown";
 
-    private enum HotspotResult {
+    private enum HotspotState {
         INACTIVE,
         ACTIVE_NULL,
         ACTIVE
@@ -176,19 +176,18 @@ public class UserBehavior implements Behavior {
                 getAction().next();
             }
 
-            // TODO Rename this to "hotspotResult" after merging all of the 1.0.20 changes... or rename this and the enum to "HotspotState".
-            HotspotResult hotspotIsActive = HotspotResult.INACTIVE;
+            HotspotState hotspotState = HotspotState.INACTIVE;
             if (getMascot().isHotspotClicked()) {
                 // activate any hotspots that emerge while mouse is held down
                 if (!mascot.getHotspots().isEmpty()) {
                     for (final Hotspot hotspot : mascot.getHotspots()) {
                         if (hotspot.contains(mascot, mascot.getCursorPosition())) {
                             // activate hotspot
-                            hotspotIsActive = HotspotResult.ACTIVE_NULL;
+                            hotspotState = HotspotState.ACTIVE_NULL;
                             try {
                                 // no need to set cursor position, it's already set
                                 if (hotspot.getBehaviour() != null) {
-                                    hotspotIsActive = HotspotResult.ACTIVE;
+                                    hotspotState = HotspotState.ACTIVE;
                                     getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour()));
                                 }
                             } catch (final BehaviorInstantiationException e) {
@@ -199,12 +198,12 @@ public class UserBehavior implements Behavior {
                     }
                 }
 
-                if (hotspotIsActive == HotspotResult.INACTIVE) {
+                if (hotspotState == HotspotState.INACTIVE) {
                     getMascot().setCursorPosition(null);
                 }
             }
 
-            if (hotspotIsActive != HotspotResult.ACTIVE) {
+            if (hotspotState != HotspotState.ACTIVE) {
                 if (getAction().hasNext()) {
                     if (getMascot().getBounds().getX() + getMascot().getBounds().getWidth()
                             <= getEnvironment().getScreen().getLeft()
