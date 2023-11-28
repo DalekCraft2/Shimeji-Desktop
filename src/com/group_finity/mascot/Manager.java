@@ -145,6 +145,8 @@ public class Manager {
             getRemoved().add(mascot);
         }
         mascot.setManager(null);
+        // Clear affordances so the mascot is not participating in any interactions, as that can cause an NPE
+        mascot.getAffordances().clear();
     }
 
     public void setBehaviorAll(final String name) {

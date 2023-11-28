@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
-// FIXME If a Shimeji on one end of an interaction is dismissed before the interaction can be started, all Shimejis will freeze.
 public class Interact extends Animate {
     private static final Logger log = Logger.getLogger(Interact.class.getName());
 
