@@ -91,14 +91,19 @@ public class ActionBuilder implements IActionBuilder {
                         // NOTE There's no constructor
                     }
 
-                    // TODO Check whether anything changes when Class#getDeclaredConstructor().newInstance() is used instead of Class#newInstance()
-                    return cls.newInstance();
+                    return cls.getConstructor().newInstance();
                 } catch (final InstantiationException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage") + "(" + this + ")", e);
                 } catch (final IllegalAccessException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("CannotAccessClassActionErrorMessage") + "(" + this + ")", e);
                 } catch (final ClassNotFoundException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage") + "(" + this + ")", e);
+                } catch (NoSuchMethodException e) {
+                    // TODO Get translations for the following error message
+                    throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("ClassConstructorNotFoundErrorMessage") + "(" + this + ")", e);
+                } catch (InvocationTargetException e) {
+                    // TODO Think of a unique error message for this without wording it confusingly
+                    throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage") + "(" + this + ")", e);
                 }
 
             } else if (type.equals(schema.getString("Move"))) {
