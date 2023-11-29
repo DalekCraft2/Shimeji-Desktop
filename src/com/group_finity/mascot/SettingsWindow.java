@@ -162,10 +162,11 @@ public class SettingsWindow extends JDialog {
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                 desktop.browse(new URI(url));
             } else {
+                // TODO Don't throw an exception inside a try block.
                 throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url);
             }
         } catch (IOException | UnsupportedOperationException | URISyntaxException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -675,7 +676,7 @@ public class SettingsWindow extends JDialog {
 
     private void btnWebsiteActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnWebsiteActionPerformed
     {// GEN-HEADEREND:event_btnWebsiteActionPerformed
-        browseToUrl("http://kilkakon.com/");
+        browseToUrl("https://kilkakon.com/");
     }// GEN-LAST:event_btnWebsiteActionPerformed
 
     private void btnDiscordActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnDiscordActionPerformed
