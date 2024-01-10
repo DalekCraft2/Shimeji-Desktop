@@ -73,7 +73,7 @@ public class Breed extends Animate {
 
         final Mascot mascot = new Mascot(childType);
 
-        log.log(Level.INFO, "Breed Mascot ({0},{1},{2})", new Object[]{getMascot(), this, mascot});
+        log.log(Level.INFO, "Breeding mascot ({0}, {1}, {2})", new Object[]{getMascot(), this, mascot});
 
         if (getMascot().isLookRight()) {
             mascot.setAnchor(new Point(getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
@@ -86,11 +86,9 @@ public class Breed extends Animate {
 
         try {
             mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour()));
-
             getMascot().getManager().add(mascot);
-
         } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-            log.log(Level.SEVERE, "Fatal Exception", e);
+            log.log(Level.SEVERE, "Failed to create mascot \"" + mascot + "\" with behavior \"" + getBornBehaviour() + "\"", e);
             Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
             mascot.dispose();
         }

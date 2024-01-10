@@ -52,7 +52,7 @@ public class FallWithIE extends Fall {
 
         final Area activeIE = getEnvironment().getActiveIE();
         if (!activeIE.isVisible()) {
-            log.log(Level.INFO, "IE Not Visible ({0},{1})", new Object[]{getMascot(), this});
+            log.log(Level.INFO, "IE not visible ({0}, {1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
 
@@ -65,13 +65,13 @@ public class FallWithIE extends Fall {
         if (getMascot().isLookRight()) {
             if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
+                log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
                 throw new LostGroundException();
             }
         } else {
             if (getMascot().getAnchor().x + offsetX != activeIE.getRight()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
+                log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
                 throw new LostGroundException();
             }
         }

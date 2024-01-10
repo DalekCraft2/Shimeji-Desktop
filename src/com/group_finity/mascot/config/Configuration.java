@@ -35,7 +35,7 @@ public class Configuration {
     private ResourceBundle schema;
 
     public void load(final Entry configurationNode, final String imageSet) throws IOException, ConfigurationException {
-        log.log(Level.INFO, "Start Reading Configuration File...");
+        log.log(Level.INFO, "Reading configuration file...");
 
         // prepare schema
         ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
@@ -62,8 +62,9 @@ public class Configuration {
                     constant.getAttribute(schema.getString("Value")));
         }
 
+        log.log(Level.INFO, "Reading action lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
-            log.log(Level.INFO, "Action List...");
+            log.log(Level.INFO, "Reading an action list...");
 
             for (final Entry node : list.selectChildren(schema.getString("Action"))) {
                 final ActionBuilder action = new ActionBuilder(this, node, imageSet);
@@ -74,13 +75,20 @@ public class Configuration {
 
                 getActionBuilders().put(action.getName(), action);
             }
-        }
 
+            log.log(Level.INFO, "Finished reading an action list");
+        }
+        log.log(Level.INFO, "Finished reading all action lists");
+
+        log.log(Level.INFO, "Reading behavior lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("BehaviourList"))) {
-            log.log(Level.INFO, "Behavior List...");
+            log.log(Level.INFO, "Reading a behavior list...");
 
             loadBehaviors(list, new ArrayList<>());
+
+            log.log(Level.INFO, "Finished reading a behavior list");
         }
+        log.log(Level.INFO, "Finished reading all behavior lists");
 
         log.log(Level.INFO, "Configuration loaded successfully");
     }
@@ -134,7 +142,7 @@ public class Configuration {
                     totalFrequency += behaviorFactory.getFrequency();
                 }
             } catch (final VariableException e) {
-                log.log(Level.WARNING, "An error occurred calculating the frequency of the action", e);
+                log.log(Level.WARNING, "Failed to calculate the frequency of the behavior", e);
             }
         }
 
@@ -151,7 +159,7 @@ public class Configuration {
                         totalFrequency += behaviorFactory.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.log(Level.WARNING, "An error occurred calculating the frequency of the behavior", e);
+                    log.log(Level.WARNING, "Failed to calculate the frequency of the behavior", e);
                 }
             }
         }

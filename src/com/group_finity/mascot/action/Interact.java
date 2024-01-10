@@ -42,8 +42,8 @@ public class Interact extends Animate {
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior()));
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                log.log(Level.SEVERE, "Fatal Exception", e);
-                Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                log.log(Level.SEVERE, "Failed to set behavior to \"" + getBehavior() + "\" for mascot \"" + getMascot() + "\"", e);
+                Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
             }
         }
     }

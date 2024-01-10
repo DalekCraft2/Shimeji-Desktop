@@ -38,7 +38,7 @@ public class ActionBuilder implements IActionBuilder {
         type = actionNode.getAttribute(schema.getString("Type"));
         className = actionNode.getAttribute(schema.getString("Class"));
 
-        log.log(Level.INFO, "Read Start Operation({0})", this);
+        log.log(Level.INFO, "Loading action: {0}", this);
 
         getParams().putAll(actionNode.getAttributes());
         for (final Entry node : actionNode.selectChildren(schema.getString("Animation"))) {
@@ -53,7 +53,7 @@ public class ActionBuilder implements IActionBuilder {
             }
         }
 
-        log.log(Level.INFO, "Actions Finished Loading");
+        log.log(Level.INFO, "Finished loading action: {0}", this);
     }
 
     @Override

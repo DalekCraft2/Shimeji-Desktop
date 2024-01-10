@@ -60,7 +60,7 @@ public class ScanMove extends BorderedAction {
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
-            log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
+            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
 
@@ -95,14 +95,16 @@ public class ScanMove extends BorderedAction {
         }
 
         if (noMoveX && noMoveY) {
+            boolean setFirstBehavior = false;
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior()));
+                setFirstBehavior = true;
                 Mascot targetMascot = target.get();
                 if (targetMascot != null) {
                     targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior()));
                 }
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                log.log(Level.SEVERE, "Fatal Exception", e);
+                log.log(Level.SEVERE, "Failed to set behavior to \"" + (setFirstBehavior ? getTargetBehavior() : getBehavior()) + "\" for mascot \"" + (setFirstBehavior ? target.get() : getMascot()) + "\"", e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
             }
         }

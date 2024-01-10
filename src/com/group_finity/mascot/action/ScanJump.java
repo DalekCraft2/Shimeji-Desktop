@@ -96,14 +96,16 @@ public class ScanJump extends ActionBase {
         if (distance <= velocity) {
             getMascot().setAnchor(new Point(targetX, targetY));
 
+            boolean setFirstBehavior = false;
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior()));
+                setFirstBehavior = true;
                 Mascot targetMascot = target.get();
                 if (targetMascot != null) {
                     targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior()));
                 }
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                log.log(Level.SEVERE, "Fatal Exception", e);
+                log.log(Level.SEVERE, "Failed to set behavior to \"" + (setFirstBehavior ? getTargetBehavior() : getBehavior()) + "\" for mascot \"" + (setFirstBehavior ? target.get() : getMascot()) + "\"", e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
             }
         }

@@ -67,7 +67,7 @@ public class UserBehavior implements Behavior {
 
         setMascot(mascot);
 
-        log.log(Level.INFO, "Default Behavior({0},{1})", new Object[]{getMascot(), this});
+        log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), getMascot()});
 
         try {
             getAction().init(mascot);
@@ -209,7 +209,7 @@ public class UserBehavior implements Behavior {
                             <= getEnvironment().getScreen().getLeft()
                             || getEnvironment().getScreen().getRight() <= getMascot().getBounds().getX()
                             || getEnvironment().getScreen().getBottom() <= getMascot().getBounds().getY()) {
-                        log.log(Level.INFO, "Out of the screen bounds({0},{1})", new Object[]{getMascot(), this});
+                        log.log(Level.INFO, "Out of the screen bounds ({0}, {1})", new Object[]{getMascot(), this});
 
                         if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
                             getMascot().setAnchor(new Point((int) (Math.random() * (getEnvironment().getScreen().getRight() - getEnvironment().getScreen().getLeft())) + getEnvironment().getScreen().getLeft(),
@@ -226,10 +226,7 @@ public class UserBehavior implements Behavior {
                         }
                     }
                 } else {
-                    log.log(Level.INFO, "Completed Behavior ({0},{1})", new Object[]
-                            {
-                                    getMascot(), this
-                            });
+                    log.log(Level.INFO, "Completed behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), getMascot()});
 
                     try {
                         getMascot().setBehavior(getConfiguration().buildBehavior(getName(), getMascot()));
@@ -239,10 +236,7 @@ public class UserBehavior implements Behavior {
                 }
             }
         } catch (final LostGroundException e) {
-            log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]
-                    {
-                            getMascot(), this
-                    });
+            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
 
             try {
                 getMascot().setCursorPosition(null);

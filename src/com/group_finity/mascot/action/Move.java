@@ -62,7 +62,7 @@ public class Move extends BorderedAction {
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
-            log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
+            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
 

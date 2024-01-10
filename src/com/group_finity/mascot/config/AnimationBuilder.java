@@ -44,7 +44,7 @@ public class AnimationBuilder {
         this.schema = schema;
         condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
 
-        log.log(Level.INFO, "Start Reading Animations");
+        log.log(Level.INFO, "Loading animations");
 
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Pose"))) {
             poses.add(loadPose(frameNode));
@@ -54,7 +54,7 @@ public class AnimationBuilder {
             hotspots.add(loadHotspot(frameNode));
         }
 
-        log.log(Level.INFO, "Animations Finished Loading");
+        log.log(Level.INFO, "Finished loading animations");
     }
 
     private Pose loadPose(final Entry frameNode) throws IOException {
@@ -87,8 +87,7 @@ public class AnimationBuilder {
                 if (imageRightText != null) {
                     error += ", " + imageRightText;
                 }
-                // TODO Have all log messages include exceptions whenever possible
-                log.log(Level.SEVERE, "Failed to load image: {0}", error);
+                log.log(Level.SEVERE, "Failed to load image" + (imageRightText != null ? "s" : "") + ": " + error, e);
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + error, e);
             }
         }
@@ -113,14 +112,14 @@ public class AnimationBuilder {
                 SoundLoader.load(soundText, volume);
                 soundText += volume;
             } catch (IOException | NumberFormatException | LineUnavailableException | UnsupportedAudioFileException e) {
-                log.log(Level.SEVERE, "Failed to load sound: {0}", soundText);
+                log.log(Level.SEVERE, "Failed to load sound: " + soundText, e);
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText, e);
             }
         }
 
         final Pose pose = new Pose(imageText, imageRightText, move.x, move.y, duration, soundText);
 
-        log.log(Level.INFO, "ReadPosition({0})", pose);
+        log.log(Level.INFO, "Finished loading pose: {0}", pose);
 
         return pose;
     }
@@ -152,7 +151,7 @@ public class AnimationBuilder {
 
         final Hotspot hotspot = new Hotspot(behaviourText, shape);
 
-        log.log(Level.INFO, "ReadHotSpot({0})", hotspot);
+        log.log(Level.INFO, "Finished loading hotspot: {0}", hotspot);
 
         return hotspot;
     }

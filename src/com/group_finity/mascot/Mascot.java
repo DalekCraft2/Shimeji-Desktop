@@ -123,7 +123,7 @@ public class Mascot implements Serializable {
         id = lastId.incrementAndGet();
         this.imageSet = imageSet;
 
-        log.log(Level.INFO, "Created a mascot ({0})", this);
+        log.log(Level.INFO, "Created mascot \"{0}\" with image set \"{1}\"", new Object[]{this, imageSet});
 
         // Always show on top
         getWindow().setAlwaysOnTop(true);
@@ -180,7 +180,7 @@ public class Mascot implements Serializable {
             try {
                 getBehavior().mousePressed(event);
             } catch (final CantBeAliveException e) {
-                log.log(Level.SEVERE, "Fatal Error", e);
+                log.log(Level.SEVERE, "Severe error in mouse press handler for mascot \"" + this + "\"", e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                 dispose();
             }
@@ -195,7 +195,7 @@ public class Mascot implements Serializable {
                 try {
                     getBehavior().mouseReleased(event);
                 } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Fatal Error", e);
+                    log.log(Level.SEVERE, "Severe error in mouse release handler for mascot \"" + this + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                     dispose();
                 }
@@ -266,6 +266,7 @@ public class Mascot implements Serializable {
         // Add the Behaviors submenu. It is currently slightly buggy; sometimes the menu ghosts.
         JLongMenu submenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"), 30);
         // The MenuScroller would look better than the JLongMenu, but the initial positioning is not working correctly.
+        // TODO Try to get MenuScroller to work.
         // MenuScroller.setScrollerFor(submenu, 30, 125);
         submenu.setAutoscrolls(true);
         JMenuItem item;
@@ -284,9 +285,10 @@ public class Mascot implements Serializable {
                         public void actionPerformed(final ActionEvent e) {
                             try {
                                 setBehavior(Main.getInstance().getConfiguration(getImageSet()).buildBehavior(command));
-                            } catch (BehaviorInstantiationException | CantBeAliveException err) {
-                                log.log(Level.SEVERE, "Error ({0})", this);
-                                Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotSetBehaviourErrorMessage") + "\n" + err.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                            } catch (BehaviorInstantiationException | CantBeAliveException ex) {
+                                // TODO Determine whether this catch block is supposed to dispose of the mascot
+                                log.log(Level.SEVERE, "Failed to set behavior to \"" + command + "\" for mascot \"" + this + "\"", ex);
+                                Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotSetBehaviourErrorMessage") + "\n" + ex.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                             }
                         }
                     });
@@ -327,7 +329,7 @@ public class Mascot implements Serializable {
                 try {
                     getBehavior().next();
                 } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Fatal Error.", e);
+                    log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                     dispose();
                 }
@@ -394,7 +396,7 @@ public class Mascot implements Serializable {
     }
 
     public void dispose() {
-        log.log(Level.INFO, "destroy mascot ({0})", this);
+        log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
 
         if (debugWindow != null) {
             debugWindow.setVisible(false);

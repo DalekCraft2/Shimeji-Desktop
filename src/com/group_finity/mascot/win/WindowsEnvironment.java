@@ -66,13 +66,13 @@ class WindowsEnvironment extends Environment {
 
         for (String windowTitle : windowTitles) {
             if (!windowTitle.trim().isEmpty() && ieTitle.contains(windowTitle)) {
-                // log.log(Level.INFO, String.format("value %s is ie", new String(title, 0, titleLength)));
+                // log.log(Level.INFO, "Value {0} is IE", new String(title, 0, titleLength));
                 ieCache.put(ie, true);
                 return true;
             }
         }
 
-        // log.log(Level.INFO, String.format("value %s is not ie", new String(title, 0, titleLength)));
+        // log.log(Level.INFO, "Value {0} is not IE", new String(title, 0, titleLength));
         ieCache.put(ie, false);
         return false;
     }

@@ -155,12 +155,8 @@ public class Manager {
                 try {
                     Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name)));
-                } catch (final BehaviorInstantiationException e) {
-                    log.log(Level.SEVERE, "Failed to initialize the following actions", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
-                    mascot.dispose();
-                } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Fatal Error", e);
+                } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                    log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                     mascot.dispose();
                 }
@@ -175,12 +171,8 @@ public class Manager {
                     if (mascot.getImageSet().equals(imageSet)) {
                         mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name)));
                     }
-                } catch (final BehaviorInstantiationException e) {
-                    log.log(Level.SEVERE, "Failed to initialize the following actions", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
-                    mascot.dispose();
-                } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Fatal Error", e);
+                } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                    log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                     mascot.dispose();
                 }

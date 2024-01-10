@@ -31,7 +31,7 @@ public class ActionRef implements IActionBuilder {
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
         getParams().putAll(refNode.getAttributes());
 
-        log.log(Level.INFO, "Read Action Reference({0})", this);
+        log.log(Level.INFO, "Finished loading action reference: {0}", this);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ActionRef implements IActionBuilder {
     @Override
     public void validate() throws ConfigurationException {
         if (!getConfiguration().getActionBuilders().containsKey(getName())) {
-            log.log(Level.SEVERE, "There is no corresponding behavior(" + this + ")");
+            log.log(Level.SEVERE, "There is no corresponding behavior for action reference: {0}", this);
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + "(" + this + ")");
         }
     }

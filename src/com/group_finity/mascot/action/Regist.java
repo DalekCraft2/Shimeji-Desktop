@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+// TODO Try to fix the typos of "resist" and "resistance" being "regist" and "registance" without breaking compatibility.
 public class Regist extends ActionBase {
 
     private static final Logger log = Logger.getLogger(Regist.class.getName());
@@ -41,7 +42,7 @@ public class Regist extends ActionBase {
         if (getTime() + 1 >= getAnimation().getDuration()) {
             getMascot().setLookRight(Math.random() < 0.5);
 
-            log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
+            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
     }

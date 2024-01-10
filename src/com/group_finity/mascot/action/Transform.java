@@ -49,8 +49,8 @@ public class Transform extends Animate {
             getMascot().setImageSet(childType);
             getMascot().setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getTransformBehavior()));
         } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-            log.log(Level.SEVERE, "Fatal Exception", e);
-            Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+            log.log(Level.SEVERE, "Failed to set behavior to \"" + getTransformBehavior() + "\" for mascot \"" + getMascot() + "\"", e);
+            Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
         }
     }
 

@@ -54,11 +54,11 @@ public class Main {
         } catch (final SecurityException | IOException e) {
             log.log(Level.SEVERE, "Failed to load log properties", e);
         } catch (OutOfMemoryError err) {
-            log.log(Level.SEVERE, "Out of Memory Error. There are probably too many "
+            log.log(Level.SEVERE, "Out of memory. There are probably too many "
                     + "Shimeji mascots in the image folder for your computer to handle. "
                     + "Select fewer image sets or move some to the "
                     + "img/unused folder and try again.", err);
-            showError("Out of Memory. There are probably too many\n"
+            showError("Out of memory. There are probably too many\n"
                     + "Shimeji mascots for your computer to handle.\n"
                     + "Select fewer image sets or move some to the\n"
                     + "img/unused folder and try again.");
@@ -91,11 +91,11 @@ public class Main {
         try {
             getInstance().run();
         } catch (OutOfMemoryError err) {
-            log.log(Level.SEVERE, "Out of Memory Error. There are probably too many "
+            log.log(Level.SEVERE, "Out of memory. There are probably too many "
                     + "Shimeji mascots in the image folder for your computer to handle. "
                     + "Select fewer image sets or move some to the "
                     + "img/unused folder and try again.", err);
-            showError("Out of Memory. There are probably too many\n"
+            showError("Out of memory. There are probably too many\n"
                     + "Shimeji mascots for your computer to handle.\n"
                     + "Select fewer image sets or move some to the\n"
                     + "img/unused folder and try again.");
@@ -267,7 +267,7 @@ public class Main {
                 actionsFile = filePath + "1.xml";
             }
 
-            log.log(Level.INFO, imageSet + " Read Action File ({0})", actionsFile);
+            log.log(Level.INFO, "Reading action file \"{0}\" for image set \"{1}\"", new Object[]{actionsFile, imageSet});
 
             final Document actions = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
                     Files.newInputStream(Paths.get(actionsFile)));
@@ -320,7 +320,7 @@ public class Main {
                 behaviorsFile = filePath + "2.xml";
             }
 
-            log.log(Level.INFO, imageSet + " Read Behavior File ({0})", behaviorsFile);
+            log.log(Level.INFO, "Reading behavior file \"{0}\" for image set \"{1}\"", new Object[]{behaviorsFile, imageSet});
 
             final Document behaviors = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
                     Files.newInputStream(Paths.get(behaviorsFile)));
@@ -372,7 +372,7 @@ public class Main {
      * Creates a tray icon.
      */
     private void createTrayIcon() {
-        log.log(Level.INFO, "create a tray icon");
+        log.log(Level.INFO, "Creating tray icon");
 
         // get the tray icon image
         BufferedImage image = null;
@@ -897,9 +897,6 @@ public class Main {
                         form.pack();
                         form.setMinimumSize(form.getSize());
 
-                        // log.info("getX(): " + event.getX() + ", getPoint().x: " + event.getPoint().x);
-                        // log.info("getY(): " + event.getY() + ", getPoint().y: " + event.getPoint().y);
-
                         float scaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
 
                         // setting location of the form
@@ -915,8 +912,6 @@ public class Main {
                         }
 
                         form.setVisible(true);
-
-                        // log.info("Final position: " + form.getX() + ", " + form.getY());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
                         createMascot();
                     } else if (event.getButton() == MouseEvent.BUTTON2 && event.getClickCount() == 2) {
@@ -963,7 +958,7 @@ public class Main {
      * Creates a mascot.
      */
     public void createMascot(String imageSet) {
-        log.log(Level.INFO, "create a mascot");
+        log.log(Level.INFO, "Creating mascot with image set \"{0}\"", imageSet);
 
         // Create one mascot
         final Mascot mascot = new Mascot(imageSet);
@@ -978,15 +973,16 @@ public class Main {
             mascot.setBehavior(getConfiguration(imageSet).buildBehavior(null, mascot));
             getManager().add(mascot);
         } catch (final BehaviorInstantiationException e) {
-            log.log(Level.SEVERE, "Failed to initialize the first action", e);
+            // Not sure why this says "first action" instead of "first behavior", but changing it would require changing all of the translations, so...
+            log.log(Level.SEVERE, "Failed to initialize the first action for mascot \"" + mascot + "\"", e);
             showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
         } catch (final CantBeAliveException e) {
-            log.log(Level.SEVERE, "Fatal Error", e);
+            log.log(Level.SEVERE, "Could not create mascot \"" + mascot + "\"", e);
             showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
         } catch (RuntimeException e) {
-            log.log(Level.SEVERE, imageSet + " fatal error, can not be started.", e);
+            log.log(Level.SEVERE, "Could not create mascot \"" + mascot + "\"", e);
             showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + " " + imageSet + ".\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
             mascot.dispose();
         }

@@ -53,7 +53,7 @@ public class BehaviorBuilder {
         this.conditions = new ArrayList<>(conditions);
         getConditions().add(behaviorNode.getAttribute(configuration.getSchema().getString("Condition")));
 
-        log.log(Level.INFO, "Start Reading({0})", this);
+        log.log(Level.INFO, "Loading behavior: {0}", this);
 
         getParams().putAll(behaviorNode.getAttributes());
         getParams().remove(configuration.getSchema().getString("Name"));
@@ -65,8 +65,6 @@ public class BehaviorBuilder {
         boolean nextAdditive = true;
 
         for (final Entry nextList : behaviorNode.selectChildren(configuration.getSchema().getString("NextBehaviourList"))) {
-            log.log(Level.INFO, "Lists the Following Behaviors...");
-
             nextAdditive = Boolean.parseBoolean(nextList.getAttribute(configuration.getSchema().getString("Add")));
 
             loadBehaviors(nextList, new ArrayList<>());
@@ -74,7 +72,7 @@ public class BehaviorBuilder {
 
         this.nextAdditive = nextAdditive;
 
-        log.log(Level.INFO, "Behaviors have finished loading({0})", this);
+        log.log(Level.INFO, "Finished loading behavior: {0}", this);
 
     }
 
@@ -104,7 +102,7 @@ public class BehaviorBuilder {
     public void validate() throws ConfigurationException {
 
         if (!getConfiguration().getActionBuilders().containsKey(getActionName())) {
-            log.log(Level.SEVERE, "There is no corresponding action(" + this + ")");
+            log.log(Level.SEVERE, "There is no corresponding action for behavior: {0}", this);
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + "(" + this + ")");
         }
     }
@@ -116,7 +114,7 @@ public class BehaviorBuilder {
                     getConfiguration().buildAction(getActionName(),
                             getParams()), getConfiguration(), isHidden());
         } catch (final ActionInstantiationException e) {
-            log.log(Level.SEVERE, "Failed to initialize the corresponding action(" + this + ")");
+            log.log(Level.SEVERE, "Failed to initialize the corresponding action for behavior: " + this, e);
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage") + "(" + this + ")", e);
         }
     }
