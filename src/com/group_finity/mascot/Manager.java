@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Maintains a list of mascot, the object to time.
+ * Manages a list of {@link Mascot Mascots}.
  * <p>
  * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * <p>
@@ -23,24 +23,26 @@ public class Manager {
     private static final Logger log = Logger.getLogger(Manager.class.getName());
 
     /**
-     * Interval timer is running.
+     * The duration of each tick, in milliseconds.
      */
     public static final int TICK_INTERVAL = 40;
 
     /**
-     * A list of mascots.
+     * A list of {@link Mascot Mascots} which are managed by this {@code Manager}.
      */
     private final List<Mascot> mascots = new ArrayList<>();
 
     /**
-     * The mascot will be added later.
-     * {@link ConcurrentModificationException} to prevent the addition of the mascot {@link #tick()} are each simultaneously reflecting.
+     * The {@link Mascot Mascots} to be added later. To prevent {@link ConcurrentModificationException ConcurrentModificationExceptions},
+     * the {@link Mascot Mascots} are added to this set in {@code synchronized} blocks outside of {@link #tick()},
+     * and then actually added to the {@code Manager} on the subsequent tick.
      */
     private final Set<Mascot> added = new LinkedHashSet<>();
 
     /**
-     * The mascot will be added later.
-     * {@link ConcurrentModificationException} to prevent the deletion of the mascot {@link #tick()} are each simultaneously reflecting.
+     * The {@link Mascot Mascots} to be removed later. To prevent {@link ConcurrentModificationException ConcurrentModificationExceptions},
+     * the {@link Mascot Mascots} are added to this set in {@code synchronized} blocks outside of {@link #tick()},
+     * and then actually removed from the {@code Manager} on the subsequent tick.
      */
     private final Set<Mascot> removed = new LinkedHashSet<>();
 
@@ -62,6 +64,7 @@ public class Manager {
         }
 
         thread = new Thread(() -> {
+            // I think nanoTime() is used instead of currentTimeMillis() because it may be more accurate on some systems that way.
             long prev = System.nanoTime() / 1000000;
             try {
                 while (true) {

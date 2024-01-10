@@ -27,9 +27,9 @@ public class Regist extends ActionBase {
     @Override
     public boolean hasNext() throws VariableException {
 
-        final boolean notMoved = Math.abs(getEnvironment().getCursor().getX() - getMascot().getAnchor().x) < 5;
+        final boolean moved = Math.abs(getEnvironment().getCursor().getX() - getMascot().getAnchor().x) >= 5;
 
-        return super.hasNext() && notMoved;
+        return super.hasNext() && !moved;
     }
 
     @Override

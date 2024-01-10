@@ -31,9 +31,9 @@ public class JLongMenu extends JMenu {
         // leave one for the "more" menu and one for the windows task bar.
     }
 
-    public JLongMenu(String label, int maxitems) {
+    public JLongMenu(String label, int maxItems) {
         super(label);
-        maxItems = maxitems;
+        this.maxItems = maxItems;
         // leave one for the "more" menu and one for the windows task bar.
     }
 
@@ -48,11 +48,11 @@ public class JLongMenu extends JMenu {
         }
         boolean isVisible = isPopupMenuVisible();
         if (visible != isVisible) {
-            // We can't call ensurePopupMenuCreated() since it is private so
-            // we call a method that calls it. (Sneaky huh?).
+            // We can't call ensurePopupMenuCreated() since it is private, so
+            // we call a method that calls it (Sneaky, huh?).
             isPopupMenuVisible();
-            // Set location of popupMenu (pulldown or pullright)
-            //  Perhaps this should be dictated by L&F
+            // Set location of popupMenu (pull-down or pull-right)
+            // Perhaps this should be dictated by L&F
             if (visible && isShowing()) {
                 Point p = getPopupMenuOrigin();
                 getPopupMenu().show(this, p.x, p.y);
@@ -114,7 +114,7 @@ public class JLongMenu extends JMenu {
                 }
             }
         } else {
-            // We are a toplevel menu (pull-down)
+            // We are a top-level menu (pull-down)
 
             // if( SwingUtilities.isLeftToRight(this) ) { // Package private.
             if (getComponentOrientation() == ComponentOrientation.LEFT_TO_RIGHT) {
@@ -157,7 +157,7 @@ public class JLongMenu extends JMenu {
             return super.add(menuItem);
         }
 
-        // If we reached here, we reached the limit and we don't have a more menu.
+        // If we reached here, we reached the limit, and we don't have a more menu.
         // Let's create it and add the item there.
         moreMenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("More"), maxItems);
 

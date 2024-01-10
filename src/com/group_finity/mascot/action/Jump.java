@@ -29,7 +29,7 @@ public class Jump extends ActionBase {
 
     private static final int DEFAULT_TARGETY = 0;
 
-    // An Action Attribute is already named Velocity
+    // An Action attribute is already named "Velocity", so this is named "VelocityParam" instead
     public static final String PARAMETER_VELOCITY = "VelocityParam";
 
     private static final double DEFAULT_VELOCITY = 20.0;

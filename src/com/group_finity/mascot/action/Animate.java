@@ -38,9 +38,9 @@ public class Animate extends BorderedAction {
     @Override
     public boolean hasNext() throws VariableException {
 
-        final boolean intime = getTime() < getAnimation().getDuration();
+        final boolean inTime = getTime() < getAnimation().getDuration();
 
-        return super.hasNext() && intime;
+        return super.hasNext() && inTime;
     }
 
 }

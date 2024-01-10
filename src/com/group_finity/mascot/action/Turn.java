@@ -41,9 +41,9 @@ public class Turn extends BorderedAction {
     @Override
     public boolean hasNext() throws VariableException {
         turning = turning || isLookRight() != getMascot().isLookRight();
-        final boolean intime = getTime() < getAnimation().getDuration();
+        final boolean inTime = getTime() < getAnimation().getDuration();
 
-        return super.hasNext() && intime && turning;
+        return super.hasNext() && inTime && turning;
     }
 
     private Boolean isLookRight() throws VariableException {

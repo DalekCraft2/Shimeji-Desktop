@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-// TODO Correct the many translation errors in this doc comment (and all others), and then fix the broken method link by figuring out what replaced the animate() method
 
 /**
  * Mascot object.
@@ -32,11 +31,8 @@ import java.util.logging.Logger;
  * Mascots' long-term, complex behaviors are represented by {@link Behavior Behaviors},
  * and their short-term, simple actions are represented by {@link Action Actions}.
  * <p>
- * Mascots have an internal timer which calls {@link Action} at a constant interval.
- * {@link Action}'s {@link #animate(Point, MascotImage, boolean)} method is called
+ * Mascots have an internal timer which calls {@link #tick()} at a constant interval
  * to animate the mascot.
- * <p>
- * {@link Action} or exits, the other at a certain time is called {@link Behavior}, the next move to {@link Action}.
  * <p>
  * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * <p>
@@ -279,7 +275,7 @@ public class Mascot implements Serializable {
                 if (!behaviour.isHidden()) {
                     item = new JMenuItem(Main.getInstance().getLanguageBundle().containsKey(behaviorName) ?
                             Main.getInstance().getLanguageBundle().getString(behaviorName) :
-                            behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll("  ", " "));
+                            behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
                     item.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(final ActionEvent e) {
@@ -338,7 +334,7 @@ public class Mascot implements Serializable {
             }
 
             if (debugWindow != null) {
-                debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll("  ", " "));
+                debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
                 debugWindow.setShimejiX(anchor.x);
                 debugWindow.setShimejiY(anchor.y);
 

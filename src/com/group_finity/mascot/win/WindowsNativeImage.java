@@ -66,6 +66,7 @@ class WindowsNativeImage implements NativeImage {
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
 
+                // TODO Fix translation errors here... after figuring out what it is supposed to say.
                 // UpdateLayeredWindow and Photoshop are incompatible ?Irashii
                 // UpdateLayeredWindow FFFFFF RGB value has the bug that it ignores the value of a,
                 // Photoshop is where a is an RGB value of 0 have the property value to 0.

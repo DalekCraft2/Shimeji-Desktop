@@ -43,7 +43,7 @@ public final class RgbYuv {
      * Calculates the lookup table. <b>MUST</b> be called (only once) before doing anything else.
      */
     public static void hqxInit() {
-        /* Initalize RGB to YUV lookup table */
+        /* Initialize RGB-to-YUV lookup table */
         int r, g, b, y, u, v;
         for (int c = 0x1000000 - 1; c >= 0; c--) {
             r = (c & 0xFF0000) >> 16;

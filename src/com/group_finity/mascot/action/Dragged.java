@@ -56,10 +56,10 @@ public class Dragged extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
-        final boolean intime = getTime() < getTimeToRegist();
+        final boolean inTime = getTime() < getTimeToRegist();
         final boolean lukewarm = Math.random() >= 0.1;
 
-        return super.hasNext() && (intime || lukewarm);
+        return super.hasNext() && (inTime || lukewarm);
     }
 
     @Override

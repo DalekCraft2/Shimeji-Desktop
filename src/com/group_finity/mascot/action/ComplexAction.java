@@ -54,9 +54,9 @@ public abstract class ComplexAction extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
-        final boolean inrange = getCurrentAction() < getActions().length;
+        final boolean inRange = getCurrentAction() < getActions().length;
 
-        return super.hasNext() && inrange && getAction().hasNext();
+        return super.hasNext() && inRange && getAction().hasNext();
     }
 
     @Override
