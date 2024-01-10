@@ -166,7 +166,7 @@ public class Main {
 
             // handle menu size
             if (!properties.containsKey("MenuDPI")) {
-                properties.setProperty("MenuDPI", Math.max(Toolkit.getDefaultToolkit().getScreenResolution(), 96) + "");
+                properties.setProperty("MenuDPI", String.valueOf(Toolkit.getDefaultToolkit().getScreenResolution()));
                 updateConfigFile();
             }
 
@@ -897,6 +897,7 @@ public class Main {
                         form.pack();
                         form.setMinimumSize(form.getSize());
 
+                        // get the DPI of the screen, and divide it by 96 to get a ratio
                         float scaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
 
                         // setting location of the form
