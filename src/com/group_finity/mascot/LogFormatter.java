@@ -16,7 +16,7 @@ public class LogFormatter extends SimpleFormatter {
 
     private Object[] args = new Object[1];
 
-    private String lineSeparator = System.getProperty("line.separator");
+    private String lineSeparator = System.lineSeparator();
 
     /**
      * Formats the given LogRecord.
@@ -40,7 +40,8 @@ public class LogFormatter extends SimpleFormatter {
         sb.append(" ");
 
         sb.append(record.getLevel().getLocalizedName());
-        sb.append(": ");
+        // sb.append(": ");
+        sb.append(" ");
 
 
         if (record.getSourceClassName() != null) {
@@ -52,7 +53,7 @@ public class LogFormatter extends SimpleFormatter {
             sb.append(" ");
             sb.append(record.getSourceMethodName());
         }
-        sb.append(" ");
+        sb.append(" - ");
 
         final String message = formatMessage(record);
         sb.append(message);
