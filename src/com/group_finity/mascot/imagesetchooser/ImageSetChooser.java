@@ -7,7 +7,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -396,10 +399,28 @@ public class ImageSetChooser extends JDialog {
     }
 
     private void setUpList1() {
-        // FIXME This custom list selection model is broken; dragging the cursor along one of the list entries causes the entry to flicker rapidly.
         jList1.setSelectionModel(new DefaultListSelectionModel() {
+            private int i0 = -1;
+            private int i1 = -1;
+
             @Override
             public void setSelectionInterval(int index0, int index1) {
+                // These statements ensure that the buttons do not flicker whenever the cursor is dragged over them
+                // This code was made by Francisco on StackOverflow (https://stackoverflow.com/a/5831609)
+                if (i0 == index0 && i1 == index1) {
+                    if (getValueIsAdjusting()) {
+                        setValueIsAdjusting(false);
+                        setSelection(index0, index1);
+                    }
+                } else {
+                    i0 = index0;
+                    i1 = index1;
+                    setValueIsAdjusting(false);
+                    setSelection(index0, index1);
+                }
+            }
+
+            private void setSelection(int index0, int index1) {
                 if (isSelectedIndex(index0)) {
                     removeSelectionInterval(index0, index1);
                 } else {
@@ -411,8 +432,27 @@ public class ImageSetChooser extends JDialog {
 
     private void setUpList2() {
         jList2.setSelectionModel(new DefaultListSelectionModel() {
+            private int i0 = -1;
+            private int i1 = -1;
+
             @Override
             public void setSelectionInterval(int index0, int index1) {
+                // These statements ensure that the buttons do not flicker whenever the cursor is dragged over them
+                // This code was made by Francisco on StackOverflow (https://stackoverflow.com/a/5831609)
+                if (i0 == index0 && i1 == index1) {
+                    if (getValueIsAdjusting()) {
+                        setValueIsAdjusting(false);
+                        setSelection(index0, index1);
+                    }
+                } else {
+                    i0 = index0;
+                    i1 = index1;
+                    setValueIsAdjusting(false);
+                    setSelection(index0, index1);
+                }
+            }
+
+            private void setSelection(int index0, int index1) {
                 if (isSelectedIndex(index0)) {
                     removeSelectionInterval(index0, index1);
                 } else {
