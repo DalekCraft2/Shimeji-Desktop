@@ -2,9 +2,9 @@ package com.group_finity.mascot.win;
 
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
-import com.group_finity.mascot.win.jna.*;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,52 +34,51 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
      * @param imageHandle bitmap handle.
      * @param alpha       concentrations shown. 0 = not at all, 255 = full display.
      */
-    private void paint(final Pointer imageHandle, final int alpha) {
+    private void paint(final WinDef.HBITMAP imageHandle, final int alpha) {
+        // setSize(WIDTH, HEIGHT);
 
-        // this.setSize(WIDTH, HEIGHT);
+        final WinDef.HWND hWnd = new WinDef.HWND(Native.getComponentPointer(this));
 
-        final Pointer hWnd = Native.getComponentPointer(this);
+        if (User32.INSTANCE.IsWindow(hWnd)) {
 
-        if (User32.INSTANCE.IsWindow(hWnd) != 0) {
-
-            final int exStyle = User32.INSTANCE.GetWindowLongW(hWnd, User32.GWL_EXSTYLE);
+            final long exStyle = User32.INSTANCE.GetWindowLongPtr(hWnd, User32.GWL_EXSTYLE).longValue();
             if ((exStyle & User32.WS_EX_LAYERED) == 0) {
-                User32.INSTANCE.SetWindowLongW(hWnd, User32.GWL_EXSTYLE, exStyle | User32.WS_EX_LAYERED);
+                User32.INSTANCE.SetWindowLongPtr(hWnd, User32.GWL_EXSTYLE, Pointer.createConstant(exStyle | User32.WS_EX_LAYERED));
             }
 
             // Create a DC source of the image
-            final Pointer clientDC = User32.INSTANCE.GetDC(hWnd);
-            final Pointer memDC = Gdi32.INSTANCE.CreateCompatibleDC(clientDC);
-            final Pointer oldBmp = Gdi32.INSTANCE.SelectObject(memDC, imageHandle);
+            final WinDef.HDC clientDC = User32.INSTANCE.GetDC(hWnd);
+            final WinDef.HDC memDC = GDI32.INSTANCE.CreateCompatibleDC(clientDC);
+            final WinNT.HANDLE oldBmp = GDI32.INSTANCE.SelectObject(memDC, imageHandle);
 
             User32.INSTANCE.ReleaseDC(hWnd, clientDC);
 
             // Destination Area
-            final RECT windowRect = new RECT();
+            final WinDef.RECT windowRect = new WinDef.RECT();
             User32.INSTANCE.GetWindowRect(hWnd, windowRect);
 
             // Forward
-            final BLENDFUNCTION bf = new BLENDFUNCTION();
-            bf.BlendOp = BLENDFUNCTION.AC_SRC_OVER;
+            final WinUser.BLENDFUNCTION bf = new WinUser.BLENDFUNCTION();
+            bf.BlendOp = WinUser.AC_SRC_OVER;
             bf.BlendFlags = 0;
             bf.SourceConstantAlpha = (byte) alpha; // Level set
-            bf.AlphaFormat = BLENDFUNCTION.AC_SRC_ALPHA;
+            bf.AlphaFormat = WinUser.AC_SRC_ALPHA;
 
-            final POINT lt = new POINT();
+            final WinDef.POINT lt = new WinDef.POINT();
             lt.x = windowRect.left;
             lt.y = windowRect.top;
-            final SIZE size = new SIZE();
-            size.cx = windowRect.Width();
-            size.cy = windowRect.Height();
-            final POINT zero = new POINT();
+            final WinUser.SIZE size = new WinUser.SIZE();
+            size.cx = windowRect.toRectangle().width;
+            size.cy = windowRect.toRectangle().height;
+            final WinDef.POINT zero = new WinDef.POINT();
             User32.INSTANCE.UpdateLayeredWindow(
-                    hWnd, Pointer.NULL,
+                    hWnd, null,
                     lt, size,
                     memDC, zero, 0, bf, User32.ULW_ALPHA);
 
             // Replace the bitmap you
-            Gdi32.INSTANCE.SelectObject(memDC, oldBmp);
-            Gdi32.INSTANCE.DeleteDC(memDC);
+            GDI32.INSTANCE.SelectObject(memDC, oldBmp);
+            GDI32.INSTANCE.DeleteDC(memDC);
 
             // Bring to front
             /* if (alwaysOnTop) {

@@ -4,11 +4,13 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.win.jna.Dwmapi;
-import com.group_finity.mascot.win.jna.Gdi32;
-import com.group_finity.mascot.win.jna.RECT;
-import com.group_finity.mascot.win.jna.User32;
+import com.group_finity.mascot.win.jna.GDI32Extra;
+import com.group_finity.mascot.win.jna.User32Extra;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.GDI32;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.LongByReference;
 
 import java.awt.*;
@@ -22,13 +24,13 @@ import java.util.logging.Logger;
  * Currently developed by Shimeji-ee Group.
  */
 class WindowsEnvironment extends Environment {
-    private static HashMap<Pointer, Boolean> ieCache = new LinkedHashMap<>();
+    private static HashMap<WinDef.HWND, Boolean> ieCache = new LinkedHashMap<>();
 
     public static Area workArea = new Area();
 
     public static Area activeIE = new Area();
 
-    private static Pointer activeIEobject = null;
+    private static WinDef.HWND activeIEobject = null;
 
     private static String[] windowTitles = null;
 
@@ -41,7 +43,7 @@ class WindowsEnvironment extends Environment {
 
     private static final Logger log = Logger.getLogger(WindowsEnvironment.class.getName());
 
-    private static boolean isIE(final Pointer ie) {
+    private static boolean isIE(final WinDef.HWND ie) {
         final Boolean cachedValue = ieCache.get(ie);
         if (cachedValue != null) {
             return cachedValue;
@@ -49,7 +51,7 @@ class WindowsEnvironment extends Environment {
 
         final char[] title = new char[1024];
 
-        final int titleLength = User32.INSTANCE.GetWindowTextW(ie, title, 1024);
+        final int titleLength = User32Extra.INSTANCE.GetWindowTextW(ie, title, 1024);
 
         final String ieTitle = new String(title, 0, titleLength);
 
@@ -77,8 +79,8 @@ class WindowsEnvironment extends Environment {
         return false;
     }
 
-    private static IEResult isViableIE(Pointer ie) {
-        if (User32.INSTANCE.IsWindowVisible(ie) != 0) {
+    private static IEResult isViableIE(WinDef.HWND ie) {
+        if (User32.INSTANCE.IsWindowVisible(ie)) {
             // metro apps can be closed or minimised and still be considered "visible" by User32
             // have to consider the new cloaked variable instead
             LongByReference flagsRef = new LongByReference();
@@ -88,16 +90,16 @@ class WindowsEnvironment extends Environment {
                 return IEResult.NOT_IE;
             }
 
-            /* int flags = User32.INSTANCE.GetWindowLongW(ie, User32.GWL_STYLE);
+            /* long flags = User32.INSTANCE.GetWindowLongPtr(ie, User32.GWL_STYLE).longValue();
             if ((flags & User32.WS_MAXIMIZE) != 0) {
                 return IEResult.INVALID;
             } */
 
-            if (User32.INSTANCE.IsZoomed(ie) != 0) {
+            if (User32Extra.INSTANCE.IsZoomed(ie)) {
                 return IEResult.INVALID;
             }
 
-            if (isIE(ie) && User32.INSTANCE.IsIconic(ie) == 0) {
+            if (isIE(ie) && !User32Extra.INSTANCE.IsIconic(ie)) {
                 Rectangle ieRect = getIERect(ie);
                 if (ieRect.intersects(getScreenRect())) {
                     return IEResult.IE;
@@ -110,7 +112,7 @@ class WindowsEnvironment extends Environment {
         return IEResult.NOT_IE;
     }
 
-    private static Pointer findActiveIE() {
+    private static WinDef.HWND findActiveIE() {
         activeIEobject = null;
 
         User32.INSTANCE.EnumWindows((ie, data) -> {
@@ -132,17 +134,17 @@ class WindowsEnvironment extends Environment {
 
         return activeIEobject;
 
-        /* Pointer ie = User32.INSTANCE.GetWindow(User32.INSTANCE.GetForegroundWindow(), User32.GW_HWNDFIRST);
+        /* WinDef.HWND ie = User32.INSTANCE.GetWindow(User32.INSTANCE.GetForegroundWindow(), new WinDef.DWORD(User32.GW_HWNDFIRST));
         boolean continueFlag = true;
 
-        while (continueFlag && User32.INSTANCE.IsWindow(ie) != 0) {
+        while (continueFlag && User32.INSTANCE.IsWindow(ie)) {
             switch (isViableIE(ie)) {
                 case IE:
                     return ie;
 
                 case IE_OUT_OF_BOUNDS:
                 case NOT_IE: // Valid window but not interactive according to user settings
-                    ie = User32.INSTANCE.GetWindow(ie, User32.GW_HWNDNEXT);
+                    ie = User32.INSTANCE.GetWindow(ie, new WinDef.DWORD(User32.GW_HWNDNEXT));
                     break;
 
                 case INVALID: // Something invalid is the foreground object
@@ -154,44 +156,42 @@ class WindowsEnvironment extends Environment {
         return null; */
     }
 
-    private static Rectangle getIERect(Pointer ie) {
-        final RECT out = new RECT();
+    private static Rectangle getIERect(WinDef.HWND ie) {
+        final WinDef.RECT out = new WinDef.RECT();
         User32.INSTANCE.GetWindowRect(ie, out);
-        final RECT in = new RECT();
-        if (getWindowRgnBox(ie, in) == User32.ERROR) {
+        final WinDef.RECT in = new WinDef.RECT();
+        if (getWindowRgnBox(ie, in) == User32Extra.ERROR) {
             // log.log(Level.INFO, "getWindowRgnBox == User32.ERROR");
             in.left = 0;
             in.top = 0;
             in.right = out.right - out.left;
             in.bottom = out.bottom - out.top;
         }
-        return new Rectangle(out.left + in.left, out.top + in.top, in.Width(), in.Height());
+        return new Rectangle(out.left + in.left, out.top + in.top, in.toRectangle().width, in.toRectangle().height);
     }
 
-    private static int getWindowRgnBox(final Pointer window, final RECT rect) {
-
-        Pointer hRgn = Gdi32.INSTANCE.CreateRectRgn(0, 0, 0, 0);
+    private static int getWindowRgnBox(final WinDef.HWND window, final WinDef.RECT rect) {
+        WinDef.HRGN hRgn = GDI32.INSTANCE.CreateRectRgn(0, 0, 0, 0);
         try {
-            if (User32.INSTANCE.GetWindowRgn(window, hRgn) == User32.ERROR) {
-                return User32.ERROR;
+            if (User32Extra.INSTANCE.GetWindowRgn(window, hRgn) == User32Extra.ERROR) {
+                return User32Extra.ERROR;
             }
-            Gdi32.INSTANCE.GetRgnBox(hRgn, rect);
+            GDI32Extra.INSTANCE.GetRgnBox(hRgn, rect);
             return 1;
         } finally {
-            Gdi32.INSTANCE.DeleteObject(hRgn);
+            GDI32.INSTANCE.DeleteObject(hRgn);
         }
     }
 
-    private static boolean moveIE(final Pointer ie, final Rectangle rect) {
-
+    private static boolean moveIE(final WinDef.HWND ie, final Rectangle rect) {
         if (ie == null) {
             return false;
         }
 
-        final RECT out = new RECT();
+        final WinDef.RECT out = new WinDef.RECT();
         User32.INSTANCE.GetWindowRect(ie, out);
-        final RECT in = new RECT();
-        if (getWindowRgnBox(ie, in) == User32.ERROR) {
+        final WinDef.RECT in = new WinDef.RECT();
+        if (getWindowRgnBox(ie, in) == User32Extra.ERROR) {
             // log.log(Level.INFO, "getWindowRgnBox == User32.ERROR");
             in.left = 0;
             in.top = 0;
@@ -199,8 +199,8 @@ class WindowsEnvironment extends Environment {
             in.bottom = out.bottom - out.top;
         }
 
-        User32.INSTANCE.MoveWindow(ie, rect.x - in.left, rect.y - in.top, rect.width + out.Width() - in.Width(),
-                rect.height + out.Height() - in.Height(), 1);
+        User32.INSTANCE.MoveWindow(ie, rect.x - in.left, rect.y - in.top, rect.width + out.toRectangle().width - in.toRectangle().width,
+                rect.height + out.toRectangle().height - in.toRectangle().height, true);
 
         return true;
     }
@@ -210,17 +210,17 @@ class WindowsEnvironment extends Environment {
             int offset = 25;
 
             @Override
-            public boolean callback(Pointer ie, Pointer data) {
-                IEResult result = isViableIE(ie);
+            public boolean callback(WinDef.HWND hWnd, Pointer data) {
+                IEResult result = isViableIE(hWnd);
                 if (result == IEResult.IE_OUT_OF_BOUNDS) {
-                    final RECT workArea = new RECT();
-                    User32.INSTANCE.SystemParametersInfoW(User32.SPI_GETWORKAREA, 0, workArea, 0);
-                    final RECT rect = new RECT();
-                    User32.INSTANCE.GetWindowRect(ie, rect);
+                    final WinDef.RECT workArea = new WinDef.RECT();
+                    User32Extra.INSTANCE.SystemParametersInfoW(User32Extra.SPI_GETWORKAREA, 0, workArea, 0);
+                    final WinDef.RECT rect = new WinDef.RECT();
+                    User32.INSTANCE.GetWindowRect(hWnd, rect);
 
-                    rect.OffsetRect(workArea.left + offset - rect.left, workArea.top + offset - rect.top);
-                    User32.INSTANCE.MoveWindow(ie, rect.left, rect.top, rect.Width(), rect.Height(), 1);
-                    User32.INSTANCE.BringWindowToTop(ie);
+                    offsetRect(rect, workArea.left + offset - rect.left, workArea.top + offset - rect.top);
+                    User32.INSTANCE.MoveWindow(hWnd, rect.left, rect.top, rect.toRectangle().width, rect.toRectangle().height, true);
+                    User32.INSTANCE.BringWindowToTop(hWnd);
 
                     offset += 25;
                 }
@@ -228,6 +228,13 @@ class WindowsEnvironment extends Environment {
                 return true;
             }
         }, null);
+    }
+
+    private static void offsetRect(WinDef.RECT rect, final int dx, final int dy) {
+        rect.left += dx;
+        rect.right += dx;
+        rect.top += dy;
+        rect.bottom += dy;
     }
 
     @Override
@@ -266,19 +273,19 @@ class WindowsEnvironment extends Environment {
 
     @Override
     public String getActiveIETitle() {
-        final Pointer ie = findActiveIE();
+        final WinDef.HWND ie = findActiveIE();
 
         final char[] title = new char[1024];
 
-        final int titleLength = User32.INSTANCE.GetWindowTextW(ie, title, 1024);
+        final int titleLength = User32Extra.INSTANCE.GetWindowTextW(ie, title, 1024);
 
         return new String(title, 0, titleLength);
     }
 
     private static Rectangle getWorkAreaRect() {
-        final RECT rect = new RECT();
-        User32.INSTANCE.SystemParametersInfoW(User32.SPI_GETWORKAREA, 0, rect, 0);
-        return new Rectangle(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+        final WinDef.RECT rect = new WinDef.RECT();
+        User32Extra.INSTANCE.SystemParametersInfoW(User32Extra.SPI_GETWORKAREA, 0, rect, 0);
+        return rect.toRectangle();
     }
 
     @Override
@@ -291,7 +298,7 @@ class WindowsEnvironment extends Environment {
         final StringBuilder text = new StringBuilder();
         final char[] title = new char[1024];
         User32.INSTANCE.EnumWindows((ie, data) -> {
-            int titleLength = User32.INSTANCE.GetWindowTextW(ie, title, 1024);
+            int titleLength = User32Extra.INSTANCE.GetWindowTextW(ie, title, 1024);
 
             String ieTitle = new String(title, 0, titleLength);
 

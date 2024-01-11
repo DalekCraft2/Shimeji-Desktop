@@ -2,7 +2,7 @@ package com.group_finity.mascot.win.jna;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
-import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.win32.StdCallLibrary;
 
@@ -18,5 +18,5 @@ public interface Dwmapi extends StdCallLibrary {
 
     int DWMWA_CLOAKED = 14;
 
-    NativeLong DwmGetWindowAttribute(Pointer hwnd, int dwAttribute, LongByReference pvAttribute, int cbAttribute);
+    NativeLong DwmGetWindowAttribute(WinDef.HWND hwnd, int dwAttribute, LongByReference pvAttribute, int cbAttribute);
 }
