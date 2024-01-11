@@ -26,23 +26,26 @@ public class Offset extends InstantAction {
 
     private static final int DEFAULT_OFFSETY = 0;
 
-    private double scaling;
+    // private double scaling;
 
     public Offset(ResourceBundle schema, final VariableMap context) {
         super(schema, context);
     }
 
-    @Override
+    /* @Override
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
         scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
-    }
+    } */
 
     @Override
     protected void apply() throws VariableException {
+        // Can't use scaling here because it makes the mascots unable to climb on the ceiling.
+        // Should've thought twice before I decided to cast doubles to integers...
         getMascot().setAnchor(
-                new Point(getMascot().getAnchor().x + (int) (getOffsetX() * scaling), getMascot().getAnchor().y + (int) (getOffsetY() * scaling)));
+                // new Point(getMascot().getAnchor().x + (int) (getOffsetX() * scaling), getMascot().getAnchor().y + (int) (getOffsetY() * scaling)));
+                new Point(getMascot().getAnchor().x + getOffsetX(), getMascot().getAnchor().y + getOffsetY()));
     }
 
     private int getOffsetX() throws VariableException {
