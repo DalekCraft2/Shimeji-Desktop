@@ -396,6 +396,7 @@ public class ImageSetChooser extends JDialog {
     }
 
     private void setUpList1() {
+        // FIXME This custom list selection model is broken; dragging the cursor along one of the list entries causes the entry to flicker rapidly.
         jList1.setSelectionModel(new DefaultListSelectionModel() {
             @Override
             public void setSelectionInterval(int index0, int index1) {

@@ -117,14 +117,14 @@ public class Fall extends ActionBase {
         Point start = getMascot().getAnchor();
 
         OUTER:
-        for (int i = 0; i <= dev; ++i) {
+        for (int i = 0; i <= dev; i++) {
             int x = start.x + dx * i / dev;
             int y = start.y + dy * i / dev;
 
             getMascot().setAnchor(new Point(x, y));
             if (dy > 0) {
                 // HACK IE
-                for (int j = -80; j <= 0; ++j) {
+                for (int j = -80; j <= 0; j++) {
                     getMascot().setAnchor(new Point(x, y + j));
                     if (getEnvironment().getFloor(true).isOn(getMascot().getAnchor())) {
                         break OUTER;

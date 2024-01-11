@@ -63,8 +63,8 @@ class WindowsNativeImage implements NativeImage {
         int destIndex = destPitch * (height - 1);
         int srcColIndex = 0;
 
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
 
                 // TODO Fix translation errors here... after figuring out what it is supposed to say.
                 // UpdateLayeredWindow and Photoshop are incompatible ?Irashii
@@ -74,7 +74,7 @@ class WindowsNativeImage implements NativeImage {
                 bmp.bmBits.setInt(destIndex + x * 4L,
                         (rgb[srcColIndex] & 0xFF000000) == 0 ? 0 : rgb[srcColIndex]);
 
-                ++srcColIndex;
+                srcColIndex++;
             }
 
             destIndex -= destPitch;

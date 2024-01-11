@@ -109,10 +109,10 @@ public abstract class Environment {
 
         for (Area area : getScreens()) {
             if (area.getTopBorder().isOn(location)) {
-                ++count;
+                count++;
             }
             if (area.getBottomBorder().isOn(location)) {
-                ++count;
+                count++;
             }
         }
 
@@ -133,10 +133,10 @@ public abstract class Environment {
 
         for (Area area : getScreens()) {
             if (area.getLeftBorder().isOn(location)) {
-                ++count;
+                count++;
             }
             if (area.getRightBorder().isOn(location)) {
-                ++count;
+                count++;
             }
         }
 

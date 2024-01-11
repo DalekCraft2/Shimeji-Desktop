@@ -1018,7 +1018,7 @@ public class Main {
     }
 
     private boolean toggleBooleanSetting(String propertyName, boolean defaultValue) {
-        if (Boolean.parseBoolean(properties.getProperty(propertyName, defaultValue + ""))) {
+        if (Boolean.parseBoolean(properties.getProperty(propertyName, String.valueOf(defaultValue)))) {
             properties.setProperty(propertyName, "false");
             return false;
         } else {
@@ -1036,11 +1036,10 @@ public class Main {
     }
 
     /**
-     * Replaces the current set of active imageSets without modifying
-     * valid imageSets that are already active. Does nothing if newImageSets
-     * are null
+     * Replaces the current set of active image sets without modifying
+     * valid image sets that are already active. Does nothing if {@code newImageSets == null}.
      *
-     * @param newImageSets All the imageSets that should now be active
+     * @param newImageSets all the image sets that should now be active
      * @author snek
      * @author Kilkakon (did some tweaks)
      */
@@ -1049,7 +1048,7 @@ public class Main {
             return;
         }
 
-        // I don't think there would be enough imageSets chosen at any given
+        // I don't think there would be enough image sets chosen at any given
         // time for it to be worth using HashSet, but I might be wrong
         Collection<String> toRemove = new ArrayList<>(imageSets);
         toRemove.removeAll(newImageSets);

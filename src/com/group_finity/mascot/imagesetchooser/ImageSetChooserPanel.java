@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Displays information about an image set. Used by ImageSetChooser
+ * Displays information about an image set. Used by {@link ImageSetChooser}.
  */
 public class ImageSetChooserPanel extends JPanel {
 

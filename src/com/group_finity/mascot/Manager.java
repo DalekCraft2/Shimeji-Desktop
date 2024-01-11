@@ -189,7 +189,7 @@ public class Manager {
     public void remainOne() {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
-            for (int i = totalMascots - 1; i > 0; --i) {
+            for (int i = totalMascots - 1; i > 0; i--) {
                 getMascots().get(i).dispose();
             }
         }
@@ -203,7 +203,7 @@ public class Manager {
     public void remainOne(Mascot mascot) {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
-            for (int i = totalMascots - 1; i >= 0; --i) {
+            for (int i = totalMascots - 1; i >= 0; i--) {
                 if (!getMascots().get(i).equals(mascot)) {
                     getMascots().get(i).dispose();
                 }
@@ -220,7 +220,7 @@ public class Manager {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
             boolean isFirst = true;
-            for (int i = totalMascots - 1; i >= 0; --i) {
+            for (int i = totalMascots - 1; i >= 0; i--) {
                 Mascot m = getMascots().get(i);
                 if (m.getImageSet().equals(imageSet) && isFirst) {
                     isFirst = false;
@@ -240,7 +240,7 @@ public class Manager {
     public void remainOne(String imageSet, Mascot mascot) {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
-            for (int i = totalMascots - 1; i >= 0; --i) {
+            for (int i = totalMascots - 1; i >= 0; i--) {
                 Mascot m = getMascots().get(i);
                 if (m.getImageSet().equals(imageSet) && !m.equals(mascot)) {
                     m.dispose();
@@ -257,7 +257,7 @@ public class Manager {
     public void remainNone(String imageSet) {
         synchronized (getMascots()) {
             int totalMascots = getMascots().size();
-            for (int i = totalMascots - 1; i >= 0; --i) {
+            for (int i = totalMascots - 1; i >= 0; i--) {
                 Mascot m = getMascots().get(i);
                 if (m.getImageSet().equals(imageSet)) {
                     m.dispose();
@@ -354,7 +354,7 @@ public class Manager {
 
     public void disposeAll() {
         synchronized (getMascots()) {
-            for (int i = getMascots().size() - 1; i >= 0; --i) {
+            for (int i = getMascots().size() - 1; i >= 0; i--) {
                 getMascots().get(i).dispose();
             }
         }

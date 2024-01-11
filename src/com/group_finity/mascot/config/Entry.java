@@ -38,7 +38,7 @@ public class Entry {
 
         attributes = new LinkedHashMap<>();
         final NamedNodeMap attrs = element.getAttributes();
-        for (int i = 0; i < attrs.getLength(); ++i) {
+        for (int i = 0; i < attrs.getLength(); i++) {
             final Attr attr = (Attr) attrs.item(i);
             attributes.put(attr.getName(), attr.getValue());
         }
@@ -84,7 +84,7 @@ public class Entry {
 
         children = new ArrayList<>();
         final NodeList childNodes = element.getChildNodes();
-        for (int i = 0; i < childNodes.getLength(); ++i) {
+        for (int i = 0; i < childNodes.getLength(); i++) {
             final Node childNode = childNodes.item(i);
             if (childNode instanceof Element) {
                 children.add(new Entry((Element) childNode));

@@ -44,8 +44,8 @@ public class ImagePairLoader {
         final BufferedImage copy = new BufferedImage(src.getWidth(), src.getHeight(),
                 src.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB : src.getType());
 
-        for (int y = 0; y < src.getHeight(); ++y) {
-            for (int x = 0; x < src.getWidth(); ++x) {
+        for (int y = 0; y < src.getHeight(); y++) {
+            for (int x = 0; x < src.getWidth(); x++) {
                 copy.setRGB(copy.getWidth() - x - 1, y, src.getRGB(x, y));
             }
         }
@@ -58,8 +58,8 @@ public class ImagePairLoader {
         Color colour;
         float[] components;
 
-        for (int y = 0; y < returnImage.getHeight(); ++y) {
-            for (int x = 0; x < returnImage.getWidth(); ++x) {
+        for (int y = 0; y < returnImage.getHeight(); y++) {
+            for (int x = 0; x < returnImage.getWidth(); x++) {
                 colour = new Color(source.getRGB(x, y), true);
                 components = colour.getComponents(null);
                 components[0] = components[3] * components[0];
@@ -115,14 +115,14 @@ public class ImagePairLoader {
                 int srcColIndex = 0;
                 int srcRowIndex = 0;
 
-                for (int y = 0; y < workingImage.getHeight(); ++y) {
-                    for (int x = 0; x < workingImage.getWidth(); ++x) {
+                for (int y = 0; y < workingImage.getHeight(); y++) {
+                    for (int x = 0; x < workingImage.getWidth(); x++) {
                         workingImage.setRGB(x, y, rbgValues[srcColIndex / (int) effectiveScaling]);
-                        ++srcColIndex;
+                        srcColIndex++;
                     }
 
                     // resets the srcColIndex to re-use the same indexes and stretch horizontally
-                    ++srcRowIndex;
+                    srcRowIndex++;
                     if (srcRowIndex == effectiveScaling) {
                         srcRowIndex = 0;
                     } else {

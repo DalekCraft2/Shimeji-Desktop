@@ -161,7 +161,7 @@ class MacEnvironment extends Environment {
         CFArrayRef cfWindows = new CFArrayRef();
         cfWindows.setPointer(axWindowsp.getValue());
 
-        for (long i = 0, l = carbon.CFArrayGetCount(cfWindows); i < l; ++i) {
+        for (long i = 0, l = carbon.CFArrayGetCount(cfWindows); i < l; i++) {
             Pointer p = carbon.CFArrayGetValueAtIndex(cfWindows, i);
             AXUIElementRef el = new AXUIElementRef();
             el.setPointer(p);
