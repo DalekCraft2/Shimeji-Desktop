@@ -8,14 +8,14 @@ import com.group_finity.mascot.win.jna.GDI32Extra;
 import com.group_finity.mascot.win.jna.User32Extra;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.GDI32;
-import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.platform.WindowUtils;
+import com.sun.jna.platform.win32.*;
 import com.sun.jna.ptr.LongByReference;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * Currently developed by Shimeji-ee Group.
  */
 class WindowsEnvironment extends Environment {
-    private static HashMap<WinDef.HWND, Boolean> ieCache = new LinkedHashMap<>();
+    private static final HashMap<WinDef.HWND, Boolean> ieCache = new LinkedHashMap<>();
 
     public static Area workArea = new Area();
 
@@ -49,11 +49,7 @@ class WindowsEnvironment extends Environment {
             return cachedValue;
         }
 
-        final char[] title = new char[1024];
-
-        final int titleLength = User32Extra.INSTANCE.GetWindowTextW(ie, title, 1024);
-
-        final String ieTitle = new String(title, 0, titleLength);
+        final String ieTitle = WindowUtils.getWindowTitle(ie);
 
         // optimisation to remove empty windows from consideration without the loop.
         // Program Manager hard coded exception as there's issues if we mess with it
@@ -68,13 +64,13 @@ class WindowsEnvironment extends Environment {
 
         for (String windowTitle : windowTitles) {
             if (!windowTitle.trim().isEmpty() && ieTitle.contains(windowTitle)) {
-                // log.log(Level.INFO, "Value {0} is IE", new String(title, 0, titleLength));
+                // log.log(Level.INFO, "Value {0} is IE", ieTitle);
                 ieCache.put(ie, true);
                 return true;
             }
         }
 
-        // log.log(Level.INFO, "Value {0} is not IE", new String(title, 0, titleLength));
+        // log.log(Level.INFO, "Value {0} is not IE", ieTitle);
         ieCache.put(ie, false);
         return false;
     }
@@ -157,20 +153,28 @@ class WindowsEnvironment extends Environment {
     }
 
     private static Rectangle getIERect(WinDef.HWND ie) {
-        final WinDef.RECT out = new WinDef.RECT();
-        User32.INSTANCE.GetWindowRect(ie, out);
-        final WinDef.RECT in = new WinDef.RECT();
-        if (getWindowRgnBox(ie, in) == User32Extra.ERROR) {
-            // log.log(Level.INFO, "getWindowRgnBox == User32.ERROR");
-            in.left = 0;
-            in.top = 0;
-            in.right = out.right - out.left;
-            in.bottom = out.bottom - out.top;
+        if (ie == null) {
+            return new Rectangle();
         }
-        return new Rectangle(out.left + in.left, out.top + in.top, in.toRectangle().width, in.toRectangle().height);
+        final Rectangle out = WindowUtils.getWindowLocationAndSize(ie);
+        Rectangle in;
+        try {
+            in = getWindowRgnBox(ie);
+        } catch (Win32Exception e) {
+            in = new Rectangle(out.width, out.height);
+        }
+        return new Rectangle(out.x + in.x, out.y + in.y, in.width, in.height);
     }
 
-    private static int getWindowRgnBox(final WinDef.HWND window, final WinDef.RECT rect) {
+    private static Rectangle getWindowRgnBox(final WinDef.HWND window) {
+        final WinDef.RECT rect = new WinDef.RECT();
+        if (getWindowRgnBoxImpl(window, rect) == User32Extra.ERROR) {
+            throw new Win32Exception(Kernel32.INSTANCE.GetLastError());
+        }
+        return rect.toRectangle();
+    }
+
+    private static int getWindowRgnBoxImpl(final WinDef.HWND window, final WinDef.RECT rect) {
         WinDef.HRGN hRgn = GDI32.INSTANCE.CreateRectRgn(0, 0, 0, 0);
         try {
             if (User32Extra.INSTANCE.GetWindowRgn(window, hRgn) == User32Extra.ERROR) {
@@ -188,19 +192,16 @@ class WindowsEnvironment extends Environment {
             return false;
         }
 
-        final WinDef.RECT out = new WinDef.RECT();
-        User32.INSTANCE.GetWindowRect(ie, out);
-        final WinDef.RECT in = new WinDef.RECT();
-        if (getWindowRgnBox(ie, in) == User32Extra.ERROR) {
-            // log.log(Level.INFO, "getWindowRgnBox == User32.ERROR");
-            in.left = 0;
-            in.top = 0;
-            in.right = out.right - out.left;
-            in.bottom = out.bottom - out.top;
+        final Rectangle out = WindowUtils.getWindowLocationAndSize(ie);
+        Rectangle in;
+        try {
+            in = getWindowRgnBox(ie);
+        } catch (Win32Exception e) {
+            in = new Rectangle(out.width, out.height);
         }
 
-        User32.INSTANCE.MoveWindow(ie, rect.x - in.left, rect.y - in.top, rect.width + out.toRectangle().width - in.toRectangle().width,
-                rect.height + out.toRectangle().height - in.toRectangle().height, true);
+        User32.INSTANCE.MoveWindow(ie, rect.x - in.x, rect.y - in.y, rect.width + out.width - in.width,
+                rect.height + out.height - in.height, true);
 
         return true;
     }
@@ -213,13 +214,11 @@ class WindowsEnvironment extends Environment {
             public boolean callback(WinDef.HWND hWnd, Pointer data) {
                 IEResult result = isViableIE(hWnd);
                 if (result == IEResult.IE_OUT_OF_BOUNDS) {
-                    final WinDef.RECT workArea = new WinDef.RECT();
-                    User32Extra.INSTANCE.SystemParametersInfoW(User32Extra.SPI_GETWORKAREA, 0, workArea, 0);
-                    final WinDef.RECT rect = new WinDef.RECT();
-                    User32.INSTANCE.GetWindowRect(hWnd, rect);
+                    final Rectangle workArea = getWorkAreaRect();
+                    final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
 
-                    offsetRect(rect, workArea.left + offset - rect.left, workArea.top + offset - rect.top);
-                    User32.INSTANCE.MoveWindow(hWnd, rect.left, rect.top, rect.toRectangle().width, rect.toRectangle().height, true);
+                    rect.add(workArea.x + offset - rect.x, workArea.y + offset - rect.y);
+                    User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
                     User32.INSTANCE.BringWindowToTop(hWnd);
 
                     offset += 25;
@@ -230,18 +229,10 @@ class WindowsEnvironment extends Environment {
         }, null);
     }
 
-    private static void offsetRect(WinDef.RECT rect, final int dx, final int dy) {
-        rect.left += dx;
-        rect.right += dx;
-        rect.top += dy;
-        rect.bottom += dy;
-    }
-
     @Override
     public void tick() {
         super.tick();
         workArea.set(getWorkAreaRect());
-
         final Rectangle ieRect = getIERect(findActiveIE());
         activeIE.setVisible(ieRect.intersects(getScreen().toRectangle()));
         activeIE.set(ieRect);
@@ -273,13 +264,7 @@ class WindowsEnvironment extends Environment {
 
     @Override
     public String getActiveIETitle() {
-        final WinDef.HWND ie = findActiveIE();
-
-        final char[] title = new char[1024];
-
-        final int titleLength = User32Extra.INSTANCE.GetWindowTextW(ie, title, 1024);
-
-        return new String(title, 0, titleLength);
+        return WindowUtils.getWindowTitle(findActiveIE());
     }
 
     private static Rectangle getWorkAreaRect() {
@@ -296,13 +281,10 @@ class WindowsEnvironment extends Environment {
 
     /* private void dumpWindowInformation() {
         final StringBuilder text = new StringBuilder();
-        final char[] title = new char[1024];
         User32.INSTANCE.EnumWindows((ie, data) -> {
-            int titleLength = User32Extra.INSTANCE.GetWindowTextW(ie, title, 1024);
+            String ieTitle = WindowUtils.getWindowTitle(ie);
 
-            String ieTitle = new String(title, 0, titleLength);
-
-            text.append(ieTitle).append(" ").append(isViableIE(ie)).append("\r\n");
+            text.append(ieTitle).append(" ").append(isViableIE(ie)).append(System.lineSeparator());
             return true;
         }, null);
 

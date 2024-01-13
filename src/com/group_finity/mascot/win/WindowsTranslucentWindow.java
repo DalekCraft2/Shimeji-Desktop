@@ -4,6 +4,7 @@ import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.win32.*;
 
 import javax.swing.*;
@@ -54,8 +55,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
             User32.INSTANCE.ReleaseDC(hWnd, clientDC);
 
             // Destination Area
-            final WinDef.RECT windowRect = new WinDef.RECT();
-            User32.INSTANCE.GetWindowRect(hWnd, windowRect);
+            final Rectangle windowRect = WindowUtils.getWindowLocationAndSize(hWnd);
 
             // Forward
             final WinUser.BLENDFUNCTION bf = new WinUser.BLENDFUNCTION();
@@ -65,11 +65,11 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
             bf.AlphaFormat = WinUser.AC_SRC_ALPHA;
 
             final WinDef.POINT lt = new WinDef.POINT();
-            lt.x = windowRect.left;
-            lt.y = windowRect.top;
+            lt.x = windowRect.x;
+            lt.y = windowRect.y;
             final WinUser.SIZE size = new WinUser.SIZE();
-            size.cx = windowRect.toRectangle().width;
-            size.cy = windowRect.toRectangle().height;
+            size.cx = windowRect.width;
+            size.cy = windowRect.height;
             final WinDef.POINT zero = new WinDef.POINT();
             User32.INSTANCE.UpdateLayeredWindow(
                     hWnd, null,
