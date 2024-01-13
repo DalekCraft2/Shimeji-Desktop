@@ -1,5 +1,6 @@
 package com.group_finity.mascot.image;
 
+import com.group_finity.mascot.Main;
 import hqx.Hqx_2x;
 import hqx.Hqx_3x;
 import hqx.Hqx_4x;
@@ -7,7 +8,6 @@ import hqx.Hqx_4x;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -27,12 +27,12 @@ public class ImagePairLoader {
             return;
         }
 
-        final BufferedImage leftImage = scale(premultiply(ImageIO.read(new File("./img/" + name))), scaling, filter);
+        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile())), scaling, filter);
         final BufferedImage rightImage;
         if (rightName == null) {
             rightImage = flip(leftImage);
         } else {
-            rightImage = scale(premultiply(ImageIO.read(new File("./img/" + rightName))), scaling, filter);
+            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(rightName).toFile())), scaling, filter);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),

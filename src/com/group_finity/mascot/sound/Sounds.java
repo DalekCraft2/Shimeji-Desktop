@@ -18,29 +18,29 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Sounds {
     private static final ConcurrentHashMap<String, Clip> SOUNDS = new ConcurrentHashMap<>();
 
-    public static void load(final String filename, final Clip clip) {
-        if (!SOUNDS.containsKey(filename)) {
-            SOUNDS.put(filename, clip);
+    public static void load(final String fileName, final Clip clip) {
+        if (!SOUNDS.containsKey(fileName)) {
+            SOUNDS.put(fileName, clip);
         }
     }
 
-    public static boolean contains(String filename) {
-        return SOUNDS.containsKey(filename);
+    public static boolean contains(String fileName) {
+        return SOUNDS.containsKey(fileName);
     }
 
-    public static Clip getSound(String filename) {
-        if (!SOUNDS.containsKey(filename)) {
+    public static Clip getSound(String fileName) {
+        if (!SOUNDS.containsKey(fileName)) {
             return null;
         }
-        return SOUNDS.get(filename);
+        return SOUNDS.get(fileName);
     }
 
-    public static List<Clip> getSoundsIgnoringVolume(String filename) {
+    public static List<Clip> getSoundsIgnoringVolume(String fileName) {
         List<Clip> sounds = new ArrayList<>(5);
         for (Map.Entry<String, Clip> entry : SOUNDS.entrySet()) {
             String soundName = entry.getKey();
             Clip soundClip = entry.getValue();
-            if (soundName.startsWith(filename)) {
+            if (soundName.startsWith(fileName)) {
                 sounds.add(soundClip);
             }
         }

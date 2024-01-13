@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -97,7 +96,7 @@ class VirtualEnvironment extends Environment {
 
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new File("./img/icon.png"));
+            image = ImageIO.read(Main.ICON_FILE.toFile());
         } catch (IOException e) {
             // not bothering reporting errors with loading the tray icon as it would have already been reported to the user by now
         } finally {

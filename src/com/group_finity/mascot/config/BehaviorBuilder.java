@@ -73,7 +73,6 @@ public class BehaviorBuilder {
         this.nextAdditive = nextAdditive;
 
         log.log(Level.INFO, "Finished loading behavior: {0}", this);
-
     }
 
     @Override
@@ -82,7 +81,6 @@ public class BehaviorBuilder {
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions) {
-
         for (final Entry node : list.getChildren()) {
 
             if (node.getName().equals(configuration.getSchema().getString("Condition"))) {
@@ -100,7 +98,6 @@ public class BehaviorBuilder {
     }
 
     public void validate() throws ConfigurationException {
-
         if (!getConfiguration().getActionBuilders().containsKey(getActionName())) {
             log.log(Level.SEVERE, "There is no corresponding action for behavior: {0}", this);
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + "(" + this + ")");
@@ -108,7 +105,6 @@ public class BehaviorBuilder {
     }
 
     public Behavior buildBehavior() throws BehaviorInstantiationException {
-
         try {
             return new UserBehavior(getName(),
                     getConfiguration().buildAction(getActionName(),

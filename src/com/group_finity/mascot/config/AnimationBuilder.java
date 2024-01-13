@@ -15,8 +15,10 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,7 +40,7 @@ public class AnimationBuilder {
 
     public AnimationBuilder(final ResourceBundle schema, final Entry animationNode, final String imageSet) throws IOException {
         if (!imageSet.isEmpty()) {
-            this.imageSet = "/" + imageSet;
+            this.imageSet = imageSet;
         }
 
         this.schema = schema;
@@ -58,8 +60,8 @@ public class AnimationBuilder {
     }
 
     private Pose loadPose(final Entry frameNode) throws IOException {
-        final String imageText = frameNode.getAttribute(schema.getString("Image")) != null ? imageSet + frameNode.getAttribute(schema.getString("Image")) : null;
-        final String imageRightText = frameNode.getAttribute(schema.getString("ImageRight")) != null ? imageSet + frameNode.getAttribute(schema.getString("ImageRight")) : null;
+        final String imageText = frameNode.getAttribute(schema.getString("Image")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("Image"))).toString() : null;
+        final String imageRightText = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))).toString() : null;
         final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor"));
         final String moveText = frameNode.getAttribute(schema.getString("Velocity"));
         final String durationText = frameNode.getAttribute(schema.getString("Duration"));
@@ -100,13 +102,15 @@ public class AnimationBuilder {
 
         if (soundText != null) {
             try {
-                if (new File("./sound" + soundText).exists()) {
-                    soundText = "./sound" + soundText;
-                } else if (new File("./sound" + imageSet + soundText).exists()) {
-                    soundText = "./sound" + imageSet + soundText;
+                Path soundPath;
+                if (Files.exists(Main.SOUND_DIRECTORY.resolve(soundText))) {
+                    soundPath = Main.SOUND_DIRECTORY.resolve(soundText);
+                } else if (Files.exists(Main.SOUND_DIRECTORY.resolve(imageSet).resolve(soundText))) {
+                    soundPath = Main.SOUND_DIRECTORY.resolve(imageSet).resolve(soundText);
                 } else {
-                    soundText = "./img" + imageSet + "/sound" + soundText;
+                    soundPath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText);
                 }
+                soundText = soundPath.toString();
 
                 float volume = Float.parseFloat(volumeText);
                 SoundLoader.load(soundText, volume);

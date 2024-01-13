@@ -10,10 +10,11 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,6 @@ import java.util.stream.IntStream;
  */
 public class SettingsWindow extends JDialog {
     private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
-    private static final String configFile = "./conf/settings.properties";    // Config file name
     private final ArrayList<String> listData = new ArrayList<>();
     private Boolean alwaysShowShimejiChooser = false;
     private String filter = "nearest";
@@ -551,7 +551,7 @@ public class SettingsWindow extends JDialog {
     private void btnDoneActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnDoneActionPerformed
     {// GEN-HEADEREND:event_btnDoneActionPerformed
         // done button
-        try (FileOutputStream output = new FileOutputStream(configFile)) {
+        try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
             Properties properties = Main.getInstance().getProperties();
             String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ", "/");
             String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");

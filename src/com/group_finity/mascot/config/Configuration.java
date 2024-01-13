@@ -13,7 +13,6 @@ import com.group_finity.mascot.script.VariableMap;
 import com.joconner.i18n.Utf8ResourceBundleControl;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -51,8 +50,7 @@ public class Configuration {
             locale = Locale.forLanguageTag("en-US");
         }
 
-        File file = new File("./conf");
-        URL[] urls = {file.toURI().toURL()};
+        URL[] urls = {Main.CONFIG_DIRECTORY.toUri().toURL()};
         try (URLClassLoader loader = new URLClassLoader(urls)) {
             schema = ResourceBundle.getBundle("schema", locale, loader, utf8Control);
         }
@@ -108,7 +106,6 @@ public class Configuration {
     }
 
     public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
-
         final ActionBuilder factory = actionBuilders.get(name);
         if (factory == null) {
             throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage") + ": " + name);
@@ -118,7 +115,6 @@ public class Configuration {
     }
 
     public void validate() throws ConfigurationException {
-
         for (final ActionBuilder builder : getActionBuilders().values()) {
             builder.validate();
         }
@@ -128,7 +124,6 @@ public class Configuration {
     }
 
     public Behavior buildBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
-
         final VariableMap context = new VariableMap();
         context.putAll(getConstants()); // put first so they can't override mascot
         context.put("mascot", mascot);

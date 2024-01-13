@@ -8,9 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,8 +22,6 @@ import java.util.List;
  * Chooser used to select the Shimeji image sets in use.
  */
 public class ImageSetChooser extends JDialog {
-    private static final String configFile = "./conf/settings.properties"; // Config file name
-    private static final String topDir = "./img"; // Top Level Directory
     private final ArrayList<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
@@ -43,9 +43,10 @@ public class ImageSetChooser extends JDialog {
             if (name.equalsIgnoreCase("unused") || name.startsWith(".")) {
                 return false;
             }
-            return new File(dir + "/" + name).isDirectory();
+            return Files.isDirectory(dir.toPath().resolve(name));
         };
-        File dir = new File(topDir);
+
+        File dir = Main.IMAGE_DIRECTORY.toFile();
         String[] children = dir.list(fileFilter);
 
         // Create ImageSetChooserPanels for ShimejiList
@@ -53,132 +54,106 @@ public class ImageSetChooser extends JDialog {
         int row = 0;    // Current row
         if (children != null) {
             for (String imageSet : children) {
-                String imageFile = topDir + "/" + imageSet + "/shime1.png";
+                Path imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve("shime1.png");
 
                 // Determine actions file
-                String filePath = "./conf/";
-                String actionsFile = filePath + "actions.xml";
-                if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
-                    actionsFile = filePath + "\u52D5\u4F5C.xml";
+                Path filePath = Main.CONFIG_DIRECTORY;
+                Path actionsFile = filePath.resolve("actions.xml");
+                if (Files.exists(filePath.resolve("\u52D5\u4F5C.xml"))) {
+                    actionsFile = filePath.resolve("\u52D5\u4F5C.xml");
                 }
 
-                filePath = "./conf/" + imageSet + "/";
-                if (new File(filePath + "actions.xml").exists()) {
-                    actionsFile = filePath + "actions.xml";
-                }
-                if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
-                    actionsFile = filePath + "\u52D5\u4F5C.xml";
-                }
-                if (new File(filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml").exists()) {
-                    actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
-                }
-                if (new File(filePath + "\u00A6-\u00BA@.xml").exists()) {
-                    actionsFile = filePath + "\u00A6-\u00BA@.xml";
-                }
-                if (new File(filePath + "\u00F4\u00AB\u00EC\u00FD.xml").exists()) {
-                    actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
-                }
-                if (new File(filePath + "one.xml").exists()) {
-                    actionsFile = filePath + "one.xml";
-                }
-                if (new File(filePath + "1.xml").exists()) {
-                    actionsFile = filePath + "1.xml";
+                filePath = Main.CONFIG_DIRECTORY.resolve(imageSet);
+                if (Files.exists(filePath.resolve("actions.xml"))) {
+                    actionsFile = filePath.resolve("actions.xml");
+                } else if (Files.exists(filePath.resolve("\u52D5\u4F5C.xml"))) {
+                    actionsFile = filePath.resolve("\u52D5\u4F5C.xml");
+                } else if (Files.exists(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
+                    actionsFile = filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml");
+                } else if (Files.exists(filePath.resolve("\u00A6-\u00BA@.xml"))) {
+                    actionsFile = filePath.resolve("\u00A6-\u00BA@.xml");
+                } else if (Files.exists(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
+                    actionsFile = filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml");
+                } else if (Files.exists(filePath.resolve("one.xml"))) {
+                    actionsFile = filePath.resolve("one.xml");
+                } else if (Files.exists(filePath.resolve("1.xml"))) {
+                    actionsFile = filePath.resolve("1.xml");
                 }
 
-                filePath = "./img/" + imageSet + "/conf/";
-                if (new File(filePath + "actions.xml").exists()) {
-                    actionsFile = filePath + "actions.xml";
-                }
-                if (new File(filePath + "\u52D5\u4F5C.xml").exists()) {
-                    actionsFile = filePath + "\u52D5\u4F5C.xml";
-                }
-                if (new File(filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml").exists()) {
-                    actionsFile = filePath + "\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml";
-                }
-                if (new File(filePath + "\u00A6-\u00BA@.xml").exists()) {
-                    actionsFile = filePath + "\u00A6-\u00BA@.xml";
-                }
-                if (new File(filePath + "\u00F4\u00AB\u00EC\u00FD.xml").exists()) {
-                    actionsFile = filePath + "\u00F4\u00AB\u00EC\u00FD.xml";
-                }
-                if (new File(filePath + "one.xml").exists()) {
-                    actionsFile = filePath + "one.xml";
-                }
-                if (new File(filePath + "1.xml").exists()) {
-                    actionsFile = filePath + "1.xml";
+                filePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.CONFIG_DIRECTORY);
+                if (Files.exists(filePath.resolve("actions.xml"))) {
+                    actionsFile = filePath.resolve("actions.xml");
+                } else if (Files.exists(filePath.resolve("\u52D5\u4F5C.xml"))) {
+                    actionsFile = filePath.resolve("\u52D5\u4F5C.xml");
+                } else if (Files.exists(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
+                    actionsFile = filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml");
+                } else if (Files.exists(filePath.resolve("\u00A6-\u00BA@.xml"))) {
+                    actionsFile = filePath.resolve("\u00A6-\u00BA@.xml");
+                } else if (Files.exists(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
+                    actionsFile = filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml");
+                } else if (Files.exists(filePath.resolve("one.xml"))) {
+                    actionsFile = filePath.resolve("one.xml");
+                } else if (Files.exists(filePath.resolve("1.xml"))) {
+                    actionsFile = filePath.resolve("1.xml");
                 }
 
                 // Determine behaviours file
-                filePath = "./conf/";
-                String behaviorsFile = filePath + "behaviors.xml";
-                if (new File(filePath + "\u884C\u52D5.xml").exists()) {
-                    behaviorsFile = filePath + "\u884C\u52D5.xml";
+                filePath = Main.CONFIG_DIRECTORY;
+                Path behaviorsFile = filePath.resolve("behaviors.xml");
+                if (Files.exists(filePath.resolve("\u884C\u52D5.xml"))) {
+                    behaviorsFile = filePath.resolve("\u884C\u52D5.xml");
                 }
 
-                filePath = "./conf/" + imageSet + "/";
-                if (new File(filePath + "behaviors.xml").exists()) {
-                    behaviorsFile = filePath + "behaviors.xml";
-                }
-                if (new File(filePath + "behavior.xml").exists()) {
-                    behaviorsFile = filePath + "behavior.xml";
-                }
-                if (new File(filePath + "\u884C\u52D5.xml").exists()) {
-                    behaviorsFile = filePath + "\u884C\u52D5.xml";
-                }
-                if (new File(filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml").exists()) {
-                    behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
-                }
-                if (new File(filePath + "\u00AA\u00B5\u00A6-.xml").exists()) {
-                    behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
-                }
-                if (new File(filePath + "\u00ECs\u00F4\u00AB.xml").exists()) {
-                    behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
-                }
-                if (new File(filePath + "two.xml").exists()) {
-                    behaviorsFile = filePath + "two.xml";
-                }
-                if (new File(filePath + "2.xml").exists()) {
-                    behaviorsFile = filePath + "2.xml";
+                filePath = Main.CONFIG_DIRECTORY.resolve(imageSet);
+                if (Files.exists(filePath.resolve("behaviors.xml"))) {
+                    behaviorsFile = filePath.resolve("behaviors.xml");
+                } else if (Files.exists(filePath.resolve("behavior.xml"))) {
+                    behaviorsFile = filePath.resolve("behavior.xml");
+                } else if (Files.exists(filePath.resolve("\u884C\u52D5.xml"))) {
+                    behaviorsFile = filePath.resolve("\u884C\u52D5.xml");
+                } else if (Files.exists(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
+                    behaviorsFile = filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml");
+                } else if (Files.exists(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
+                    behaviorsFile = filePath.resolve("\u00AA\u00B5\u00A6-.xml");
+                } else if (Files.exists(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
+                    behaviorsFile = filePath.resolve("\u00ECs\u00F4\u00AB.xml");
+                } else if (Files.exists(filePath.resolve("two.xml"))) {
+                    behaviorsFile = filePath.resolve("two.xml");
+                } else if (Files.exists(filePath.resolve("2.xml"))) {
+                    behaviorsFile = filePath.resolve("2.xml");
                 }
 
-                filePath = "./img/" + imageSet + "/conf/";
-                if (new File(filePath + "behaviors.xml").exists()) {
-                    behaviorsFile = filePath + "behaviors.xml";
-                }
-                if (new File(filePath + "behavior.xml").exists()) {
-                    behaviorsFile = filePath + "behavior.xml";
-                }
-                if (new File(filePath + "\u884C\u52D5.xml").exists()) {
-                    behaviorsFile = filePath + "\u884C\u52D5.xml";
-                }
-                if (new File(filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml").exists()) {
-                    behaviorsFile = filePath + "\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml";
-                }
-                if (new File(filePath + "\u00AA\u00B5\u00A6-.xml").exists()) {
-                    behaviorsFile = filePath + "\u00AA\u00B5\u00A6-.xml";
-                }
-                if (new File(filePath + "\u00ECs\u00F4\u00AB.xml").exists()) {
-                    behaviorsFile = filePath + "\u00ECs\u00F4\u00AB.xml";
-                }
-                if (new File(filePath + "two.xml").exists()) {
-                    behaviorsFile = filePath + "two.xml";
-                }
-                if (new File(filePath + "2.xml").exists()) {
-                    behaviorsFile = filePath + "2.xml";
+                filePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.CONFIG_DIRECTORY);
+                if (Files.exists(filePath.resolve("behaviors.xml"))) {
+                    behaviorsFile = filePath.resolve("behaviors.xml");
+                } else if (Files.exists(filePath.resolve("behavior.xml"))) {
+                    behaviorsFile = filePath.resolve("behavior.xml");
+                } else if (Files.exists(filePath.resolve("\u884C\u52D5.xml"))) {
+                    behaviorsFile = filePath.resolve("\u884C\u52D5.xml");
+                } else if (Files.exists(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
+                    behaviorsFile = filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml");
+                } else if (Files.exists(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
+                    behaviorsFile = filePath.resolve("\u00AA\u00B5\u00A6-.xml");
+                } else if (Files.exists(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
+                    behaviorsFile = filePath.resolve("\u00ECs\u00F4\u00AB.xml");
+                } else if (Files.exists(filePath.resolve("two.xml"))) {
+                    behaviorsFile = filePath.resolve("two.xml");
+                } else if (Files.exists(filePath.resolve("2.xml"))) {
+                    behaviorsFile = filePath.resolve("2.xml");
                 }
 
                 if (onList1) {
                     onList1 = false;
-                    data1.add(new ImageSetChooserPanel(imageSet, actionsFile,
-                            behaviorsFile, imageFile));
+                    data1.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
+                            behaviorsFile.toString(), imageFile));
                     // Is this set initially selected?
                     if (activeImageSets.contains(imageSet) || selectAllSets) {
                         si1.add(row);
                     }
                 } else {
                     onList1 = true;
-                    data2.add(new ImageSetChooserPanel(imageSet, actionsFile,
-                            behaviorsFile, imageFile));
+                    data2.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
+                            behaviorsFile.toString(), imageFile));
                     // Is this set initially selected?
                     if (activeImageSets.contains(imageSet) || selectAllSets) {
                         si2.add(row);
@@ -221,7 +196,7 @@ public class ImageSetChooser extends JDialog {
     }
 
     private void updateConfigFile() {
-        try (FileOutputStream output = new FileOutputStream(configFile)) {
+        try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
             Main.getInstance().getProperties().setProperty("ActiveShimeji", imageSets.toString().replace("[", "").replace("]", "").replace(", ", "/"));
             Main.getInstance().getProperties().store(output, "Shimeji-ee Configuration Options");
         } catch (IOException e) {

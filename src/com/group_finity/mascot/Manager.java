@@ -320,8 +320,8 @@ public class Manager {
     /**
      * Returns a Mascot with the given affordance.
      *
-     * @param affordance
-     * @return A WeakReference to a mascot with the required affordance, or null
+     * @param affordance the affordance for which to check
+     * @return a {@link WeakReference} to a mascot with the required affordance, or {@code null} if none was found
      */
     public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
         synchronized (getMascots()) {

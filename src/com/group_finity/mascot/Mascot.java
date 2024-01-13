@@ -49,34 +49,34 @@ public class Mascot implements Serializable {
 
     private String imageSet;
     /**
-     * A window that displays the mascot.
+     * The window that displays the {@code Mascot}.
      */
     private final TranslucentWindow window = NativeFactory.getInstance().newTransparentWindow();
 
     /**
-     * Managers are managing the mascot.
+     * The {@link Manager} that manages this {@code Mascot}.
      */
     private Manager manager = null;
 
     /**
-     * Mascot ground coordinates.
-     * Or feet, for example, when part of the hand is hanging.
+     * The {@code Mascot}'s ground coordinates
+     * (or feet coordinates, for example, when the {@code Mascot} is climbing).
      */
     private Point anchor = new Point(0, 0);
 
     /**
-     * Image to display.
+     * The image to display.
      */
     private MascotImage image = null;
 
     /**
-     * Whether looking right or left.
-     * The original image is treated as left, true means picture must be inverted.
+     * Whether the {@code Mascot} is looking right instead of left.
+     * The original image is treated as left; {@code true} means the image is flipped.
      */
     private boolean lookRight = false;
 
     /**
-     * Object representing the long-term behavior.
+     * An object representing the long-term behavior of this {@code Mascot}.
      */
     private Behavior behavior = null;
 
@@ -93,7 +93,7 @@ public class Mascot implements Serializable {
     private boolean paused = false;
 
     /**
-     * Set by behaviours when the shimeji is being dragged by the mouse cursor,
+     * Set by behaviours when the {@code Mascot} is being dragged by the mouse cursor,
      * as opposed to hotspots or the like.
      */
     private boolean dragging = false;
@@ -109,8 +109,8 @@ public class Mascot implements Serializable {
     private List<Hotspot> hotspots = new ArrayList<>(5);
 
     /**
-     * Set by behaviours when the user has triggered a hotspot on this shimeji,
-     * so that the shimeji knows to check for any new hotspots that emerge while
+     * Set by behaviours when the user has triggered a hotspot on this {@code Mascot},
+     * so that the {@code Mascot} knows to check for any new hotspots that emerge while
      * the mouse is held down.
      */
     private Point cursor = null;
@@ -313,8 +313,8 @@ public class Mascot implements Serializable {
         // TODO Get the popup to close when clicking outside of it
         getWindow().asComponent().requestFocus();
 
-        // lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window boundary
-        // as the shimeji window can't support this we need to set them to heavyweight
+        // Lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window's boundary.
+        // As the shimeji window can't support this, we need to set them to heavyweight.
         popup.setLightWeightPopupEnabled(false);
         popup.show(getWindow().asComponent(), x, y);
     }
@@ -450,7 +450,7 @@ public class Mascot implements Serializable {
 
     public Rectangle getBounds() {
         if (getImage() != null) {
-            // Central area of the window find the image coordinates and ground coordinates. The centre has already been adjusted for scaling
+            // Find the top-left corner of the bounds with the ground coordinates and image center coordinates. The center has already been adjusted for scaling.
             final int top = getAnchor().y - getImage().getCenter().y;
             final int left = getAnchor().x - getImage().getCenter().x;
 

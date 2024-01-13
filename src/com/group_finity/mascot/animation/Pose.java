@@ -54,7 +54,7 @@ public class Pose {
 
     @Override
     public String toString() {
-        return "Pose (" + (getImage() == null ? "" : getImage()) + "," + getDx() + "," + getDy() + "," + getDuration() + ", " + sound + ")";
+        return "Pose(" + (getImage() == null ? "" : getImage()) + "," + getDx() + "," + getDy() + "," + getDuration() + ", " + sound + ")";
     }
 
     public void next(final Mascot mascot) {

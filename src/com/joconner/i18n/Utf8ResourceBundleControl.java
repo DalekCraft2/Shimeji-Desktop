@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
  */
 public class Utf8ResourceBundleControl extends PackageableResourceControl {
 
-
     public Utf8ResourceBundleControl() {
     }
 
@@ -57,7 +56,7 @@ public class Utf8ResourceBundleControl extends PackageableResourceControl {
         return bundle;
     }
 
-    InputStream reload(String resourceName, ClassLoader classLoader) throws IOException {
+    private InputStream reload(String resourceName, ClassLoader classLoader) throws IOException {
         InputStream stream = null;
         URL url = classLoader.getResource(resourceName);
         if (url != null) {
@@ -71,6 +70,4 @@ public class Utf8ResourceBundleControl extends PackageableResourceControl {
         }
         return stream;
     }
-
-
 }

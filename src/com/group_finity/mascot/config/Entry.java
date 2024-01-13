@@ -59,7 +59,6 @@ public class Entry {
     }
 
     public List<Entry> selectChildren(final String tagName) {
-
         List<Entry> children = selected.get(tagName);
         if (children != null) {
             return children;
@@ -77,7 +76,6 @@ public class Entry {
     }
 
     public List<Entry> getChildren() {
-
         if (children != null) {
             return children;
         }

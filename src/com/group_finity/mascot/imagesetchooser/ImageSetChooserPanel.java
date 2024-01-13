@@ -7,8 +7,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Displays information about an image set. Used by {@link ImageSetChooser}.
@@ -20,14 +20,14 @@ public class ImageSetChooserPanel extends JPanel {
     }
 
     public ImageSetChooserPanel(String name, String actions,
-                                String behaviors, String imageLocation) {
+                                String behaviors, Path imageLocation) {
         initComponents();
 
         this.name.setText(name);
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
         try {
-            BufferedImage img = ImageIO.read(new File(imageLocation));
+            BufferedImage img = ImageIO.read(imageLocation.toFile());
             image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
         } catch (IOException e) {
             // Doesn't matter, the image just won't show
