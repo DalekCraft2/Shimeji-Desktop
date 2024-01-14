@@ -1,9 +1,6 @@
 package com.group_finity.mascot.win;
 
-import com.group_finity.mascot.Main;
 import com.group_finity.mascot.image.NativeImage;
-import com.group_finity.mascot.win.jna.GDI32Extra;
-import com.sun.jna.Native;
 import com.sun.jna.platform.win32.GDI32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinGDI;
@@ -55,7 +52,8 @@ class WindowsNativeImage implements NativeImage {
      */
     private static void flushNative(final WinDef.HBITMAP nativeHandle, final int[] rgb) {
         final WinGDI.BITMAP bmp = new WinGDI.BITMAP();
-        GDI32Extra.INSTANCE.GetObjectW(nativeHandle, Main.getInstance().getPlatform().getBitmapSize() + Native.POINTER_SIZE, bmp);
+        GDI32.INSTANCE.GetObject(nativeHandle, bmp.size(), bmp.getPointer());
+        bmp.read();
 
         // Copy at the pixel level. These dimensions are already scaled
         int width = bmp.bmWidth.intValue();

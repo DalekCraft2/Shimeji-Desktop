@@ -15,7 +15,6 @@ import com.sun.jna.ptr.LongByReference;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -81,21 +80,18 @@ class WindowsEnvironment extends Environment {
             // have to consider the new cloaked variable instead
             LongByReference flagsRef = new LongByReference();
             NativeLong result = Dwmapi.INSTANCE.DwmGetWindowAttribute(ie, Dwmapi.DWMWA_CLOAKED, flagsRef, 8);
-            if (result.longValue() != 0x80070057 && (result.longValue() != 0 || flagsRef.getValue() != 0)) // unsupported on 7 so skip the check
+            if (result.longValue() != WinError.E_INVALIDARG && (result.longValue() != 0 || flagsRef.getValue() != 0)) // unsupported on 7 so skip the check
             {
                 return IEResult.NOT_IE;
             }
 
-            /* long flags = User32.INSTANCE.GetWindowLongPtr(ie, User32.GWL_STYLE).longValue();
-            if ((flags & User32.WS_MAXIMIZE) != 0) {
-                return IEResult.INVALID;
-            } */
+            int flags = WindowsUtil.GetWindowLong(ie, User32.GWL_STYLE).intValue();
 
-            if (User32Extra.INSTANCE.IsZoomed(ie)) {
+            if ((flags & User32.WS_MAXIMIZE) != 0) {
                 return IEResult.INVALID;
             }
 
-            if (isIE(ie) && !User32Extra.INSTANCE.IsIconic(ie)) {
+            if (isIE(ie) && (flags & User32.WS_MINIMIZE) == 0) {
                 Rectangle ieRect = getIERect(ie);
                 if (ieRect.intersects(getScreenRect())) {
                     return IEResult.IE;

@@ -42,9 +42,9 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
         if (User32.INSTANCE.IsWindow(hWnd)) {
 
-            final long exStyle = User32.INSTANCE.GetWindowLongPtr(hWnd, User32.GWL_EXSTYLE).longValue();
+            final int exStyle = WindowsUtil.GetWindowLong(hWnd, User32.GWL_EXSTYLE).intValue();
             if ((exStyle & User32.WS_EX_LAYERED) == 0) {
-                User32.INSTANCE.SetWindowLongPtr(hWnd, User32.GWL_EXSTYLE, Pointer.createConstant(exStyle | User32.WS_EX_LAYERED));
+                WindowsUtil.SetWindowLong(hWnd, User32.GWL_EXSTYLE, Pointer.createConstant(exStyle | User32.WS_EX_LAYERED));
             }
 
             // Create a DC source of the image

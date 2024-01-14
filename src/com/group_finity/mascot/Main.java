@@ -86,7 +86,6 @@ public class Main {
     private ConcurrentHashMap<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
     private static Main instance = new Main();
     private Properties properties = new Properties();
-    private Platform platform;
     private ResourceBundle languageBundle;
 
     private JDialog form;
@@ -118,13 +117,6 @@ public class Main {
     }
 
     public void run() {
-        // test operating system
-        if (System.getProperty("sun.arch.data.model").equals("64")) {
-            platform = Platform.x86_64;
-        } else {
-            platform = Platform.x86;
-        }
-
         // load properties
         properties = new Properties();
         if (Files.isRegularFile(SETTINGS_FILE)) {
@@ -1143,10 +1135,6 @@ public class Main {
 
     private Manager getManager() {
         return manager;
-    }
-
-    public Platform getPlatform() {
-        return platform;
     }
 
     public Properties getProperties() {
