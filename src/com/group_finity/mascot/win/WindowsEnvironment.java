@@ -6,6 +6,7 @@ import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.win.jna.Dwmapi;
 import com.group_finity.mascot.win.jna.GDI32Extra;
 import com.group_finity.mascot.win.jna.User32Extra;
+import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.WindowUtils;
@@ -164,20 +165,17 @@ class WindowsEnvironment extends Environment {
 
     private static Rectangle getWindowRgnBox(final WinDef.HWND window) {
         final WinDef.RECT rect = new WinDef.RECT();
-        if (getWindowRgnBoxImpl(window, rect) == User32Extra.ERROR) {
-            throw new Win32Exception(Kernel32.INSTANCE.GetLastError());
-        }
+        getWindowRgnBoxImpl(window, rect);
         return rect.toRectangle();
     }
 
-    private static int getWindowRgnBoxImpl(final WinDef.HWND window, final WinDef.RECT rect) {
+    private static void getWindowRgnBoxImpl(final WinDef.HWND window, final WinDef.RECT rect) {
         WinDef.HRGN hRgn = GDI32.INSTANCE.CreateRectRgn(0, 0, 0, 0);
         try {
             if (User32Extra.INSTANCE.GetWindowRgn(window, hRgn) == User32Extra.ERROR) {
-                return User32Extra.ERROR;
+                throw new Win32Exception(Native.getLastError());
             }
             GDI32Extra.INSTANCE.GetRgnBox(hRgn, rect);
-            return 1;
         } finally {
             GDI32.INSTANCE.DeleteObject(hRgn);
         }
@@ -213,7 +211,7 @@ class WindowsEnvironment extends Environment {
                     final Rectangle workArea = getWorkAreaRect();
                     final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
 
-                    rect.add(workArea.x + offset - rect.x, workArea.y + offset - rect.y);
+                    rect.setLocation(workArea.x + offset, workArea.y + offset);
                     User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
                     User32.INSTANCE.BringWindowToTop(hWnd);
 
