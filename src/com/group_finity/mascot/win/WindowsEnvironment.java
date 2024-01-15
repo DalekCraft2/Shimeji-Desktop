@@ -4,7 +4,6 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.win.jna.Dwmapi;
-import com.group_finity.mascot.win.jna.GDI32Extra;
 import com.group_finity.mascot.win.jna.User32Extra;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
@@ -165,20 +164,11 @@ class WindowsEnvironment extends Environment {
 
     private static Rectangle getWindowRgnBox(final WinDef.HWND window) {
         final WinDef.RECT rect = new WinDef.RECT();
-        getWindowRgnBoxImpl(window, rect);
-        return rect.toRectangle();
-    }
-
-    private static void getWindowRgnBoxImpl(final WinDef.HWND window, final WinDef.RECT rect) {
-        WinDef.HRGN hRgn = GDI32.INSTANCE.CreateRectRgn(0, 0, 0, 0);
-        try {
-            if (User32Extra.INSTANCE.GetWindowRgn(window, hRgn) == User32Extra.ERROR) {
-                throw new Win32Exception(Native.getLastError());
-            }
-            GDI32Extra.INSTANCE.GetRgnBox(hRgn, rect);
-        } finally {
-            GDI32.INSTANCE.DeleteObject(hRgn);
+        int result = User32Extra.INSTANCE.GetWindowRgnBox(window, rect);
+        if (result == User32Extra.ERROR) {
+            throw new Win32Exception(Native.getLastError());
         }
+        return rect.toRectangle();
     }
 
     private static boolean moveIE(final WinDef.HWND ie, final Rectangle rect) {

@@ -33,5 +33,7 @@ public interface User32Extra extends StdCallLibrary {
 
     int GetWindowRgn(WinDef.HWND hWnd, WinDef.HRGN hRgn);
 
+    int GetWindowRgnBox(WinDef.HWND hWnd, WinDef.RECT lprc);
+
     boolean SetProcessDPIAware();
 }
