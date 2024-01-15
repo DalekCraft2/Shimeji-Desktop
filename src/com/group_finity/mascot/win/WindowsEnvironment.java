@@ -252,9 +252,13 @@ class WindowsEnvironment extends Environment {
     }
 
     private static Rectangle getWorkAreaRect() {
-        final WinDef.RECT rect = new WinDef.RECT();
-        User32Extra.INSTANCE.SystemParametersInfoW(User32Extra.SPI_GETWORKAREA, 0, rect, 0);
-        return rect.toRectangle();
+        // Get the primary display monitor handle
+        final WinUser.HMONITOR monitor = User32.INSTANCE.MonitorFromPoint(new WinDef.POINT.ByValue(0, 0), User32.MONITOR_DEFAULTTOPRIMARY);
+
+        final WinUser.MONITORINFO monitorInfo = new WinUser.MONITORINFO();
+        User32.INSTANCE.GetMonitorInfo(monitor, monitorInfo); // TODO Look into this method for future patches
+
+        return monitorInfo.rcWork.toRectangle();
     }
 
     @Override
