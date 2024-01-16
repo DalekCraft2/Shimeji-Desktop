@@ -123,46 +123,42 @@ class WindowsNativeImage implements NativeImage {
     }
 
     public void flush() {
-        managedImage.flush();
+        getManagedImage().flush();
     }
 
     public Graphics getGraphics() {
-        return managedImage.createGraphics();
-    }
-
-    public WinDef.HBITMAP getHandle() {
-        return nativeHandle;
-    }
-
-    public int getHeight() {
-        return managedImage.getHeight();
+        return getManagedImage().createGraphics();
     }
 
     public int getWidth() {
-        return managedImage.getWidth();
+        return getManagedImage().getWidth();
     }
 
-    public int getHeight(final ImageObserver observer) {
-        return managedImage.getHeight(observer);
-    }
-
-    public Object getProperty(final String name, final ImageObserver observer) {
-        return managedImage.getProperty(name, observer);
-    }
-
-    public ImageProducer getSource() {
-        return managedImage.getSource();
+    public int getHeight() {
+        return getManagedImage().getHeight();
     }
 
     public int getWidth(final ImageObserver observer) {
-        return managedImage.getWidth(observer);
+        return getManagedImage().getWidth(observer);
     }
 
-    private BufferedImage getManagedImage() {
+    public int getHeight(final ImageObserver observer) {
+        return getManagedImage().getHeight(observer);
+    }
+
+    public Object getProperty(final String name, final ImageObserver observer) {
+        return getManagedImage().getProperty(name, observer);
+    }
+
+    public ImageProducer getSource() {
+        return getManagedImage().getSource();
+    }
+
+    BufferedImage getManagedImage() {
         return managedImage;
     }
 
-    private WinDef.HBITMAP getNativeHandle() {
+    public WinDef.HBITMAP getNativeHandle() {
         return nativeHandle;
     }
 }

@@ -35,12 +35,16 @@ class VirtualNativeImage implements NativeImage {
         return managedImage.createGraphics();
     }
 
+    public int getWidth() {
+        return managedImage.getWidth();
+    }
+
     public int getHeight() {
         return managedImage.getHeight();
     }
 
-    public int getWidth() {
-        return managedImage.getWidth();
+    public int getWidth(final ImageObserver observer) {
+        return managedImage.getWidth(observer);
     }
 
     public int getHeight(final ImageObserver observer) {
@@ -53,10 +57,6 @@ class VirtualNativeImage implements NativeImage {
 
     public ImageProducer getSource() {
         return managedImage.getSource();
-    }
-
-    public int getWidth(final ImageObserver observer) {
-        return managedImage.getWidth(observer);
     }
 
     BufferedImage getManagedImage() {

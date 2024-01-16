@@ -40,12 +40,16 @@ class GenericNativeImage implements NativeImage {
         return getManagedImage().createGraphics();
     }
 
+    public int getWidth() {
+        return getManagedImage().getWidth();
+    }
+
     public int getHeight() {
         return getManagedImage().getHeight();
     }
 
-    public int getWidth() {
-        return getManagedImage().getWidth();
+    public int getWidth(final ImageObserver observer) {
+        return getManagedImage().getWidth(observer);
     }
 
     public int getHeight(final ImageObserver observer) {
@@ -58,10 +62,6 @@ class GenericNativeImage implements NativeImage {
 
     public ImageProducer getSource() {
         return getManagedImage().getSource();
-    }
-
-    public int getWidth(final ImageObserver observer) {
-        return getManagedImage().getWidth(observer);
     }
 
     BufferedImage getManagedImage() {
