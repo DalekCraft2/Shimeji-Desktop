@@ -1,5 +1,6 @@
 package com.group_finity.mascot.image;
 
+import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -36,7 +37,7 @@ public class ImagePairs {
             return;
         }
 
-        imagePairs.keySet().removeIf(key -> searchTerm.equals(key.split("/")[1]));
+        imagePairs.keySet().removeIf(key -> searchTerm.equals(Paths.get(key).getParent().toString()));
     }
 
     public static MascotImage getImage(String filename, boolean isLookRight) {
