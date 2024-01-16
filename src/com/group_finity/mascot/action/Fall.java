@@ -87,7 +87,9 @@ public class Fall extends ActionBase {
     @Override
     public boolean hasNext() throws VariableException {
         Point pos = getMascot().getAnchor();
-        boolean onBorder = getEnvironment().getFloor().isOn(pos) || getEnvironment().getWall().isOn(pos);
+        // Check that the velocity is at least 0 so that, if a mascot starts an action with negative initial Y velocity,
+        // the action is not cancelled immediately.
+        boolean onBorder = getEnvironment().getFloor().isOn(pos) && getVelocityY() >= 0 || getEnvironment().getWall().isOn(pos);
         return super.hasNext() && !onBorder;
     }
 
