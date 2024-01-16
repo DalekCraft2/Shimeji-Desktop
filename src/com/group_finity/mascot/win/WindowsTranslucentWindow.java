@@ -36,8 +36,6 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
      * @param alpha       concentrations shown. 0 = not at all, 255 = full display.
      */
     private void paint(final WinDef.HBITMAP imageHandle, final int alpha) {
-        // setSize(WIDTH, HEIGHT);
-
         final WinDef.HWND hWnd = new WinDef.HWND(Native.getComponentPointer(this));
 
         if (User32.INSTANCE.IsWindow(hWnd)) {
@@ -59,24 +57,18 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
             // Forward
             final WinUser.BLENDFUNCTION bf = new WinUser.BLENDFUNCTION();
-            bf.BlendOp = WinUser.AC_SRC_OVER;
-            bf.BlendFlags = 0;
             bf.SourceConstantAlpha = (byte) alpha; // Level set
             bf.AlphaFormat = WinUser.AC_SRC_ALPHA;
 
-            final WinDef.POINT lt = new WinDef.POINT();
-            lt.x = windowRect.x;
-            lt.y = windowRect.y;
-            final WinUser.SIZE size = new WinUser.SIZE();
-            size.cx = windowRect.width;
-            size.cy = windowRect.height;
+            final WinDef.POINT lt = new WinDef.POINT(windowRect.x, windowRect.y);
+            final WinUser.SIZE size = new WinUser.SIZE(windowRect.width, windowRect.height);
             final WinDef.POINT zero = new WinDef.POINT();
             User32.INSTANCE.UpdateLayeredWindow(
                     hWnd, null,
                     lt, size,
                     memDC, zero, 0, bf, User32.ULW_ALPHA);
 
-            // Replace the bitmap you
+            // Replace the old bitmap with the new one
             GDI32.INSTANCE.SelectObject(memDC, oldBmp);
             GDI32.INSTANCE.DeleteDC(memDC);
 
@@ -106,7 +98,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     public void paint(final Graphics g) {
         if (getImage() != null) {
             // JNI with drawing images using the alpha value.
-            paint(getImage().getHandle(), getAlpha());
+            paint(getImage().getNativeHandle(), getAlpha());
         }
     }
 
