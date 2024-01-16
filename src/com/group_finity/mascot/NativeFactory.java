@@ -26,9 +26,10 @@ public abstract class NativeFactory {
                 instance = new com.group_finity.mascot.win.NativeFactoryImpl();
             } else if (Platform.isMac()) {
                 instance = new com.group_finity.mascot.mac.NativeFactoryImpl();
-            } /* else if (Platform.isLinux()) {
-                // TODO Add Linux support
-            } */
+            } else if (/* Platform.isLinux() */ Platform.isX11()) {
+                // Because Linux uses X11, this functions as the Linux support.
+                instance = new com.group_finity.mascot.x11.NativeFactoryImpl();
+            }
         } else if (environment.equals("virtual")) {
             instance = new com.group_finity.mascot.virtual.NativeFactoryImpl();
         }
