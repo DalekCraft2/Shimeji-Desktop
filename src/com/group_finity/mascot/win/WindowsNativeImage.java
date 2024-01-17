@@ -95,25 +95,25 @@ class WindowsNativeImage implements NativeImage {
      */
     private final BufferedImage managedImage;
 
-    /**
-     * Windows bitmap handle.
-     */
-    private final WinDef.HBITMAP nativeHandle;
+    // /**
+    //  * Windows bitmap handle.
+    //  */
+    // private final WinDef.HBITMAP nativeHandle;
 
     public WindowsNativeImage(final BufferedImage image) {
         managedImage = image;
-        nativeHandle = createNative(image.getWidth(), image.getHeight());
+        /* nativeHandle = createNative(image.getWidth(), image.getHeight());
 
         int[] rbgValues = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
 
-        flushNative(getNativeHandle(), rbgValues);
+        flushNative(getNativeHandle(), rbgValues); */
     }
 
-    @Override
+    /* @Override
     protected void finalize() throws Throwable {
         super.finalize();
         freeNative(getNativeHandle());
-    }
+    } */
 
     /**
      * Changes to be reflected in the Windows bitmap image.
@@ -158,7 +158,7 @@ class WindowsNativeImage implements NativeImage {
         return managedImage;
     }
 
-    public WinDef.HBITMAP getNativeHandle() {
+    /* public WinDef.HBITMAP getNativeHandle() {
         return nativeHandle;
-    }
+    } */
 }

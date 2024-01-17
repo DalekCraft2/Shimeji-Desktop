@@ -24,6 +24,22 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Image to display.
+     */
+    private WindowsNativeImage image;
+
+    /**
+     * The concentration shown. 0 = not at all, 255 = full display.
+     */
+    private int alpha = 255;
+
+    public WindowsTranslucentWindow() {
+        super();
+
+        setBackground(new Color(0, 0, 0, 0));
+    }
+
     @Override
     public Component asComponent() {
         return this;
@@ -35,6 +51,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
      * @param imageHandle bitmap handle.
      * @param alpha       concentrations shown. 0 = not at all, 255 = full display.
      */
+    // FIXME This method does not work on Java 11.
     private void paint(final WinDef.HBITMAP imageHandle, final int alpha) {
         final WinDef.HWND hWnd = new WinDef.HWND(Native.getComponentPointer(this));
 
@@ -79,16 +96,6 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
         }
     }
 
-    /**
-     * Image to display.
-     */
-    private WindowsNativeImage image;
-
-    /**
-     * The concentration shown. 0 = not at all, 255 = full display.
-     */
-    private int alpha = 255;
-
     @Override
     public String toString() {
         return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
@@ -96,9 +103,14 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public void paint(final Graphics g) {
+        super.paint(g);
         if (getImage() != null) {
             // JNI with drawing images using the alpha value.
-            paint(getImage().getNativeHandle(), getAlpha());
+            // paint(getImage().getNativeHandle(), getAlpha());
+
+            // Using AWT as a temporary fix until I get paint() to work with Java 11.
+            // Though I may keep using AWT here since I prefer to use high-level stuff...
+            g.drawImage(getImage().getManagedImage(), 0, 0, null);
         }
     }
 
@@ -121,6 +133,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public void updateImage() {
+        validate();
         repaint();
     }
 }
