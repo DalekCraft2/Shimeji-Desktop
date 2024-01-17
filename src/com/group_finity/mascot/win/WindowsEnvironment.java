@@ -27,7 +27,8 @@ class WindowsEnvironment extends Environment {
 
     public static Area workArea = new Area();
 
-    public static Area activeIE = new Area();
+    public static Area activeIeDpiUnaware = new Area();
+    public static Area activeIe = new Area();
 
     private static WinDef.HWND activeIEobject = null;
 
@@ -92,7 +93,7 @@ class WindowsEnvironment extends Environment {
             }
 
             if (isIE(ie) && (flags & User32.WS_MINIMIZE) == 0) {
-                Rectangle ieRect = getIERect(ie);
+                Rectangle ieRect = getIERect(ie, true);
                 if (ieRect.intersects(getScreenRect())) {
                     return IEResult.IE;
                 } else {
@@ -148,7 +149,7 @@ class WindowsEnvironment extends Environment {
         return null; */
     }
 
-    private static Rectangle getIERect(WinDef.HWND ie) {
+    private static Rectangle getIERect(WinDef.HWND ie, boolean dpiAware) {
         if (ie == null) {
             return new Rectangle();
         }
@@ -159,7 +160,17 @@ class WindowsEnvironment extends Environment {
         } catch (Win32Exception e) {
             in = new Rectangle(out.width, out.height);
         }
-        return new Rectangle(out.x + in.x, out.y + in.y, in.width, in.height);
+        Rectangle rect = new Rectangle(out.x + in.x, out.y + in.y, in.width, in.height);
+        if (dpiAware) {
+            double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+            if (dpiScaleInverse != 1) {
+                rect.x = (int) Math.round(rect.x * dpiScaleInverse);
+                rect.y = (int) Math.round(rect.y * dpiScaleInverse);
+                rect.width = (int) Math.round(rect.width * dpiScaleInverse);
+                rect.height = (int) Math.round(rect.height * dpiScaleInverse);
+            }
+        }
+        return rect;
     }
 
     private static Rectangle getWindowRgnBox(final WinDef.HWND window) {
@@ -183,6 +194,11 @@ class WindowsEnvironment extends Environment {
         } catch (Win32Exception e) {
             in = new Rectangle(out.width, out.height);
         }
+        double dpiScale = Toolkit.getDefaultToolkit().getScreenResolution() / 96.0;
+        if (dpiScale != 1) {
+            rect.x = (int) Math.round(rect.x * dpiScale);
+            rect.y = (int) Math.round(rect.y * dpiScale);
+        }
 
         User32.INSTANCE.MoveWindow(ie, rect.x - in.x, rect.y - in.y, rect.width + out.width - in.width,
                 rect.height + out.height - in.height, true);
@@ -193,19 +209,27 @@ class WindowsEnvironment extends Environment {
     private static void restoreAllIEs() {
         User32.INSTANCE.EnumWindows(new User32.WNDENUMPROC() {
             int offset = 25;
+            boolean firstCallback = true;
 
             @Override
             public boolean callback(WinDef.HWND hWnd, Pointer data) {
                 IEResult result = isViableIE(hWnd);
                 if (result == IEResult.IE_OUT_OF_BOUNDS) {
-                    final Rectangle workArea = getWorkAreaRect();
+                    final Rectangle workArea = getWorkAreaRect(false);
                     final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
 
+                    double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+                    if (firstCallback && dpiScaleInverse != 1) {
+                        offset = (int) Math.round(offset * dpiScaleInverse);
+                        firstCallback = false;
+                    }
                     rect.setLocation(workArea.x + offset, workArea.y + offset);
                     User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
                     User32.INSTANCE.BringWindowToTop(hWnd);
 
-                    offset += 25;
+                    if (dpiScaleInverse != 1) {
+                        offset = (int) Math.round(offset + 25 * dpiScaleInverse);
+                    }
                 }
 
                 return true;
@@ -216,10 +240,12 @@ class WindowsEnvironment extends Environment {
     @Override
     public void tick() {
         super.tick();
-        workArea.set(getWorkAreaRect());
-        final Rectangle ieRect = getIERect(findActiveIE());
-        activeIE.setVisible(ieRect.intersects(getScreen().toRectangle()));
-        activeIE.set(ieRect);
+        workArea.set(getWorkAreaRect(true));
+        final Rectangle ieRect = getIERect(findActiveIE(), true);
+        activeIe.setVisible(ieRect.intersects(getScreen().toRectangle()));
+        activeIe.set(ieRect);
+        final Rectangle ieRectDpiUnaware = getIERect(activeIEobject, false);
+        activeIeDpiUnaware.set(ieRectDpiUnaware);
     }
 
     @Override
@@ -228,7 +254,7 @@ class WindowsEnvironment extends Environment {
 
     @Override
     public void moveActiveIE(final Point point) {
-        moveIE(findActiveIE(), new Rectangle(point.x, point.y, activeIE.getWidth(), activeIE.getHeight()));
+        moveIE(findActiveIE(), new Rectangle(point.x, point.y, activeIeDpiUnaware.getWidth(), activeIeDpiUnaware.getHeight()));
     }
 
     @Override
@@ -243,7 +269,7 @@ class WindowsEnvironment extends Environment {
 
     @Override
     public Area getActiveIE() {
-        return activeIE;
+        return activeIe;
     }
 
     @Override
@@ -251,14 +277,26 @@ class WindowsEnvironment extends Environment {
         return WindowUtils.getWindowTitle(findActiveIE());
     }
 
-    private static Rectangle getWorkAreaRect() {
-        // Get the primary display monitor handle
-        final WinUser.HMONITOR monitor = User32.INSTANCE.MonitorFromPoint(new WinDef.POINT.ByValue(0, 0), User32.MONITOR_DEFAULTTOPRIMARY);
+    private static Rectangle getWorkAreaRect(boolean dpiAware) {
+        if (dpiAware) {
+            GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                    .getDefaultScreenDevice().getDefaultConfiguration();
+            Rectangle rect = config.getBounds();
+            Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
+            rect.x += insets.left;
+            rect.y += insets.top;
+            rect.width -= insets.right;
+            rect.height -= insets.bottom;
+            return rect;
+        } else {
+            // Get the primary display monitor handle
+            final WinUser.HMONITOR monitor = User32.INSTANCE.MonitorFromPoint(new WinDef.POINT.ByValue(0, 0), User32.MONITOR_DEFAULTTOPRIMARY);
 
-        final WinUser.MONITORINFO monitorInfo = new WinUser.MONITORINFO();
-        User32.INSTANCE.GetMonitorInfo(monitor, monitorInfo); // TODO Look into this method for future patches
+            final WinUser.MONITORINFO monitorInfo = new WinUser.MONITORINFO();
+            User32.INSTANCE.GetMonitorInfo(monitor, monitorInfo); // TODO Look into this method for future patches
 
-        return monitorInfo.rcWork.toRectangle();
+            return monitorInfo.rcWork.toRectangle();
+        }
     }
 
     @Override

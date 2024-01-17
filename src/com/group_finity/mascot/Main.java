@@ -168,12 +168,6 @@ public class Main {
                 theme.setFrameOpacity(255);
             }
 
-            // handle menu size
-            if (!properties.containsKey("MenuDPI")) {
-                properties.setProperty("MenuDPI", String.valueOf(Toolkit.getDefaultToolkit().getScreenResolution()));
-                updateConfigFile();
-            }
-
             NimRODLookAndFeel.setCurrentTheme(theme);
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
@@ -901,19 +895,19 @@ public class Main {
                         form.pack();
                         form.setMinimumSize(form.getSize());
 
-                        // get the DPI of the screen, and divide it by 96 to get a ratio
-                        float scaling = Float.parseFloat(properties.getProperty("MenuDPI", "96")) / 96;
+                        // get the DPI of the screen, and divide 96 by it to get a ratio
+                        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
 
                         // setting location of the form
-                        form.setLocation((int) (event.getX() / scaling) - form.getWidth(), (int) (event.getY() / scaling) - form.getHeight());
+                        form.setLocation((int) Math.round(event.getX() * dpiScaleInverse) - form.getWidth(), (int) Math.round(event.getY() * dpiScaleInverse) - form.getHeight());
 
                         // make sure that it is on the screen if people are using exotic taskbar locations
                         Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
                         if (form.getX() < screen.getX()) {
-                            form.setLocation((int) (event.getX() / scaling), form.getY());
+                            form.setLocation((int) Math.round(event.getX() * dpiScaleInverse), form.getY());
                         }
                         if (form.getY() < screen.getY()) {
-                            form.setLocation(form.getX(), (int) (event.getY() / scaling));
+                            form.setLocation(form.getX(), (int) Math.round(event.getY() * dpiScaleInverse));
                         }
 
                         form.setVisible(true);
