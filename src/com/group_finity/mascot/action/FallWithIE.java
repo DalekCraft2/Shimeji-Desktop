@@ -18,10 +18,7 @@ import java.util.logging.Logger;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
-/*
- * TODO Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.
- * This is pretty important because Java 8 makes the Shimejis much smaller by default for some reason.
- */
+// TODO Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.
 public class FallWithIE extends Fall {
 
     private static final Logger log = Logger.getLogger(FallWithIE.class.getName());
@@ -57,8 +54,8 @@ public class FallWithIE extends Fall {
         }
 
         // Can't use scaling here yet because it doesn't work for scales other than 1; the Shimejis will just fall off the window immediately.
-        // final int offsetX = (int) (getIEOffsetX() * scaling);
-        // final int offsetY = (int) (getIEOffsetY() * scaling);
+        // final int offsetX = (int) Math.round(getIEOffsetX() * scaling);
+        // final int offsetY = (int) Math.round(getIEOffsetY() * scaling);
         final int offsetX = getIEOffsetX();
         final int offsetY = getIEOffsetY();
 

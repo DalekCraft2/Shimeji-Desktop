@@ -1,7 +1,5 @@
 package com.group_finity.mascot.action;
 
-import com.group_finity.mascot.Main;
-import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
@@ -44,7 +42,7 @@ public class Offset extends InstantAction {
         // Can't use scaling here because it makes the mascots unable to climb on the ceiling.
         // Should've thought twice before I decided to cast doubles to integers...
         getMascot().setAnchor(
-                // new Point(getMascot().getAnchor().x + (int) (getOffsetX() * scaling), getMascot().getAnchor().y + (int) (getOffsetY() * scaling)));
+                // new Point(getMascot().getAnchor().x + (int) Math.round(getOffsetX() * scaling), getMascot().getAnchor().y + (int) Math.round(getOffsetY() * scaling)));
                 new Point(getMascot().getAnchor().x + getOffsetX(), getMascot().getAnchor().y + getOffsetY()));
     }
 

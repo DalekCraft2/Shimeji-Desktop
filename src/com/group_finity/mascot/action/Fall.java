@@ -108,8 +108,8 @@ public class Fall extends ActionBase {
         setModX(getModX() + getVelocityX() % 1);
         setModY(getModY() + getVelocityY() % 1);
 
-        int dx = (int) getVelocityX() + (int) getModX();
-        int dy = (int) getVelocityY() + (int) getModY();
+        int dx = (int) Math.round(getVelocityX() + getModX());
+        int dy = (int) Math.round(getVelocityY() + getModY());
 
         setModX(getModX() % 1);
         setModY(getModY() % 1);

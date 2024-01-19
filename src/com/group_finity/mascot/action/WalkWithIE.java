@@ -62,8 +62,8 @@ public class WalkWithIE extends Move {
         }
 
         // Can't use scaling here yet because it doesn't work for scales other than 1; the Shimejis will just release the window immediately.
-        // final int offsetX = (int) (getIEOffsetX() * scaling);
-        // final int offsetY = (int) (getIEOffsetY() * scaling);
+        // final int offsetX = (int) Math.round(getIEOffsetX() * scaling);
+        // final int offsetY = (int) Math.round(getIEOffsetY() * scaling);
         final int offsetX = getIEOffsetX();
         final int offsetY = getIEOffsetY();
 
