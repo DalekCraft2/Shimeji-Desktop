@@ -54,8 +54,9 @@ public abstract class Environment {
         final GraphicsDevice[] gs = ge.getScreenDevices();
 
         for (final GraphicsDevice gd : gs) {
-            screenRects.put(gd.getIDstring(), gd.getDefaultConfiguration().getBounds());
-            virtualBounds = virtualBounds.union(gd.getDefaultConfiguration().getBounds());
+            Rectangle bounds = gd.getDefaultConfiguration().getBounds();
+            screenRects.put(gd.getIDstring(), bounds);
+            virtualBounds = virtualBounds.union(bounds);
         }
 
         Environment.screenRects = screenRects;
