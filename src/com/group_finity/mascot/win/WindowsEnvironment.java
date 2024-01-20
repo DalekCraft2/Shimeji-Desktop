@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  * <p>
  * Currently developed by Shimeji-ee Group.
  */
+// FIXME This environment feels slower than it used to be whenever a lot of Shimejis are moving on-screen.
 class WindowsEnvironment extends Environment {
     private static final HashMap<WinDef.HWND, Boolean> ieCache = new LinkedHashMap<>();
 
@@ -241,10 +242,18 @@ class WindowsEnvironment extends Environment {
     public void tick() {
         super.tick();
         workArea.set(getWorkAreaRect(true));
-        final Rectangle ieRect = getIERect(findActiveIE(), true);
+        final Rectangle ieRectDpiUnaware = getIERect(findActiveIE(), false);
+        // Calculate the DPI-aware rectangle here to avoid calling getIERect() a second time
+        final Rectangle ieRect = new Rectangle(ieRectDpiUnaware);
+        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+        if (dpiScaleInverse != 1) {
+            ieRect.x = (int) Math.round(ieRect.x * dpiScaleInverse);
+            ieRect.y = (int) Math.round(ieRect.y * dpiScaleInverse);
+            ieRect.width = (int) Math.round(ieRect.width * dpiScaleInverse);
+            ieRect.height = (int) Math.round(ieRect.height * dpiScaleInverse);
+        }
         activeIe.setVisible(ieRect.intersects(getScreen().toRectangle()));
         activeIe.set(ieRect);
-        final Rectangle ieRectDpiUnaware = getIERect(activeIEobject, false);
         activeIeDpiUnaware.set(ieRectDpiUnaware);
     }
 
