@@ -9,8 +9,8 @@ import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.sound.Sounds;
 import com.joconner.i18n.Utf8ResourceBundleControl;
-import com.nilo.plaf.nimrod.NimRODLookAndFeel;
-import com.nilo.plaf.nimrod.NimRODTheme;
+import net.sf.nimrod.NimRODLookAndFeel;
+import net.sf.nimrod.NimRODTheme;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 

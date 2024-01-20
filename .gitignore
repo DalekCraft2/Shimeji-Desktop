@@ -31,6 +31,7 @@ src/tests/antunit/core/output
 /log.xml
 lib/optional/license.txt
 /release/distrib/
+/dependency-reduced-pom.xml
 
 # Shimeji-specific
 conf/settings.properties
