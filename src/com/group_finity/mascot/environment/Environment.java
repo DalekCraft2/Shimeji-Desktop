@@ -84,9 +84,9 @@ public abstract class Environment {
     }
 
     public void tick() {
-        screen.set(getScreenRect());
-        complexScreen.set(screenRects);
-        cursor.set(getCursorPos());
+        getScreen().set(getScreenRect());
+        getComplexScreen().set(screenRects);
+        getCursor().set(getCursorPos());
     }
 
     public Area getScreen() {

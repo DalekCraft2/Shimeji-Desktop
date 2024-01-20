@@ -119,8 +119,8 @@ class VirtualEnvironment extends Environment {
 
     @Override
     public void tick() {
-        screenRect.setBounds(display.getContentPane().getBounds());
-        screen.set(screenRect);
+        getScreenRect().setBounds(display.getContentPane().getBounds());
+        getScreen().set(getScreenRect());
 
         PointerInfo info = MouseInfo.getPointerInfo();
         Point point = new Point(0, 0);
@@ -128,7 +128,7 @@ class VirtualEnvironment extends Environment {
             point = info.getLocation();
             SwingUtilities.convertPointFromScreen(point, display.getContentPane());
         }
-        cursor.set(point);
+        getCursor().set(point);
     }
 
     @Override
