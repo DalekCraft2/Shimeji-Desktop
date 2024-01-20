@@ -2,12 +2,15 @@ package com.group_finity.mascot.script;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.exception.VariableException;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.HostAccess;
 
 import javax.script.Compilable;
 import javax.script.CompiledScript;
-import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
@@ -16,7 +19,19 @@ import javax.script.ScriptException;
  */
 public class Script extends Variable {
 
-    private static final ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine(new ScriptFilter());
+    private static final ThreadLocal<GraalJSScriptEngine> engine;
+
+    static {
+        engine = ThreadLocal.withInitial(
+                () -> GraalJSScriptEngine.create(null,
+                    Context.newBuilder("js")
+                        .allowHostAccess(HostAccess.ALL)
+                        .allowHostClassLookup(s -> s.startsWith("com.group_finity.mascot"))
+                        .allowExperimentalOptions(true)
+                        .option("js.nashorn-compat", "true")
+                )
+        );
+    }
 
     private final String source;
 
@@ -31,7 +46,7 @@ public class Script extends Variable {
         this.source = source;
         this.clearAtInitFrame = clearAtInitFrame;
         try {
-            compiled = ((Compilable) engine).compile(this.source);
+            compiled = ((Compilable) engine.get()).compile(this.source);
         } catch (final ScriptException e) {
             throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptCompilationErrorMessage") + ": " + this.source, e);
         }
@@ -61,8 +76,13 @@ public class Script extends Variable {
             return getValue();
         }
 
-        try {
-            setValue(getCompiled().eval(variables));
+        Map<String, Variable> filteredMap = variables.getRawMap().entrySet().stream()
+                .filter((entry) -> entry.getValue() != this)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        VariableMap tempVariables = new VariableMap();
+        tempVariables.getRawMap().putAll(filteredMap);
+
+        try {setValue(getCompiled().eval(tempVariables));
         } catch (final ScriptException e) {
             throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptEvaluationErrorMessage") + ": " + source, e);
         }
