@@ -25,6 +25,9 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <mainClass>com.group_finity.mascot.Main</mainClass>
+
+        <libPrefix>lib</libPrefix>
+        <libDirectory>${project.build.directory}/${libPrefix}</libDirectory>
     </properties>
 
     <dependencies>
@@ -64,7 +67,7 @@
             <optional>true</optional>
             <!-- Nimrod L&F has no official Maven artifact, so I am going to use the official download for now. -->
             <!-- https://nilogonzalez.es/nimrodlf/download-en.html -->
-            <systemPath>${basedir}/lib/nimrodlf.jar</systemPath>
+            <systemPath>${project.basedir}/${libPrefix}/nimrodlf-1.2d.jar</systemPath>
         </dependency>
 
         <!-- TODO Switch to GraalVM JavaScript, as it may perform better -->
@@ -147,11 +150,38 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <classpathPrefix>${libPrefix}/</classpathPrefix>
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <!-- Manually add Nimrod L&F to the classpath because it is a system dependency -->
+                            <Class-Path>${libPrefix}/nimrodlf-1.2d.jar</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <!-- Copy dependencies to target/lib directory -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${libDirectory}</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <!-- Generate the ZIP files from the old Ant build.xml script -->
@@ -159,37 +189,6 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.1.0</version>
                 <executions>
-                    <execution>
-                        <!-- Copy all dependencies into a "lib" directory in the build directory -->
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <!-- Create a mapper to remove the versions from the dependency files' names -->
-                                <!--suppress UnresolvedMavenProperty -->
-                                <mapper id="remove-versions"
-                                        classname="org.apache.maven.ant.tasks.support.VersionMapper"
-                                        from="${maven.project.dependencies.versions}"
-                                        to="flatten"/>
-
-                                <!-- This copies the dependencies to the "target/lib" directory -->
-                                <dependencyfilesets prefix="mydeps."/>
-                                <mkdir dir="${project.build.directory}/lib"/>
-                                <copy todir="${project.build.directory}/lib" flatten="true">
-                                    <fileset refid="mydeps.maven.project.dependencies"/>
-                                    <!-- Use the mapper to remove the versions -->
-                                    <mapper refid="remove-versions"/>
-                                </copy>
-                                <!-- Copy any dependencies in the "lib" folder (i.e., Nimrod L&F) to "target/lib" -->
-                                <copy todir="${project.build.directory}/lib">
-                                    <fileset dir="${project.basedir}/lib"/>
-                                </copy>
-                            </target>
-                        </configuration>
-                    </execution>
                     <execution>
                         <!-- Create ZIP files for the source and the three release variants -->
                         <id>create-zips</id>
