@@ -66,6 +66,16 @@
             <!-- https://nilogonzalez.es/nimrodlf/download-en.html -->
             <systemPath>${basedir}/lib/nimrodlf.jar</systemPath>
         </dependency>
+
+        <!-- TODO Switch to GraalVM JavaScript, as it may perform better -->
+        <dependency>
+            <!-- OpenJDK Nashorn -->
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.4</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <repositories/>

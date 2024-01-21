@@ -1,6 +1,6 @@
 package com.group_finity.mascot.script;
 
-import jdk.nashorn.api.scripting.ClassFilter;
+import org.openjdk.nashorn.api.scripting.ClassFilter;
 
 public class ScriptFilter implements ClassFilter {
     @Override

@@ -2,7 +2,7 @@ package com.group_finity.mascot.script;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.exception.VariableException;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.Compilable;
 import javax.script.CompiledScript;
