@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.group_finity</groupId>
+    <artifactId>mascot</artifactId>
+    <version>1.0.20</version>
+    <packaging>jar</packaging>
+
+    <name>Shimeji-ee</name>
+    <description/>
+    <url>https://github.com/DalekCraft2/Shimeji-Desktop</url>
+    <inceptionYear/>
+    <licenses/>
+
+    <scm/>
+    <issueManagement/>
+    <ciManagement/>
+    <distributionManagement/>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <mainClass>com.group_finity.mascot.Main</mainClass>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <!-- AbsoluteLayout -->
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE190</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <!-- Java Native Access -->
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.13.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <!-- Java Native Access Platform -->
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>5.13.0</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <!-- Nimrod Look and Feel -->
+            <groupId>es.nilogonzalez</groupId>
+            <artifactId>nimrodlf</artifactId>
+            <version>1.2d</version>
+            <scope>system</scope>
+            <optional>true</optional>
+            <!-- Nimrod L&F has no official Maven artifact, so I am going to use the official download for now. -->
+            <!-- https://nilogonzalez.es/nimrodlf/download-en.html -->
+            <systemPath>${basedir}/lib/nimrodlf.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+    <repositories/>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <finalName>${project.name}</finalName>
+        <!-- <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>LICENSE.txt</include>
+                </includes>
+            </resource>
+        </resources> -->
+        <plugins>
+            <plugin>
+                <!-- Compile -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Attach sources -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Attach Javadocs -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Set main class -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Generate the ZIP files from the old Ant build.xml script -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <!-- Copy all dependencies into a "lib" directory in the build directory -->
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Create a mapper to remove the versions from the dependency files' names -->
+                                <!--suppress UnresolvedMavenProperty -->
+                                <mapper id="remove-versions"
+                                        classname="org.apache.maven.ant.tasks.support.VersionMapper"
+                                        from="${maven.project.dependencies.versions}"
+                                        to="flatten"/>
+
+                                <!-- This copies the dependencies to the "target/lib" directory -->
+                                <dependencyfilesets prefix="mydeps."/>
+                                <mkdir dir="${project.build.directory}/lib"/>
+                                <copy todir="${project.build.directory}/lib" flatten="true">
+                                    <fileset refid="mydeps.maven.project.dependencies"/>
+                                    <!-- Use the mapper to remove the versions -->
+                                    <mapper refid="remove-versions"/>
+                                </copy>
+                                <!-- Copy any dependencies in the "lib" folder (i.e., Nimrod L&F) to "target/lib" -->
+                                <copy todir="${project.build.directory}/lib">
+                                    <fileset dir="${project.basedir}/lib"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Create ZIP files for the source and the three release variants -->
+                        <id>create-zips</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Define the "version" property for the build.xml script -->
+                                <property name="version" value="${project.version}"/>
+                                <!-- Execute the "zip" target in build.xml -->
+                                <ant antfile="${project.basedir}/build.xml">
+                                    <target name="zip"/>
+                                </ant>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
