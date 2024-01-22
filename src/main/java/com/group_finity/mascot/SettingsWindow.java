@@ -322,7 +322,7 @@ public class SettingsWindow extends JDialog {
         btnRemoveInteractiveWindow.addActionListener(this::btnRemoveInteractiveWindowActionPerformed);
         pnlInteractiveButtons.add(btnRemoveInteractiveWindow);
 
-        lstInteractiveWindows.setModel(new AbstractListModel<String>() {
+        lstInteractiveWindows.setModel(new AbstractListModel<>() {
             String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
 
             @Override

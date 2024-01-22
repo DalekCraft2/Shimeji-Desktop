@@ -31,12 +31,12 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         }
     }
 
-    private final Set<Map.Entry<String, Object>> entrySet = new AbstractSet<Entry<String, Object>>() {
+    private final Set<Map.Entry<String, Object>> entrySet = new AbstractSet<>() {
 
         @Override
         public Iterator<Map.Entry<String, Object>> iterator() {
 
-            return new Iterator<Entry<String, Object>>() {
+            return new Iterator<>() {
 
                 private Iterator<Map.Entry<String, Variable>> rawIterator = getRawMap().entrySet()
                         .iterator();
@@ -51,7 +51,7 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
                     final Map.Entry<String, Variable> rawKeyValue = rawIterator.next();
                     final Variable value = rawKeyValue.getValue();
 
-                    return new Map.Entry<String, Object>() {
+                    return new Map.Entry<>() {
 
                         @Override
                         public String getKey() {
