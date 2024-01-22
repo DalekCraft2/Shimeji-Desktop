@@ -302,8 +302,7 @@
         <Action Name="Fall" Type="Sequence" Loop="false">
             <ActionReference Name="Falling"/>
             <Action Type="Select">
-                <Action Type="Sequence" Condition="${mascot.environment.floor.isOn(mascot.anchor) ||
-                    mascot.environment.activeIE.topBorder.isOn(mascot.anchor) }">
+                <Action Type="Sequence" Condition="${mascot.environment.floor.isOn(mascot.anchor)}">
                     <ActionReference Name="Bouncing"/>
                     <ActionReference Name="Stand" Duration="${100+Math.random()*100}"/>
                 </Action>
@@ -322,8 +321,7 @@
             <ActionReference Name="Falling" InitialVX="${mascot.environment.cursor.dx}"
                              InitialVY="${mascot.environment.cursor.dy}"/>
             <Action Type="Select">
-                <Action Type="Sequence"
-                        Condition="${mascot.environment.floor.isOn(mascot.anchor) || mascot.environment.activeIE.topBorder.isOn(mascot.anchor) }">
+                <Action Type="Sequence" Condition="${mascot.environment.floor.isOn(mascot.anchor)}">
                     <ActionReference Name="Bouncing"/>
                     <ActionReference Name="Stand" Duration="${100+Math.random()*100}"/>
                 </Action>
@@ -635,8 +633,7 @@
         </Action>
 
         <Action Name="ChaseMouse" Type="Sequence" Loop="false">
-            <Action Type="Sequence"
-                    Condition="${mascot.environment.ceiling.isOn(mascot.anchor) || mascot.environment.activeIE.bottomBorder.isOn(mascot.anchor)}">
+            <Action Type="Sequence" Condition="${mascot.environment.ceiling.isOn(mascot.anchor)}">
                 <ActionReference Name="Offset" Y="1"/>
                 <ActionReference Name="Falling"/>
                 <ActionReference Name="Bouncing"/>
@@ -662,15 +659,15 @@
                     mascot.anchor.x &gt;= (mascot.environment.activeIE.left+mascot.environment.activeIE.right)/2}"/>
             </Action>
             <ActionReference Name="Dash"
-                             TargetX="${ mascot.anchor.x+(mascot.environment.cursor.x-mascot.anchor.x)*Math.random()/2 }"/>
+                             TargetX="${mascot.anchor.x+(mascot.environment.cursor.x-mascot.anchor.x)*Math.random()/2}"/>
             <ActionReference Name="Tripping" Condition="${Math.random() &lt; 0.05}"/>
             <ActionReference Name="Dash"
-                             TargetX="${ mascot.anchor.x+(mascot.environment.cursor.x-mascot.anchor.x)*Math.random() }"/>
+                             TargetX="${mascot.anchor.x+(mascot.environment.cursor.x-mascot.anchor.x)*Math.random()}"/>
             <ActionReference Name="Tripping" Condition="${Math.random() &lt; 0.05}"/>
             <ActionReference Name="Dash" TargetX="#{mascot.environment.cursor.x+Gap}"
-                             Gap="${ mascot.anchor.x &lt; mascot.environment.cursor.x ?
+                             Gap="${mascot.anchor.x &lt; mascot.environment.cursor.x ?
                     -Math.min( mascot.environment.cursor.x-mascot.anchor.x, Math.random()*200) :
-                    Math.min( mascot.anchor.x-mascot.environment.cursor.x, Math.random()*200 ) }"/>
+                    Math.min( mascot.anchor.x-mascot.environment.cursor.x, Math.random()*200 )}"/>
             <ActionReference Name="Look" LookRight="${mascot.anchor.x &lt; mascot.environment.cursor.x}"/>
         </Action>
 
