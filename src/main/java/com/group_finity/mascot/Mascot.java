@@ -335,7 +335,8 @@ public class Mascot implements Serializable {
 
             if (debugWindow != null) {
                 // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
-                debugWindow.setTitle(toString());
+                // Unfortunately, doing this make it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
+                // debugWindow.setTitle(toString());
 
                 debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
                 debugWindow.setShimejiX(anchor.x);
