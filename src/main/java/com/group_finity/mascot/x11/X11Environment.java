@@ -227,9 +227,10 @@ class X11Environment extends Environment {
         } catch (X11Exception ignored) {
         }
         // Remove user-terminated windows from the container every 5th tick
-        for (Number i : IE.keySet()) {
+        for (Map.Entry<Number, Area> entry : IE.entrySet()) {
+            Number i = entry.getKey();
             if (!curActiveWin.contains(i)) {
-                IE.get(i).setVisible(false);
+                entry.getValue().setVisible(false);
                 IE.remove(i);
                 break;
             }

@@ -2,11 +2,10 @@ package com.group_finity.mascot.script;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.exception.VariableException;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngine;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
-import javax.script.Compilable;
 import javax.script.CompiledScript;
-import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**
@@ -16,7 +15,7 @@ import javax.script.ScriptException;
  */
 public class Script extends Variable {
 
-    private static final ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine(new ScriptFilter());
+    private static final NashornScriptEngine ENGINE = (NashornScriptEngine) new NashornScriptEngineFactory().getScriptEngine(new ScriptFilter());
 
     private final String source;
 
@@ -31,7 +30,7 @@ public class Script extends Variable {
         this.source = source;
         this.clearAtInitFrame = clearAtInitFrame;
         try {
-            compiled = ((Compilable) engine).compile(this.source);
+            compiled = ENGINE.compile(this.source);
         } catch (final ScriptException e) {
             throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptCompilationErrorMessage") + ": " + this.source, e);
         }
