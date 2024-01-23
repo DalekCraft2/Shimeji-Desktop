@@ -2,7 +2,6 @@
  * Created by asdfman, Ygarr, and Pro-Prietary
  * https://github.com/asdfman/linux-shimeji
  * https://github.com/Ygarr/linux-shimeji
- * https://github.com/Pro-Prietary/sayori-shimeji-linux
  */
 package com.group_finity.mascot.x11;
 
