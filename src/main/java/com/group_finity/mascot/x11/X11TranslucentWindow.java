@@ -81,7 +81,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     private int[] pixels;
 
     private void updateX11() {
-        // FIXME This does not work with setAlpha()/setOpacity(). It always draws the image assuming that the alpha is 1.0.
+        // FIXME This does not work with setAlpha()/setOpacity(). It always draws the image as if the alpha is 1.0.
         try {
             if (win == null) {
                 win = new X11.Window(Native.getWindowID(alphaWindow));
