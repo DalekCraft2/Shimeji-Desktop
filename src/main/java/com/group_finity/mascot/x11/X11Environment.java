@@ -58,7 +58,7 @@ class X11Environment extends Environment {
      * Variables for configuration options.
      */
     private int xoffset, yoffset, wmod, hmod = 0;
-    private List<String> windowTitles = new ArrayList<>();
+    private List<String> windowTitles = null;
 
 
     /**
@@ -97,6 +97,7 @@ class X11Environment extends Environment {
         badTypeList.add(Integer.decode(display.getAtom("_NET_WM_WINDOW_TYPE_SPLASH").toString()));
         badTypeList.add(Integer.decode(display.getAtom("_NET_WM_WINDOW_TYPE_DIALOG").toString()));
         badTypeList.add(Integer.decode(display.getAtom("_NET_WM_WINDOW_TYPE_DESKTOP").toString()));
+        // TODO Change this proprietary config format to use the existing one
         try (InputStream fstream = Files.newInputStream(Paths.get("window.conf")); DataInputStream in = new DataInputStream(fstream); InputStreamReader inr = new InputStreamReader(in); BufferedReader br = new BufferedReader(inr)) {
             String strLine;
             int z = 0;
@@ -123,16 +124,6 @@ class X11Environment extends Environment {
             }
         } catch (IOException | NumberFormatException ignored) {
         }
-        windowTitles.addAll(Arrays.asList(Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/")));
-        for (int i = 0; i < windowTitles.size(); i++) {
-            if (windowTitles.get(i).trim().isEmpty()) {
-                windowTitles.remove(i);
-                i--;
-            }
-        }
-        if (windowTitles.isEmpty()) {
-            checkTitles = false;
-        }
     }
 
 
@@ -142,6 +133,7 @@ class X11Environment extends Environment {
     @Override
     public void tick() {
         super.tick();
+        // TODO Figure out why this has been set to update on every 5th tick.
         if (q % 5 == 0 || updateOnNext) {
             update();
         }
@@ -164,19 +156,22 @@ class X11Environment extends Environment {
         if (curVisibleWin != null) {
             curVisibleWin.clear();
         }
-        curActiveWin = new ArrayList<>();
+        curActiveWin.clear();
         if (display == null) {
             return;
         }
         updateOnNext = false;
         try {
             // Retrieve all windows from the X Display
+            // allWindows = new Window[]{display.getActiveWindow()};
+            // FIXME The windows gotten by Display#getWindows() are exclusively from this program (i.e., only the mascot windows are included).
             allWindows = display.getWindows();
             curDesktop = display.getActiveDesktopNumber();
             for (Window allWindow : allWindows) {
                 // Break for-loop if the window title does not match config.
-                if (checkTitles) {
-                    if (!isIE(allWindow.getTitle())) {
+                if (!isIE(allWindow.getTitle())) {
+                    // Check checkTitles after isIE() is called because isIE() sets the value of checkTitles.
+                    if (checkTitles) {
                         continue;
                     }
                 }
@@ -237,6 +232,18 @@ class X11Environment extends Environment {
     }
 
     private boolean isIE(String titleBar) {
+        if (windowTitles == null) {
+            windowTitles = new ArrayList<>();
+            windowTitles.addAll(Arrays.asList(Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/")));
+            for (int i = 0; i < windowTitles.size(); i++) {
+                if (windowTitles.get(i).trim().isEmpty()) {
+                    windowTitles.remove(i);
+                    i--;
+                }
+            }
+            checkTitles = !windowTitles.isEmpty();
+        }
+
         return windowTitles.stream().anyMatch(s -> titleBar.toLowerCase().contains(s));
     }
 
@@ -261,11 +268,10 @@ class X11Environment extends Environment {
      * for jump action targeting.
      */
     private void getRandomIE() {
-        ArrayList<Area> visibleWin;
         if (curVisibleWin == null) {
             return;
         }
-        visibleWin = curVisibleWin.stream().filter(Objects::nonNull).map(n -> IE.get(n)).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Area> visibleWin = curVisibleWin.stream().filter(Objects::nonNull).map(n -> IE.get(n)).collect(Collectors.toCollection(ArrayList::new));
         if (visibleWin.isEmpty()) {
             return;
         }
@@ -283,6 +289,19 @@ class X11Environment extends Environment {
     @Override
     public Area getActiveIE() {
         return activeIE;
+        // double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+        // if (dpiScaleInverse == 1) {
+        //     return activeIE;
+        // } else {
+        //     Rectangle rect = activeIE.toRectangle();
+        //     rect.x = (int) Math.round(rect.x * dpiScaleInverse);
+        //     rect.y = (int) Math.round(rect.y * dpiScaleInverse);
+        //     rect.width = (int) Math.round(rect.width * dpiScaleInverse);
+        //     rect.height = (int) Math.round(rect.height * dpiScaleInverse);
+        //     Area activeIeDpiUnaware = new Area();
+        //     activeIeDpiUnaware.set(rect);
+        //     return activeIeDpiUnaware;
+        // }
     }
 
     // TODO Implement the five below methods
@@ -308,7 +327,11 @@ class X11Environment extends Environment {
 
     @Override
     public void refreshCache() {
-
+        IE.clear(); // will be repopulated next isIE call
+        // windowTitles.clear();
+        windowTitles = null;
+        curActiveWin.clear();
+        curVisibleWin.clear();
     }
 
     @Override

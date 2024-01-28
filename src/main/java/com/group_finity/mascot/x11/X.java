@@ -264,7 +264,9 @@ public class X {
                 try {
                     curDesktop = root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
                 } catch (Exception e1) {
-                    throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
+                    // NOTE This is a hotfix for Ubuntu because this method fails on it (at least in a VM).
+                    // throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
+                    return 0;
                 }
             }
 
@@ -1065,22 +1067,6 @@ public class X {
 
             X11.Atom xaRetType = xaRetTypeRef.getValue();
             Pointer retProp = retPropRef.getValue();
-
-            // TODO Figure out whether this statement is supposed to be repeated four times. Does it do something natively?
-            if (xaRetType == null) {
-                // the specified property does not exist for the specified window
-                return null;
-            }
-
-            if (xaRetType == null) {
-                // the specified property does not exist for the specified window
-                return null;
-            }
-
-            if (xaRetType == null) {
-                // the specified property does not exist for the specified window
-                return null;
-            }
 
             if (xaRetType == null || xaPropType == null ||
                     !xaRetType.toNative().equals(xaPropType.toNative())) {
