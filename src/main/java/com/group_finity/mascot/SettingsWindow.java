@@ -162,10 +162,15 @@ public class SettingsWindow extends JDialog {
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                 desktop.browse(new URI(url));
             } else {
-                // TODO Don't throw an exception inside a try block.
-                throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url);
+                if (desktop == null) {
+                    log.log(Level.WARNING, "Can not open URL \"" + url + "\", as desktop operations are not supported on this platform");
+                } else {
+                    log.log(Level.WARNING, "Can not open URL \"" + url + "\", as the desktop browse operation is not supported on this platform");
+                }
+                JOptionPane.showMessageDialog(this, Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url, "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (IOException | UnsupportedOperationException | URISyntaxException e) {
+            log.log(Level.SEVERE, "Failed to open URL \"" + url + "\"", e);
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
