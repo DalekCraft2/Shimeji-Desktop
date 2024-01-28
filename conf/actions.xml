@@ -170,13 +170,13 @@
         <!-- IE -->
 
         <Action Name="FallWithIe" Type="Embedded" Class="com.group_finity.mascot.action.FallWithIE"
-                IeOffsetX="0" IeOffsetY="-64">
+                IeOffsetX="6" IeOffsetY="-58">
             <Animation>
                 <Pose Image="/shime36.png" ImageAnchor="64,128" Velocity="0,0" Duration="250"/>
             </Animation>
         </Action>
         <Action Name="WalkWithIe" BorderType="Floor" Type="Embedded" Class="com.group_finity.mascot.action.WalkWithIE"
-                IeOffsetX="0" IeOffsetY="-64">
+                IeOffsetX="6" IeOffsetY="-58">
             <Animation>
                 <Pose Image="/shime34.png" ImageAnchor="64,128" Velocity="-2,0" Duration="6"/>
                 <Pose Image="/shime35.png" ImageAnchor="64,128" Velocity="-2,0" Duration="6"/>
@@ -185,7 +185,7 @@
             </Animation>
         </Action>
         <Action Name="RunWithIe" BorderType="Floor" Type="Embedded" Class="com.group_finity.mascot.action.WalkWithIE"
-                IeOffsetX="0" IeOffsetY="-64">
+                IeOffsetX="6" IeOffsetY="-58">
             <Animation>
                 <Pose Image="/shime34.png" ImageAnchor="64,128" Velocity="-8,0" Duration="2"/>
                 <Pose Image="/shime35.png" ImageAnchor="64,128" Velocity="-8,0" Duration="2"/>
@@ -592,8 +592,8 @@
         </Action>
 
         <Action Name="ThrowIEFromLeft" Type="Sequence" Loop="false">
-            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.left}"
-                             TargetY="${mascot.environment.activeIE.bottom+64}"/>
+            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.left+6}"
+                             TargetY="${mascot.environment.activeIE.bottom+58}"/>
             <ActionReference Name="FallWithIe"/>
             <ActionReference Name="WalkWithIe" TargetX="#{mascot.environment.workArea.right-400}"/>
             <ActionReference Name="ThrowIe"/>
@@ -602,8 +602,8 @@
             <ActionReference Name="Stand" Duration="${50+Math.random()*50}"/>
         </Action>
         <Action Name="ThrowIEFromRight" Type="Sequence" Loop="false">
-            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.right}"
-                             TargetY="${mascot.environment.activeIE.bottom+64}"/>
+            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.right-6}"
+                             TargetY="${mascot.environment.activeIE.bottom+58}"/>
             <ActionReference Name="FallWithIe"/>
             <ActionReference Name="WalkWithIe" TargetX="#{mascot.environment.workArea.left+400}"/>
             <ActionReference Name="ThrowIe"/>
@@ -612,8 +612,8 @@
             <ActionReference Name="Stand" Duration="${50+Math.random()*50}"/>
         </Action>
         <Action Name="WalkAndThrowIEFromRight" Type="Sequence" Loop="false">
-            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.left}"
-                             TargetY="${mascot.environment.activeIE.bottom+64}"/>
+            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.left+6}"
+                             TargetY="${mascot.environment.activeIE.bottom+58}"/>
             <ActionReference Name="FallWithIe"/>
             <ActionReference Name="RunWithIe" TargetX="#{mascot.environment.workArea.right-400}"/>
             <ActionReference Name="ThrowIe"/>
@@ -622,8 +622,8 @@
             <ActionReference Name="Stand" Duration="${50+Math.random()*50}"/>
         </Action>
         <Action Name="WalkAndThrowIEFromLeft" Type="Sequence" Loop="false">
-            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.right}"
-                             TargetY="${mascot.environment.activeIE.bottom+64}"/>
+            <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.right-6}"
+                             TargetY="${mascot.environment.activeIE.bottom+58}"/>
             <ActionReference Name="FallWithIe"/>
             <ActionReference Name="RunWithIe" TargetX="#{mascot.environment.workArea.left+400}"/>
             <ActionReference Name="ThrowIe"/>
