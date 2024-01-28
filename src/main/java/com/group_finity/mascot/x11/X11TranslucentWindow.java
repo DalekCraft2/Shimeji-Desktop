@@ -10,10 +10,7 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
-import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.unix.X11;
-import com.sun.jna.platform.unix.X11.Display;
-import com.sun.jna.platform.unix.X11.GC;
 import com.sun.jna.ptr.IntByReference;
 
 import javax.swing.*;
@@ -40,34 +37,36 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private X11NativeImage image;
 
-    private final JPanel panel;
-    private final X11 x11 = X11.INSTANCE;
-    private final Display dpy = x11.XOpenDisplay(null);
+    // private final JPanel panel;
+    private static final X11 x11 = X11.INSTANCE;
+    private final X11.Display dpy = x11.XOpenDisplay(null);
     private X11.Window win = null;
-    private final float alpha = 1.0f;
+    // private float alpha = 1.0f;
     private final JWindow alphaWindow = this;
 
     public X11TranslucentWindow() {
-        super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-        init();
-        panel = new JPanel() {
-            private static final long serialVersionUID = 1L;
+        super();
+        // super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
+        // init();
+        // panel = new JPanel() /* {
+        //     private static final long serialVersionUID = 1L;
+        //
+        //     @Override
+        //     protected void paintComponent(final Graphics g) {
+        //         g.drawImage(getImage().getManagedImage(), 0, 0, null);
+        //     }
+        // } */;
+        // setContentPane(panel);
 
-            @Override
-            protected void paintComponent(final Graphics g) {
-                g.drawImage(getImage().getManagedImage(), 0, 0, null);
-            }
-        };
-        setContentPane(panel);
-
+        setBackground(new Color(0, 0, 0, 0));
     }
 
-    private void init() {
+    /* private void init() {
         System.setProperty("sun.java2d.noddraw", "true");
         System.setProperty("sun.java2d.opengl", "true");
-    }
+    } */
 
-    @Override
+    /* @Override
     public void setVisible(final boolean b) {
         super.setVisible(b);
         if (b) {
@@ -76,15 +75,16 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
             } catch (IllegalArgumentException ignored) {
             }
         }
-    }
+    } */
 
     private Memory buffer;
     private int[] pixels;
 
     private void updateX11() {
+        // FIXME This does not work with setAlpha()/setOpacity(). It always draws the image assuming that the alpha is 1.0.
         try {
             if (win == null) {
-                win = new X11.Window((int) Native.getWindowID(alphaWindow));
+                win = new X11.Window(Native.getWindowID(alphaWindow));
             }
             int w = image.getWidth(null);
             int h = image.getHeight(null);
@@ -100,7 +100,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
             Graphics g = buf.getGraphics();
             g.drawImage(image.getManagedImage(), 0, 0, w, h, null);
 
-            GC gc = x11.XCreateGC(dpy, win, new NativeLong(0), null);
+            X11.GC gc = x11.XCreateGC(dpy, win, new NativeLong(0), null);
 
             try {
                 Raster raster = buf.getData();
@@ -132,28 +132,31 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
         } catch (HeadlessException ignored) {
         }
-        if (!alphaWindow.isVisible()) {
+        /* if (!alphaWindow.isVisible()) {
             alphaWindow.setVisible(true);
             // hack for initial refresh (X11)
             repaint();
-        }
+        } */
     }
 
-    @Override
+    /* @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
         if (comp instanceof JComponent) {
             final JComponent jcomp = (JComponent) comp;
             jcomp.setOpaque(false);
         }
+    } */
+
+    public float getAlpha() {
+        // return alpha;
+        return getOpacity();
     }
 
     public void setAlpha(final float alpha) {
-        WindowUtils.setWindowAlpha(alphaWindow, alpha);
-    }
-
-    public float getAlpha() {
-        return alpha;
+        // this.alpha = alpha;
+        // WindowUtils.setWindowAlpha(this, this.alpha);
+        setOpacity(alpha);
     }
 
     public void setToDock(int value) {
@@ -173,6 +176,16 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
     }
 
+    /* @Override
+    public void paint(final Graphics g) {
+        super.paint(g);
+        if (getImage() != null) {
+            g.drawImage(getImage().getManagedImage(), 0, 0, null);
+            // JNI with drawing images.
+            updateX11();
+        }
+    } */
+
     public X11NativeImage getImage() {
         return image;
     }
@@ -182,15 +195,10 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         this.image = (X11NativeImage) image;
     }
 
-
-    public void repaint(Graphics g) {
-        updateX11();
-    }
-
     @Override
     public void updateImage() {
         validate();
+        // repaint();
         updateX11();
     }
-
 }
