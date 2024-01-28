@@ -159,9 +159,9 @@
                 mascot.anchor.x &lt; mascot.environment.activeIE.left}"/>
             <Behavior Name="ThrowIEFromRight" Frequency="0" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
                 mascot.anchor.x &gt; mascot.environment.activeIE.right}"/>
-            <Behavior Name="WalkAndThrowIEFromRight" Frequency="0" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
-                mascot.anchor.x &lt; mascot.environment.activeIE.left}"/>
             <Behavior Name="WalkAndThrowIEFromLeft" Frequency="0" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
+                mascot.anchor.x &lt; mascot.environment.activeIE.left}"/>
+            <Behavior Name="WalkAndThrowIEFromRight" Frequency="0" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
                 mascot.anchor.x &gt; mascot.environment.activeIE.right}"/>
         </Condition>
     </BehaviorList>

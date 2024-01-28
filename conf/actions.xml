@@ -611,7 +611,7 @@
             <ActionReference Name="Look"/>
             <ActionReference Name="Stand" Duration="${50+Math.random()*50}"/>
         </Action>
-        <Action Name="WalkAndThrowIEFromRight" Type="Sequence" Loop="false">
+        <Action Name="WalkAndThrowIEFromLeft" Type="Sequence" Loop="false">
             <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.left+6}"
                              TargetY="${mascot.environment.activeIE.bottom+58}"/>
             <ActionReference Name="FallWithIe"/>
@@ -621,7 +621,7 @@
             <ActionReference Name="Look"/>
             <ActionReference Name="Stand" Duration="${50+Math.random()*50}"/>
         </Action>
-        <Action Name="WalkAndThrowIEFromLeft" Type="Sequence" Loop="false">
+        <Action Name="WalkAndThrowIEFromRight" Type="Sequence" Loop="false">
             <ActionReference Name="Jumping" TargetX="${mascot.environment.activeIE.right-6}"
                              TargetY="${mascot.environment.activeIE.bottom+58}"/>
             <ActionReference Name="FallWithIe"/>
