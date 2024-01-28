@@ -40,6 +40,11 @@ class VirtualEnvironment extends Environment {
     }
 
     @Override
+    public long getActiveWindowId() {
+        return 0;
+    }
+
+    @Override
     public void moveActiveIE(final Point point) {
     }
 

@@ -78,6 +78,10 @@ public class MascotEnvironment {
         return impl.getActiveIETitle();
     }
 
+    public long getActiveWindowId() {
+        return impl.getActiveWindowId();
+    }
+
     public Border getCeiling() {
         return getCeiling(false);
     }

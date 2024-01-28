@@ -286,6 +286,11 @@ class WindowsEnvironment extends Environment {
         return WindowUtils.getWindowTitle(findActiveIE());
     }
 
+    @Override
+    public long getActiveWindowId() {
+        return activeIEobject.hashCode();
+    }
+
     private static Rectangle getWorkAreaRect(boolean dpiAware) {
         if (dpiAware) {
             GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()

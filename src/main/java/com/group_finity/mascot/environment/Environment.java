@@ -17,6 +17,8 @@ public abstract class Environment {
 
     public abstract String getActiveIETitle();
 
+    public abstract long getActiveWindowId();
+
     public abstract void moveActiveIE(final Point point);
 
     public abstract void restoreIE();

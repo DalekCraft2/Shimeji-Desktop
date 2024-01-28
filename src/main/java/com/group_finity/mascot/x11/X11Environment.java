@@ -292,6 +292,11 @@ class X11Environment extends Environment {
     }
 
     @Override
+    public long getActiveWindowId() {
+        return activeIE.hashCode();
+    }
+
+    @Override
     public void moveActiveIE(Point point) {
 
     }

@@ -51,6 +51,11 @@ class GenericEnvironment extends Environment {
     }
 
     @Override
+    public long getActiveWindowId() {
+        return 0;
+    }
+
+    @Override
     public void refreshCache() {
         // I feel so refreshed
     }

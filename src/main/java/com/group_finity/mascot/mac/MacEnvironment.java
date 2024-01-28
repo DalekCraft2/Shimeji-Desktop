@@ -377,6 +377,11 @@ class MacEnvironment extends Environment {
     }
 
     @Override
+    public long getActiveWindowId() {
+        return currentPID;
+    }
+
+    @Override
     public void refreshCache() {
     }
 

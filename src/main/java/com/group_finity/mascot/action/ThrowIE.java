@@ -36,6 +36,8 @@ public class ThrowIE extends Animate {
 
     private double scaling;
 
+    private long activeWindowId = 0;
+
     public ThrowIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
@@ -45,23 +47,25 @@ public class ThrowIE extends Animate {
         super.init(mascot);
 
         scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+        activeWindowId = getEnvironment().getActiveWindowId();
     }
 
     @Override
     public boolean hasNext() throws VariableException {
-
         if (!Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Throwing", "true"))) {
             return false;
         }
 
+        // Check whether the window being thrown has not changed;
+        // this ensures that only one window gets moved off-screen instead of all of the on-screen windows.
+        final boolean isSameWindow = activeWindowId == getEnvironment().getActiveWindowId();
         final boolean ieVisible = getEnvironment().getActiveIE().isVisible();
 
-        return super.hasNext() && ieVisible;
+        return super.hasNext() && isSameWindow && ieVisible;
     }
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-
         super.tick();
 
         final Area activeIE = getEnvironment().getActiveIE();
@@ -75,7 +79,6 @@ public class ThrowIE extends Animate {
                         + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)));
             }
         }
-
     }
 
     private int getInitialVx() throws VariableException {
