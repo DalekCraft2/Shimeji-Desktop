@@ -9,7 +9,7 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.image.TranslucentWindow;
-import com.group_finity.mascot.menu.JLongMenu;
+import com.group_finity.mascot.menu.MenuScroller;
 import com.group_finity.mascot.sound.Sounds;
 
 import javax.sound.sampled.Clip;
@@ -260,10 +260,8 @@ public class Mascot implements Serializable {
         pauseMenu.addActionListener(event -> setPaused(!isPaused()));
 
         // Add the Behaviors submenu. It is currently slightly buggy; sometimes the menu ghosts.
-        JLongMenu submenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"), 30);
-        // The MenuScroller would look better than the JLongMenu, but the initial positioning is not working correctly.
-        // TODO Try to get MenuScroller to work.
-        // MenuScroller.setScrollerFor(submenu, 30, 125);
+        // JLongMenu submenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"), 30);
+        JMenu submenu = new JMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"));
         submenu.setAutoscrolls(true);
         JMenuItem item;
         Configuration config = Main.getInstance().getConfiguration(getImageSet());
@@ -294,6 +292,8 @@ public class Mascot implements Serializable {
                 // just skip if something goes wrong
             }
         }
+        // Create the MenuScroller after adding all the items to the submenu, so it is positioned correctly when first shown.
+        MenuScroller.setScrollerFor(submenu, 30, 125);
 
         popup.add(increaseMenu);
         popup.add(new JSeparator());
