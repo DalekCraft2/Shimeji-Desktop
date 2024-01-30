@@ -35,16 +35,7 @@
             <!-- AbsoluteLayout -->
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
-            <version>RELEASE190</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <!-- Java Native Access -->
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.13.0</version>
+            <version>RELEASE200</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -53,7 +44,7 @@
             <!-- Java Native Access Platform -->
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
-            <version>5.13.0</version>
+            <version>5.14.0</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
