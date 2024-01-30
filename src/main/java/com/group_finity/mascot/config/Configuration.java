@@ -37,21 +37,20 @@ public class Configuration {
         log.log(Level.INFO, "Reading configuration file...");
 
         // prepare schema
-        ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
         Locale locale;
 
         // check for Japanese XML tag and adapt locale accordingly
         if (configurationNode.hasChild("\u52D5\u4F5C\u30EA\u30B9\u30C8") ||
                 configurationNode.hasChild("\u884C\u52D5\u30EA\u30B9\u30C8")) {
-            log.log(Level.INFO, "Using ja-JP schema");
-            locale = Locale.forLanguageTag("ja-JP");
+            locale = Locale.JAPAN;
         } else {
-            log.log(Level.INFO, "Using en-US schema");
-            locale = Locale.forLanguageTag("en-US");
+            locale = Locale.US;
         }
+        log.log(Level.INFO, "Using " + locale.toLanguageTag() + " schema");
 
         URL[] urls = {Main.CONFIG_DIRECTORY.toUri().toURL()};
         try (URLClassLoader loader = new URLClassLoader(urls)) {
+            ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
             schema = ResourceBundle.getBundle("schema", locale, loader, utf8Control);
         }
 

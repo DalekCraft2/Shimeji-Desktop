@@ -128,15 +128,16 @@ public class Main {
         }
 
         // load languages
+        Locale locale = Locale.forLanguageTag(properties.getProperty("Language", Locale.UK.toLanguageTag()));
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
             try (URLClassLoader loader = new URLClassLoader(urls)) {
                 ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-                languageBundle = ResourceBundle.getBundle("language", Locale.forLanguageTag(properties.getProperty("Language", "en-GB")), loader, utf8Control);
+                languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
             }
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to load default language file", e);
-            showError("The default language file could not be loaded. Ensure that you have the latest shimeji language.properties in your conf directory.");
+            log.log(Level.SEVERE, "Failed to load language file for locale " + locale.toLanguageTag(), e);
+            showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
             exit();
         }
 
@@ -632,7 +633,7 @@ public class Main {
                         final JMenuItem englishMenu = new JMenuItem("English");
                         englishMenu.addActionListener(e121 -> {
                             form.dispose();
-                            updateLanguage("en-GB");
+                            updateLanguage(Locale.UK);
                             updateConfigFile();
                         });
 
@@ -656,7 +657,7 @@ public class Main {
                         final JMenuItem germanMenu = new JMenuItem("Deutsch");
                         germanMenu.addActionListener(e118 -> {
                             form.dispose();
-                            updateLanguage("de-DE");
+                            updateLanguage(Locale.GERMANY);
                             updateConfigFile();
                         });
 
@@ -672,7 +673,7 @@ public class Main {
                         final JMenuItem frenchMenu = new JMenuItem("Fran\u00E7ais");
                         frenchMenu.addActionListener(e116 -> {
                             form.dispose();
-                            updateLanguage("fr-FR");
+                            updateLanguage(Locale.FRANCE);
                             updateConfigFile();
                         });
 
@@ -688,7 +689,7 @@ public class Main {
                         final JMenuItem italianMenu = new JMenuItem("Italiano");
                         italianMenu.addActionListener(e114 -> {
                             form.dispose();
-                            updateLanguage("it-IT");
+                            updateLanguage(Locale.ITALY);
                             updateConfigFile();
                         });
 
@@ -768,7 +769,7 @@ public class Main {
                         final JMenuItem chineseMenu = new JMenuItem("\u7b80\u4f53\u4e2d\u6587");
                         chineseMenu.addActionListener(e14 -> {
                             form.dispose();
-                            updateLanguage("zh-CN");
+                            updateLanguage(Locale.SIMPLIFIED_CHINESE);
                             updateConfigFile();
                         });
 
@@ -776,7 +777,7 @@ public class Main {
                         final JMenuItem chineseTraditionalMenu = new JMenuItem("\u7E41\u9AD4\u4E2D\u6587");
                         chineseTraditionalMenu.addActionListener(e13 -> {
                             form.dispose();
-                            updateLanguage("zh-TW");
+                            updateLanguage(Locale.TRADITIONAL_CHINESE);
                             updateConfigFile();
                         });
 
@@ -784,7 +785,7 @@ public class Main {
                         final JMenuItem koreanMenu = new JMenuItem("\ud55c\uad6d\uc5b4");
                         koreanMenu.addActionListener(e12 -> {
                             form.dispose();
-                            updateLanguage("ko-KR");
+                            updateLanguage(Locale.KOREA);
                             updateConfigFile();
                         });
 
@@ -792,7 +793,7 @@ public class Main {
                         final JMenuItem japaneseMenu = new JMenuItem("\u65E5\u672C\u8A9E");
                         japaneseMenu.addActionListener(e1 -> {
                             form.dispose();
-                            updateLanguage("ja-JP");
+                            updateLanguage(Locale.JAPAN);
                             updateConfigFile();
                         });
 
@@ -988,9 +989,18 @@ public class Main {
         }
     }
 
-    private void refreshLanguage() {
-        ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-        languageBundle = ResourceBundle.getBundle("language", Locale.forLanguageTag(properties.getProperty("Language", "en-GB")), utf8Control);
+    private void refreshLanguage(Locale locale) {
+        try {
+            URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
+            try (URLClassLoader loader = new URLClassLoader(urls)) {
+                ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
+                languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
+            }
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Failed to load language file for locale " + locale.toLanguageTag(), e);
+            showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
+            exit();
+        }
 
         boolean isExit = getManager().isExitOnLastRemoved();
         getManager().setExitOnLastRemoved(false);
@@ -1009,10 +1019,17 @@ public class Main {
         getManager().setExitOnLastRemoved(isExit);
     }
 
-    private void updateLanguage(String language) {
-        if (!properties.getProperty("Language", "en-GB").equals(language)) {
-            properties.setProperty("Language", language);
-            refreshLanguage();
+    private void updateLanguage(Locale locale) {
+        if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(locale.toLanguageTag())) {
+            properties.setProperty("Language", locale.toLanguageTag());
+            refreshLanguage(locale);
+        }
+    }
+
+    private void updateLanguage(String languageTag) {
+        if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(languageTag)) {
+            properties.setProperty("Language", languageTag);
+            refreshLanguage(Locale.forLanguageTag(languageTag));
         }
     }
 
