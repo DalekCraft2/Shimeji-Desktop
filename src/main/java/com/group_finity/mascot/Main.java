@@ -164,6 +164,8 @@ public class Main {
                 theme.setSecondary1(Color.decode("#BCBCBE"));
                 theme.setSecondary2(Color.decode("#C6C6C8"));
                 theme.setSecondary3(Color.decode("#D0D0D2"));
+                theme.setWhite(Color.WHITE);
+                theme.setBlack(Color.BLACK);
                 theme.setMenuOpacity(255);
                 theme.setFrameOpacity(255);
             }
