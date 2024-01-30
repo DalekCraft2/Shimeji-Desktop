@@ -50,21 +50,13 @@ import java.util.List;
  * @author Stefan Endrullis
  */
 public class X {
-    /**
-     * Remove/unset property.
-     */
+    /** Remove/unset property. */
     public static final int _NET_WM_STATE_REMOVE = 0;
-    /**
-     * Add/set property.
-     */
+    /** Add/set property. */
     public static final int _NET_WM_STATE_ADD = 1;
-    /**
-     * Toggle property.
-     */
+    /** Toggle property. */
     public static final int _NET_WM_STATE_TOGGLE = 2;
-    /**
-     * Maximal property value length.
-     */
+    /** Maximal property value length. */
     public static final int MAX_PROPERTY_VALUE_LEN = 4096;
 
     private static final X11 x11 = X11.INSTANCE;
@@ -93,7 +85,7 @@ public class X {
          */
         private final X11.Display x11Display;
         /**
-         * HashMap<String,X11.Atom>.
+         * Map used for caching atoms.
          */
         private final HashMap<String, Atom> atomsHash = new HashMap<>();
 
@@ -257,13 +249,12 @@ public class X {
             Window root = getRootWindow();
             int curDesktop;
 
-            // NOTE These very broad catch clauses are a hotfix.
             try {
                 curDesktop = root.getIntProperty(X11.XA_CARDINAL, "_NET_CURRENT_DESKTOP");
-            } catch (Exception e) {
+            } catch (X11Exception e) {
                 try {
                     curDesktop = root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
-                } catch (Exception e1) {
+                } catch (X11Exception e1) {
                     // NOTE This is a hotfix for Ubuntu because this method fails on it (at least in a VM).
                     // throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
                     return 0;
@@ -347,7 +338,7 @@ public class X {
          * Returns the key symbol corresponding to the keycode.
          *
          * @param keyCode keycode
-         * @param index   element of the keycode vector
+         * @param index element of the keycode vector
          * @return key symbol
          */
         public X11.KeySym getKeySym(byte keyCode, int index) {
@@ -388,7 +379,7 @@ public class X {
          * Returns the key name corresponding to the keycode and the index in the keycode vector.
          *
          * @param keyCode keycode
-         * @param index   index in the keycode vector
+         * @param index index in the keycode vector
          * @return name of the key
          */
         public String getKeyName(byte keyCode, int index) {
@@ -413,7 +404,7 @@ public class X {
          * @param modifierKeymap modifier keymap
          */
         public void setModifierKeymap(ModifierKeymap modifierKeymap) {
-            X11.XModifierKeymapRef xModifierKeymapRef = modifierKeymap.toXModifierKeyamp();
+            X11.XModifierKeymapRef xModifierKeymapRef = modifierKeymap.toXModifierKeymap();
             x11.XSetModifierMapping(x11Display, xModifierKeymapRef);
         }
     }
@@ -427,37 +418,21 @@ public class X {
      * {@link X.Display#setModifierKeymap(ModifierKeymap)}.
      */
     public static class ModifierKeymap {
-        /**
-         * Shift modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Shift modifier as a list of bytes. */
         public ArrayList<Byte> shift = new ArrayList<>(4);
-        /**
-         * Lock modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Lock modifier as a list of bytes. */
         public ArrayList<Byte> lock = new ArrayList<>(4);
-        /**
-         * Control modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Control modifier as a list of bytes. */
         public ArrayList<Byte> control = new ArrayList<>(4);
-        /**
-         * Mod1 modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Mod1 modifier as a list of bytes. */
         public ArrayList<Byte> mod1 = new ArrayList<>(4);
-        /**
-         * Mod2 modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Mod2 modifier as a list of bytes. */
         public ArrayList<Byte> mod2 = new ArrayList<>(4);
-        /**
-         * Mod3 modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Mod3 modifier as a list of bytes. */
         public ArrayList<Byte> mod3 = new ArrayList<>(4);
-        /**
-         * Mod4 modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Mod4 modifier as a list of bytes. */
         public ArrayList<Byte> mod4 = new ArrayList<>(4);
-        /**
-         * Mod5 modifier as an ArrayList&lt;Byte&gt;.
-         */
+        /** Mod5 modifier as a list of bytes. */
         public ArrayList<Byte> mod5 = new ArrayList<>(4);
 
         /**
@@ -504,7 +479,7 @@ public class X {
          *
          * @return XModifierKeymap
          */
-        public X11.XModifierKeymapRef toXModifierKeyamp() {
+        public X11.XModifierKeymapRef toXModifierKeymap() {
             ArrayList<Byte>[] allModifiers = getAllModifiers();
 
             // determine max list size
@@ -617,7 +592,7 @@ public class X {
         public int getState() {
             try {
                 return getIntProperty(display.getAtom("ATOM"), "_NET_WM_STATE");
-            } catch (Exception e) { // NOTE Hotfix: This has to be a very broad catch clause, otherwise the program *will* crash.
+            } catch (X11Exception e) {
                 return 0;
             }
         }
@@ -801,8 +776,12 @@ public class X {
          */
         public Integer getIntProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
-            if (property == null /*|| property.length < 3*/) { // NOTE The second condition here is a hotfix.
+            if (property == null) {
                 return null;
+            }
+            // NOTE This "if" statement is a hotfix.
+            if (property.length < 3) {
+                return 0;
             }
             return bytesToInt(property);
         }
