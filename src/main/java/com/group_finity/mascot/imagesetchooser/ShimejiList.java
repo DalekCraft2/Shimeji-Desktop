@@ -18,8 +18,6 @@ public class ShimejiList extends JList<ImageSetChooserPanel> {
                                                       int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof ImageSetChooserPanel) {
                 ImageSetChooserPanel component = (ImageSetChooserPanel) value;
-                component.setForeground(Color.WHITE);
-                component.setBackground(isSelected ? SystemColor.controlHighlight : Color.WHITE);
                 component.setCheckbox(isSelected);
                 return component;
             } else {
