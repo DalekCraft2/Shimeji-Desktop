@@ -397,533 +397,532 @@ public class Main {
 
                 @Override
                 public void mousePressed(MouseEvent e) {
+                    // Check for popup triggers in both mousePressed and mouseReleased
+                    // because it works differently on different systems
+                    if (e.isPopupTrigger()) {
+                        onPopupTrigger(e);
+                    }
                 }
 
                 @Override
-                public void mouseReleased(MouseEvent event) {
-                    if (event.isPopupTrigger()) {
-                        // close the form if it's open
-                        if (form != null) {
-                            form.dispose();
-                        }
+                public void mouseReleased(MouseEvent e) {
+                    // Check for popup triggers in both mousePressed and mouseReleased
+                    // because it works differently on different systems
+                    if (e.isPopupTrigger()) {
+                        onPopupTrigger(e);
+                    }
+                }
 
-                        // create the form and border
-                        form = new JDialog(frame, false);
-                        final JPanel panel = new JPanel();
-                        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-                        form.add(panel);
+                private void onPopupTrigger(MouseEvent event) {
+                    // close the form if it's open
+                    if (form != null) {
+                        form.dispose();
+                    }
 
-                        // buttons and action handling
-                        JButton btnCallShimeji = new JButton(languageBundle.getString("CallShimeji"));
-                        btnCallShimeji.addActionListener(event17 -> {
-                            createMascot();
-                            form.dispose();
-                        });
+                    // create the form and border
+                    form = new JDialog(frame, false);
+                    final JPanel panel = new JPanel();
+                    panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+                    form.add(panel);
 
-                        JButton btnFollowCursor = new JButton(languageBundle.getString("FollowCursor"));
-                        btnFollowCursor.addActionListener(event16 -> {
-                            getManager().setBehaviorAll(BEHAVIOR_GATHER);
-                            form.dispose();
-                        });
-
-                        JButton btnReduceToOne = new JButton(languageBundle.getString("ReduceToOne"));
-                        btnReduceToOne.addActionListener(event15 -> {
-                            getManager().remainOne();
-                            form.dispose();
-                        });
-
-                        JButton btnRestoreWindows = new JButton(languageBundle.getString("RestoreWindows"));
-                        btnRestoreWindows.addActionListener(event14 -> {
-                            NativeFactory.getInstance().getEnvironment().restoreIE();
-                            form.dispose();
-                        });
-
-                        final JButton btnAllowedBehaviours = new JButton(languageBundle.getString("AllowedBehaviours"));
-                        btnAllowedBehaviours.addMouseListener(new MouseListener() {
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mouseReleased(MouseEvent e) {
-                                btnAllowedBehaviours.setEnabled(true);
-                            }
-
-                            @Override
-                            public void mouseEntered(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mouseExited(MouseEvent e) {
-                            }
-                        });
-                        btnAllowedBehaviours.addActionListener(event13 -> {
-                            // "Disable Breeding" menu item
-                            final JCheckBoxMenuItem breedingMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingCloning"), Boolean.parseBoolean(properties.getProperty("Breeding", "true")));
-                            breedingMenu.addItemListener(e -> {
-                                breedingMenu.setState(toggleBooleanSetting("Breeding", true));
-                                updateConfigFile();
-                                btnAllowedBehaviours.setEnabled(true);
-                            });
-
-                            // "Disable Breeding Transient" menu item
-                            final JCheckBoxMenuItem transientMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingTransient"), Boolean.parseBoolean(properties.getProperty("Transients", "true")));
-                            transientMenu.addItemListener(e -> {
-                                transientMenu.setState(toggleBooleanSetting("Transients", true));
-                                updateConfigFile();
-                                btnAllowedBehaviours.setEnabled(true);
-                            });
-
-                            // "Disable Transformations" menu item
-                            final JCheckBoxMenuItem transformationMenu = new JCheckBoxMenuItem(languageBundle.getString("Transformation"), Boolean.parseBoolean(properties.getProperty("Transformation", "true")));
-                            transformationMenu.addItemListener(e -> {
-                                transformationMenu.setState(toggleBooleanSetting("Transformation", true));
-                                updateConfigFile();
-                                btnAllowedBehaviours.setEnabled(true);
-                            });
-
-                            // "Throwing Windows" menu item
-                            final JCheckBoxMenuItem throwingMenu = new JCheckBoxMenuItem(languageBundle.getString("ThrowingWindows"), Boolean.parseBoolean(properties.getProperty("Throwing", "true")));
-                            throwingMenu.addItemListener(e -> {
-                                throwingMenu.setState(toggleBooleanSetting("Throwing", true));
-                                updateConfigFile();
-                                btnAllowedBehaviours.setEnabled(true);
-                            });
-
-                            // "Mute Sounds" menu item
-                            final JCheckBoxMenuItem soundsMenu = new JCheckBoxMenuItem(languageBundle.getString("SoundEffects"), Boolean.parseBoolean(properties.getProperty("Sounds", "true")));
-                            soundsMenu.addItemListener(e -> {
-                                boolean result = toggleBooleanSetting("Sounds", true);
-                                soundsMenu.setState(result);
-                                Sounds.setMuted(!result);
-                                updateConfigFile();
-                                btnAllowedBehaviours.setEnabled(true);
-                            });
-
-                            // "Multiscreen" menu item
-                            final JCheckBoxMenuItem multiscreenMenu = new JCheckBoxMenuItem(languageBundle.getString("Multiscreen"), Boolean.parseBoolean(properties.getProperty("Multiscreen", "true")));
-                            multiscreenMenu.addItemListener(e -> {
-                                multiscreenMenu.setState(toggleBooleanSetting("Multiscreen", true));
-                                updateConfigFile();
-                                btnAllowedBehaviours.setEnabled(true);
-                            });
-
-                            JPopupMenu behaviourPopup = new JPopupMenu();
-                            behaviourPopup.add(breedingMenu);
-                            behaviourPopup.add(transientMenu);
-                            behaviourPopup.add(transformationMenu);
-                            behaviourPopup.add(throwingMenu);
-                            behaviourPopup.add(soundsMenu);
-                            behaviourPopup.add(multiscreenMenu);
-                            behaviourPopup.addPopupMenuListener(new PopupMenuListener() {
-                                @Override
-                                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                                }
-
-                                @Override
-                                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                                    if (panel.getMousePosition() != null) {
-                                        btnAllowedBehaviours.setEnabled(!(panel.getMousePosition().x > btnAllowedBehaviours.getX() &&
-                                                panel.getMousePosition().x < btnAllowedBehaviours.getX() + btnAllowedBehaviours.getWidth() &&
-                                                panel.getMousePosition().y > btnAllowedBehaviours.getY() &&
-                                                panel.getMousePosition().y < btnAllowedBehaviours.getY() + btnAllowedBehaviours.getHeight()));
-                                    } else {
-                                        btnAllowedBehaviours.setEnabled(true);
-                                    }
-                                }
-
-                                @Override
-                                public void popupMenuCanceled(PopupMenuEvent e) {
-                                }
-                            });
-                            behaviourPopup.show(btnAllowedBehaviours, 0, btnAllowedBehaviours.getHeight());
-                            btnAllowedBehaviours.requestFocusInWindow();
-                        });
-
-                        final JButton btnChooseShimeji = new JButton(languageBundle.getString("ChooseShimeji"));
-                        btnChooseShimeji.addActionListener(event12 -> {
-                            form.dispose();
-                            ImageSetChooser chooser = new ImageSetChooser(frame, true);
-                            chooser.setIconImage(icon.getImage());
-                            setActiveImageSets(chooser.display());
-                        });
-
-                        final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
-                        btnSettings.addActionListener(event1 -> {
-                            form.dispose();
-                            SettingsWindow dialog = new SettingsWindow(frame, true);
-                            dialog.setIconImage(icon.getImage());
-                            dialog.display();
-
-                            if (dialog.getEnvironmentReloadRequired()) {
-                                NativeFactory.getInstance().getEnvironment().dispose();
-                                NativeFactory.resetInstance();
-                            }
-                            if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
-                                // need to reload the shimeji as the images have rescaled
-                                boolean isExit = getManager().isExitOnLastRemoved();
-                                getManager().setExitOnLastRemoved(false);
-                                getManager().disposeAll();
-
-                                // Wipe all loaded data
-                                ImagePairs.clear();
-                                configurations.clear();
-
-                                // Load settings
-                                for (String imageSet : imageSets) {
-                                    loadConfiguration(imageSet);
-                                }
-
-                                // Create the first mascot
-                                for (String imageSet : imageSets) {
-                                    createMascot(imageSet);
-                                }
-
-                                getManager().setExitOnLastRemoved(isExit);
-                            }
-                            if (dialog.getInteractiveWindowReloadRequired()) {
-                                NativeFactory.getInstance().getEnvironment().refreshCache();
-                            }
-                        });
-
-                        final JButton btnLanguage = new JButton(languageBundle.getString("Language"));
-                        btnLanguage.addMouseListener(new MouseListener() {
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mouseReleased(MouseEvent e) {
-                                btnLanguage.setEnabled(true);
-                            }
-
-                            @Override
-                            public void mouseEntered(MouseEvent e) {
-                            }
-
-                            @Override
-                            public void mouseExited(MouseEvent e) {
-                            }
-                        });
-                        btnLanguage.addActionListener(e -> {
-                            // English menu item
-                            final JMenuItem englishMenu = new JMenuItem("English");
-                            englishMenu.addActionListener(e121 -> {
-                                form.dispose();
-                                updateLanguage("en-GB");
-                                updateConfigFile();
-                            });
-
-                            // Arabic menu item
-                            final JMenuItem arabicMenu = new JMenuItem("\u0639\u0631\u0628\u064A");
-                            arabicMenu.addActionListener(e120 -> {
-                                form.dispose();
-                                updateLanguage("ar-SA");
-                                updateConfigFile();
-                            });
-
-                            // Catalan menu item
-                            final JMenuItem catalanMenu = new JMenuItem("Catal\u00E0");
-                            catalanMenu.addActionListener(e119 -> {
-                                form.dispose();
-                                updateLanguage("ca-ES");
-                                updateConfigFile();
-                            });
-
-                            // German menu item
-                            final JMenuItem germanMenu = new JMenuItem("Deutsch");
-                            germanMenu.addActionListener(e118 -> {
-                                form.dispose();
-                                updateLanguage("de-DE");
-                                updateConfigFile();
-                            });
-
-                            // Spanish menu item
-                            final JMenuItem spanishMenu = new JMenuItem("Espa\u00F1ol");
-                            spanishMenu.addActionListener(e117 -> {
-                                form.dispose();
-                                updateLanguage("es-ES");
-                                updateConfigFile();
-                            });
-
-                            // French menu item
-                            final JMenuItem frenchMenu = new JMenuItem("Fran\u00E7ais");
-                            frenchMenu.addActionListener(e116 -> {
-                                form.dispose();
-                                updateLanguage("fr-FR");
-                                updateConfigFile();
-                            });
-
-                            // Croatian menu item
-                            final JMenuItem croatianMenu = new JMenuItem("Hrvatski");
-                            croatianMenu.addActionListener(e115 -> {
-                                form.dispose();
-                                updateLanguage("hr-HR");
-                                updateConfigFile();
-                            });
-
-                            // Italian menu item
-                            final JMenuItem italianMenu = new JMenuItem("Italiano");
-                            italianMenu.addActionListener(e114 -> {
-                                form.dispose();
-                                updateLanguage("it-IT");
-                                updateConfigFile();
-                            });
-
-                            // Dutch menu item
-                            final JMenuItem dutchMenu = new JMenuItem("Nederlands");
-                            dutchMenu.addActionListener(e113 -> {
-                                form.dispose();
-                                updateLanguage("nl-NL");
-                                updateConfigFile();
-                            });
-
-                            // Polish menu item
-                            final JMenuItem polishMenu = new JMenuItem("Polski");
-                            polishMenu.addActionListener(e112 -> {
-                                form.dispose();
-                                updateLanguage("pl-PL");
-                                updateConfigFile();
-                            });
-
-                            // Brazilian Portuguese menu item
-                            final JMenuItem brazilianPortugueseMenu = new JMenuItem("Portugu\u00eas Brasileiro");
-                            brazilianPortugueseMenu.addActionListener(e111 -> {
-                                form.dispose();
-                                updateLanguage("pt-BR");
-                                updateConfigFile();
-                            });
-
-                            // Portuguese menu item
-                            final JMenuItem portugueseMenu = new JMenuItem("Portugu\u00eas");
-                            portugueseMenu.addActionListener(e110 -> {
-                                form.dispose();
-                                updateLanguage("pt-PT");
-                                updateConfigFile();
-                            });
-
-                            // Russian menu item
-                            final JMenuItem russianMenu = new JMenuItem("\u0440\u0443\u0301\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u0301\u043a");
-                            russianMenu.addActionListener(e19 -> {
-                                form.dispose();
-                                updateLanguage("ru-RU");
-                                updateConfigFile();
-                            });
-
-                            // Romanian menu item
-                            final JMenuItem romanianMenu = new JMenuItem("Rom\u00e2n\u0103");
-                            romanianMenu.addActionListener(e18 -> {
-                                form.dispose();
-                                updateLanguage("ro-RO");
-                                updateConfigFile();
-                            });
-
-                            // Serbian menu item
-                            final JMenuItem serbianMenu = new JMenuItem("Srpski");
-                            serbianMenu.addActionListener(e17 -> {
-                                form.dispose();
-                                updateLanguage("sr-RS");
-                                updateConfigFile();
-                            });
-
-                            // Finnish menu item
-                            final JMenuItem finnishMenu = new JMenuItem("Suomi");
-                            finnishMenu.addActionListener(e16 -> {
-                                form.dispose();
-                                updateLanguage("fi-FI");
-                                updateConfigFile();
-                            });
-
-                            // Vietnamese menu item
-                            final JMenuItem vietnameseMenu = new JMenuItem("ti\u1ebfng Vi\u1ec7t");
-                            vietnameseMenu.addActionListener(e15 -> {
-                                form.dispose();
-                                updateLanguage("vi-VN");
-                                updateConfigFile();
-                            });
-
-                            // Chinese menu item
-                            final JMenuItem chineseMenu = new JMenuItem("\u7b80\u4f53\u4e2d\u6587");
-                            chineseMenu.addActionListener(e14 -> {
-                                form.dispose();
-                                updateLanguage("zh-CN");
-                                updateConfigFile();
-                            });
-
-                            // Chinese (Traditional) menu item
-                            final JMenuItem chineseTraditionalMenu = new JMenuItem("\u7E41\u9AD4\u4E2D\u6587");
-                            chineseTraditionalMenu.addActionListener(e13 -> {
-                                form.dispose();
-                                updateLanguage("zh-TW");
-                                updateConfigFile();
-                            });
-
-                            // Korean menu item
-                            final JMenuItem koreanMenu = new JMenuItem("\ud55c\uad6d\uc5b4");
-                            koreanMenu.addActionListener(e12 -> {
-                                form.dispose();
-                                updateLanguage("ko-KR");
-                                updateConfigFile();
-                            });
-
-                            // Japanese menu item
-                            final JMenuItem japaneseMenu = new JMenuItem("\u65E5\u672C\u8A9E");
-                            japaneseMenu.addActionListener(e1 -> {
-                                form.dispose();
-                                updateLanguage("ja-JP");
-                                updateConfigFile();
-                            });
-
-                            JPopupMenu languagePopup = new JPopupMenu();
-                            languagePopup.add(englishMenu);
-                            languagePopup.addSeparator();
-                            languagePopup.add(arabicMenu);
-                            languagePopup.add(catalanMenu);
-                            languagePopup.add(germanMenu);
-                            languagePopup.add(spanishMenu);
-                            languagePopup.add(frenchMenu);
-                            languagePopup.add(croatianMenu);
-                            languagePopup.add(italianMenu);
-                            languagePopup.add(dutchMenu);
-                            languagePopup.add(polishMenu);
-                            languagePopup.add(portugueseMenu);
-                            languagePopup.add(brazilianPortugueseMenu);
-                            languagePopup.add(russianMenu);
-                            languagePopup.add(romanianMenu);
-                            languagePopup.add(serbianMenu);
-                            languagePopup.add(finnishMenu);
-                            languagePopup.add(vietnameseMenu);
-                            languagePopup.add(chineseMenu);
-                            languagePopup.add(chineseTraditionalMenu);
-                            languagePopup.add(koreanMenu);
-                            languagePopup.add(japaneseMenu);
-                            languagePopup.addPopupMenuListener(new PopupMenuListener() {
-                                @Override
-                                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                                }
-
-                                @Override
-                                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                                    if (panel.getMousePosition() != null) {
-                                        btnLanguage.setEnabled(!(panel.getMousePosition().x > btnLanguage.getX() &&
-                                                panel.getMousePosition().x < btnLanguage.getX() + btnLanguage.getWidth() &&
-                                                panel.getMousePosition().y > btnLanguage.getY() &&
-                                                panel.getMousePosition().y < btnLanguage.getY() + btnLanguage.getHeight()));
-                                    } else {
-                                        btnLanguage.setEnabled(true);
-                                    }
-                                }
-
-                                @Override
-                                public void popupMenuCanceled(PopupMenuEvent e) {
-                                }
-                            });
-                            languagePopup.show(btnLanguage, 0, btnLanguage.getHeight());
-                            btnLanguage.requestFocusInWindow();
-                        });
-
-                        JButton btnPauseAll = new JButton(getManager().isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
-                        btnPauseAll.addActionListener(e -> {
-                            form.dispose();
-                            getManager().togglePauseAll();
-                        });
-
-                        JButton btnDismissAll = new JButton(languageBundle.getString("DismissAll"));
-                        btnDismissAll.addActionListener(e -> exit());
-
-                        // layout
-                        panel.setLayout(new GridBagLayout());
-                        GridBagConstraints gridBag = new GridBagConstraints();
-                        gridBag.fill = GridBagConstraints.HORIZONTAL;
-                        gridBag.gridx = 0;
-                        gridBag.gridy = 0;
-                        panel.add(btnCallShimeji, gridBag);
-                        gridBag.insets = new Insets(5, 0, 0, 0);
-                        gridBag.gridy++;
-                        panel.add(btnFollowCursor, gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnReduceToOne, gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnRestoreWindows, gridBag);
-                        gridBag.gridy++;
-                        panel.add(new JSeparator(), gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnAllowedBehaviours, gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnChooseShimeji, gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnSettings, gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnLanguage, gridBag);
-                        gridBag.gridy++;
-                        panel.add(new JSeparator(), gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnPauseAll, gridBag);
-                        gridBag.gridy++;
-                        panel.add(btnDismissAll, gridBag);
-
-                        form.setIconImage(icon.getImage());
-                        form.setTitle(languageBundle.getString("ShimejiEE"));
-                        form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                        form.setAlwaysOnTop(true);
-
-                        // set the form dimensions
-                        FontMetrics metrics = btnCallShimeji.getFontMetrics(btnCallShimeji.getFont());
-                        int width = metrics.stringWidth(btnCallShimeji.getText());
-                        width = Math.max(metrics.stringWidth(btnFollowCursor.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnReduceToOne.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnRestoreWindows.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnAllowedBehaviours.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnChooseShimeji.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnSettings.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnLanguage.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnPauseAll.getText()), width);
-                        width = Math.max(metrics.stringWidth(btnDismissAll.getText()), width);
-                        panel.setPreferredSize(new Dimension(width + 64,
-                                24 + // 12 padding on top and bottom
-                                        75 + // 13 insets of 5 height normally
-                                        10 * metrics.getHeight() + // 10 button faces
-                                        84));
-                        form.pack();
-                        form.setMinimumSize(form.getSize());
-
-                        // get the DPI of the screen, and divide 96 by it to get a ratio
-                        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-
-                        // setting location of the form
-                        form.setLocation((int) Math.round(event.getX() * dpiScaleInverse) - form.getWidth(), (int) Math.round(event.getY() * dpiScaleInverse) - form.getHeight());
-
-                        // make sure that it is on the screen if people are using exotic taskbar locations
-                        Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-                        if (form.getX() < screen.getX()) {
-                            form.setLocation((int) Math.round(event.getX() * dpiScaleInverse), form.getY());
-                        }
-                        if (form.getY() < screen.getY()) {
-                            form.setLocation(form.getX(), (int) Math.round(event.getY() * dpiScaleInverse));
-                        }
-
-                        form.setVisible(true);
-                    } else if (event.getButton() == MouseEvent.BUTTON1) {
+                    // buttons and action handling
+                    JButton btnCallShimeji = new JButton(languageBundle.getString("CallShimeji"));
+                    btnCallShimeji.addActionListener(event17 -> {
                         createMascot();
-                    } else if (event.getButton() == MouseEvent.BUTTON2 && event.getClickCount() == 2) {
-                        if (getManager().isExitOnLastRemoved()) {
+                        form.dispose();
+                    });
+
+                    JButton btnFollowCursor = new JButton(languageBundle.getString("FollowCursor"));
+                    btnFollowCursor.addActionListener(event16 -> {
+                        getManager().setBehaviorAll(BEHAVIOR_GATHER);
+                        form.dispose();
+                    });
+
+                    JButton btnReduceToOne = new JButton(languageBundle.getString("ReduceToOne"));
+                    btnReduceToOne.addActionListener(event15 -> {
+                        getManager().remainOne();
+                        form.dispose();
+                    });
+
+                    JButton btnRestoreWindows = new JButton(languageBundle.getString("RestoreWindows"));
+                    btnRestoreWindows.addActionListener(event14 -> {
+                        NativeFactory.getInstance().getEnvironment().restoreIE();
+                        form.dispose();
+                    });
+
+                    final JButton btnAllowedBehaviours = new JButton(languageBundle.getString("AllowedBehaviours"));
+                    btnAllowedBehaviours.addMouseListener(new MouseListener() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                            btnAllowedBehaviours.setEnabled(true);
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                        }
+                    });
+                    btnAllowedBehaviours.addActionListener(event13 -> {
+                        // "Disable Breeding" menu item
+                        final JCheckBoxMenuItem breedingMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingCloning"), Boolean.parseBoolean(properties.getProperty("Breeding", "true")));
+                        breedingMenu.addItemListener(e -> {
+                            breedingMenu.setState(toggleBooleanSetting("Breeding", true));
+                            updateConfigFile();
+                            btnAllowedBehaviours.setEnabled(true);
+                        });
+
+                        // "Disable Breeding Transient" menu item
+                        final JCheckBoxMenuItem transientMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingTransient"), Boolean.parseBoolean(properties.getProperty("Transients", "true")));
+                        transientMenu.addItemListener(e -> {
+                            transientMenu.setState(toggleBooleanSetting("Transients", true));
+                            updateConfigFile();
+                            btnAllowedBehaviours.setEnabled(true);
+                        });
+
+                        // "Disable Transformations" menu item
+                        final JCheckBoxMenuItem transformationMenu = new JCheckBoxMenuItem(languageBundle.getString("Transformation"), Boolean.parseBoolean(properties.getProperty("Transformation", "true")));
+                        transformationMenu.addItemListener(e -> {
+                            transformationMenu.setState(toggleBooleanSetting("Transformation", true));
+                            updateConfigFile();
+                            btnAllowedBehaviours.setEnabled(true);
+                        });
+
+                        // "Throwing Windows" menu item
+                        final JCheckBoxMenuItem throwingMenu = new JCheckBoxMenuItem(languageBundle.getString("ThrowingWindows"), Boolean.parseBoolean(properties.getProperty("Throwing", "true")));
+                        throwingMenu.addItemListener(e -> {
+                            throwingMenu.setState(toggleBooleanSetting("Throwing", true));
+                            updateConfigFile();
+                            btnAllowedBehaviours.setEnabled(true);
+                        });
+
+                        // "Mute Sounds" menu item
+                        final JCheckBoxMenuItem soundsMenu = new JCheckBoxMenuItem(languageBundle.getString("SoundEffects"), Boolean.parseBoolean(properties.getProperty("Sounds", "true")));
+                        soundsMenu.addItemListener(e -> {
+                            boolean result = toggleBooleanSetting("Sounds", true);
+                            soundsMenu.setState(result);
+                            Sounds.setMuted(!result);
+                            updateConfigFile();
+                            btnAllowedBehaviours.setEnabled(true);
+                        });
+
+                        // "Multiscreen" menu item
+                        final JCheckBoxMenuItem multiscreenMenu = new JCheckBoxMenuItem(languageBundle.getString("Multiscreen"), Boolean.parseBoolean(properties.getProperty("Multiscreen", "true")));
+                        multiscreenMenu.addItemListener(e -> {
+                            multiscreenMenu.setState(toggleBooleanSetting("Multiscreen", true));
+                            updateConfigFile();
+                            btnAllowedBehaviours.setEnabled(true);
+                        });
+
+                        JPopupMenu behaviourPopup = new JPopupMenu();
+                        behaviourPopup.add(breedingMenu);
+                        behaviourPopup.add(transientMenu);
+                        behaviourPopup.add(transformationMenu);
+                        behaviourPopup.add(throwingMenu);
+                        behaviourPopup.add(soundsMenu);
+                        behaviourPopup.add(multiscreenMenu);
+                        behaviourPopup.addPopupMenuListener(new PopupMenuListener() {
+                            @Override
+                            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                            }
+
+                            @Override
+                            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                                if (panel.getMousePosition() != null) {
+                                    btnAllowedBehaviours.setEnabled(!(panel.getMousePosition().x > btnAllowedBehaviours.getX() &&
+                                            panel.getMousePosition().x < btnAllowedBehaviours.getX() + btnAllowedBehaviours.getWidth() &&
+                                            panel.getMousePosition().y > btnAllowedBehaviours.getY() &&
+                                            panel.getMousePosition().y < btnAllowedBehaviours.getY() + btnAllowedBehaviours.getHeight()));
+                                } else {
+                                    btnAllowedBehaviours.setEnabled(true);
+                                }
+                            }
+
+                            @Override
+                            public void popupMenuCanceled(PopupMenuEvent e) {
+                            }
+                        });
+                        behaviourPopup.show(btnAllowedBehaviours, 0, btnAllowedBehaviours.getHeight());
+                        btnAllowedBehaviours.requestFocusInWindow();
+                    });
+
+                    final JButton btnChooseShimeji = new JButton(languageBundle.getString("ChooseShimeji"));
+                    btnChooseShimeji.addActionListener(event12 -> {
+                        form.dispose();
+                        ImageSetChooser chooser = new ImageSetChooser(frame, true);
+                        chooser.setIconImage(icon.getImage());
+                        setActiveImageSets(chooser.display());
+                    });
+
+                    final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
+                    btnSettings.addActionListener(event1 -> {
+                        form.dispose();
+                        SettingsWindow dialog = new SettingsWindow(frame, true);
+                        dialog.setIconImage(icon.getImage());
+                        dialog.display();
+
+                        if (dialog.getEnvironmentReloadRequired()) {
+                            NativeFactory.getInstance().getEnvironment().dispose();
+                            NativeFactory.resetInstance();
+                        }
+                        if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
+                            // need to reload the shimeji as the images have rescaled
+                            boolean isExit = getManager().isExitOnLastRemoved();
                             getManager().setExitOnLastRemoved(false);
                             getManager().disposeAll();
-                        } else {
+
+                            // Wipe all loaded data
+                            ImagePairs.clear();
+                            configurations.clear();
+
+                            // Load settings
+                            for (String imageSet : imageSets) {
+                                loadConfiguration(imageSet);
+                            }
+
+                            // Create the first mascot
                             for (String imageSet : imageSets) {
                                 createMascot(imageSet);
                             }
-                            getManager().setExitOnLastRemoved(true);
+
+                            getManager().setExitOnLastRemoved(isExit);
                         }
+                        if (dialog.getInteractiveWindowReloadRequired()) {
+                            NativeFactory.getInstance().getEnvironment().refreshCache();
+                        }
+                    });
+
+                    final JButton btnLanguage = new JButton(languageBundle.getString("Language"));
+                    btnLanguage.addMouseListener(new MouseListener() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                            btnLanguage.setEnabled(true);
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                        }
+                    });
+                    btnLanguage.addActionListener(e -> {
+                        // English menu item
+                        final JMenuItem englishMenu = new JMenuItem("English");
+                        englishMenu.addActionListener(e121 -> {
+                            form.dispose();
+                            updateLanguage("en-GB");
+                            updateConfigFile();
+                        });
+
+                        // Arabic menu item
+                        final JMenuItem arabicMenu = new JMenuItem("\u0639\u0631\u0628\u064A");
+                        arabicMenu.addActionListener(e120 -> {
+                            form.dispose();
+                            updateLanguage("ar-SA");
+                            updateConfigFile();
+                        });
+
+                        // Catalan menu item
+                        final JMenuItem catalanMenu = new JMenuItem("Catal\u00E0");
+                        catalanMenu.addActionListener(e119 -> {
+                            form.dispose();
+                            updateLanguage("ca-ES");
+                            updateConfigFile();
+                        });
+
+                        // German menu item
+                        final JMenuItem germanMenu = new JMenuItem("Deutsch");
+                        germanMenu.addActionListener(e118 -> {
+                            form.dispose();
+                            updateLanguage("de-DE");
+                            updateConfigFile();
+                        });
+
+                        // Spanish menu item
+                        final JMenuItem spanishMenu = new JMenuItem("Espa\u00F1ol");
+                        spanishMenu.addActionListener(e117 -> {
+                            form.dispose();
+                            updateLanguage("es-ES");
+                            updateConfigFile();
+                        });
+
+                        // French menu item
+                        final JMenuItem frenchMenu = new JMenuItem("Fran\u00E7ais");
+                        frenchMenu.addActionListener(e116 -> {
+                            form.dispose();
+                            updateLanguage("fr-FR");
+                            updateConfigFile();
+                        });
+
+                        // Croatian menu item
+                        final JMenuItem croatianMenu = new JMenuItem("Hrvatski");
+                        croatianMenu.addActionListener(e115 -> {
+                            form.dispose();
+                            updateLanguage("hr-HR");
+                            updateConfigFile();
+                        });
+
+                        // Italian menu item
+                        final JMenuItem italianMenu = new JMenuItem("Italiano");
+                        italianMenu.addActionListener(e114 -> {
+                            form.dispose();
+                            updateLanguage("it-IT");
+                            updateConfigFile();
+                        });
+
+                        // Dutch menu item
+                        final JMenuItem dutchMenu = new JMenuItem("Nederlands");
+                        dutchMenu.addActionListener(e113 -> {
+                            form.dispose();
+                            updateLanguage("nl-NL");
+                            updateConfigFile();
+                        });
+
+                        // Polish menu item
+                        final JMenuItem polishMenu = new JMenuItem("Polski");
+                        polishMenu.addActionListener(e112 -> {
+                            form.dispose();
+                            updateLanguage("pl-PL");
+                            updateConfigFile();
+                        });
+
+                        // Brazilian Portuguese menu item
+                        final JMenuItem brazilianPortugueseMenu = new JMenuItem("Portugu\u00eas Brasileiro");
+                        brazilianPortugueseMenu.addActionListener(e111 -> {
+                            form.dispose();
+                            updateLanguage("pt-BR");
+                            updateConfigFile();
+                        });
+
+                        // Portuguese menu item
+                        final JMenuItem portugueseMenu = new JMenuItem("Portugu\u00eas");
+                        portugueseMenu.addActionListener(e110 -> {
+                            form.dispose();
+                            updateLanguage("pt-PT");
+                            updateConfigFile();
+                        });
+
+                        // Russian menu item
+                        final JMenuItem russianMenu = new JMenuItem("\u0440\u0443\u0301\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u0301\u043a");
+                        russianMenu.addActionListener(e19 -> {
+                            form.dispose();
+                            updateLanguage("ru-RU");
+                            updateConfigFile();
+                        });
+
+                        // Romanian menu item
+                        final JMenuItem romanianMenu = new JMenuItem("Rom\u00e2n\u0103");
+                        romanianMenu.addActionListener(e18 -> {
+                            form.dispose();
+                            updateLanguage("ro-RO");
+                            updateConfigFile();
+                        });
+
+                        // Serbian menu item
+                        final JMenuItem serbianMenu = new JMenuItem("Srpski");
+                        serbianMenu.addActionListener(e17 -> {
+                            form.dispose();
+                            updateLanguage("sr-RS");
+                            updateConfigFile();
+                        });
+
+                        // Finnish menu item
+                        final JMenuItem finnishMenu = new JMenuItem("Suomi");
+                        finnishMenu.addActionListener(e16 -> {
+                            form.dispose();
+                            updateLanguage("fi-FI");
+                            updateConfigFile();
+                        });
+
+                        // Vietnamese menu item
+                        final JMenuItem vietnameseMenu = new JMenuItem("ti\u1ebfng Vi\u1ec7t");
+                        vietnameseMenu.addActionListener(e15 -> {
+                            form.dispose();
+                            updateLanguage("vi-VN");
+                            updateConfigFile();
+                        });
+
+                        // Chinese menu item
+                        final JMenuItem chineseMenu = new JMenuItem("\u7b80\u4f53\u4e2d\u6587");
+                        chineseMenu.addActionListener(e14 -> {
+                            form.dispose();
+                            updateLanguage("zh-CN");
+                            updateConfigFile();
+                        });
+
+                        // Chinese (Traditional) menu item
+                        final JMenuItem chineseTraditionalMenu = new JMenuItem("\u7E41\u9AD4\u4E2D\u6587");
+                        chineseTraditionalMenu.addActionListener(e13 -> {
+                            form.dispose();
+                            updateLanguage("zh-TW");
+                            updateConfigFile();
+                        });
+
+                        // Korean menu item
+                        final JMenuItem koreanMenu = new JMenuItem("\ud55c\uad6d\uc5b4");
+                        koreanMenu.addActionListener(e12 -> {
+                            form.dispose();
+                            updateLanguage("ko-KR");
+                            updateConfigFile();
+                        });
+
+                        // Japanese menu item
+                        final JMenuItem japaneseMenu = new JMenuItem("\u65E5\u672C\u8A9E");
+                        japaneseMenu.addActionListener(e1 -> {
+                            form.dispose();
+                            updateLanguage("ja-JP");
+                            updateConfigFile();
+                        });
+
+                        JPopupMenu languagePopup = new JPopupMenu();
+                        languagePopup.add(englishMenu);
+                        languagePopup.addSeparator();
+                        languagePopup.add(arabicMenu);
+                        languagePopup.add(catalanMenu);
+                        languagePopup.add(germanMenu);
+                        languagePopup.add(spanishMenu);
+                        languagePopup.add(frenchMenu);
+                        languagePopup.add(croatianMenu);
+                        languagePopup.add(italianMenu);
+                        languagePopup.add(dutchMenu);
+                        languagePopup.add(polishMenu);
+                        languagePopup.add(portugueseMenu);
+                        languagePopup.add(brazilianPortugueseMenu);
+                        languagePopup.add(russianMenu);
+                        languagePopup.add(romanianMenu);
+                        languagePopup.add(serbianMenu);
+                        languagePopup.add(finnishMenu);
+                        languagePopup.add(vietnameseMenu);
+                        languagePopup.add(chineseMenu);
+                        languagePopup.add(chineseTraditionalMenu);
+                        languagePopup.add(koreanMenu);
+                        languagePopup.add(japaneseMenu);
+                        languagePopup.addPopupMenuListener(new PopupMenuListener() {
+                            @Override
+                            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                            }
+
+                            @Override
+                            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                                if (panel.getMousePosition() != null) {
+                                    btnLanguage.setEnabled(!(panel.getMousePosition().x > btnLanguage.getX() &&
+                                            panel.getMousePosition().x < btnLanguage.getX() + btnLanguage.getWidth() &&
+                                            panel.getMousePosition().y > btnLanguage.getY() &&
+                                            panel.getMousePosition().y < btnLanguage.getY() + btnLanguage.getHeight()));
+                                } else {
+                                    btnLanguage.setEnabled(true);
+                                }
+                            }
+
+                            @Override
+                            public void popupMenuCanceled(PopupMenuEvent e) {
+                            }
+                        });
+                        languagePopup.show(btnLanguage, 0, btnLanguage.getHeight());
+                        btnLanguage.requestFocusInWindow();
+                    });
+
+                    JButton btnPauseAll = new JButton(getManager().isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
+                    btnPauseAll.addActionListener(e -> {
+                        form.dispose();
+                        getManager().togglePauseAll();
+                    });
+
+                    JButton btnDismissAll = new JButton(languageBundle.getString("DismissAll"));
+                    btnDismissAll.addActionListener(e -> exit());
+
+                    // layout
+                    panel.setLayout(new GridBagLayout());
+                    GridBagConstraints gridBag = new GridBagConstraints();
+                    gridBag.fill = GridBagConstraints.HORIZONTAL;
+                    gridBag.gridx = 0;
+                    gridBag.gridy = 0;
+                    panel.add(btnCallShimeji, gridBag);
+                    gridBag.insets = new Insets(5, 0, 0, 0);
+                    gridBag.gridy++;
+                    panel.add(btnFollowCursor, gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnReduceToOne, gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnRestoreWindows, gridBag);
+                    gridBag.gridy++;
+                    panel.add(new JSeparator(), gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnAllowedBehaviours, gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnChooseShimeji, gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnSettings, gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnLanguage, gridBag);
+                    gridBag.gridy++;
+                    panel.add(new JSeparator(), gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnPauseAll, gridBag);
+                    gridBag.gridy++;
+                    panel.add(btnDismissAll, gridBag);
+
+                    form.setIconImage(icon.getImage());
+                    form.setTitle(languageBundle.getString("ShimejiEE"));
+                    form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    form.setAlwaysOnTop(true);
+
+                    // set the form dimensions
+                    FontMetrics metrics = btnCallShimeji.getFontMetrics(btnCallShimeji.getFont());
+                    int width = metrics.stringWidth(btnCallShimeji.getText());
+                    width = Math.max(metrics.stringWidth(btnFollowCursor.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnReduceToOne.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnRestoreWindows.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnAllowedBehaviours.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnChooseShimeji.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnSettings.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnLanguage.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnPauseAll.getText()), width);
+                    width = Math.max(metrics.stringWidth(btnDismissAll.getText()), width);
+                    panel.setPreferredSize(new Dimension(width + 64,
+                            24 + // 12 padding on top and bottom
+                                    75 + // 13 insets of 5 height normally
+                                    10 * metrics.getHeight() + // 10 button faces
+                                    84));
+                    form.pack();
+                    form.setMinimumSize(form.getSize());
+
+                    // get the DPI of the screen, and divide 96 by it to get a ratio
+                    double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+
+                    // setting location of the form
+                    form.setLocation((int) Math.round(event.getX() * dpiScaleInverse) - form.getWidth(), (int) Math.round(event.getY() * dpiScaleInverse) - form.getHeight());
+
+                    // make sure that it is on the screen if people are using exotic taskbar locations
+                    Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+                    if (form.getX() < screen.getX()) {
+                        form.setLocation((int) Math.round(event.getX() * dpiScaleInverse), form.getY());
                     }
+                    if (form.getY() < screen.getY()) {
+                        form.setLocation(form.getX(), (int) Math.round(event.getY() * dpiScaleInverse));
+                    }
+
+                    form.setVisible(true);
                 }
 
                 @Override

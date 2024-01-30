@@ -171,19 +171,27 @@ public class Mascot implements Serializable {
     }
 
     private void mousePressed(final MouseEvent event) {
-        // Switch to drag the animation when the mouse is down
-        if (!isPaused() && getBehavior() != null) {
-            try {
-                getBehavior().mousePressed(event);
-            } catch (final CantBeAliveException e) {
-                log.log(Level.SEVERE, "Severe error in mouse press handler for mascot \"" + this + "\"", e);
-                Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
-                dispose();
+        // Check for popup triggers in both mousePressed and mouseReleased
+        // because it works differently on different systems
+        if (event.isPopupTrigger()) {
+            SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
+        } else {
+            // Switch to drag the animation when the mouse is down
+            if (!isPaused() && getBehavior() != null) {
+                try {
+                    getBehavior().mousePressed(event);
+                } catch (final CantBeAliveException e) {
+                    log.log(Level.SEVERE, "Severe error in mouse press handler for mascot \"" + this + "\"", e);
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                    dispose();
+                }
             }
         }
     }
 
     private void mouseReleased(final MouseEvent event) {
+        // Check for popup triggers in both mousePressed and mouseReleased
+        // because it works differently on different systems
         if (event.isPopupTrigger()) {
             SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
         } else {
