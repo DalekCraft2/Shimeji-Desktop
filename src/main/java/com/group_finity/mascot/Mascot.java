@@ -304,15 +304,15 @@ public class Mascot implements Serializable {
         MenuScroller.setScrollerFor(submenu, 30, 125);
 
         popup.add(increaseMenu);
-        popup.add(new JSeparator());
+        popup.addSeparator();
         popup.add(gatherMenu);
         popup.add(restoreMenu);
         popup.add(debugMenu);
-        popup.add(new JSeparator());
+        popup.addSeparator();
         popup.add(submenu);
-        popup.add(new JSeparator());
+        popup.addSeparator();
         popup.add(pauseMenu);
-        popup.add(new JSeparator());
+        popup.addSeparator();
         popup.add(disposeMenu);
         popup.add(oneMenu);
         popup.add(onlyOneMenu);
