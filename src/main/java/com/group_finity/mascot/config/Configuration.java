@@ -10,7 +10,6 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
-import com.joconner.i18n.Utf8ResourceBundleControl;
 
 import java.awt.*;
 import java.io.IOException;
@@ -50,8 +49,9 @@ public class Configuration {
 
         URL[] urls = {Main.CONFIG_DIRECTORY.toUri().toURL()};
         try (URLClassLoader loader = new URLClassLoader(urls)) {
-            ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-            schema = ResourceBundle.getBundle("schema", locale, loader, utf8Control);
+            // ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
+            // schema = ResourceBundle.getBundle("schema", locale, loader, utf8Control);
+            schema = ResourceBundle.getBundle("schema", locale, loader);
         }
 
         for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {

@@ -8,7 +8,6 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.sound.Sounds;
-import com.joconner.i18n.Utf8ResourceBundleControl;
 import com.nilo.plaf.nimrod.NimRODLookAndFeel;
 import com.nilo.plaf.nimrod.NimRODTheme;
 import org.w3c.dom.Document;
@@ -132,8 +131,9 @@ public class Main {
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
             try (URLClassLoader loader = new URLClassLoader(urls)) {
-                ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-                languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
+                // ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
+                // languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
+                languageBundle = ResourceBundle.getBundle("language", locale, loader);
             }
         } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to load language file for locale " + locale.toLanguageTag(), e);
@@ -993,8 +993,9 @@ public class Main {
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
             try (URLClassLoader loader = new URLClassLoader(urls)) {
-                ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-                languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
+                // ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
+                // languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
+                languageBundle = ResourceBundle.getBundle("language", locale, loader);
             }
         } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to load language file for locale " + locale.toLanguageTag(), e);
