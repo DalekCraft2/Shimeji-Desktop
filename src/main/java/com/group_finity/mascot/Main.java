@@ -396,6 +396,22 @@ public class Main {
             icon.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
+                        // Create a mascot when the icon is clicked
+                        createMascot();
+                    } else if (SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 2) {
+                        // When the icon is double-right-clicked, dispose of all mascots, but do not close the program
+                        if (getManager().isExitOnLastRemoved()) {
+                            getManager().setExitOnLastRemoved(false);
+                            getManager().disposeAll();
+                        } else {
+                            // If the mascots are already gone, recreate one mascot for each active image set
+                            for (String imageSet : imageSets) {
+                                createMascot(imageSet);
+                                getManager().setExitOnLastRemoved(true);
+                            }
+                        }
+                    }
                 }
 
                 @Override
