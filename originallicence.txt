@@ -1,15 +1,29 @@
-==== NOTES ====
+==== ORIGINAL LICENSE ====
 
+Copyright (c) 2009-2011 Yuki Yamada
+
+本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。 本ソフトウェアの使用によって生じるいかなる損害についても、作者は一切の責任を負わないものとします。
+
+以下の制限に従う限り、商用アプリケーションを含めて、本ソフトウェアを任意の目的に使用し、自由に改変して再頒布することをすべての人に許可します。
+
+1.本ソフトウェアの出自について虚偽の表示をしてはなりません。あなたがオリジナルのソフトウェアを作成したと主張してはなりません。 あなたが本ソフトウェアを製品内で使用する場合、製品の文書に謝辞を入れていただければ幸いですが、必須ではありません。
+2.ソースを変更した場合は、そのことを明示しなければなりません。オリジナルのソフトウェアであるという虚偽の表示をしてはなりません。
+3.ソースの頒布物から、この表示を削除したり、表示の内容を変更したりしてはなりません。
+
+==== TRANSLATED LICENSE ====
+
+--NOTE--
+This is a translated copy of the original license for reference purposes. In the case of any conflict, the original Japanese license supersedes the translation.
+--KILKAKON'S NOTE--
 Sorry, I just ran this through Google Translate, but I think the message is clear enough.  This original license still holds.  When hosting this project on Google Projects, I needed to choose a license and it seems like the New BSD License fit it perfectly.
+--END NOTES--
 
-==== END NOTE ====
+Copyright (c) 2009-2011 Yuki Yamada
 
-Copyright (c) 2009 Yuki Yamada
+THE SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. The author assumes no responsibility for any damage caused by the use of this software.
 
-This software is "as is" basis, and whether in explicit or implicit, is provided without warranty of any kind. For any damages resulting from the use of this software, the authors assume no liability.
+Permission is granted to anyone to use, freely modify, and redistribute this software for any purpose, including commercial applications, subject to the restrictions below.
 
-Unless subject to the following restrictions, including commercial applications, using this software for any purpose, to allow everyone to modify and redistribute it freely.
-
-1. To misstatements about the origin of this software must not be. Claimed to have created the original software, you must not. If you use this software in your product, but I hope you'll put an acknowledgment of the product documentation, but not required.
-2. If you change the source, must clearly indicate that. View that it is false to the original software will not.
-3. From a distribution of the source or remove the display, then you must change the contents of the display.
+1.You must not falsely represent the origin of this software. Do not claim that you created the original software. If you use the Software in a product, it would be appreciated, but not required, that you include an acknowledgment in the product documentation.
+2. If the source has been modified, this must be clearly indicated. You may not falsely represent original software.
+3. You may not remove or alter this notice from any distribution of Source.

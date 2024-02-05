@@ -7,11 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Virtual desktop environment by Kilkakon
- * <p>
- * <a href="https://kilkakon.com">kilkakon.com</a>
+ * Virtual desktop translucent panel.
  *
  * @author Kilkakon
+ * @since 1.0.20
  */
 class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     /**

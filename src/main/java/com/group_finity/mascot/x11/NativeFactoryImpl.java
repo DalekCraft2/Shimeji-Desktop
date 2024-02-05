@@ -1,5 +1,5 @@
 /*
- * Created by asdfman, Ygarr, and Pro-Prietary
+ * Created by asdfman and Ygarr
  * https://github.com/asdfman/linux-shimeji
  * https://github.com/Ygarr/linux-shimeji
  */
@@ -13,9 +13,7 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import java.awt.image.BufferedImage;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * @author asdfman
  */
 public class NativeFactoryImpl extends NativeFactory {
 

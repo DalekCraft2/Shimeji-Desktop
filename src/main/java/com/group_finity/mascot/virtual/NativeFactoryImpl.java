@@ -8,11 +8,10 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import java.awt.image.BufferedImage;
 
 /**
- * Virtual desktop environment by Kilkakon
- * <p>
- * <a href="https://kilkakon.com">kilkakon.com</a>
+ * Virtual desktop factory.
  *
  * @author Kilkakon
+ * @since 1.0.20
  */
 public class NativeFactoryImpl extends NativeFactory {
     private VirtualEnvironment environment = new VirtualEnvironment();

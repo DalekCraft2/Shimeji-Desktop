@@ -8,11 +8,10 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
 /**
- * Virtual desktop environment by Kilkakon
- * <p>
- * <a href="https://kilkakon.com">kilkakon.com</a>
+ * Virtual desktop native image.
  *
  * @author Kilkakon
+ * @since 1.0.20
  */
 class VirtualNativeImage implements NativeImage {
     /**

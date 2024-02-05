@@ -11,6 +11,7 @@ import java.awt.*;
  * when the user interacts with the area.
  *
  * @author Kilkakon
+ * @since 1.0.19
  */
 public class Hotspot {
     private final String behaviour;

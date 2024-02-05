@@ -17,9 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class ActionBuilder implements IActionBuilder {
 
@@ -82,13 +81,13 @@ public class ActionBuilder implements IActionBuilder {
                             return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
                         } catch (IllegalAccessException | IllegalArgumentException | InstantiationException |
                                  NoSuchMethodException | SecurityException | InvocationTargetException e) {
-                            // NOTE There's no constructor
+                            // NOTE There seems to be no constructor, so move on to the next
                         }
 
                         return cls.getConstructor(ResourceBundle.class, VariableMap.class).newInstance(schema, variables);
                     } catch (IllegalAccessException | IllegalArgumentException | InstantiationException |
                              NoSuchMethodException | SecurityException | InvocationTargetException e) {
-                        // NOTE There's no constructor
+                        // NOTE There seems to be no constructor, so move on to the next
                     }
 
                     return cls.getConstructor().newInstance();

@@ -11,9 +11,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Loads image pairs.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class ImagePairLoader {
     public enum Filter {
@@ -22,6 +23,15 @@ public class ImagePairLoader {
         BICUBIC
     }
 
+    /**
+     * Loads an image pair.
+     *
+     * @param name file name of left-facing image to load
+     * @param rightName file name of right-facing image to load
+     * @param center image center coordinate
+     * @param scaling the scale factor of the image
+     * @param filter the type of filter to use to generate the image
+     */
     public static void load(final String name, final String rightName, final Point center, final double scaling, final Filter filter) throws IOException {
         if (ImagePairs.contains(name + (rightName == null ? "" : rightName))) {
             return;
@@ -40,6 +50,12 @@ public class ImagePairLoader {
         ImagePairs.load(name + (rightName == null ? "" : rightName), ip);
     }
 
+    /**
+     * Flips the image horizontally.
+     *
+     * @param src the image to flip horizontally
+     * @return horizontally flipped image
+     */
     private static BufferedImage flip(final BufferedImage src) {
         final BufferedImage copy = new BufferedImage(src.getWidth(), src.getHeight(),
                 src.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB : src.getType());

@@ -11,23 +11,22 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
 /**
- * {@link WindowsTranslucentWindow} a value that can be used with images.
+ * An image with alpha value that can be used for {@link WindowsTranslucentWindow}.
  * <p>
- * {@link WindowsTranslucentWindow} is available because only Windows bitmap
- * {@link BufferedImage} existing copy pixels from a Windows bitmap.
- * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Only Windows bitmaps can be used for {@link WindowsTranslucentWindow}, so
+ * copy pixels from an existing {@link BufferedImage} to a Windows bitmap.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 class WindowsNativeImage implements NativeImage {
 
     /**
-     * Windows to create a bitmap.
+     * Creates a Windows bitmap.
      *
-     * @param width  width of the bitmap.
-     * @param height the height of the bitmap.
-     * @return the handle of a bitmap that you create.
+     * @param width width of the bitmap
+     * @param height height of the bitmap
+     * @return handle of the created bitmap
      */
     private static WinDef.HBITMAP createNative(final int width, final int height) {
         final WinGDI.BITMAPINFOHEADER bmiHeader = new WinGDI.BITMAPINFOHEADER();
@@ -45,10 +44,10 @@ class WindowsNativeImage implements NativeImage {
     }
 
     /**
-     * {@link BufferedImage} to reflect the contents of the bitmap.
+     * Reflects the contents of a {@link BufferedImage} in the bitmap.
      *
-     * @param nativeHandle bitmap handle.
-     * @param rgb          ARGB of the picture.
+     * @param nativeHandle bitmap handle
+     * @param rgb ARGB values of the image
      */
     private static void flushNative(final WinDef.HBITMAP nativeHandle, final int[] rgb) {
         final WinGDI.BITMAP bmp = new WinGDI.BITMAP();
@@ -64,11 +63,9 @@ class WindowsNativeImage implements NativeImage {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-
-                // TODO Fix translation errors here... after figuring out what it is supposed to say.
-                // UpdateLayeredWindow and Photoshop are incompatible ?Irashii
-                // UpdateLayeredWindow FFFFFF RGB value has the bug that it ignores the value of a,
-                // Photoshop is where a is an RGB value of 0 have the property value to 0.
+                // UpdateLayeredWindow and Photoshop seem to be incompatible.
+                // UpdateLayeredWindow has a bug where it ignores the alpha value when the RGB value is FFFFFF,
+                // and Photoshop has the property of setting the RGB value to 0 where the alpha value is 0.
 
                 bmp.bmBits.setInt(destIndex + x * 4L,
                         (rgb[srcColIndex] & 0xFF000000) == 0 ? 0 : rgb[srcColIndex]);
@@ -82,16 +79,16 @@ class WindowsNativeImage implements NativeImage {
     }
 
     /**
-     * Windows to open a bitmap.
+     * Free up Windows bitmaps.
      *
-     * @param nativeHandle bitmap handle.
+     * @param nativeHandle bitmap handle
      */
     private static void freeNative(final WinDef.HBITMAP nativeHandle) {
         GDI32.INSTANCE.DeleteObject(nativeHandle);
     }
 
     /**
-     * Java Image object.
+     * Java image object.
      */
     private final BufferedImage managedImage;
 
@@ -104,9 +101,7 @@ class WindowsNativeImage implements NativeImage {
         managedImage = image;
         /* nativeHandle = createNative(image.getWidth(), image.getHeight());
 
-        int[] rbgValues = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
-
-        flushNative(getNativeHandle(), rbgValues); */
+        update(); */
     }
 
     /* @Override
@@ -116,10 +111,12 @@ class WindowsNativeImage implements NativeImage {
     } */
 
     /**
-     * Changes to be reflected in the Windows bitmap image.
+     * Reflects changes to the image in the Windows bitmap.
      */
     public void update() {
-        // this isn't used
+        /* int[] rbgValues = managedImage.getRGB(0, 0, managedImage.getWidth(), managedImage.getHeight(), null, 0, managedImage.getWidth());
+
+        flushNative(nativeHandle, rbgValues); */
     }
 
     public void flush() {

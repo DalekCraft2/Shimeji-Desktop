@@ -16,9 +16,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Multiplying action.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class Breed extends Animate {
     private static final Logger log = Logger.getLogger(Breed.class.getName());
@@ -64,6 +65,7 @@ public class Breed extends Animate {
                 (getBornTransient() ?
                         Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Transients", "true")) :
                         Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Breeding", "true")))) {
+            // Multiply
             breed();
         }
     }
@@ -71,10 +73,12 @@ public class Breed extends Animate {
     private void breed() throws VariableException {
         String childType = Main.getInstance().getConfiguration(getBornMascot()) != null ? getBornMascot() : getMascot().getImageSet();
 
+        // Create a mascot
         final Mascot mascot = new Mascot(childType);
 
         log.log(Level.INFO, "Breeding mascot ({0}, {1}, {2})", new Object[]{getMascot(), this, mascot});
 
+        // Start outside the range
         if (getMascot().isLookRight()) {
             mascot.setAnchor(new Point(getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
                     getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));

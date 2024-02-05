@@ -13,11 +13,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * Virtual desktop environment by Kilkakon
- * <p>
- * <a href="https://kilkakon.com">kilkakon.com</a>
+ * Virtual desktop environment.
  *
  * @author Kilkakon
+ * @since 1.0.20
  */
 class VirtualEnvironment extends Environment {
     private final JFrame display = new JFrame();

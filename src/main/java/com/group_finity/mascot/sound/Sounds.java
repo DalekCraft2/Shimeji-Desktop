@@ -10,10 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This static class contains all the sounds loaded by Shimeji-ee.
- * <p>
- * Visit <a href="https://kilkakon.com/shimeji">kilkakon.com/shimeji</a> for updates
  *
  * @author Kilkakon
+ * @since 1.0.9
  */
 public class Sounds {
     private static final ConcurrentHashMap<String, Clip> SOUNDS = new ConcurrentHashMap<>();

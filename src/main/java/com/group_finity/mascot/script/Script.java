@@ -9,9 +9,8 @@ import javax.script.CompiledScript;
 import javax.script.ScriptException;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class Script extends Variable {
 
@@ -26,7 +25,6 @@ public class Script extends Variable {
     private Object value;
 
     public Script(final String source, final boolean clearAtInitFrame) throws VariableException {
-
         this.source = source;
         this.clearAtInitFrame = clearAtInitFrame;
         try {

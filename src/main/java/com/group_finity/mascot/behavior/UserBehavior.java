@@ -20,10 +20,9 @@ import java.util.logging.Logger;
 
 /**
  * Simple {@link Behavior} implementation.
- * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class UserBehavior implements Behavior {
     private static final Logger log = Logger.getLogger(UserBehavior.class.getName());
@@ -97,7 +96,8 @@ public class UserBehavior implements Behavior {
     }
 
     /**
-     * On Mouse Pressed. Start dragging.
+     * Called when a mouse button is pressed.
+     * If the left button is pressed, start dragging.
      *
      * @throws CantBeAliveException
      */
@@ -146,7 +146,8 @@ public class UserBehavior implements Behavior {
     }
 
     /**
-     * On Mouse Release. End dragging.
+     * Called when a mouse button is released.
+     * If the left button is released, the dragging ends.
      *
      * @throws CantBeAliveException
      */
@@ -160,6 +161,7 @@ public class UserBehavior implements Behavior {
             // check if we are in the middle of a drag, otherwise we do nothing
             if (getMascot().isDragging()) {
                 try {
+                    // Stop dragging
                     getMascot().setDragging(false);
                     getMascot().setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_THROWN)));
                 } catch (final BehaviorInstantiationException e) {
@@ -205,6 +207,7 @@ public class UserBehavior implements Behavior {
 
             if (hotspotState != HotspotState.ACTIVE) {
                 if (getAction().hasNext()) {
+                    // If it goes off-screen
                     if (getMascot().getBounds().getX() + getMascot().getBounds().getWidth()
                             <= getEnvironment().getScreen().getLeft()
                             || getEnvironment().getScreen().getRight() <= getMascot().getBounds().getX()

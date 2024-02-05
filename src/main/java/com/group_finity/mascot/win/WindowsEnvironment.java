@@ -18,9 +18,10 @@ import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Uses JNI to obtain environment information that is difficult to obtain with Java.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 // FIXME This environment feels slower than it used to be whenever a lot of Shimejis are moving on-screen.
 class WindowsEnvironment extends Environment {
@@ -50,6 +51,7 @@ class WindowsEnvironment extends Environment {
             return cachedValue;
         }
 
+        // Determine whether it is IE by the window title
         final String ieTitle = WindowUtils.getWindowTitle(ie);
 
         // optimisation to remove empty windows from consideration without the loop.
@@ -90,10 +92,12 @@ class WindowsEnvironment extends Environment {
             int flags = WindowsUtil.GetWindowLong(ie, User32.GWL_STYLE).intValue();
 
             if ((flags & User32.WS_MAXIMIZE) != 0) {
+                // Aborted because a maximized window was found
                 return IEResult.INVALID;
             }
 
             if (isIE(ie) && (flags & User32.WS_MINIMIZE) == 0) {
+                // IE found
                 Rectangle ieRect = getIERect(ie, true);
                 if (ieRect.intersects(getScreenRect())) {
                     return IEResult.IE;
@@ -103,6 +107,7 @@ class WindowsEnvironment extends Environment {
             }
         }
 
+        // Not found
         return IEResult.NOT_IE;
     }
 
@@ -150,10 +155,16 @@ class WindowsEnvironment extends Environment {
         return null; */
     }
 
+    /**
+     * Gets the given window's area.
+     *
+     * @return the window's area
+     */
     private static Rectangle getIERect(WinDef.HWND ie, boolean dpiAware) {
         if (ie == null) {
             return new Rectangle();
         }
+        // Get IE rectangle
         final Rectangle out = WindowUtils.getWindowLocationAndSize(ie);
         Rectangle in;
         try {
@@ -161,6 +172,7 @@ class WindowsEnvironment extends Environment {
         } catch (Win32Exception e) {
             in = new Rectangle(out.width, out.height);
         }
+        // Create and return a Rectangle object
         Rectangle rect = new Rectangle(out.x + in.x, out.y + in.y, in.width, in.height);
         if (dpiAware) {
             double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
@@ -188,6 +200,7 @@ class WindowsEnvironment extends Environment {
             return false;
         }
 
+        // Get IE rectangle
         final Rectangle out = WindowUtils.getWindowLocationAndSize(ie);
         Rectangle in;
         try {
@@ -216,7 +229,11 @@ class WindowsEnvironment extends Environment {
             public boolean callback(WinDef.HWND hWnd, Pointer data) {
                 IEResult result = isViableIE(hWnd);
                 if (result == IEResult.IE_OUT_OF_BOUNDS) {
+                    // IE found
+
+                    // Get the work area rectangle
                     final Rectangle workArea = getWorkAreaRect(false);
+                    // Get IE rectangle
                     final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
 
                     double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
@@ -224,6 +241,7 @@ class WindowsEnvironment extends Environment {
                         offset = (int) Math.round(offset * dpiScaleInverse);
                         firstCallback = false;
                     }
+                    // Move the window to be on-screen
                     rect.setLocation(workArea.x + offset, workArea.y + offset);
                     User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
                     User32.INSTANCE.BringWindowToTop(hWnd);
@@ -291,6 +309,11 @@ class WindowsEnvironment extends Environment {
         return activeIEobject.hashCode();
     }
 
+    /**
+     * Gets the work area. This area is the display area excluding the taskbar.
+     *
+     * @return work area
+     */
     private static Rectangle getWorkAreaRect(boolean dpiAware) {
         if (dpiAware) {
             GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()

@@ -7,9 +7,8 @@ import com.group_finity.mascot.NativeFactory;
 import java.awt.*;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class MascotEnvironment {
     private final Environment impl;
@@ -24,14 +23,26 @@ public class MascotEnvironment {
         impl.init();
     }
 
+    /**
+     * Gets the screen containing this environment's {@link Mascot}.
+     *
+     * @return the screen containing this environment's {@link Mascot}
+     */
     public Area getWorkArea() {
         return getWorkArea(false);
     }
 
+    /**
+     * Gets the screen containing this environment's {@link Mascot}.
+     *
+     * @param ignoreSettings whether to force the current work area to be recalculated
+     * @return the screen containing this environment's {@link Mascot}
+     */
     public Area getWorkArea(Boolean ignoreSettings) {
         if (currentWorkArea != null) {
             if (ignoreSettings || Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
-                // NOTE Windows
+                // NOTE For Windows multi-monitor support: The Windows work area is smaller than the main screen.
+                // If the current screen includes a work area and the mascot is included in the work area, give priority to the work area.
                 if (currentWorkArea != impl.getWorkArea() && currentWorkArea.toRectangle().contains(impl.getWorkArea().toRectangle())) {
                     if (impl.getWorkArea().contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
                         currentWorkArea = impl.getWorkArea();
@@ -39,7 +50,8 @@ public class MascotEnvironment {
                     }
                 }
 
-                // NOTE
+                // NOTE For Windows multi-monitor support:  The mascot may be included on multiple monitors at the same time,
+                // in which case the current monitor takes priority.
                 if (currentWorkArea.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
                     return currentWorkArea;
                 }
@@ -48,11 +60,13 @@ public class MascotEnvironment {
             }
         }
 
+        // First check whether the mascot is included in the work area
         if (impl.getWorkArea().contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
             currentWorkArea = impl.getWorkArea();
             return currentWorkArea;
         }
 
+        // Check whether any monitor contains the mascot
         for (Area area : impl.getScreens()) {
             if (area.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
                 currentWorkArea = area;

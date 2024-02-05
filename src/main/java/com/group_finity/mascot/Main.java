@@ -40,10 +40,9 @@ import java.util.logging.Logger;
 
 /**
  * Program entry point.
- * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class Main {
     private static final Logger log = Logger.getLogger(Main.class.getName());
@@ -201,7 +200,7 @@ public class Main {
             }
         }
 
-        // Load settings
+        // Load configurations
         for (int index = 0; index < imageSets.size(); index++) {
             if (!loadConfiguration(imageSets.get(index))) {
                 // failed validation
@@ -217,7 +216,7 @@ public class Main {
         // Create the tray icon
         createTrayIcon();
 
-        // Create the first mascot
+        // Create mascots
         for (String imageSet : imageSets) {
             createMascot(imageSet);
         }
@@ -225,6 +224,11 @@ public class Main {
         getManager().start();
     }
 
+    /**
+     * Loads the configuration files for the given image set.
+     *
+     * @param imageSet the image set to load
+     */
     private boolean loadConfiguration(final String imageSet) {
         try {
             // try to load in the correct xml files
@@ -963,7 +967,7 @@ public class Main {
     }
 
     /**
-     * Randomly creates a mascot.
+     * Creates a random {@link Mascot}.
      */
     public void createMascot() {
         int length = imageSets.size();
@@ -972,7 +976,9 @@ public class Main {
     }
 
     /**
-     * Creates a mascot.
+     * Creates a {@link Mascot} with the specified image set.
+     *
+     * @param imageSet the image set to use
      */
     public void createMascot(String imageSet) {
         log.log(Level.INFO, "Creating mascot with image set \"{0}\"", imageSet);

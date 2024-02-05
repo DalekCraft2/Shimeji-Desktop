@@ -11,14 +11,13 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * The image window with alpha.
- * {@link #setImage(NativeImage)} set in {@link WindowsNativeImage} can be displayed on the desktop.
+ * Image window with alpha value.
+ * {@link WindowsNativeImage} set with {@link #setImage(NativeImage)} can be displayed on the desktop.
  * <p>
- * {@link #setAlpha(int)} may be specified when the concentration of view.
- * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * You can also specify the alpha when displaying with {@link #setAlpha(int)}.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
@@ -30,7 +29,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     private WindowsNativeImage image;
 
     /**
-     * The concentration shown. 0 = not at all, 255 = full display.
+     * Display concentration. 0 = not displayed at all, 255 = completely displayed.
      */
     private int alpha = 255;
 
@@ -46,10 +45,10 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     /**
-     * Draw a picture with a value of alpha.
+     * Draws an image with alpha value.
      *
-     * @param imageHandle bitmap handle.
-     * @param alpha       concentrations shown. 0 = not at all, 255 = full display.
+     * @param imageHandle bitmap handle
+     * @param alpha display alpha. 0 = not displayed at all, 255 = completely displayed.
      */
     // FIXME This method does not work on Java 11.
     private void paint(final WinDef.HBITMAP imageHandle, final int alpha) {
@@ -62,19 +61,19 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
                 WindowsUtil.SetWindowLong(hWnd, User32.GWL_EXSTYLE, Pointer.createConstant(exStyle | User32.WS_EX_LAYERED));
             }
 
-            // Create a DC source of the image
+            // Create image transfer source DC
             final WinDef.HDC clientDC = User32.INSTANCE.GetDC(hWnd);
             final WinDef.HDC memDC = GDI32.INSTANCE.CreateCompatibleDC(clientDC);
             final WinNT.HANDLE oldBmp = GDI32.INSTANCE.SelectObject(memDC, imageHandle);
 
             User32.INSTANCE.ReleaseDC(hWnd, clientDC);
 
-            // Destination Area
+            // Transfer destination area
             final Rectangle windowRect = WindowUtils.getWindowLocationAndSize(hWnd);
 
-            // Forward
+            // Transfer
             final WinUser.BLENDFUNCTION bf = new WinUser.BLENDFUNCTION();
-            bf.SourceConstantAlpha = (byte) alpha; // Level set
+            bf.SourceConstantAlpha = (byte) alpha; // Set alpha
             bf.AlphaFormat = WinUser.AC_SRC_ALPHA;
 
             final WinDef.POINT lt = new WinDef.POINT(windowRect.x, windowRect.y);
@@ -85,7 +84,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
                     lt, size,
                     memDC, zero, 0, bf, User32.ULW_ALPHA);
 
-            // Replace the old bitmap with the new one
+            // Revert the bitmap to its original state
             GDI32.INSTANCE.SelectObject(memDC, oldBmp);
             GDI32.INSTANCE.DeleteDC(memDC);
 
@@ -105,7 +104,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     public void paint(final Graphics g) {
         super.paint(g);
         if (getImage() != null) {
-            // JNI with drawing images using the alpha value.
+            // Draw an image with alpha value using JNI.
             // paint(getImage().getNativeHandle(), getAlpha());
 
             // Using AWT as a temporary fix until I get paint() to work with Java 11.

@@ -5,24 +5,33 @@ import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * An object that represents a {@link Mascot}'s short-term movement.
  * <p>
- * Currently developed by Shimeji-ee Group.
+ * {@link #next()} is called at regular intervals.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public interface Action {
 
     /**
-     * @param mascot
+     * Called when starting an action.
+     *
+     * @param mascot the {@link Mascot} with which to associate
      */
     void init(Mascot mascot) throws VariableException;
 
     /**
-     * @return
+     * Checks whether there is a next frame.
+     *
+     * @return whether there is a next frame
      */
     boolean hasNext() throws VariableException;
 
     /**
-     * @throws LostGroundException
+     * Advances the {@link Mascot} to the next frame.
+     *
+     * @throws LostGroundException if there is no ground
      */
     void next() throws LostGroundException, VariableException;
 

@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class ComplexArea {
 
@@ -22,7 +21,8 @@ public class ComplexArea {
     }
 
     public void set(String name, final Rectangle value) {
-
+        // Should I exclude an area which matches exactly?
+        // This seems to occur when mirroring
         for (Area area : areas.values()) {
             if (area.getLeft() == value.x &&
                     area.getTop() == value.y &&

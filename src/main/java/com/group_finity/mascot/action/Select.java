@@ -6,9 +6,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * An action that executes only one of multiple actions that matches the conditions.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class Select extends ComplexAction {
     private static final Logger log = Logger.getLogger(Select.class.getName());

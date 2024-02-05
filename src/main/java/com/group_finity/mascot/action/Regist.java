@@ -11,9 +11,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Action for resisting being dragged.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 // TODO Try to fix the typos of "resist" and "resistance" being "regist" and "registance" without breaking compatibility.
 public class Regist extends ActionBase {
@@ -36,10 +37,13 @@ public class Regist extends ActionBase {
     protected void tick() throws LostGroundException, VariableException {
         getMascot().setDragging(true);
 
+        // Animate
         final Animation animation = getAnimation();
         animation.next(getMascot(), getTime());
 
         if (getTime() + 1 >= getAnimation().getDuration()) {
+            // Ended because the period has passed.
+
             getMascot().setLookRight(Math.random() < 0.5);
 
             log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});

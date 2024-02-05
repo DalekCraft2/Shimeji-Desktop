@@ -12,9 +12,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Base class for actions that move while attached to a frame.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public abstract class BorderedAction extends ActionBase {
 
@@ -54,6 +55,7 @@ public abstract class BorderedAction extends ActionBase {
     @Override
     protected void tick() throws LostGroundException, VariableException {
         if (getBorder() != null) {
+            // The frame may be moving
             getMascot().setAnchor(getBorder().move(getMascot().getAnchor()));
         }
     }

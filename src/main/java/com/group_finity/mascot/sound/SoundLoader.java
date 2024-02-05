@@ -7,10 +7,9 @@ import java.io.IOException;
 /**
  * Loads in new Clip objects into the Sounds collection. It will not duplicate
  * sounds already in the collection.
- * <p>
- * Visit <a href="https://kilkakon.com/shimeji">kilkakon.com/shimeji</a> for updates
  *
  * @author Kilkakon
+ * @since 1.0.9
  */
 public class SoundLoader {
     public static void load(final String name, final float volume) throws IOException, LineUnavailableException, UnsupportedAudioFileException {

@@ -14,9 +14,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Action of falling whilst holding a window.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 // TODO Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.
 public class FallWithIE extends Fall {
@@ -59,6 +60,7 @@ public class FallWithIE extends Fall {
         final int offsetX = getIEOffsetX();
         final int offsetY = getIEOffsetY();
 
+        // Check whether the mascot has the window properly
         if (getMascot().isLookRight()) {
             if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
@@ -75,6 +77,7 @@ public class FallWithIE extends Fall {
 
         super.tick();
 
+        // Move window
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
                 getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x - offsetX, getMascot().getAnchor().y

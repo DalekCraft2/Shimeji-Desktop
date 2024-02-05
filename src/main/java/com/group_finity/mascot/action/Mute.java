@@ -11,11 +11,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
- * By Kilkakon
- * <p>
- * Go to <a href="https://kilkakon.com">kilkakon.com</a> for all the best milkshakes and chocolate sundaes
- * <p>
- * Now I'm hungry
+ * @author Kilkakon
+ * @since 1.0.16
  */
 public class Mute extends InstantAction {
     private static final Logger log = Logger.getLogger(Mute.class.getName());

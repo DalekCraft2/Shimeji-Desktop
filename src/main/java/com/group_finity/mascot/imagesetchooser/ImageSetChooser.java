@@ -20,6 +20,9 @@ import java.util.List;
 
 /**
  * Chooser used to select the Shimeji image sets in use.
+ *
+ * @author Shimeji-ee Group
+ * @since 1.0.2
  */
 public class ImageSetChooser extends JDialog {
     private final ArrayList<String> imageSets = new ArrayList<>();

@@ -12,6 +12,9 @@ import java.nio.file.Path;
 
 /**
  * Displays information about an image set. Used by {@link ImageSetChooser}.
+ *
+ * @author Shimeji-ee Group
+ * @since 1.0.2
  */
 public class ImageSetChooserPanel extends JPanel {
 

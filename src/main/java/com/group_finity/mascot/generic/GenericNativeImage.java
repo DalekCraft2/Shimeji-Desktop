@@ -9,19 +9,18 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
 /**
- * {@link GenericTranslucentWindow} a value that can be used with images.
+ * An image with alpha value that can be used for {@link GenericTranslucentWindow}.
  * <p>
- * {@link GenericTranslucentWindow} is available because only Windows bitmap
- * {@link BufferedImage} existing copy pixels from a Windows bitmap.
- * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Only Windows bitmaps can be used for {@link GenericTranslucentWindow}, so
+ * copy pixels from an existing {@link BufferedImage} to a Windows bitmap.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 class GenericNativeImage implements NativeImage {
 
     /**
-     * Java Image object.
+     * Java image object.
      */
     private final BufferedImage managedImage;
 

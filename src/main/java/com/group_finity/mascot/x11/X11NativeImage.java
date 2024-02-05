@@ -1,7 +1,6 @@
 /*
- * Created by asdfman, Ygarr, and Pro-Prietary
+ * Created by asdfman
  * https://github.com/asdfman/linux-shimeji
- * https://github.com/Ygarr/linux-shimeji
  */
 package com.group_finity.mascot.x11;
 
@@ -14,14 +13,12 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 
 /**
- * {@link X11TranslucentWindow} a value that can be used with images.
+ * An image with alpha value that can be used for {@link X11TranslucentWindow}.
  * <p>
- * {@link X11TranslucentWindow} is available because only Windows bitmap
- * {@link BufferedImage} existing copy pixels from a Windows bitmap.
- * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Only Windows bitmaps can be used for {@link X11TranslucentWindow}, so
+ * copy pixels from an existing {@link BufferedImage} to a Windows bitmap.
+ *
+ * @author asdfman
  */
 class X11NativeImage implements NativeImage {
 

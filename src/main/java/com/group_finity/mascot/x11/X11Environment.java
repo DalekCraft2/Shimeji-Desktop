@@ -1,7 +1,6 @@
 /*
- * Created by asdfman, Ygarr, and Pro-Prietary
+ * Created by asdfman
  * https://github.com/asdfman/linux-shimeji
- * https://github.com/Ygarr/linux-shimeji
  */
 package com.group_finity.mascot.x11;
 
@@ -20,6 +19,11 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Uses JNI to obtain environment information that is difficult to obtain with Java.
+ *
+ * @author asdfman
+ */
 class X11Environment extends Environment {
 
     /**

@@ -8,6 +8,11 @@ import java.util.Date;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * Class to format logs.
+ *
+ * @author Yuki Yamada
+ */
 public class LogFormatter extends SimpleFormatter {
 
     private final Date dat = new Date();

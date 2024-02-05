@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
+ * @since 1.0.18
  */
 public class BreedMove extends Move {
     private static final Logger log = Logger.getLogger(BreedMove.class.getName());

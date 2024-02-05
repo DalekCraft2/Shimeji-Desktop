@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
+ * @since 1.0.18
  */
 public class BreedJump extends Jump {
     private static final Logger log = Logger.getLogger(BreedJump.class.getName());

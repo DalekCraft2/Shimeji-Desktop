@@ -13,9 +13,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Action for being dragged.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class Dragged extends ActionBase {
     private static final Logger log = Logger.getLogger(Dragged.class.getName());
@@ -79,11 +80,14 @@ public class Dragged extends ActionBase {
         setFootDx((getFootDx() + (newX - getFootX()) * 0.1) * 0.8);
         setFootX(getFootX() + getFootDx());
 
+        // Since the foot position and foot delta position may be included in the animation conditions, put them in variables
         putVariable(getSchema().getString(VARIABLE_FOOTDX), getFootDx());
         putVariable(getSchema().getString(VARIABLE_FOOTX), getFootX());
 
+        // Animate
         getAnimation().next(getMascot(), getTime());
 
+        // Align the mascot position to the mouse cursor
         getMascot().setAnchor(new Point(cursor.getX() + (int) Math.round(getOffsetX() * scaling), cursor.getY() + (int) Math.round(getOffsetY() * scaling)));
     }
 

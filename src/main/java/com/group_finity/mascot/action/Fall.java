@@ -13,9 +13,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Falling action.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class Fall extends ActionBase {
 
@@ -108,6 +109,7 @@ public class Fall extends ActionBase {
         setModX(getModX() + getVelocityX() % 1);
         setModY(getModY() + getVelocityY() % 1);
 
+        // Movement amount
         int dx = (int) Math.round(getVelocityX() + getModX());
         int dy = (int) Math.round(getVelocityY() + getModY());
 
@@ -123,9 +125,10 @@ public class Fall extends ActionBase {
             int x = start.x + dx * i / dev;
             int y = start.y + dy * i / dev;
 
+            // Move mascot
             getMascot().setAnchor(new Point(x, y));
             if (dy > 0) {
-                // HACK IE
+                // HACK: Windows may be moved, so check them often.
                 for (int j = -80; j <= 0; j++) {
                     getMascot().setAnchor(new Point(x, y + j));
                     if (getEnvironment().getFloor(true).isOn(getMascot().getAnchor())) {
@@ -138,6 +141,7 @@ public class Fall extends ActionBase {
             }
         }
 
+        // Animate
         getAnimation().next(getMascot(), getTime());
     }
 

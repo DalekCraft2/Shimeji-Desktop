@@ -14,9 +14,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * Abstract class that implements common functionality of actions.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public abstract class ActionBase implements Action {
 
@@ -64,11 +65,14 @@ public abstract class ActionBase implements Action {
         setMascot(mascot);
         setTime(0);
 
+        // Add mascot and action to the variable map, so they can be used in the script
         getVariables().put("mascot", mascot);
         getVariables().put("action", this);
 
+        // Initialize variable values
         getVariables().init();
 
+        // Initialize the animations
         for (final Animation animation : animations) {
             animation.init();
         }
@@ -84,9 +88,10 @@ public abstract class ActionBase implements Action {
     }
 
     private void initFrame() {
-
+        // Initialize variable values (each frame)
         getVariables().initFrame();
 
+        // Initialize animation frames
         for (final Animation animation : getAnimations()) {
             animation.initFrame();
         }

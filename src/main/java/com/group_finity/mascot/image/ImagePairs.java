@@ -4,9 +4,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * @author Shimeji-ee Group
  */
 public class ImagePairs {
     private static ConcurrentHashMap<String, ImagePair> imagePairs = new ConcurrentHashMap<>();

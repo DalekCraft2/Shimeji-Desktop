@@ -1,5 +1,6 @@
 package com.group_finity.mascot;
 
+import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.Area;
@@ -28,23 +29,31 @@ import java.util.logging.Logger;
 /**
  * Mascot object.
  * <p>
- * Mascots' long-term, complex behaviors are represented by {@link Behavior Behaviors},
- * and their short-term, simple actions are represented by {@link Action Actions}.
+ * Mascots move using {@link Behavior}, which represents long-term and complex behavior,
+ * and {@link Action}, which represents short-term and monotonous movements.
  * <p>
- * Mascots have an internal timer which calls {@link #tick()} at a constant interval
- * to animate the mascot.
+ * Mascots have an internal timer and call {@link Action} at regular intervals.
+ * {@link Action} animates the mascot by calling {@link Animation}.
  * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * When {@link Action} ends or at other specific times, {@link Behavior} is called and moves to the next {@link Action}.
+ *
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public class Mascot implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static final Logger log = Logger.getLogger(Mascot.class.getName());
 
+    /**
+     * The ID of the last generated {@code Mascot}.
+     */
     private static AtomicInteger lastId = new AtomicInteger();
 
+    /**
+     * The {@code Mascot}'s ID.
+     * Exists only to make it easier to view debug logs.
+     */
     private final int id;
 
     private String imageSet;
@@ -59,8 +68,9 @@ public class Mascot implements Serializable {
     private Manager manager = null;
 
     /**
-     * The {@code Mascot}'s ground coordinates
-     * (or feet coordinates, for example, when the {@code Mascot} is climbing).
+     * The {@code Mascot}'s ground coordinates.
+     * For example, its feet or its hands when hanging.
+     * This will be the center when displaying the image.
      */
     private Point anchor = new Point(0, 0);
 
@@ -70,18 +80,18 @@ public class Mascot implements Serializable {
     private MascotImage image = null;
 
     /**
-     * Whether the {@code Mascot} is looking right instead of left.
-     * The original image is treated as left; {@code true} means the image is flipped.
+     * Whether the {@code Mascot} is facing right.
+     * The original image is treated as facing left, so setting this to {@code true} will cause it to be reversed.
      */
     private boolean lookRight = false;
 
     /**
-     * An object representing the long-term behavior of this {@code Mascot}.
+     * An object that represents the long-term behavior of this {@code Mascot}.
      */
     private Behavior behavior = null;
 
     /**
-     * Increases with each tick of the timer.
+     * Time that increases every tick of the timer.
      */
     private int time = 0;
 
@@ -98,6 +108,9 @@ public class Mascot implements Serializable {
      */
     private boolean dragging = false;
 
+    /**
+     * Mascot display environment.
+     */
     private MascotEnvironment environment = new MascotEnvironment(this);
 
     private String sound = null;
@@ -176,7 +189,7 @@ public class Mascot implements Serializable {
         if (event.isPopupTrigger()) {
             SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
         } else {
-            // Switch to drag the animation when the mouse is down
+            // Switch to drag animation when mouse is pressed
             if (!isPaused() && getBehavior() != null) {
                 try {
                     getBehavior().mousePressed(event);
@@ -373,7 +386,7 @@ public class Mascot implements Serializable {
                 // Set the window region
                 getWindow().asComponent().setBounds(getBounds());
 
-                // Set Images
+                // Set the image
                 getWindow().setImage(getImage().getImage());
 
                 // Display
@@ -462,7 +475,7 @@ public class Mascot implements Serializable {
 
     public Rectangle getBounds() {
         if (getImage() != null) {
-            // Find the top-left corner of the bounds with the ground coordinates and image center coordinates. The center has already been adjusted for scaling.
+            // Find the window area from the ground coordinates and image center coordinates. The center has already been adjusted for scaling.
             final int top = getAnchor().y - getImage().getCenter().y;
             final int left = getAnchor().x - getImage().getCenter().x;
 

@@ -1,7 +1,6 @@
 /*
- * Created by asdfman, Ygarr, and Pro-Prietary
+ * Created by asdfman
  * https://github.com/asdfman/linux-shimeji
- * https://github.com/Ygarr/linux-shimeji
  */
 package com.group_finity.mascot.x11;
 
@@ -19,14 +18,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * The image window with alpha.
- * {@link #setImage(NativeImage)} set in {@link NativeImage} can be displayed on the desktop.
+ * Image window with alpha value.
+ * {@link X11NativeImage} set with {@link #setImage(NativeImage)} can be displayed on the desktop.
  * <p>
- * {@link #setAlpha(float)} may be specified when the concentration of view.
- * <p>
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * You can also specify the alpha when displaying with {@link #setAlpha(float)}.
+ *
+ * @author asdfman
  */
 class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
@@ -181,7 +178,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         super.paint(g);
         if (getImage() != null) {
             g.drawImage(getImage().getManagedImage(), 0, 0, null);
-            // JNI with drawing images.
+            // Draw an image with alpha value using JNI.
             updateX11();
         }
     } */

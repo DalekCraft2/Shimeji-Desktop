@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Original Author: Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
- * <p>
- * Currently developed by Shimeji-ee Group.
+ * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Shimeji-ee Group
  */
 public abstract class Environment {
     protected abstract Area getWorkArea();
@@ -66,10 +65,20 @@ public abstract class Environment {
         screenRect = virtualBounds;
     }
 
+    /**
+     * Gets the area of the screen. This area includes everything from the top left to the bottom right of the display.
+     *
+     * @return screen area
+     */
     protected static Rectangle getScreenRect() {
         return screenRect;
     }
 
+    /**
+     * Gets the cursor coordinates.
+     *
+     * @return cursor coordinates
+     */
     private static Point getCursorPos() {
         PointerInfo info = MouseInfo.getPointerInfo();
         return info != null ? info.getLocation() : new Point(0, 0);
