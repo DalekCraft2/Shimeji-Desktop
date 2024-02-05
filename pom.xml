@@ -152,7 +152,7 @@
                 <!-- Copy dependencies to target/lib directory -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
@@ -165,6 +165,75 @@
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Parse version components and create properties for them -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Create an .exe file to run the application -->
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+                            <jar>${project.build.finalName}.jar</jar>
+                            <dontWrapJar>true</dontWrapJar>
+                            <downloadUrl>https://www.oracle.com/java/technologies/downloads/</downloadUrl>
+                            <!-- <supportUrl>${project.ciManagement.url}</supportUrl> -->
+                            <chdir>.</chdir>
+                            <icon>${project.basedir}/img/icon.ico</icon>
+                            <classPath>
+                                <mainClass>${mainClass}</mainClass>
+                            </classPath>
+                            <jre>
+                                <path>%JAVA_HOME%</path>
+                                <!-- <minVersion>1.8.0_0</minVersion> -->
+                                <minVersion>11.0.0</minVersion>
+                                <maxVersion/>
+                                <!-- <jdkPreference>preferJre</jdkPreference> -->
+                                <jdkPreference>preferJdk</jdkPreference>
+                                <requiresJdk>true</requiresJdk>
+                            </jre>
+                            <versionInfo>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <fileVersion>
+                                    ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}
+                                </fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>${project.name}</fileDescription>
+                                <copyright>Copyright (C) Group-Finity. All rights reserved.</copyright>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <productVersion>
+                                    ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}
+                                </productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>${project.name}</productName>
+                                <companyName>Group Finity</companyName>
+                                <internalName>${project.artifactId}</internalName>
+                                <originalFilename>${project.build.finalName}.exe</originalFilename>
+                            </versionInfo>
                         </configuration>
                     </execution>
                 </executions>

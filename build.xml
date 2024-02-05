@@ -34,6 +34,7 @@
         <zip destfile="target/Shimeji-ee_${version}_${edition}.zip">
             <fileset dir="target">
                 <include name="Shimeji-ee.jar"/>
+                <include name="Shimeji-ee.exe"/>
                 <include name="src.zip"/>
                 <include name="lib/*"/>
             </fileset>
@@ -44,7 +45,6 @@
                 <globmapper from="*.xml" to="conf/behaviors.xml"/>
             </mappedresources>
             <fileset dir=".">
-                <include name="Shimeji-ee.exe"/>
                 <include name="Shimeji-ee.bat"/>
                 <include name="ShimejiHomePage.url"/>
                 <include name="Shimeji-eeHomePage.url"/>
