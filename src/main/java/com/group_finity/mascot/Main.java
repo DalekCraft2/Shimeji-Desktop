@@ -401,10 +401,11 @@ public class Main {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
-                        // Create a mascot when the icon is clicked
+                        // Create a mascot when the icon is left-clicked
                         createMascot();
                     } else if (SwingUtilities.isMiddleMouseButton(e) && e.getClickCount() == 2) {
                         // When the icon is double-middle-clicked, dispose of all mascots, but do not close the program
+                        // FIXME Java seems to think the middle mouse button is the left mouse button, so this code never gets executed
                         if (getManager().isExitOnLastRemoved()) {
                             getManager().setExitOnLastRemoved(false);
                             getManager().disposeAll();
