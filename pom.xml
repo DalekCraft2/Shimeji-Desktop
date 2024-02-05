@@ -37,7 +37,6 @@
             <artifactId>AbsoluteLayout</artifactId>
             <version>RELEASE200</version>
             <scope>compile</scope>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -46,7 +45,6 @@
             <artifactId>jna-platform</artifactId>
             <version>5.14.0</version>
             <scope>compile</scope>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -55,20 +53,17 @@
             <artifactId>nimrodlf</artifactId>
             <version>1.2d</version>
             <scope>system</scope>
-            <optional>true</optional>
             <!-- Nimrod L&F has no official Maven artifact, so I am going to use the official download for now. -->
             <!-- https://nilogonzalez.es/nimrodlf/download-en.html -->
             <systemPath>${project.basedir}/${libPrefix}/nimrodlf-1.2d.jar</systemPath>
         </dependency>
 
-        <!-- TODO Switch to GraalVM JavaScript, as it may perform better -->
         <dependency>
             <!-- OpenJDK Nashorn -->
             <groupId>org.openjdk.nashorn</groupId>
             <artifactId>nashorn-core</artifactId>
             <version>15.4</version>
             <scope>compile</scope>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -104,8 +99,8 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <!-- Attach sources -->
+            <!-- <plugin>
+                &lt;!&ndash; Attach sources &ndash;&gt;
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.3.0</version>
@@ -119,7 +114,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- Attach Javadocs -->
+                &lt;!&ndash; Attach Javadocs &ndash;&gt;
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.2</version>
@@ -131,7 +126,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <!-- Set main class -->
                 <groupId>org.apache.maven.plugins</groupId>
