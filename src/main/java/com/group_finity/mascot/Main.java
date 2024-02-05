@@ -399,8 +399,8 @@ public class Main {
                     if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
                         // Create a mascot when the icon is clicked
                         createMascot();
-                    } else if (SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 2) {
-                        // When the icon is double-right-clicked, dispose of all mascots, but do not close the program
+                    } else if (SwingUtilities.isMiddleMouseButton(e) && e.getClickCount() == 2) {
+                        // When the icon is double-middle-clicked, dispose of all mascots, but do not close the program
                         if (getManager().isExitOnLastRemoved()) {
                             getManager().setExitOnLastRemoved(false);
                             getManager().disposeAll();
