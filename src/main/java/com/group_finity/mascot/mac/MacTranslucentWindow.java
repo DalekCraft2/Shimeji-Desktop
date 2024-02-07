@@ -16,10 +16,10 @@ class MacTranslucentWindow implements TranslucentWindow {
         delegate = factory.newTransparentWindow();
         JRootPane rootPane = ((JWindow) delegate.asComponent()).getRootPane();
 
-        // ウィンドウの影がずれるので、影を描画しないようにする
+        // The shadow of the window will shift, so avoid drawing the shadow.
         rootPane.putClientProperty("Window.shadow", Boolean.FALSE);
 
-        // 実行時の warning を消す
+        // Eliminate warnings at runtime
         rootPane.putClientProperty("apple.awt.draggableWindowBackground", Boolean.TRUE);
     }
 

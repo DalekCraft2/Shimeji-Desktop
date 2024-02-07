@@ -16,15 +16,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Java では取得が難しい環境情報をAccessibility APIを使用して取得する.
+ * Uses the Accessibility API to obtain environment information that is difficult to obtain using Java.
  */
 class MacEnvironment extends Environment {
 
     /**
-     * Mac では、アクティブなウィンドウを取れるので、
-     * それにしめじが反応するようにする。
+     * On Mac, you can take the active window, so Shimeji will react to it.
      * <p>
-     * なので、このクラス内では、activeIE に frontmostWindow という別名をつける
+     * Therefore, in this class, give {@code activeIE} an alias called {@link #frontmostWindow}.
      */
     private static Area activeIE = new Area();
     private static Area frontmostWindow = activeIE;
@@ -36,8 +35,8 @@ class MacEnvironment extends Environment {
 
     private static Carbon carbon = Carbon.INSTANCE;
 
-    // Mac では、ManagementFactory.getRuntimeMXBean().getName()で
-    // PID@マシン名 の文字列が返ってくる
+    // On Mac, ManagementFactory.getRuntimeMXBean().getName()
+    // returns the "PID@machine name" string
     private static long myPID =
             Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 
@@ -63,7 +62,7 @@ class MacEnvironment extends Environment {
 
         PointerByReference windowp = new PointerByReference();
 
-        // XXX: ここ以外でもエラーチェックは必要?
+        // XXX: Is error checking necessary other than here?
         if (carbon.AXUIElementCopyAttributeValue(
                 application, kAXFocusedWindow, windowp) == carbon.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef();
@@ -198,24 +197,23 @@ class MacEnvironment extends Environment {
     }
 
     /**
-     * min < max のとき、
-     * min <= a <= max ならば a を返す
-     * a < min ならば min を返す
-     * a > max ならば max を返す
+     * If {@code min < max}, return {@code a} if {@code min <= a <= max}.
+     * If {@code a < min}, return {@code min}.
+     * If {@code a > max}, return {@code max}.
      */
     private static double betweenOrLimit(double a, double min, double max) {
         return Math.min(Math.max(a, min), max);
     }
 
     /**
-     * 画面内でウィンドウを移動しても押し返されない範囲を Rectangle で返す。
-     * Mac では、ウィンドウを完全に画面外に移動させようとすると、
-     * ウィンドウが画面内に押し返されてしまう。
+     * Returns the range that will not be pushed back even if the window is moved within the screen as a Rectangle.
+     * On Mac, if you try to move the window completely off the screen,
+     * the window gets pushed back into the screen.
      */
     private static Rectangle getWindowVisibleArea() {
         final int menuBarHeight = 22;
         int x = 1, y = menuBarHeight,
-                width = getScreenWidth() - 2, // 0-origin なので
+                width = getScreenWidth() - 2, // Because it's 0-origin
                 height = getScreenHeight() - menuBarHeight;
 
         refreshDockState();
@@ -230,7 +228,7 @@ class MacEnvironment extends Environment {
             x += tilesize;
             width -= tilesize;
         } else /* if ("null".equals(orientation)) */ {
-            // Dock の方向がわからないので、どちらにあってもいいようにする
+            // We don't know the direction of the Dock, so we want it to be in either direction.
             x += tilesize;
             width -= 2 * tilesize;
         }
@@ -243,7 +241,7 @@ class MacEnvironment extends Environment {
                 carbon.CFPreferencesCopyValue(
                         kOrientation, kDock, carbon.kCurrentUser, carbon.kAnyHost);
 
-        // CFPreferencesCopyValue が null を返す環境がある
+        // There are environments where CFPreferencesCopyValue returns null
         if (orientationRef == null) {
             return "null";
         }
@@ -260,19 +258,18 @@ class MacEnvironment extends Environment {
 
     private static int getDockTileSize() {
         /*
-         * Dock の高さを監視する効率的な方法が見当たらないため、
-         * ひとまず Dock の最大サイズより大きい定数を返しておく。
+         * Since there is no efficient way to monitor the height of the Dock,
+         * we will return a constant larger than the maximum size of the Dock for now.
          *
-         * CFPreferencesCopyValue で得られる値は、
-         * AppleScript で得られる値とは異なっていて、
-         * AppleScript のほうが正しい値。
+         * The value obtained by CFPreferencesCopyValue is different from the value obtained by AppleScript,
+         * and AppleScript is the correct value.
          *
-         * pid 取得して Accessibility API を使うと正しい値は取れるが、
-         * killall Dock されると SEGV してしまう。
-         * SEGV しないためには毎回 pid を取り直す必要があるが、
-         * プロセスのリストをたぐってさがす以外の方法が見当たらない。
-         * 呼ばれる頻度を考えると AppleScript は使いたくない。
-         * このトレードオフはあとで考えることにする。
+         * If you get the PID and use the Accessibility API, you can get the correct value,
+         * but if you do a killall Dock, it will SEGV.
+         * In order to avoid SEGV, it is necessary to reset the pid every time,
+         * but I can't find any other way other than going through the list of processes.
+         * Considering how often it is called, I don't want to use AppleScript.
+         * We will consider this trade-off later.
          */
         return 100;
     }
@@ -304,7 +301,7 @@ class MacEnvironment extends Environment {
         frontmostWindow.setVisible(
                 frontmostWindowRect != null
                         && frontmostWindowRect.intersects(windowVisibleArea)
-                        && !frontmostWindowRect.contains(windowVisibleArea) // デスクトップを除外
+                        && !frontmostWindowRect.contains(windowVisibleArea) // Exclude desktop
         );
         frontmostWindow.set(
                 frontmostWindowRect == null ? new Rectangle(-1, -1, 0, 0) : frontmostWindowRect);
@@ -325,29 +322,28 @@ class MacEnvironment extends Environment {
     @Override
     public void moveActiveIE(final Point point) {
         /*
-         * 前述のとおり、完全に画面外へ移動しようとすると押し返されるため、
-         * そのような位置の指定に対しては可能なかぎりの移動に切り替える。
+         * As mentioned above, if you try to move completely off-screen, you will be pushed back,
+         * so if you specify such a position, switch to moving as far as possible.
          */
         final Rectangle
                 visibleRect = getWindowVisibleArea(),
                 windowRect = getFrontmostAppRect();
 
         final double
-                minX = visibleRect.getMinX() - windowRect.getWidth(), // 左方向の折り返し座標
-                maxX = visibleRect.getMaxX(),                                                    // 右方向の折り返し座標
-                minY = visibleRect.getMinY(),                                                    // 上方向の折り返し座標
-                // (メニューバーより
-                //  上へは移動できない)
-                maxY = visibleRect.getMaxY();                                                    // 下方向の折り返し座標
+                minX = visibleRect.getMinX() - windowRect.getWidth(), // Left direction wrap coordinate
+                maxX = visibleRect.getMaxX(), // Right direction wrap coordinate
+                minY = visibleRect.getMinY(), // Upward wrap coordinate
+                // (Cannot move above the menu bar)
+                maxY = visibleRect.getMaxY(); // Downward wrap coordinate
 
         double
                 pX = point.getX(),
                 pY = point.getY();
 
-        // X方向の折り返し
+        // Wrapping in the X direction
         pX = betweenOrLimit(pX, minX, maxX);
 
-        // Y方向の折り返し
+        // Wrapping in Y direction
         pY = betweenOrLimit(pY, minY, maxY);
 
         point.setLocation(pX, pY);
