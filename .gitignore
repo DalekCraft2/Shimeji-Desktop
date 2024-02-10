@@ -36,3 +36,4 @@ lib/optional/license.txt
 conf/settings.properties
 **/*.log
 **/*.log.lck
+img/*/**
