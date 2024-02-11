@@ -117,6 +117,7 @@
     <complexType name="Animation">
         <sequence>
             <element name="Pose" type="tns:Pose" maxOccurs="unbounded" minOccurs="1"/>
+            <element name="Hotspot" type="tns:Hotspot" maxOccurs="unbounded" minOccurs="0"/>
         </sequence>
         <attribute name="Condition" type="string"/>
     </complexType>
@@ -159,6 +160,32 @@
             </simpleType>
         </attribute>
         <attribute name="Volume" type="float"/>
+    </complexType>
+
+    <complexType name="Hotspot">
+        <attribute name="Shape" use="required">
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="Rectangle"/>
+                    <enumeration value="Ellipse"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="Origin" use="required">
+            <simpleType>
+                <restriction base="string">
+                    <pattern value="-?\d+,-?\d+"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="Size" use="required">
+            <simpleType>
+                <restriction base="string">
+                    <pattern value="-?\d+,-?\d+"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="Behavior" type="string" use="required"/>
     </complexType>
 
     <complexType name="ActionReference">
