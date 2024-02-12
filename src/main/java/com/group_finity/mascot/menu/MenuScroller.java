@@ -366,7 +366,9 @@ public class MenuScroller
         // compute how much to scroll the menu
         int amount = e.getScrollAmount() * e.getWheelRotation();
         firstIndex += amount;
-        refreshMenu();
+        if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
+            refreshMenu();
+        }
         e.consume();
     }
 
@@ -672,7 +674,9 @@ public class MenuScroller
                 case KeyEvent.VK_UP: {
                     // log.debug("MenuScroller.keyReleased(VK_UP)");
                     firstIndex--;
-                    refreshMenu();
+                    if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
+                        refreshMenu();
+                    }
                     e.consume();
                     break;
                 }
@@ -680,7 +684,9 @@ public class MenuScroller
                 case KeyEvent.VK_DOWN: {
                     // log.debug("MenuScroller.keyReleased(VK_DOWN)");
                     firstIndex++;
-                    refreshMenu();
+                    if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
+                        refreshMenu();
+                    }
                     e.consume();
                     break;
                 }
