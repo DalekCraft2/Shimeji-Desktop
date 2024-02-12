@@ -23,7 +23,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     private static final long serialVersionUID = 1L;
 
-    public static final boolean USE_AWT = false;
+    public static final boolean USE_AWT = true;
 
     /**
      * Image to display.
