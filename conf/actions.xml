@@ -721,11 +721,11 @@
             <ActionReference Name="Bouncing"/>
             <ActionReference Name="Sprawl" Duration="40"/>
         </Action>
-
         <Action Name="PullUp" Type="Sequence">
             <ActionReference Name="Falling" InitialVX="${mascot.lookRight ? 10 : -10}" InitialVY="-40"/>
             <ActionReference Name="Bouncing"/>
         </Action>
+
         <Action Name="Divide1" Type="Embedded" Class="com.group_finity.mascot.action.Breed"
                 BornX="-16" BornY="0" BornBehavior="Divided">
             <Animation>
