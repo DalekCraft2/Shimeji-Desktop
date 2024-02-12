@@ -5,6 +5,7 @@ import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.mac.jna.*;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.mac.CoreFoundation;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
@@ -33,7 +34,7 @@ class MacEnvironment extends Environment {
     private static final int screenHeight =
             (int) Math.round(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
 
-    private static Carbon carbon = Carbon.INSTANCE;
+    private static CarbonExtra carbonEx = CarbonExtra.INSTANCE;
 
     // On Mac, ManagementFactory.getRuntimeMXBean().getName()
     // returns the "PID@machine name" string
@@ -44,7 +45,7 @@ class MacEnvironment extends Environment {
 
     private static Set<Long> touchedProcesses = new HashSet<>();
 
-    static final CFStringRef
+    static final CoreFoundation.CFStringRef
             kAXPosition = createCFString("AXPosition"),
             kAXSize = createCFString("AXSize"),
             kAXFocusedWindow = createCFString("AXFocusedWindow"),
@@ -58,13 +59,13 @@ class MacEnvironment extends Environment {
         long pid = getCurrentPID();
 
         AXUIElementRef application =
-                carbon.AXUIElementCreateApplication(pid);
+                carbonEx.AXUIElementCreateApplication(pid);
 
         PointerByReference windowp = new PointerByReference();
 
         // XXX: Is error checking necessary other than here?
-        if (carbon.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindow, windowp) == carbon.kAXErrorSuccess) {
+        if (carbonEx.AXUIElementCopyAttributeValue(
+                application, kAXFocusedWindow, windowp) == carbonEx.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef();
             window.setPointer(windowp.getValue());
             ret = getRectOfWindow(window);
@@ -72,7 +73,7 @@ class MacEnvironment extends Environment {
             ret = null;
         }
 
-        carbon.CFRelease(application);
+        application.release();
         return ret;
     }
 
@@ -80,8 +81,8 @@ class MacEnvironment extends Environment {
         ProcessSerialNumber frontProcessPsn = new ProcessSerialNumber();
         LongByReference frontProcessPidp = new LongByReference();
 
-        carbon.GetFrontProcess(frontProcessPsn);
-        carbon.GetProcessPID(frontProcessPsn, frontProcessPidp);
+        carbonEx.GetFrontProcess(frontProcessPsn);
+        carbonEx.GetProcessPID(frontProcessPsn, frontProcessPidp);
 
         return frontProcessPidp.getValue();
     }
@@ -91,9 +92,9 @@ class MacEnvironment extends Environment {
         AXValueRef axvalue = new AXValueRef();
         PointerByReference valuep = new PointerByReference();
 
-        carbon.AXUIElementCopyAttributeValue(window, kAXPosition, valuep);
+        carbonEx.AXUIElementCopyAttributeValue(window, kAXPosition, valuep);
         axvalue.setPointer(valuep.getValue());
-        carbon.AXValueGetValue(axvalue, carbon.kAXValueCGPointType, position.getPointer());
+        carbonEx.AXValueGetValue(axvalue, carbonEx.kAXValueCGPointType, position.getPointer());
         position.read();
 
         return position;
@@ -104,9 +105,9 @@ class MacEnvironment extends Environment {
         AXValueRef axvalue = new AXValueRef();
         PointerByReference valuep = new PointerByReference();
 
-        carbon.AXUIElementCopyAttributeValue(window, kAXSize, valuep);
+        carbonEx.AXUIElementCopyAttributeValue(window, kAXSize, valuep);
         axvalue.setPointer(valuep.getValue());
-        carbon.AXValueGetValue(axvalue, carbon.kAXValueCGSizeType, size.getPointer());
+        carbonEx.AXValueGetValue(axvalue, carbonEx.kAXValueCGSizeType, size.getPointer());
         size.read();
 
         return size;
@@ -114,36 +115,36 @@ class MacEnvironment extends Environment {
 
     private static void moveFrontmostWindow(final Point point) {
         AXUIElementRef application =
-                carbon.AXUIElementCreateApplication(currentPID);
+                carbonEx.AXUIElementCreateApplication(currentPID);
 
         PointerByReference windowp = new PointerByReference();
 
-        if (carbon.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindow, windowp) == carbon.kAXErrorSuccess) {
+        if (carbonEx.AXUIElementCopyAttributeValue(
+                application, kAXFocusedWindow, windowp) == carbonEx.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef();
             window.setPointer(windowp.getValue());
             moveWindow(window, point.x, point.y);
         }
 
-        carbon.CFRelease(application);
+        application.release();
     }
 
     private static void restoreWindowsNotIn(final Rectangle rect) {
         Rectangle visibleArea = getWindowVisibleArea();
         for (long pid : getTouchedProcesses()) {
             AXUIElementRef application =
-                    carbon.AXUIElementCreateApplication(pid);
+                    carbonEx.AXUIElementCreateApplication(pid);
 
             for (AXUIElementRef window : getWindowsOf(application)) {
-                carbon.CFRetain(window);
+                window.retain();
                 Rectangle windowRect = getRectOfWindow(window);
                 if (!visibleArea.intersects(windowRect)) {
                     moveWindow(window, 0, 0);
                 }
-                carbon.CFRelease(window);
+                window.release();
             }
 
-            carbon.CFRelease(application);
+            application.release();
         }
     }
 
@@ -151,17 +152,16 @@ class MacEnvironment extends Environment {
         PointerByReference axWindowsp = new PointerByReference();
         Collection<AXUIElementRef> ret = new ArrayList<>();
 
-        carbon.AXUIElementCopyAttributeValue(application, kAXChildren, axWindowsp);
+        carbonEx.AXUIElementCopyAttributeValue(application, kAXChildren, axWindowsp);
 
         if (axWindowsp.getValue() == Pointer.NULL) {
             return ret;
         }
 
-        CFArrayRef cfWindows = new CFArrayRef();
-        cfWindows.setPointer(axWindowsp.getValue());
+        CoreFoundation.CFArrayRef cfWindows = new CoreFoundation.CFArrayRef(axWindowsp.getValue());
 
-        for (long i = 0, l = carbon.CFArrayGetCount(cfWindows); i < l; i++) {
-            Pointer p = carbon.CFArrayGetValueAtIndex(cfWindows, i);
+        for (int i = 0, count = cfWindows.getCount(); i < count; i++) {
+            Pointer p = cfWindows.getValueAtIndex(i);
             AXUIElementRef el = new AXUIElementRef();
             el.setPointer(p);
             ret.add(el);
@@ -179,13 +179,13 @@ class MacEnvironment extends Environment {
     private static void moveWindow(AXUIElementRef window, int x, int y) {
         CGPoint position = new CGPoint(x, y);
         position.write();
-        AXValueRef axvalue = carbon.AXValueCreate(
-                carbon.kAXValueCGPointType, position.getPointer());
-        carbon.AXUIElementSetAttributeValue(window, kAXPosition, axvalue);
+        AXValueRef axvalue = carbonEx.AXValueCreate(
+                carbonEx.kAXValueCGPointType, position.getPointer());
+        carbonEx.AXUIElementSetAttributeValue(window, kAXPosition, axvalue);
     }
 
-    private static CFStringRef createCFString(String s) {
-        return carbon.CFStringCreateWithCharacters(null, s.toCharArray(), s.length());
+    private static CoreFoundation.CFStringRef createCFString(String s) {
+        return CoreFoundation.CFStringRef.createCFString(s);
     }
 
     private static int getScreenWidth() {
@@ -237,20 +237,23 @@ class MacEnvironment extends Environment {
     }
 
     private static String getDockOrientation() {
-        CFTypeRef orientationRef =
-                carbon.CFPreferencesCopyValue(
-                        kOrientation, kDock, carbon.kCurrentUser, carbon.kAnyHost);
+        CoreFoundation.CFTypeRef orientationRef =
+                carbonEx.CFPreferencesCopyValue(
+                        kOrientation, kDock, carbonEx.kCurrentUser, carbonEx.kAnyHost);
 
         // There are environments where CFPreferencesCopyValue returns null
         if (orientationRef == null) {
             return "null";
         }
 
+        // Cast the property to a string ref
+        CoreFoundation.CFStringRef orientationStringRef = new CoreFoundation.CFStringRef(orientationRef.getPointer());
+
         final int bufsize = 64;
         Memory buf = new Memory(64);
-        carbon.CFStringGetCString(
-                orientationRef, buf, bufsize, carbon.CFStringGetSystemEncoding());
-        carbon.CFRelease(orientationRef);
+        CoreFoundation.INSTANCE.CFStringGetCString(
+                orientationStringRef, buf, new CoreFoundation.CFIndex(bufsize), carbonEx.CFStringGetSystemEncoding());
+        orientationStringRef.release();
         String ret = buf.getString(0);
         buf.clear();
         return ret;
@@ -275,7 +278,7 @@ class MacEnvironment extends Environment {
     }
 
     private static void refreshDockState() {
-        carbon.CFPreferencesAppSynchronize(kDock);
+        carbonEx.CFPreferencesAppSynchronize(kDock);
     }
 
     private static long getCurrentPID() {

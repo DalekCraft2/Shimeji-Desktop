@@ -1,4 +1,6 @@
 package com.group_finity.mascot.mac.jna;
 
-public class AXValueRef extends CFTypeRef {
+import com.sun.jna.platform.mac.CoreFoundation;
+
+public class AXValueRef extends CoreFoundation.CFTypeRef {
 }
