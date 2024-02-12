@@ -6,9 +6,15 @@
 
     <complexType name="Mascot">
         <sequence>
+            <element name="Constant" type="tns:Constant" maxOccurs="unbounded" minOccurs="0"/>
             <element name="ActionList" type="tns:ActionList" maxOccurs="unbounded" minOccurs="0"/>
             <element name="BehaviorList" type="tns:BehaviorList" maxOccurs="unbounded" minOccurs="0"/>
         </sequence>
+    </complexType>
+
+    <complexType name="Constant">
+        <attribute name="Name" use="required"/>
+        <attribute name="Value" use="required"/>
     </complexType>
 
     <complexType name="ActionList">
@@ -82,9 +88,6 @@
                             <enumeration value="Stay"/>
                             <enumeration value="Animate"/>
                             <enumeration value="Sequence"/>
-                            <enumeration value="Pause"/>
-                            <enumeration value="Fixed"/>
-                            <enumeration value="Composite"/>
                             <enumeration value="Select"/>
                         </restriction>
                     </simpleType>
