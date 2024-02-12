@@ -339,6 +339,7 @@ public class Main {
             ArrayList<String> childMascots = new ArrayList<>();
 
             // born mascot bit goes here...
+            // TODO Make these use the proper language's schema tag names instead of hardcoding them as the English ones
             for (final Entry list : new Entry(actions.getDocumentElement()).selectChildren("ActionList")) {
                 for (final Entry node : list.selectChildren("Action")) {
                     if (node.getAttributes().containsKey("BornMascot")) {

@@ -26,7 +26,7 @@ public class Fall extends ActionBase {
 
     private static final int DEFAULT_INITIALVX = 0;
 
-    private static final String PARAMETER_INITIALVY = "InitialVY";
+    public static final String PARAMETER_INITIALVY = "InitialVY";
 
     private static final int DEFAULT_INITIALVY = 0;
 

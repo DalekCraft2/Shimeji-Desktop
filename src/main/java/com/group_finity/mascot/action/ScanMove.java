@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class ScanMove extends BorderedAction {
     private static final Logger log = Logger.getLogger(ScanMove.class.getName());
 
-    private static final String PARAMETER_AFFORDANCE = "Affordance";
+    public static final String PARAMETER_AFFORDANCE = "Affordance";
 
     private static final String DEFAULT_AFFORDANCE = "";
 

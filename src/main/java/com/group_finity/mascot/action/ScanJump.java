@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class ScanJump extends ActionBase {
     private static final Logger log = Logger.getLogger(ScanJump.class.getName());
 
-    private static final String PARAMETER_AFFORDANCE = "Affordance";
+    public static final String PARAMETER_AFFORDANCE = "Affordance";
 
     private static final String DEFAULT_AFFORDANCE = "";
 

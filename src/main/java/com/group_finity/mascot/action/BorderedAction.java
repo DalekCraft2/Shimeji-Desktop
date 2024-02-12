@@ -21,9 +21,9 @@ public abstract class BorderedAction extends ActionBase {
 
     private static final Logger log = Logger.getLogger(BorderedAction.class.getName());
 
-    private static final String PARAMETER_BORDERTYPE = "BorderType";
+    public static final String PARAMETER_BORDERTYPE = "BorderType";
 
-    public static final String DEFAULT_BORDERTYPE = null;
+    private static final String DEFAULT_BORDERTYPE = null;
 
     public static final String BORDERTYPE_CEILING = "Ceiling";
 
