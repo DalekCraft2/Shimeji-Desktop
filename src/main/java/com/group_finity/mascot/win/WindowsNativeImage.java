@@ -29,15 +29,13 @@ class WindowsNativeImage implements NativeImage {
      * @return handle of the created bitmap
      */
     private static WinDef.HBITMAP createNative(final int width, final int height) {
-        final WinGDI.BITMAPINFOHEADER bmiHeader = new WinGDI.BITMAPINFOHEADER();
-        bmiHeader.biSize = 40;
-        bmiHeader.biWidth = width;
-        bmiHeader.biHeight = height;
-        bmiHeader.biPlanes = 1;
-        bmiHeader.biBitCount = 32;
-
         final WinGDI.BITMAPINFO bmi = new WinGDI.BITMAPINFO();
-        bmi.bmiHeader = bmiHeader;
+        bmi.bmiHeader.biWidth = width;
+        bmi.bmiHeader.biHeight = height;
+        bmi.bmiHeader.biPlanes = 1;
+        bmi.bmiHeader.biBitCount = 32;
+        bmi.bmiHeader.biCompression = WinGDI.BI_RGB;
+        bmi.bmiHeader.biSizeImage = width * height * 4;
 
         return GDI32.INSTANCE.CreateDIBSection(
                 null, bmi, WinGDI.DIB_RGB_COLORS, null, null, 0);
@@ -49,7 +47,7 @@ class WindowsNativeImage implements NativeImage {
      * @param nativeHandle bitmap handle
      * @param rgb ARGB values of the image
      */
-    private static void flushNative(final WinDef.HBITMAP nativeHandle, final int[] rgb) {
+    private void flushNative(final WinDef.HBITMAP nativeHandle, final /*Raster raster*/ int[] rgb) {
         final WinGDI.BITMAP bmp = new WinGDI.BITMAP();
         GDI32.INSTANCE.GetObject(nativeHandle, bmp.size(), bmp.getPointer());
         bmp.read();
@@ -76,6 +74,20 @@ class WindowsNativeImage implements NativeImage {
             destIndex -= destPitch;
         }
 
+        /* int[] pixel = new int[4];
+        int[] bits = new int[width];
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                raster.getPixel(col, row, pixel);
+                int alpha = (pixel[3] & 0xFF) << 24;
+                int red = (pixel[2] & 0xFF);
+                int green = (pixel[1] & 0xFF) << 8;
+                int blue = (pixel[0] & 0xFF) << 16;
+                bits[col] = alpha | red | green | blue;
+            }
+            int v = height - (origin.y + row) - 1;
+            bmp.bmBits.write((v * width + origin.x) * 4, bits, 0, bits.length);
+        } */
     }
 
     /**
@@ -92,31 +104,38 @@ class WindowsNativeImage implements NativeImage {
      */
     private final BufferedImage managedImage;
 
-    // /**
-    //  * Windows bitmap handle.
-    //  */
-    // private final WinDef.HBITMAP nativeHandle;
+    /**
+     * Windows bitmap handle.
+     */
+    private final WinDef.HBITMAP nativeHandle;
 
     public WindowsNativeImage(final BufferedImage image) {
         managedImage = image;
-        /* nativeHandle = createNative(image.getWidth(), image.getHeight());
+        if (WindowsTranslucentWindow.USE_AWT) {
+            nativeHandle = null;
+        } else {
+            nativeHandle = createNative(image.getWidth(), image.getHeight());
 
-        update(); */
+            update();
+        }
     }
 
-    /* @Override
+    @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        freeNative(getNativeHandle());
-    } */
+        if (WindowsTranslucentWindow.USE_AWT) {
+            freeNative(getNativeHandle());
+        }
+    }
 
     /**
      * Reflects changes to the image in the Windows bitmap.
      */
     public void update() {
-        /* int[] rbgValues = managedImage.getRGB(0, 0, managedImage.getWidth(), managedImage.getHeight(), null, 0, managedImage.getWidth());
+        int[] rbgValues = managedImage.getRGB(0, 0, managedImage.getWidth(), managedImage.getHeight(), null, 0, managedImage.getWidth());
 
-        flushNative(nativeHandle, rbgValues); */
+        flushNative(nativeHandle, rbgValues);
+        // flushNative(nativeHandle, managedImage.getData());
     }
 
     public void flush() {
@@ -155,7 +174,7 @@ class WindowsNativeImage implements NativeImage {
         return managedImage;
     }
 
-    /* public WinDef.HBITMAP getNativeHandle() {
+    public WinDef.HBITMAP getNativeHandle() {
         return nativeHandle;
-    } */
+    }
 }

@@ -23,6 +23,8 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     private static final long serialVersionUID = 1L;
 
+    public static final boolean USE_AWT = false;
+
     /**
      * Image to display.
      */
@@ -36,7 +38,9 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     public WindowsTranslucentWindow() {
         super();
 
-        setBackground(new Color(0, 0, 0, 0));
+        if (USE_AWT) {
+            setBackground(new Color(0, 0, 0, 0));
+        }
     }
 
     @Override
@@ -55,10 +59,9 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
         final WinDef.HWND hWnd = new WinDef.HWND(Native.getComponentPointer(this));
 
         if (User32.INSTANCE.IsWindow(hWnd)) {
-
-            final int exStyle = WindowsUtil.GetWindowLong(hWnd, User32.GWL_EXSTYLE).intValue();
-            if ((exStyle & User32.WS_EX_LAYERED) == 0) {
-                WindowsUtil.SetWindowLong(hWnd, User32.GWL_EXSTYLE, Pointer.createConstant(exStyle | User32.WS_EX_LAYERED));
+            final int exStyle = WindowsUtil.GetWindowLong(hWnd, WinUser.GWL_EXSTYLE).intValue();
+            if ((exStyle & WinUser.WS_EX_LAYERED) == 0) {
+                WindowsUtil.SetWindowLong(hWnd, WinUser.GWL_EXSTYLE, Pointer.createConstant(exStyle | WinUser.WS_EX_LAYERED));
             }
 
             // Create image transfer source DC
@@ -66,10 +69,17 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
             final WinDef.HDC memDC = GDI32.INSTANCE.CreateCompatibleDC(clientDC);
             final WinNT.HANDLE oldBmp = GDI32.INSTANCE.SelectObject(memDC, imageHandle);
 
-            User32.INSTANCE.ReleaseDC(hWnd, clientDC);
-
             // Transfer destination area
             final Rectangle windowRect = WindowUtils.getWindowLocationAndSize(hWnd);
+
+            // FIXME On Java 11, this causes the mascots to be as big as they would be without any DPI-awareness, and also causes them to rapidly teleport across the screen.
+            double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+            if (dpiScaleInverse != 1) {
+                windowRect.x = (int) Math.round(windowRect.x * dpiScaleInverse);
+                windowRect.y = (int) Math.round(windowRect.y * dpiScaleInverse);
+                windowRect.width = (int) Math.round(windowRect.width * dpiScaleInverse);
+                windowRect.height = (int) Math.round(windowRect.height * dpiScaleInverse);
+            }
 
             // Transfer
             final WinUser.BLENDFUNCTION bf = new WinUser.BLENDFUNCTION();
@@ -79,10 +89,13 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
             final WinDef.POINT lt = new WinDef.POINT(windowRect.x, windowRect.y);
             final WinUser.SIZE size = new WinUser.SIZE(windowRect.width, windowRect.height);
             final WinDef.POINT zero = new WinDef.POINT();
+
             User32.INSTANCE.UpdateLayeredWindow(
-                    hWnd, null,
+                    hWnd, clientDC,
                     lt, size,
-                    memDC, zero, 0, bf, User32.ULW_ALPHA);
+                    memDC, zero, 0, bf, WinUser.ULW_ALPHA);
+
+            User32.INSTANCE.ReleaseDC(hWnd, clientDC);
 
             // Revert the bitmap to its original state
             GDI32.INSTANCE.SelectObject(memDC, oldBmp);
@@ -104,12 +117,20 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     public void paint(final Graphics g) {
         super.paint(g);
         if (getImage() != null) {
-            // Draw an image with alpha value using JNI.
-            // paint(getImage().getNativeHandle(), getAlpha());
+            if (USE_AWT) {
+                // I am using AWT as a temporary fix until I get paint() to work with Java 11.
+                // Though I may keep using AWT here since I prefer to use high-level stuff...
+                if (g instanceof Graphics2D) {
+                    Graphics2D g2d = (Graphics2D) g;
 
-            // Using AWT as a temporary fix until I get paint() to work with Java 11.
-            // Though I may keep using AWT here since I prefer to use high-level stuff...
-            g.drawImage(getImage().getManagedImage(), 0, 0, null);
+                    // Higher-quality image
+                    g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                }
+                g.drawImage(getImage().getManagedImage(), 0, 0, null);
+            } else {
+                // Draw an image with alpha value using JNI.
+                paint(getImage().getNativeHandle(), getAlpha());
+            }
         }
     }
 
