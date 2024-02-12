@@ -117,9 +117,9 @@ public class Mascot implements Serializable {
 
     protected DebugWindow debugWindow = null;
 
-    private List<String> affordances = new ArrayList<>(5);
+    private final List<String> affordances = new ArrayList<>(5);
 
-    private List<Hotspot> hotspots = new ArrayList<>(5);
+    private final List<Hotspot> hotspots = new ArrayList<>(5);
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this {@code Mascot},
@@ -432,6 +432,7 @@ public class Mascot implements Serializable {
     }
 
     private void refreshCursor(Point position) {
+        // FIXME ConcurrentModificationException can be thrown here
         boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position));
 
         refreshCursor(useHand);
