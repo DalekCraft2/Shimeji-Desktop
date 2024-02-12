@@ -306,7 +306,7 @@ class WindowsEnvironment extends Environment {
 
     @Override
     public long getActiveWindowId() {
-        return activeIEobject.hashCode();
+        return activeIEobject == null ? 0 : activeIEobject.hashCode();
     }
 
     /**
