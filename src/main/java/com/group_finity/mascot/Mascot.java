@@ -19,7 +19,6 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,9 +39,7 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
-public class Mascot implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class Mascot {
     private static final Logger log = Logger.getLogger(Mascot.class.getName());
 
     /**
