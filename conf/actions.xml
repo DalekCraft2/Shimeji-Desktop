@@ -48,6 +48,7 @@
                 <Pose Image="/shime11.png" ImageAnchor="64,128" Velocity="0,0" Duration="250"/>
             </Animation>
         </Action>
+
         <Action Name="SitAndLookUp" Type="Stay" BorderType="Floor">
             <Animation>
                 <Pose Image="/shime26.png" ImageAnchor="64,128" Velocity="0,0" Duration="250"/>
@@ -143,6 +144,7 @@
                 <Pose Image="/shime13.png" ImageAnchor="64,128" Velocity="0,0" Duration="250"/>
             </Animation>
         </Action>
+
         <Action Name="ClimbWall" Type="Move" BorderType="Wall">
             <Animation Condition="#{TargetY &lt; mascot.anchor.y}">
                 <Pose Image="/shime14.png" ImageAnchor="64,128" Velocity="0,0" Duration="16"/>
@@ -232,7 +234,6 @@
                 <Pose Image="/shime19.png" ImageAnchor="64,104" Velocity="-4,0" Duration="4"/>
             </Animation>
         </Action>
-
 
         <!-- Dragging -->
 
