@@ -113,14 +113,19 @@ public abstract class ActionBase implements Action {
     }
 
     protected void refreshHotspots() {
-        getMascot().getHotspots().clear();
+        getMascot().getHotspotLock().writeLock().lock();
         try {
-            if (getAnimation() != null) {
-                for (final Hotspot hotspot : getAnimation().getHotspots())
-                    getMascot().getHotspots().add(hotspot);
-            }
-        } catch (VariableException ex) {
             getMascot().getHotspots().clear();
+            try {
+                if (getAnimation() != null) {
+                    for (final Hotspot hotspot : getAnimation().getHotspots())
+                        getMascot().getHotspots().add(hotspot);
+                }
+            } catch (VariableException ex) {
+                getMascot().getHotspots().clear();
+            }
+        } finally {
+            getMascot().getHotspotLock().writeLock().unlock();
         }
     }
 

@@ -22,6 +22,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,6 +119,7 @@ public class Mascot {
     private final List<String> affordances = new ArrayList<>(5);
 
     private final List<Hotspot> hotspots = new ArrayList<>(5);
+    private final ReadWriteLock hotspotLock = new ReentrantReadWriteLock();
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this {@code Mascot},
@@ -429,10 +432,14 @@ public class Mascot {
     }
 
     private void refreshCursor(Point position) {
-        // FIXME ConcurrentModificationException can be thrown here
-        boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position));
+        hotspotLock.writeLock().lock();
+        try {
+            boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position));
 
-        refreshCursor(useHand);
+            refreshCursor(useHand);
+        } finally {
+            hotspotLock.writeLock().unlock();
+        }
     }
 
     private void refreshCursor(Boolean useHand) {
@@ -531,6 +538,10 @@ public class Mascot {
 
     public List<Hotspot> getHotspots() {
         return hotspots;
+    }
+
+    public ReadWriteLock getHotspotLock() {
+        return hotspotLock;
     }
 
     public void setImageSet(final String set) {
