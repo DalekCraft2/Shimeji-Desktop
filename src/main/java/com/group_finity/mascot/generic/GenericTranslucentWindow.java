@@ -20,14 +20,13 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private GenericNativeImage image;
 
-    private JPanel panel;
     private float alpha = 1.0f;
 
     public GenericTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
         init();
 
-        panel = new JPanel() {
+        JPanel panel = new JPanel() {
             private static final long serialVersionUID = 1L;
 
             @Override
