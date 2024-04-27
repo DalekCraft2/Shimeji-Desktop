@@ -70,5 +70,4 @@ class GenericNativeImage implements NativeImage {
     public Icon getIcon() {
         return icon;
     }
-
 }

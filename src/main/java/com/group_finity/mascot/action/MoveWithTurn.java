@@ -46,12 +46,14 @@ public class MoveWithTurn extends BorderedAction {
         boolean noMoveY = false;
 
         if (targetX != Integer.MIN_VALUE) {
+            // Do we need to move in the X direction?
             if (getMascot().getAnchor().x == targetX) {
                 noMoveX = true;
             }
         }
 
         if (targetY != Integer.MIN_VALUE) {
+            // Do we need to move in the Y direction?
             if (getMascot().getAnchor().y == targetY) {
                 noMoveY = true;
             }
@@ -66,6 +68,7 @@ public class MoveWithTurn extends BorderedAction {
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
+            // The mascot is off the wall
             log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
@@ -91,15 +94,18 @@ public class MoveWithTurn extends BorderedAction {
             turning = false;
         }
 
+        // Animate
         getAnimation().next(getMascot(), getTime());
 
         if (targetX != DEFAULT_TARGETX) {
+            // If we went past the target, set ourselves to the target position
             if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX
                     || !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
                 getMascot().setAnchor(new Point(targetX, getMascot().getAnchor().y));
             }
         }
         if (targetY != DEFAULT_TARGETY) {
+            // If we went past the target, set ourselves to the target position
             if (down && getMascot().getAnchor().y >= targetY ||
                     !down && getMascot().getAnchor().y <= targetY) {
                 getMascot().setAnchor(new Point(getMascot().getAnchor().x, targetY));

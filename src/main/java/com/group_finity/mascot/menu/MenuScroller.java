@@ -617,8 +617,10 @@ public class MenuScroller
 
     private class MenuScrollerTimer extends Timer {
 
-        public MenuScrollerTimer(final int increment, int interval) {
-            super(interval, e -> {
+        public MenuScrollerTimer(final int increment, int delay) {
+            // NOTE: This ActionListener needs to be an anonymous class instead of lambda when on Java 8, due to some
+            // sort of compilation bug
+            super(delay, e -> {
                 firstIndex += increment;
                 refreshMenu();
             });

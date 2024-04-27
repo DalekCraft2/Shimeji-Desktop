@@ -23,7 +23,7 @@ import java.awt.image.ImageProducer;
 class X11NativeImage implements NativeImage {
 
     /**
-     * Java Image object.
+     * Java image object.
      */
     private final BufferedImage managedImage;
 

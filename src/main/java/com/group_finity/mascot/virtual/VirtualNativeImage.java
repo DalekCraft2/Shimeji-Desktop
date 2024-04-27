@@ -15,7 +15,7 @@ import java.awt.image.ImageProducer;
  */
 class VirtualNativeImage implements NativeImage {
     /**
-     * Java Image object.
+     * Java image object.
      */
     private final BufferedImage managedImage;
 

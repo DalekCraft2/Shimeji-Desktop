@@ -120,6 +120,7 @@ class WindowsNativeImage implements NativeImage {
         }
     }
 
+    // TODO Migrate this away from using finalize().
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
