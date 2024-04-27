@@ -7,8 +7,6 @@ import com.sun.jna.platform.win32.WinGDI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 
 /**
  * An image with alpha value that can be used for {@link WindowsTranslucentWindow}.
@@ -143,32 +141,24 @@ class WindowsNativeImage implements NativeImage {
         getManagedImage().flush();
     }
 
-    public Graphics getGraphics() {
+    @Override
+    public Graphics2D createGraphics() {
         return getManagedImage().createGraphics();
     }
 
+    @Override
     public int getWidth() {
         return getManagedImage().getWidth();
     }
 
+    @Override
     public int getHeight() {
         return getManagedImage().getHeight();
     }
 
-    public int getWidth(final ImageObserver observer) {
-        return getManagedImage().getWidth(observer);
-    }
-
-    public int getHeight(final ImageObserver observer) {
-        return getManagedImage().getHeight(observer);
-    }
-
-    public Object getProperty(final String name, final ImageObserver observer) {
-        return getManagedImage().getProperty(name, observer);
-    }
-
-    public ImageProducer getSource() {
-        return getManagedImage().getSource();
+    @Override
+    public Object getProperty(final String name) {
+        return getManagedImage().getProperty(name);
     }
 
     BufferedImage getManagedImage() {

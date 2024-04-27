@@ -4,8 +4,6 @@ import com.group_finity.mascot.image.NativeImage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 
 /**
  * Virtual desktop native image.
@@ -30,32 +28,24 @@ class VirtualNativeImage implements NativeImage {
         managedImage.flush();
     }
 
-    public Graphics getGraphics() {
+    @Override
+    public Graphics2D createGraphics() {
         return managedImage.createGraphics();
     }
 
+    @Override
     public int getWidth() {
         return managedImage.getWidth();
     }
 
+    @Override
     public int getHeight() {
         return managedImage.getHeight();
     }
 
-    public int getWidth(final ImageObserver observer) {
-        return managedImage.getWidth(observer);
-    }
-
-    public int getHeight(final ImageObserver observer) {
-        return managedImage.getHeight(observer);
-    }
-
-    public Object getProperty(final String name, final ImageObserver observer) {
-        return managedImage.getProperty(name, observer);
-    }
-
-    public ImageProducer getSource() {
-        return managedImage.getSource();
+    @Override
+    public Object getProperty(final String name) {
+        return managedImage.getProperty(name);
     }
 
     BufferedImage getManagedImage() {

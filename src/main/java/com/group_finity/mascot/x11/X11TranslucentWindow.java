@@ -83,8 +83,8 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
             if (win == null) {
                 win = new X11.Window(Native.getWindowID(alphaWindow));
             }
-            int w = image.getWidth(null);
-            int h = image.getHeight(null);
+            int w = image.getWidth();
+            int h = image.getHeight();
             alphaWindow.setSize(w, h);
 
 
