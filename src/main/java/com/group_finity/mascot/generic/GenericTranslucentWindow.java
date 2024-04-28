@@ -59,13 +59,13 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
         }
     }
 
+    public float getAlpha() {
+        return alpha;
+    }
+
     public void setAlpha(final float alpha) {
         WindowUtils.setWindowAlpha(this, alpha);
         this.alpha = alpha;
-    }
-
-    public float getAlpha() {
-        return alpha;
     }
 
     @Override
