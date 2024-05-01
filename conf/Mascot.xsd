@@ -5,6 +5,9 @@
     <element name="Mascot" type="tns:Mascot"/>
 
     <complexType name="Mascot">
+        <annotation>
+            <documentation>The root of the Mascot XML.</documentation>
+        </annotation>
         <sequence>
             <element name="Constant" type="tns:Constant" maxOccurs="unbounded" minOccurs="0"/>
             <element name="ActionList" type="tns:ActionList" maxOccurs="unbounded" minOccurs="0"/>
@@ -13,62 +16,333 @@
     </complexType>
 
     <complexType name="Constant">
-        <attribute name="Name" use="required"/>
-        <attribute name="Value" use="required"/>
+        <annotation>
+            <documentation>Defines a constant for use in scripted parameters and conditions.</documentation>
+        </annotation>
+        <attribute name="Name" type="string" use="required">
+            <annotation>
+                <documentation>A unique identifier for the constant.</documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Value" type="string" use="required">
+            <annotation>
+                <documentation>The value of the constant. Can be numeric. Can not be scripted.</documentation>
+            </annotation>
+        </attribute>
     </complexType>
 
     <complexType name="ActionList">
+        <annotation>
+            <documentation>A list of actions which can be performed by the mascot.</documentation>
+        </annotation>
         <choice maxOccurs="unbounded" minOccurs="0">
             <element name="Action" type="tns:TopAction"/>
         </choice>
     </complexType>
 
     <complexType name="ActionArguments" abstract="true">
-        <attribute name="Duration" type="tns:IntParameter"/>
-        <attribute name="Condition" type="tns:BooleanParameter" default="true"/>
-        <attribute name="Draggable" type="tns:BooleanParameter" default="true"/>
-        <attribute name="TargetX" type="tns:IntParameter"/>
-        <attribute name="TargetY" type="tns:IntParameter"/>
-        <attribute name="InitialVX" type="tns:IntParameter"/>
-        <attribute name="InitialVY" type="tns:IntParameter"/>
-        <attribute name="X" type="tns:IntParameter" default="0"/>
-        <attribute name="Y" type="tns:IntParameter" default="0"/>
-        <attribute name="LookRight" type="tns:BooleanParameter"/>
-        <attribute name="IeOffsetX" type="tns:IntParameter" default="0"/>
-        <attribute name="IeOffsetY" type="tns:IntParameter" default="0"/>
-        <attribute name="OffsetX" type="tns:IntParameter" default="0"/>
-        <attribute name="OffsetY" type="tns:IntParameter" default="120"/>
-        <attribute name="Affordance" type="tns:StringParameter" default=""/>
-        <attribute name="BornX" type="tns:IntParameter" default="0"/>
-        <attribute name="BornY" type="tns:IntParameter" default="0"/>
-        <attribute name="BornBehavior" type="tns:StringParameter" default=""/>
-        <attribute name="BornMascot" type="tns:StringParameter" default=""/>
-        <attribute name="BornInterval" type="tns:IntParameter" default="1"/>
-        <attribute name="BornTransient" type="tns:BooleanParameter" default="false"/>
-        <attribute name="VelocityParam" type="tns:DoubleParameter" default="20"/>
-        <attribute name="RegistanceX" type="tns:DoubleParameter" default="0.05"/>
-        <attribute name="RegistanceY" type="tns:DoubleParameter" default="0.1"/>
-        <attribute name="Gravity" type="tns:DoubleParameter"/>
-        <attribute name="TransformMascot" type="tns:StringParameter" default=""/>
-        <attribute name="TransformBehavior" type="tns:StringParameter" default=""/>
-        <attribute name="Behavior" type="tns:StringParameter" default=""/>
-        <attribute name="TargetBehavior" type="tns:StringParameter" default=""/>
-        <attribute name="Sound" type="tns:StringParameter"/>
+        <attribute name="Duration" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the duration of this action, in ticks. Defaults to the maximum
+                    integer value, making it endless.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Condition" type="tns:BooleanParameter" default="true">
+            <annotation>
+                <documentation>
+                    A scriptable boolean representing whether this action should be performed. Defaults to
+                    "true".
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Draggable" type="tns:BooleanParameter" default="true">
+            <annotation>
+                <documentation>
+                    A scriptable boolean representing whether the mascot should be draggable during this
+                    action. Defaults to "true".
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TargetX" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the final x-position of the mascot when using the Jump, Move,
+                    or MoveWithTurn actions (or subclasses of them). For Jump, defaults to 0. For Move and MoveWithTurn,
+                    defaults to the maximum integer value.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TargetY" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the final y-position of the mascot when using the Jump, Move,
+                    or MoveWithTurn actions (or subclasses of them). For Jump, defaults to 0. For Move and MoveWithTurn,
+                    defaults to the maximum integer value.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="InitialVX" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the initial x-velocity of the mascot when using the Fall action
+                    (or subclasses of it), or the initial x-velocity of the window when using the ThrowIE action. For
+                    Fall, defaults to 0. For ThrowIE, defaults to 32.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="InitialVY" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the initial y-velocity of the mascot when using the Fall action
+                    (or subclasses of it), or the initial y-velocity of the window when using the ThrowIE action. For
+                    Fall, defaults to 0. For ThrowIE, defaults to -10.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="X" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the x-offset of the mascot when using the Offset action. Defaults
+                    to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Y" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the y-offset of the mascot when using the Offset action. Defaults
+                    to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="LookRight" type="tns:BooleanParameter">
+            <annotation>
+                <documentation>
+                    A scriptable boolean representing whether the mascot should face right when using the Look
+                    or Turn actions. Defaults to the direction opposite of whichever the mascot is currently facing.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="IeOffsetX" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the x-offset of the window when using the FallWithIE or WalkWithIE
+                    actions. Defaults to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="IeOffsetY" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the y-offset of the window when using the FallWithIE or WalkWithIE
+                    actions. Defaults to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="OffsetX" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the x-offset of the mascot when using the Dragged action. Defaults
+                    to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="OffsetY" type="tns:IntParameter" default="120">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the y-offset of the mascot when using the Dragged action. Defaults
+                    to 120.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Affordance" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the affordance when using the Broadcast, BroadcastJump,
+                    BroadcastMove, BroadcastStay, ScanJump, or ScanMove actions. For the Broadcast actions, this mascot
+                    is broadcasting the affordance with this name; for the Scan actions, this mascot will be
+                    searching for another mascot broadcasting an affordance with this name. Defaults to an empty string.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="BornX" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the relative x-position of the newly created mascot when using the
+                    Breed, BreedJump, or BreedMove actions. Defaults to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="BornY" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the relative y-position of the newly created mascot when using the
+                    Breed, BreedJump, or BreedMove actions. Defaults to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="BornBehavior" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the initial behavior of the newly created mascot when
+                    using the Breed, BreedJump, or BreedMove actions. Defaults to an empty string.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="BornMascot" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the image set of the newly created mascot when using
+                    the Breed, BreedJump, or BreedMove actions. Defaults to an empty string, which means this mascot's
+                    image set is used.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="BornInterval" type="tns:IntParameter" default="1">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the interval between each breeding, in ticks, when using the
+                    BreedJump or BreedMove actions. Must be greater than 0. Defaults to 1.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="BornTransient" type="tns:BooleanParameter" default="false">
+            <annotation>
+                <documentation>
+                    A scriptable boolean representing whether to mark the newly created mascot as transient when using
+                    the Breed, BreedJump, or BreedMove actions. Should be used when the new mascot is intended to be
+                    temporary. Defaults to "false".
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="VelocityParam" type="tns:DoubleParameter" default="20">
+            <annotation>
+                <documentation>
+                    A scriptable double representing a scalar value for both the x- and y-velocities of the mascot when
+                    using the Jump or ScanJump actions (or subclasses of them). Defaults to 20.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="RegistanceX" type="tns:DoubleParameter" default="0.05">
+            <annotation>
+                <documentation>
+                    A scriptable double representing the x-resistance of the mascot when using the Fall action (or
+                    subclasses of it). Defaults to 0.05.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="RegistanceY" type="tns:DoubleParameter" default="0.1">
+            <annotation>
+                <documentation>
+                    A scriptable double representing the y-resistance of the mascot when using the Fall action (or
+                    subclasses of it). Defaults to 0.1.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Gravity" type="tns:DoubleParameter">
+            <annotation>
+                <documentation>
+                    A scriptable double representing the downward acceleration of the mascot when using the Fall action
+                    (or subclasses of it), or the downward acceleration of the window when using the ThrowIE action. For
+                    Fall, defaults to 2. For ThrowIE, defaults to 0.5.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TransformMascot" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the new image set for this mascot when using the
+                    Transform action. Defaults to an empty string, which means this mascot's image set is used.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TransformBehavior" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the initial behavior of this mascot after transforming
+                    when using the Transform action. Defaults to an empty string.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Behavior" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the behavior to perform whilst overlapping another
+                    mascot when using the Interact action, or the name of the behavior to perform after reaching an
+                    affordance when using the ScanJump or ScanMove actions. Defaults to an empty string.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TargetBehavior" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the behavior for the target mascot to perform after
+                    this mascot has reached them when using the ScanJump or ScanMove actions. Defaults to an empty
+                    string.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Sound" type="tns:StringParameter">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the path to the sound file to mute when using the Mute action. This
+                    will stop all instances of the specified sound. Defaults to all sounds from all mascots.
+                    The root's "sound/" directory is searched first for the file, then "sound/[image_set]/", and finally
+                    "img/[image_set]/sound/".
+                </documentation>
+            </annotation>
+        </attribute>
         <attribute name="BorderType">
+            <annotation>
+                <documentation>
+                    A scriptable enum representing the type of border on which to stay when using any bordered action
+                    (any subclass of BorderedAction). For most bordered actions, if the mascot is not on any instance of
+                    the specified border, it will enter the "Fall" action. Defaults to no border.
+                </documentation>
+            </annotation>
             <simpleType>
                 <restriction base="string">
-                    <enumeration value="Floor"/>
-                    <enumeration value="Wall"/>
-                    <enumeration value="Ceiling"/>
+                    <enumeration value="Floor">
+                        <annotation>
+                            <documentation>The action occurs on a floor.</documentation>
+                        </annotation>
+                    </enumeration>
+                    <enumeration value="Wall">
+                        <annotation>
+                            <documentation>The action occurs on a wall.</documentation>
+                        </annotation>
+                    </enumeration>
+                    <enumeration value="Ceiling">
+                        <annotation>
+                            <documentation>The action occurs on a ceiling.</documentation>
+                        </annotation>
+                    </enumeration>
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="Loop" type="tns:BooleanParameter" default="false"/>
+        <attribute name="Loop" type="tns:BooleanParameter" default="false">
+            <annotation>
+                <documentation>
+                    A scriptable boolean representing whether to loop this action indefinitely when using the Sequence
+                    action. Defaults to "false".
+                </documentation>
+            </annotation>
+        </attribute>
 
+        <!--
+        This is technically not part of the schema.
+        It is used in the default action.xml file to make use of the feature of using attributes in the scripts.
+        It is included here only to prevent errors in the default action.xml file.
+        -->
         <attribute name="Gap" type="tns:Parameter"/>
     </complexType>
 
     <complexType name="Action">
+        <annotation>
+            <documentation>Defines an action which can be performed by the mascot.</documentation>
+        </annotation>
         <complexContent>
             <extension base="tns:ActionArguments">
                 <choice>
@@ -81,18 +355,88 @@
                     </sequence>
                 </choice>
                 <attribute name="Type" use="required">
+                    <annotation>
+                        <documentation>The type of action.</documentation>
+                    </annotation>
                     <simpleType>
                         <restriction base="string">
-                            <enumeration value="Embedded"/>
-                            <enumeration value="Move"/>
-                            <enumeration value="Stay"/>
-                            <enumeration value="Animate"/>
-                            <enumeration value="Sequence"/>
-                            <enumeration value="Select"/>
+                            <enumeration value="Embedded">
+                                <annotation>
+                                    <documentation>
+                                        Uses the specified action class as the action type.
+                                        The class must be specified with the "Class" parameter.
+                                    </documentation>
+                                </annotation>
+                            </enumeration>
+                            <enumeration value="Move">
+                                <annotation>
+                                    <documentation>
+                                        Uses the "Move" class as the action type.
+                                        This causes the action to end when the mascot reaches the TargetX and TargetY
+                                        parameters specified, or when the mascot has been doing the action for the
+                                        Duration specified. These parameters can be provided in this action, or in an
+                                        ActionReference tag referencing this action.
+                                        The action will also end prematurely if the ground beneath the mascot is lost
+                                        mid-action.
+                                    </documentation>
+                                </annotation>
+                            </enumeration>
+                            <enumeration value="Stay">
+                                <annotation>
+                                    <documentation>
+                                        Uses the "Stay" class as the action type.
+                                        This causes the action to end when the mascot has been doing the action for the
+                                        Duration specified. This parameter can be provided in this action, or in an
+                                        ActionReference tag referencing this action.
+                                        The action will also end prematurely if the ground beneath the mascot is lost
+                                        mid-action.
+                                    </documentation>
+                                </annotation>
+                            </enumeration>
+                            <enumeration value="Animate">
+                                <annotation>
+                                    <documentation>
+                                        Uses the "Animate" class as the action type.
+                                        This causes the action to end when the mascot finishes their current animation,
+                                        or when the mascot has been doing the action for the Duration specified.
+                                        This parameter can be provided in this action, or in an ActionReference tag
+                                        referencing this action.
+                                        The action will also end prematurely if the ground beneath the mascot is lost
+                                        mid-action.
+                                    </documentation>
+                                </annotation>
+                            </enumeration>
+                            <enumeration value="Sequence">
+                                <annotation>
+                                    <documentation>
+                                        Uses the complex "Sequence" class as the action type.
+                                        This accepts child Action/ActionReference tags, and executes all of them in
+                                        sequence.
+                                    </documentation>
+                                </annotation>
+                            </enumeration>
+                            <enumeration value="Select">
+                                <annotation>
+                                    <documentation>
+                                        Uses the complex "Select" class as the action type.
+                                        This accepts child Action/ActionReference tags, and executes only one of them.
+                                        Child actions should each have the "Condition" parameter to determine which
+                                        action should be executed.
+                                        Optionally, the last action may lack a "Condition" parameter, making it the
+                                        default.
+                                    </documentation>
+                                </annotation>
+                            </enumeration>
                         </restriction>
                     </simpleType>
                 </attribute>
                 <attribute name="Class">
+                    <annotation>
+                        <documentation>
+                            Defines which class should be used as this action's type.
+                            Only used when the "Type" parameter is set to "Embedded".
+                        </documentation>
+                    </annotation>
                     <simpleType>
                         <restriction base="string">
                             <pattern value="com\.group_finity\.mascot\.action\.[a-zA-Z][a-zA-Z0-9]+"/>
@@ -104,29 +448,67 @@
     </complexType>
 
     <complexType name="TopAction">
+        <annotation>
+            <documentation>Defines a named, top-level action which can be performed by the mascot.</documentation>
+        </annotation>
         <complexContent>
             <extension base="tns:Action">
-                <attribute name="Name" type="string" use="required"/>
+                <attribute name="Name" type="string" use="required">
+                    <annotation>
+                        <documentation>A unique identifier for the action.</documentation>
+                    </annotation>
+                </attribute>
             </extension>
         </complexContent>
     </complexType>
 
     <complexType name="LowerAction">
+        <annotation>
+            <documentation>
+                Defines an anonymous child action which can be performed by the mascot.
+                Anonymous actions are defined as children of "Sequence" or "Select" actions.
+                They can not be referenced with ActionReference tags.
+            </documentation>
+        </annotation>
         <complexContent>
             <extension base="tns:Action"/>
         </complexContent>
     </complexType>
 
     <complexType name="Animation">
+        <annotation>
+            <documentation>
+                An animation which the mascot will perform, represented by poses with varying durations, and by
+                hotspots.
+            </documentation>
+        </annotation>
         <sequence>
             <element name="Pose" type="tns:Pose" maxOccurs="unbounded" minOccurs="1"/>
             <element name="Hotspot" type="tns:Hotspot" maxOccurs="unbounded" minOccurs="0"/>
         </sequence>
-        <attribute name="Condition" type="string"/>
+        <attribute name="Condition" type="tns:BooleanParameter">
+            <annotation>
+                <documentation>
+                    A scriptable boolean condition to determine whether this animation should be performed.
+                    If evaluated to false, this animation will be skipped, and the next animation (if present) will be
+                    evaluated.
+                </documentation>
+            </annotation>
+        </attribute>
     </complexType>
 
     <complexType name="Pose">
-        <attribute name="Image" use="required">
+        <annotation>
+            <documentation>Defines a pose for use in Animation tags.</documentation>
+        </annotation>
+        <attribute name="Image">
+            <annotation>
+                <documentation>
+                    Relative to the image set's base directory ("img/[image_set]/"), the path to the image file used
+                    for this pose. If present, the "ImageAnchor" attribute must also be provided, and the "ImageRight"
+                    attribute may optionally be provided.
+                </documentation>
+            </annotation>
             <simpleType>
                 <restriction base="string">
                     <pattern value=".+\.(png|gif|jpeg|jpg|bmp|PNG|GIF|JPEG|JPG|BMP)"/>
@@ -134,72 +516,144 @@
             </simpleType>
         </attribute>
         <attribute name="ImageRight">
+            <annotation>
+                <documentation>
+                    Relative to the image set's base directory ("img/[image_set]/"), the path to an optional image
+                    file used for the pose when the mascot is facing right. If not provided, the left-facing image will
+                    simply be flipped when the mascot faces right. Requires that the "Image" attribute has been set.
+                </documentation>
+            </annotation>
             <simpleType>
                 <restriction base="string">
                     <pattern value=".+\.(png|gif|jpeg|jpg|bmp|PNG|GIF|JPEG|JPG|BMP)"/>
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="ImageAnchor" use="required">
-            <simpleType>
-                <restriction base="string">
-                    <pattern value="-?\d+,-?\d+"/>
-                </restriction>
-            </simpleType>
+        <attribute name="ImageAnchor" type="tns:Point">
+            <annotation>
+                <documentation>
+                    The coordinates of the center of the image used for this pose, in the format "x,y". The origin
+                    ("0,0") refers to the top-left corner of the left-facing image.
+                    When the mascot is facing left, increasing the x-coordinate means moving the image leftward.
+                    Increasing the y-coordinate means moving the image upward. Requires that the "Image" attribute has
+                    been set.
+                </documentation>
+            </annotation>
         </attribute>
-        <attribute name="Velocity" use="required">
-            <simpleType>
-                <restriction base="string">
-                    <pattern value="-?\d+,-?\d+"/>
-                </restriction>
-            </simpleType>
+        <attribute name="Velocity" type="tns:Point" use="required">
+            <annotation>
+                <documentation>
+                    A point in the format "x,y", representing the velocity the mascot should have when this pose is
+                    active. Positive x-values mean moving rightward, and positive y-values mean moving downward. The
+                    velocity does not flip when the mascot faces right.
+                </documentation>
+            </annotation>
         </attribute>
-        <attribute name="Duration" type="int" use="required"/>
+        <attribute name="Duration" type="int" use="required">
+            <annotation>
+                <documentation>The duration of this pose, in ticks.</documentation>
+            </annotation>
+        </attribute>
         <attribute name="Sound">
+            <annotation>
+                <documentation>
+                    The path to an optional sound file to be played when the pose becomes active.
+                    The root's "sound/" directory is searched first for the file, then "sound/[image_set]/", and finally
+                    "img/[image_set]/sound/".
+                    If present, the "Volume" attribute may optionally be provided.
+                </documentation>
+            </annotation>
             <simpleType>
                 <restriction base="string">
                     <pattern value=".+\.(aiff|au|wav|wave|mid|midi|rmf|AIFF|AU|WAV|WAVE|MID|MIDI|RMF)"/>
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="Volume" type="float"/>
+        <attribute name="Volume" type="float" default="0">
+            <annotation>
+                <documentation>
+                    The volume to use when playing the optional sound. Defaults to 0.
+                    Requires that the "Sound" attribute has been set.
+                </documentation>
+            </annotation>
+        </attribute>
     </complexType>
 
     <complexType name="Hotspot">
+        <annotation>
+            <documentation>Defines an area on the mascot which triggers a behavior when clicked.</documentation>
+        </annotation>
         <attribute name="Shape" use="required">
+            <annotation>
+                <documentation>The shape of the clickable region.</documentation>
+            </annotation>
             <simpleType>
                 <restriction base="string">
-                    <enumeration value="Rectangle"/>
-                    <enumeration value="Ellipse"/>
+                    <enumeration value="Rectangle">
+                        <annotation>
+                            <documentation>Uses a rectangular clickable region.</documentation>
+                        </annotation>
+                    </enumeration>
+                    <enumeration value="Ellipse">
+                        <annotation>
+                            <documentation>Uses an elliptic clickable region.</documentation>
+                        </annotation>
+                    </enumeration>
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="Origin" use="required">
-            <simpleType>
-                <restriction base="string">
-                    <pattern value="-?\d+,-?\d+"/>
-                </restriction>
-            </simpleType>
+        <attribute name="Origin" type="tns:Point" use="required">
+            <annotation>
+                <documentation>
+                    A point in the format "x,y", representing the upper-left corner of the clickable region when the
+                    mascot is facing left. The origin ("0,0") refers to the top-left corner of the left-facing image.
+                    When "Shape" is "Rectangle", it represents the upper-left corner of the rectangle; when "Shape" is
+                    "Ellipse", it represents the upper-left corner of the rectangle which bounds the ellipse.
+                </documentation>
+            </annotation>
         </attribute>
-        <attribute name="Size" use="required">
-            <simpleType>
-                <restriction base="string">
-                    <pattern value="-?\d+,-?\d+"/>
-                </restriction>
-            </simpleType>
+        <attribute name="Size" type="tns:Point" use="required">
+            <annotation>
+                <documentation>
+                    A point in the format "width,height", representing the dimensions of the clickable region.
+                </documentation>
+            </annotation>
         </attribute>
-        <attribute name="Behavior" type="string" use="required"/>
+        <attribute name="Behavior" type="string" use="required">
+            <annotation>
+                <documentation>
+                    The name of the behavior to perform when this hotspot is triggered. The behavior must exist in the
+                    behaviors XML.
+                </documentation>
+            </annotation>
+        </attribute>
     </complexType>
 
     <complexType name="ActionReference">
+        <annotation>
+            <documentation>
+                References an already defined action which can be performed by the mascot.
+                ActionReference tags can be placed before or after the Action tag which they reference.
+            </documentation>
+        </annotation>
         <complexContent>
             <extension base="tns:ActionArguments">
-                <attribute name="Name" type="string" use="required"/>
+                <attribute name="Name" type="string" use="required">
+                    <annotation>
+                        <documentation>
+                            The name of the action being referenced. An Action tag with this name must exist somewhere
+                            in the actions XML.
+                        </documentation>
+                    </annotation>
+                </attribute>
             </extension>
         </complexContent>
     </complexType>
 
     <complexType name="BehaviorList">
+        <annotation>
+            <documentation>A list of behaviors which can be performed by the mascot.</documentation>
+        </annotation>
         <sequence>
             <choice maxOccurs="unbounded" minOccurs="1">
                 <element name="Behavior" type="tns:Behavior"/>
@@ -209,15 +663,77 @@
     </complexType>
 
     <complexType name="Behavior">
+        <annotation>
+            <documentation>Defines a top-level behavior which can be performed by the mascot.</documentation>
+        </annotation>
         <sequence>
             <choice maxOccurs="1" minOccurs="0">
                 <element name="NextBehaviorList" type="tns:NextBehaviorList"/>
             </choice>
         </sequence>
-        <attribute name="Name" type="string" use="required"/>
-        <attribute name="Frequency" type="int" use="required"/>
-        <attribute name="Condition" type="tns:Parameter"/>
-        <attribute name="Hidden" type="boolean"/>
+        <attribute name="Name" type="string" use="required">
+            <annotation>
+                <documentation>
+                    A unique identifier for the behavior. If the "Action" attribute is absent, an action with this
+                    name must also be defined in the actions XML.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Action" type="string">
+            <annotation>
+                <documentation>
+                    The name of the action which will be triggered by this behavior.
+                    An Action tag with this name must exist somewhere in the actions XML.
+                    If absent, defaults to the name of the behavior.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Frequency" type="int" use="required">
+            <annotation>
+                <documentation>
+                    Defines the weight of this behavior. This is used to determine the probability of this behavior
+                    being called rather than another one of the top-level behaviors. The probability is calculated by
+                    dividing this behavior's weight by the sum of the weights of all top-level behaviors (e.g., if there
+                    are three behaviors with weights 1, 1, and 2, the probability for the first one being chosen would
+                    be 1/4). Using a weight of 0 will make the behavior never called unless it is specifically
+                    referenced by an action or another behavior.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Condition" type="tns:BooleanParameter">
+            <annotation>
+                <documentation>
+                    A scriptable boolean condition to determine whether this behavior should be performed.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Hidden" type="boolean">
+            <annotation>
+                <documentation>
+                    Whether this behavior should not show up in the context menu for this mascot.
+                </documentation>
+            </annotation>
+        </attribute>
+    </complexType>
+
+    <complexType name="BehaviorCondition">
+        <annotation>
+            <documentation>
+                A list of behaviors which can only be performed if the specified condition evaluates to true.
+            </documentation>
+        </annotation>
+        <complexContent>
+            <extension base="tns:BehaviorList">
+                <attribute name="Condition" type="tns:BooleanParameter">
+                    <annotation>
+                        <documentation>
+                            A scriptable boolean condition to determine whether any of the behaviors inside this list
+                            should be performed.
+                        </documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
     </complexType>
 
     <complexType name="NextBehaviorList">
@@ -227,53 +743,182 @@
                 <element name="Condition" type="tns:BehaviorReferenceCondition"/>
             </choice>
         </sequence>
-        <attribute name="Add" type="boolean" use="required"/>
-    </complexType>
-
-    <complexType name="BehaviorReferenceCondition">
-        <complexContent>
-            <extension base="tns:NextBehaviorList">
-                <attribute name="Condition" type="string"/>
-            </extension>
-        </complexContent>
+        <attribute name="Add" type="boolean" use="required">
+            <annotation>
+                <documentation>
+                    Whether to add these behaviors' weights (their "Frequency" attribute) to the weights of the parent
+                    behavior list when determining which behavior to perform. This will make it possible
+                    See documentation for the "Frequency" attribute for more information.
+                </documentation>
+            </annotation>
+        </attribute>
     </complexType>
 
     <complexType name="BehaviorReference">
-        <attribute name="Name" type="string" use="required"/>
-        <attribute name="Frequency" type="int" use="required"/>
-        <attribute name="Condition" type="tns:Parameter"/>
-        <attribute name="Hidden" type="boolean"/>
+        <annotation>
+            <documentation>
+                References an already defined behavior which can be performed by the mascot.
+                BehaviorReference tags can safely be placed before or after the Behavior tag which they reference.
+            </documentation>
+        </annotation>
+        <attribute name="Name" type="string" use="required">
+            <annotation>
+                <documentation>
+                    The name of the behavior being referenced. A Behavior tag with this name must exist somewhere
+                    in the behaviors XML.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Action" type="string">
+            <annotation>
+                <documentation>
+                    The name of the action which will be triggered by this behavior.
+                    An Action tag with this name must exist somewhere in the actions XML.
+                    If absent, defaults to the name of the behavior.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Frequency" type="int" use="required">
+            <annotation>
+                <documentation>
+                    Defines the weight of this behavior. This is used to determine the probability of this behavior
+                    being called rather than another one of the top-level behaviors. The probability is calculated by
+                    dividing this behavior's weight by the sum of the weights of all top-level behaviors (e.g., if there
+                    are three behaviors with weights 1, 1, and 2, the probability for the first one being chosen would
+                    be 1/4). Using a weight of 0 will make the behavior never called unless it is specifically
+                    referenced by an action or another behavior.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Condition" type="tns:BooleanParameter">
+            <annotation>
+                <documentation>
+                    A scriptable boolean condition to determine whether this behavior should be performed.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Hidden" type="boolean">
+            <annotation>
+                <documentation>
+                    Whether this behavior should not show up in the context menu for this mascot.
+                </documentation>
+            </annotation>
+        </attribute>
     </complexType>
 
-    <complexType name="BehaviorCondition">
+    <complexType name="BehaviorReferenceCondition">
+        <annotation>
+            <documentation>
+                A list of references to behaviors which can only be performed if the specified condition evaluates to
+                true.
+            </documentation>
+        </annotation>
         <complexContent>
-            <extension base="tns:BehaviorList">
-                <attribute name="Condition" type="tns:Parameter"/>
+            <extension base="tns:NextBehaviorList">
+                <attribute name="Condition" type="tns:BooleanParameter">
+                    <annotation>
+                        <documentation>
+                            A scriptable boolean condition to determine whether any of the behaviors inside this list
+                            should be performed.
+                        </documentation>
+                    </annotation>
+                </attribute>
             </extension>
         </complexContent>
     </complexType>
 
+    <simpleType name="Point">
+        <annotation>
+            <documentation>
+                A pair of two integers in the format "x,y". Typically, each integer can be either positive or negative.
+            </documentation>
+        </annotation>
+        <restriction base="string">
+            <pattern value="-?\d+,-?\d+"/>
+        </restriction>
+    </simpleType>
+
     <simpleType name="Parameter">
+        <annotation>
+            <documentation>
+                A generic scriptable. Can be a boolean, integer, or double; or can be scripted, meaning it is treated
+                as JavaScript code. If scripted, it must evaluate to a boolean, integer, or double.
+                A scripted expression must be contained within braces ("{...}"), with either a "$" or a "#" character
+                before the opening brace. Using "$" will cause the expression to be evaluated once and then reused on
+                each frame, whereas using "#" will cause it to be reevaluated on every frame.
+                In the expression, the keyword "mascot" allows access to this mascot's fields as defined in the
+                Shimeji-ee source code. Refer to the Shimeji-ee source to see what fields are available.
+                Constants (defined via "Constant" tags inside the "Mascot" tag) can also be referenced in expressions.
+            </documentation>
+        </annotation>
         <restriction base="string">
             <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)|true|false"/>
         </restriction>
     </simpleType>
     <simpleType name="BooleanParameter">
+        <annotation>
+            <documentation>
+                A scriptable boolean value. Can be either "true" or "false"; or can be scripted, meaning it is treated
+                as JavaScript code. If scripted, it must evaluate to a boolean.
+                A scripted expression must be contained within braces ("{...}"), with either a "$" or a "#" character
+                before the opening brace. Using "$" will cause the expression to be evaluated once and then reused on
+                each frame, whereas using "#" will cause it to be reevaluated on every frame.
+                In the expression, the keyword "mascot" allows access to this mascot's fields as defined in the
+                Shimeji-ee source code. Refer to the Shimeji-ee source to see what fields are available.
+                Constants (defined via "Constant" tags inside the "Mascot" tag) can also be referenced in expressions.
+            </documentation>
+        </annotation>
         <restriction base="string">
             <pattern value="([$#]\{.+\})|true|false"/>
         </restriction>
     </simpleType>
     <simpleType name="IntParameter">
+        <annotation>
+            <documentation>
+                A scriptable integer value. Can be any positive or negative integer; or can be scripted, meaning it is
+                treated as JavaScript code. If scripted, it must evaluate to an integer.
+                A scripted expression must be contained within braces ("{...}"), with either a "$" or a "#" character
+                before the opening brace. Using "$" will cause the expression to be evaluated once and then reused on
+                each frame, whereas using "#" will cause it to be reevaluated on every frame.
+                In the expression, the keyword "mascot" allows access to this mascot's fields as defined in the
+                Shimeji-ee source code. Refer to the Shimeji-ee source to see what fields are available.
+                Constants (defined via "Constant" tags inside the "Mascot" tag) can also be referenced in expressions.
+            </documentation>
+        </annotation>
         <restriction base="string">
             <pattern value="([$#]\{.+\})|(-?\d+)"/>
         </restriction>
     </simpleType>
     <simpleType name="DoubleParameter">
+        <annotation>
+            <documentation>
+                A scriptable double value. Can be any positive or negative double; or can be scripted, meaning it is
+                treated as JavaScript code. If scripted, it must evaluate to a double.
+                A scripted expression must be contained within braces ("{...}"), with either a "$" or a "#" character
+                before the opening brace. Using "$" will cause the expression to be evaluated once and then reused on
+                each frame, whereas using "#" will cause it to be reevaluated on every frame.
+                In the expression, the keyword "mascot" allows access to this mascot's fields as defined in the
+                Shimeji-ee source code. Refer to the Shimeji-ee source to see what fields are available.
+                Constants (defined via "Constant" tags inside the "Mascot" tag) can also be referenced in expressions.
+            </documentation>
+        </annotation>
         <restriction base="string">
             <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)"/>
         </restriction>
     </simpleType>
     <simpleType name="StringParameter">
+        <annotation>
+            <documentation>
+                A scriptable string value. Can be any string; or can be scripted, meaning it is treated as JavaScript
+                code. If scripted, it must evaluate to a string.
+                A scripted expression must be contained within braces ("{...}"), with either a "$" or a "#" character
+                before the opening brace. Using "$" will cause the expression to be evaluated once and then reused on
+                each frame, whereas using "#" will cause it to be reevaluated on every frame.
+                In the expression, the keyword "mascot" allows access to this mascot's fields as defined in the
+                Shimeji-ee source code. Refer to the Shimeji-ee source to see what fields are available.
+                Constants (defined via "Constant" tags inside the "Mascot" tag) can also be referenced in expressions.
+            </documentation>
+        </annotation>
         <restriction base="string">
             <!-- <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)"/> -->
         </restriction>
