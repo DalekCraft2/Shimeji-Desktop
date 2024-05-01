@@ -1,3 +1,20 @@
+# Fork notes
+
+Formerly, this was an attempt to port Kilkakon's fork of Shimeji-ee from JRE 6 to JDK 21. I switched to porting to JDK
+11 to maintain the most compatibility possible, though it is still compatible with JDK 21.
+
+This fork also contains bug fixes, log message changes, fixes in the default mascot action/behavior XML files,
+more documentation (including comments and documentation from the original Shimeji, now translated through a better
+Google Translate than before), updated dependencies, formatting fixes, and probably more. Notably, I have also switched
+the project from Ant to Maven, and ported the `launch4j.xml` file from the original Shimeji to the Launch4j Maven
+Plugin.
+
+(It also has WIP Linux support, though it was just copied and modified
+from [asdfman's fork](https://github.com/asdfman/linux-shimeji) and doesn't entirely work yet. I can only test it by
+using a VM, so that doesn't help.)
+
+The rest of this file is the original README, albeit ported to Markdown.
+
 # Shimeji-ee: Shimeji English Enhanced
 
 Shimeji-ee is a Windows desktop mascot that freely wanders and plays around the screen. The mascot is very configurable;
