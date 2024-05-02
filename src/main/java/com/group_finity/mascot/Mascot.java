@@ -429,8 +429,7 @@ public class Mascot {
     }
 
     private void refreshCursor(Point position) {
-        hotspotLock.writeLock().lock();
-        try {
+        synchronized (getHotspots()) {
             boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position));
 
             refreshCursor(useHand);
@@ -533,10 +532,6 @@ public class Mascot {
 
     public List<Hotspot> getHotspots() {
         return hotspots;
-    }
-
-    public ReadWriteLock getHotspotLock() {
-        return hotspotLock;
     }
 
     public void setImageSet(final String set) {
