@@ -93,12 +93,9 @@ public class Dragged extends ActionBase {
 
     @Override
     protected void refreshHotspots() {
-        getMascot().getHotspotLock().writeLock().lock();
-        try {
+        synchronized (getMascot().getHotspots()) {
             // action does not support hotspots
             getMascot().getHotspots().clear();
-        } finally {
-            getMascot().getHotspotLock().writeLock().unlock();
         }
     }
 

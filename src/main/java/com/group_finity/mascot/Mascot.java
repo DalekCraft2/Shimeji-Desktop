@@ -22,8 +22,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -119,7 +117,6 @@ public class Mascot {
     private final List<String> affordances = new ArrayList<>(5);
 
     private final List<Hotspot> hotspots = new ArrayList<>(5);
-    private final ReadWriteLock hotspotLock = new ReentrantReadWriteLock();
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this {@code Mascot},
@@ -356,7 +353,7 @@ public class Mascot {
 
             if (debugWindow != null) {
                 // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
-                // Unfortunately, doing this make it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
+                // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
                 // debugWindow.setTitle(toString());
 
                 debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
@@ -437,8 +434,6 @@ public class Mascot {
             boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position));
 
             refreshCursor(useHand);
-        } finally {
-            hotspotLock.writeLock().unlock();
         }
     }
 

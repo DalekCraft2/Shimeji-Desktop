@@ -113,8 +113,7 @@ public abstract class ActionBase implements Action {
     }
 
     protected void refreshHotspots() {
-        getMascot().getHotspotLock().writeLock().lock();
-        try {
+        synchronized (getMascot().getHotspots()) {
             getMascot().getHotspots().clear();
             try {
                 if (getAnimation() != null) {
@@ -124,8 +123,6 @@ public abstract class ActionBase implements Action {
             } catch (VariableException ex) {
                 getMascot().getHotspots().clear();
             }
-        } finally {
-            getMascot().getHotspotLock().writeLock().unlock();
         }
     }
 
