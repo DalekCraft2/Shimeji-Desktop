@@ -33,7 +33,8 @@ public class ImagePairLoader {
      * @param filter the type of filter to use to generate the image
      */
     public static void load(final String name, final String rightName, final Point center, final double scaling, final Filter filter) throws IOException {
-        if (ImagePairs.contains(name + (rightName == null ? "" : rightName))) {
+        String key = name + (rightName == null ? "" : rightName);
+        if (ImagePairs.contains(key)) {
             return;
         }
 
@@ -47,7 +48,7 @@ public class ImagePairLoader {
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
                 new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
-        ImagePairs.load(name + (rightName == null ? "" : rightName), ip);
+        ImagePairs.load(key, ip);
     }
 
     /**
