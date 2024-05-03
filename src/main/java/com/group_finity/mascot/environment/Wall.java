@@ -61,7 +61,6 @@ public class Wall implements Border {
 
     @Override
     public Point move(final Point location) {
-
         if (!getArea().isVisible()) {
             return location;
         }
@@ -77,6 +76,7 @@ public class Wall implements Border {
         if (Math.abs(newLocation.x - location.x) >= 80 || Math.abs(newLocation.y - location.y) >= 80) {
             return location;
         }
+
         return newLocation;
     }
 }
