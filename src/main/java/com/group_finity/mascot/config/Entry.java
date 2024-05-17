@@ -9,7 +9,6 @@ import java.util.*;
  * @author Shimeji-ee Group
  */
 public class Entry {
-
     private Element element;
 
     private Map<String, String> attributes;
@@ -24,6 +23,10 @@ public class Entry {
 
     public String getName() {
         return element.getTagName();
+    }
+
+    public String getText() {
+        return element.getTextContent();
     }
 
     public boolean hasAttribute(final String attributeName) {

@@ -1,16 +1,20 @@
 package com.group_finity.mascot.imagesetchooser;
 
 import com.group_finity.mascot.Main;
+import com.group_finity.mascot.config.Configuration;
+import com.group_finity.mascot.config.Entry;
+import com.group_finity.mascot.exception.ConfigurationException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -57,8 +61,6 @@ public class ImageSetChooser extends JDialog {
         int row = 0;    // Current row
         if (children != null) {
             for (String imageSet : children) {
-                Path imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve("shime1.png");
-
                 // Determine actions file
                 Path filePath = Main.CONFIG_DIRECTORY;
                 Path actionsFile = filePath.resolve("actions.xml");
@@ -145,10 +147,47 @@ public class ImageSetChooser extends JDialog {
                     behaviorsFile = filePath.resolve("2.xml");
                 }
 
+                // Determine information file
+                filePath = Main.CONFIG_DIRECTORY;
+                Path infoFile = filePath.resolve("info.xml");
+
+                filePath = Main.CONFIG_DIRECTORY.resolve(imageSet);
+                if (Files.exists(filePath.resolve("info.xml"))) {
+                    infoFile = filePath.resolve("info.xml");
+                }
+
+                filePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.CONFIG_DIRECTORY);
+                if (Files.exists(filePath.resolve("info.xml"))) {
+                    infoFile = filePath.resolve("info.xml");
+                }
+
+                Path imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve("shime1.png");
+                String caption = imageSet;
+                try {
+                    if (Files.exists(infoFile)) {
+                        Configuration configuration = new Configuration();
+
+                        final Document information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Files.newInputStream(infoFile));
+
+                        configuration.load(new Entry(information.getDocumentElement()), imageSet);
+
+                        if (configuration.containsInformationKey(configuration.getSchema().getString("Name"))) {
+                            caption = configuration.getInformation(configuration.getSchema().getString("Name"));
+                        }
+                        if (configuration.containsInformationKey(configuration.getSchema().getString("PreviewImage"))) {
+                            imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(configuration.getInformation(configuration.getSchema().getString("PreviewImage")));
+                        }
+                    }
+
+                } catch (ConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
+                    imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve("shime1.png");
+                    caption = imageSet;
+                }
+
                 if (onList1) {
                     onList1 = false;
                     data1.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
-                            behaviorsFile.toString(), imageFile));
+                            behaviorsFile.toString(), imageFile, caption));
                     // Is this set initially selected?
                     if (activeImageSets.contains(imageSet) || selectAllSets) {
                         si1.add(row);
@@ -156,7 +195,7 @@ public class ImageSetChooser extends JDialog {
                 } else {
                     onList1 = true;
                     data2.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
-                            behaviorsFile.toString(), imageFile));
+                            behaviorsFile.toString(), imageFile, caption));
                     // Is this set initially selected?
                     if (activeImageSets.contains(imageSet) || selectAllSets) {
                         si2.add(row);

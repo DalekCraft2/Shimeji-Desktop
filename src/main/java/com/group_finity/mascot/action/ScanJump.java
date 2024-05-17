@@ -22,10 +22,6 @@ import java.util.logging.Logger;
 public class ScanJump extends ActionBase {
     private static final Logger log = Logger.getLogger(ScanJump.class.getName());
 
-    public static final String PARAMETER_AFFORDANCE = "Affordance";
-
-    private static final String DEFAULT_AFFORDANCE = "";
-
     public static final String PARAMETER_BEHAVIOUR = "Behaviour";
 
     private static final String DEFAULT_BEHAVIOUR = "";
@@ -34,10 +30,18 @@ public class ScanJump extends ActionBase {
 
     private static final String DEFAULT_TARGETBEHAVIOUR = "";
 
-    // An Action attribute is already named "Velocity", so this is named "VelocityParam" instead
+    public static final String PARAMETER_TARGETLOOK = "TargetLook";
+
+    private static final boolean DEFAULT_TARGETLOOK = false;
+
+    // A Pose attribute is already named "Velocity", so this is named "VelocityParam" instead
     public static final String PARAMETER_VELOCITY = "VelocityParam";
 
     private static final double DEFAULT_VELOCITY = 20.0;
+
+    public static final String VARIABLE_VELOCITYX = "VelocityX";
+
+    public static final String VARIABLE_VELOCITYY = "VelocityY";
 
     private WeakReference<Mascot> target;
 
@@ -52,6 +56,14 @@ public class ScanJump extends ActionBase {
         super.init(mascot);
 
         scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+
+        // cannot broadcast while scanning for an affordance
+        getMascot().getAffordances().clear();
+
+        if (getMascot().getManager() != null) {
+            target = getMascot().getManager().getMascotWithAffordance(getAffordance());
+        }
+        putVariable("target", target != null ? target.get() : null);
     }
 
     @Override
@@ -60,15 +72,14 @@ public class ScanJump extends ActionBase {
             return super.hasNext();
         }
 
-        if (target == null) {
-            target = getMascot().getManager().getMascotWithAffordance(getAffordance());
-        }
-
         return super.hasNext() && target != null && target.get() != null && target.get().getAffordances().contains(getAffordance());
     }
 
     @Override
     protected void tick() throws VariableException {
+        // cannot broadcast while scanning for an affordance
+        getMascot().getAffordances().clear();
+
         int targetX = target.get().getAnchor().x;
         int targetY = target.get().getAnchor().y;
 
@@ -87,6 +98,9 @@ public class ScanJump extends ActionBase {
             int velocityX = (int) Math.round(velocity * distanceX / distance);
             int velocityY = (int) Math.round(velocity * distanceY / distance);
 
+            putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocityX);
+            putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
+
             getMascot().setAnchor(new Point(getMascot().getAnchor().x + velocityX,
                     getMascot().getAnchor().y + velocityY));
             getAnimation().next(getMascot(), getTime());
@@ -97,11 +111,14 @@ public class ScanJump extends ActionBase {
 
             boolean setFirstBehavior = false;
             try {
-                getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior()));
+                getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
                 setFirstBehavior = true;
                 Mascot targetMascot = target.get();
                 if (targetMascot != null) {
-                    targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior()));
+                    targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
+                    if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
+                        targetMascot.setLookRight(!getMascot().isLookRight());
+                    }
                 }
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                 log.log(Level.SEVERE, "Failed to set behavior to \"" + (setFirstBehavior ? getTargetBehavior() : getBehavior()) + "\" for mascot \"" + (setFirstBehavior ? target.get() : getMascot()) + "\"", e);
@@ -110,16 +127,16 @@ public class ScanJump extends ActionBase {
         }
     }
 
-    private String getAffordance() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_AFFORDANCE), String.class, DEFAULT_AFFORDANCE);
-    }
-
     private String getBehavior() throws VariableException {
         return eval(getSchema().getString(PARAMETER_BEHAVIOUR), String.class, DEFAULT_BEHAVIOUR);
     }
 
     private String getTargetBehavior() throws VariableException {
         return eval(getSchema().getString(PARAMETER_TARGETBEHAVIOUR), String.class, DEFAULT_TARGETBEHAVIOUR);
+    }
+
+    private boolean getTargetLook() throws VariableException {
+        return eval(getSchema().getString(PARAMETER_TARGETLOOK), Boolean.class, DEFAULT_TARGETLOOK);
     }
 
     private double getVelocity() throws VariableException {

@@ -19,7 +19,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Jump extends ActionBase {
-
     private static final Logger log = Logger.getLogger(Jump.class.getName());
 
     public static final String PARAMETER_TARGETX = "TargetX";
@@ -30,10 +29,14 @@ public class Jump extends ActionBase {
 
     private static final int DEFAULT_TARGETY = 0;
 
-    // An Action attribute is already named "Velocity", so this is named "VelocityParam" instead
+    // A Pose attribute is already named "Velocity", so this is named "VelocityParam" instead
     public static final String PARAMETER_VELOCITY = "VelocityParam";
 
     private static final double DEFAULT_VELOCITY = 20.0;
+
+    public static final String VARIABLE_VELOCITYX = "VelocityX";
+
+    public static final String VARIABLE_VELOCITYY = "VelocityY";
 
     private double scaling;
 
@@ -63,7 +66,6 @@ public class Jump extends ActionBase {
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
@@ -80,6 +82,9 @@ public class Jump extends ActionBase {
             final int velocityX = (int) Math.round(velocity * distanceX / distance);
             final int velocityY = (int) Math.round(velocity * distanceY / distance);
 
+            putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocity * distanceX / distance);
+            putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocity * distanceY / distance);
+
             getMascot().setAnchor(new Point(getMascot().getAnchor().x + velocityX,
                     getMascot().getAnchor().y + velocityY));
             getAnimation().next(getMascot(), getTime());
@@ -88,7 +93,6 @@ public class Jump extends ActionBase {
         if (distance <= velocity) {
             getMascot().setAnchor(new Point(targetX, targetY));
         }
-
     }
 
     private double getVelocity() throws VariableException {

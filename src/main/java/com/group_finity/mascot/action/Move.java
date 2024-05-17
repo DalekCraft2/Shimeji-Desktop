@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Move extends BorderedAction {
-
     private static final Logger log = Logger.getLogger(Move.class.getName());
 
     public static final String PARAMETER_TARGETX = "TargetX";
@@ -29,13 +28,16 @@ public class Move extends BorderedAction {
 
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
+    private boolean turning = false;
+
+    private Boolean hasTurning = null;
+
     public Move(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
 
     @Override
     public boolean hasNext() throws VariableException {
-
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
@@ -56,12 +58,14 @@ public class Move extends BorderedAction {
             }
         }
 
-        return super.hasNext() && !noMoveX && !noMoveY;
+        // TODO Determine whether this condition was written incorrectly;
+        // It may have been meant to be parsed as "super.hasNext() && (turning || (!noMoveX && !noMoveY))",
+        // but I think it is currently parsed as "(super.hasNext() && turning) || (!noMoveX && !noMoveY)"
+        return super.hasNext() && turning || (!noMoveX && !noMoveY);
     }
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
@@ -77,11 +81,18 @@ public class Move extends BorderedAction {
 
         if (targetX != DEFAULT_TARGETX) {
             if (getMascot().getAnchor().x != targetX) {
+                // Activate turning animation if we change directions
+                turning = hasTurningAnimation() && (turning || getMascot().getAnchor().x < targetX != getMascot().isLookRight());
                 getMascot().setLookRight(getMascot().getAnchor().x < targetX);
             }
         }
         if (targetY != DEFAULT_TARGETY) {
             down = getMascot().getAnchor().y < targetY;
+        }
+
+        // Check whether turning animation has finished
+        if (turning && getTime() >= getAnimation().getDuration()) {
+            turning = false;
         }
 
         // Animate
@@ -101,7 +112,39 @@ public class Move extends BorderedAction {
                 getMascot().setAnchor(new Point(getMascot().getAnchor().x, targetY));
             }
         }
+    }
 
+    @Override
+    protected Animation getAnimation() throws VariableException {
+        // had to expose both animations and variables for this
+        // is there a better way?
+        List<Animation> animations = getAnimations();
+        for (int index = 0; index < animations.size(); index++) {
+            if (animations.get(index).isEffective(getVariables()) &&
+                    turning == animations.get(index).isTurn()) {
+                return animations.get(index);
+            }
+        }
+
+        return null;
+    }
+
+    protected boolean hasTurningAnimation() {
+        if (hasTurning == null) {
+            hasTurning = false;
+            List<Animation> animations = getAnimations();
+            for (int index = 0; index < animations.size(); index++) {
+                if (animations.get(index).isTurn()) {
+                    hasTurning = true;
+                    index = animations.size();
+                }
+            }
+        }
+        return hasTurning;
+    }
+
+    protected boolean isTurning() {
+        return turning;
     }
 
     private int getTargetX() throws VariableException {

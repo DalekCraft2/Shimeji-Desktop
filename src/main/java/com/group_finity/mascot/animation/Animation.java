@@ -16,8 +16,9 @@ public class Animation {
     private Variable condition;
     private final Pose[] poses;
     private final Hotspot[] hotspots;
+    private boolean turn;
 
-    public Animation(final Variable condition, final Pose[] poses, final Hotspot[] hotspots) {
+    public Animation(final Variable condition, final Pose[] poses, final Hotspot[] hotspots, final boolean turn) {
         if (poses.length == 0) {
             throw new IllegalArgumentException("poses.length==0");
         }
@@ -25,6 +26,7 @@ public class Animation {
         this.condition = condition;
         this.poses = poses;
         this.hotspots = hotspots;
+        this.turn = turn;
     }
 
     public boolean isEffective(final VariableMap variables) throws VariableException {
@@ -70,5 +72,13 @@ public class Animation {
 
     public Hotspot[] getHotspots() {
         return hotspots;
+    }
+
+    public boolean isTurn() {
+        return turn;
+    }
+
+    public void setTurn(boolean turn) {
+        this.turn = turn;
     }
 }

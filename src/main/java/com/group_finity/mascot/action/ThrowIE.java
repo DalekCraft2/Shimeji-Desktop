@@ -20,7 +20,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class ThrowIE extends Animate {
-
     private static final Logger log = Logger.getLogger(ThrowIE.class.getName());
 
     public static final String PARAMETER_INITIALVX = "InitialVX";
@@ -73,11 +72,11 @@ public class ThrowIE extends Animate {
 
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() + (int) Math.round(getInitialVx() * scaling), activeIE.getTop()
-                        + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)));
+                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() + (int) Math.round(getInitialVx() * scaling),
+                        activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)));
             } else {
-                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() - (int) Math.round(getInitialVx() * scaling), activeIE.getTop()
-                        + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)));
+                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() - (int) Math.round(getInitialVx() * scaling),
+                        activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)));
             }
         }
     }

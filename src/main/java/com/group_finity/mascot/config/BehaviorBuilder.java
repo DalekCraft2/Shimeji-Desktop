@@ -37,6 +37,8 @@ public class BehaviorBuilder {
 
     private final boolean hidden;
 
+    private final boolean toggleable;
+
     private final boolean nextAdditive;
 
     private final List<BehaviorBuilder> nextBehaviorBuilders = new ArrayList<>();
@@ -51,6 +53,15 @@ public class BehaviorBuilder {
         hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
         this.conditions = new ArrayList<>(conditions);
         getConditions().add(behaviorNode.getAttribute(configuration.getSchema().getString("Condition")));
+
+        // override of toggleable state for required fields
+        if (name.equals(UserBehavior.BEHAVIOURNAME_FALL) ||
+                name.equals(UserBehavior.BEHAVIOURNAME_THROWN) ||
+                name.equals(UserBehavior.BEHAVIOURNAME_DRAGGED)) {
+            toggleable = false;
+        } else {
+            toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Toggleable")));
+        }
 
         log.log(Level.INFO, "Loading behavior: {0}", this);
 
@@ -107,7 +118,7 @@ public class BehaviorBuilder {
         try {
             return new UserBehavior(getName(),
                     getConfiguration().buildAction(getActionName(),
-                            getParams()), getConfiguration(), isHidden());
+                            getParams()), getConfiguration());
         } catch (final ActionInstantiationException e) {
             log.log(Level.SEVERE, "Failed to initialize the corresponding action for behavior: " + this, e);
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage") + "(" + this + ")", e);
@@ -141,6 +152,10 @@ public class BehaviorBuilder {
 
     public boolean isHidden() {
         return hidden;
+    }
+
+    public boolean isToggleable() {
+        return toggleable;
     }
 
     private String getActionName() {

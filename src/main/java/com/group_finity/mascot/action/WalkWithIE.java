@@ -20,7 +20,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class WalkWithIE extends Move {
-
     private static final Logger log = Logger.getLogger(WalkWithIE.class.getName());
 
     public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
@@ -55,7 +54,6 @@ public class WalkWithIE extends Move {
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-
         final Area activeIE = getEnvironment().getActiveIE();
         if (!activeIE.isVisible()) {
             log.log(Level.INFO, "IE was hidden ({0}, {1})", new Object[]{getMascot(), this});
@@ -86,14 +84,13 @@ public class WalkWithIE extends Move {
 
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x - offsetX, getMascot().getAnchor().y
-                        + offsetY - activeIE.getHeight()));
+                getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x - offsetX,
+                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()));
             } else {
                 getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x + offsetX - activeIE.getWidth(),
                         getMascot().getAnchor().y + offsetY - activeIE.getHeight()));
             }
         }
-
     }
 
     private int getIEOffsetX() throws VariableException {

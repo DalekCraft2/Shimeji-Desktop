@@ -24,9 +24,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -200,7 +198,7 @@ public class Main {
             }
         }
 
-        // Load configurations
+        // Load mascot configurations
         for (int index = 0; index < imageSets.size(); index++) {
             if (!loadConfiguration(imageSets.get(index))) {
                 // failed validation
@@ -218,6 +216,16 @@ public class Main {
 
         // Create mascots
         for (String imageSet : imageSets) {
+            String informationAlreadySeen = properties.getProperty("InformationDismissed", "");
+            if (configurations.get(imageSet).containsInformationKey("SplashImage") &&
+                    (Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false")) ||
+                            !informationAlreadySeen.contains(imageSet))) {
+                InformationWindow info = new InformationWindow();
+                info.init(imageSet, configurations.get(imageSet));
+                info.display();
+                setMascotInformationDismissed(imageSet);
+                updateConfigFile();
+            }
             createMascot(imageSet);
         }
 
@@ -331,6 +339,27 @@ public class Main {
                     Files.newInputStream(behaviorsFile));
 
             configuration.load(new Entry(behaviors.getDocumentElement()), imageSet);
+
+            filePath = CONFIG_DIRECTORY;
+            Path infoFile = filePath.resolve("info.xml");
+
+            filePath = CONFIG_DIRECTORY.resolve(imageSet);
+            if (Files.exists(filePath.resolve("info.xml"))) {
+                infoFile = filePath.resolve("info.xml");
+            }
+
+            filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
+            if (Files.exists(filePath.resolve("info.xml"))) {
+                infoFile = filePath.resolve("info.xml");
+            }
+
+            if (Files.exists(infoFile)) {
+                log.log(Level.INFO, "Reading information file \"{0}\" for image set \"{1}\"", new Object[]{infoFile, imageSet});
+
+                final Document information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Files.newInputStream(infoFile));
+
+                configuration.load(new Entry(information.getDocumentElement()), imageSet);
+            }
 
             configuration.validate();
 
@@ -594,6 +623,7 @@ public class Main {
                         form.dispose();
                         SettingsWindow dialog = new SettingsWindow(frame, true);
                         dialog.setIconImage(icon.getImage());
+                        dialog.init();
                         dialog.display();
 
                         if (dialog.getEnvironmentReloadRequired()) {
@@ -995,7 +1025,7 @@ public class Main {
         mascot.setLookRight(Math.random() < 0.5);
 
         try {
-            mascot.setBehavior(getConfiguration(imageSet).buildBehavior(null, mascot));
+            mascot.setBehavior(getConfiguration(imageSet).buildNextBehavior(null, mascot));
             getManager().add(mascot);
         } catch (final BehaviorInstantiationException e) {
             // Not sure why this says "first action" instead of "first behavior", but changing it would require changing all of the translations, so...
@@ -1031,12 +1061,12 @@ public class Main {
         getManager().setExitOnLastRemoved(false);
         getManager().disposeAll();
 
-        // Load settings
+        // Load mascot configurations
         for (String imageSet : imageSets) {
             loadConfiguration(imageSet);
         }
 
-        // Create the first mascot
+        // Create mascots
         for (String imageSet : imageSets) {
             createMascot(imageSet);
         }
@@ -1066,6 +1096,43 @@ public class Main {
             properties.setProperty(propertyName, "true");
             return true;
         }
+    }
+
+    private void setMascotInformationDismissed(final String imageSet) {
+        ArrayList<String> list = new ArrayList<String>();
+        String[] data = properties.getProperty("InformationDismissed", "").split("/");
+
+        if (data.length > 0 && !data[0].equals("")) {
+            list.addAll(Arrays.asList(data));
+        }
+        if (!list.contains(imageSet)) {
+            list.add(imageSet);
+        }
+
+        properties.setProperty("InformationDismissed", list.toString().replace("[", "").replace("]", "").replace(", ", "/"));
+    }
+
+    public void setMascotBehaviorEnabled(final String name, final Mascot mascot, boolean enabled) {
+        ArrayList<String> list = new ArrayList<String>();
+        String[] data = properties.getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/");
+
+        if (data.length > 0 && !data[0].equals("")) {
+            list.addAll(Arrays.asList(data));
+        }
+
+        if (list.contains(name) && enabled) {
+            list.remove(name);
+        } else if (!list.contains(name) && !enabled) {
+            list.add(name);
+        }
+
+        if (list.size() > 0) {
+            properties.setProperty("DisabledBehaviours." + mascot.getImageSet(), list.toString().replace("[", "").replace("]", "").replace(", ", "/"));
+        } else {
+            properties.remove("DisabledBehaviours." + mascot.getImageSet());
+        }
+
+        updateConfigFile();
     }
 
     private void updateConfigFile() {
@@ -1164,6 +1231,16 @@ public class Main {
         } else {
             if (loadConfiguration(imageSet)) {
                 imageSets.add(imageSet);
+                String informationAlreadySeen = properties.getProperty("InformationDismissed", "");
+                if (configurations.get(imageSet).containsInformationKey("SplashImage") &&
+                        (Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false")) ||
+                                !informationAlreadySeen.contains(imageSet))) {
+                    InformationWindow info = new InformationWindow();
+                    info.init(imageSet, configurations.get(imageSet));
+                    info.display();
+                    setMascotInformationDismissed(imageSet);
+                    updateConfigFile();
+                }
                 createMascot(imageSet);
             } else {
                 // conf failed

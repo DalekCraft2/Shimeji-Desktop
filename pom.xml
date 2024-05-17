@@ -6,7 +6,7 @@
 
     <groupId>com.group_finity</groupId>
     <artifactId>mascot</artifactId>
-    <version>1.0.20</version>
+    <version>1.0.21.1</version>
     <packaging>jar</packaging>
 
     <name>Shimeji-ee</name>
@@ -219,16 +219,20 @@
                             </jre>
                             <versionInfo>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <fileVersion>
+                                <!-- <fileVersion>
                                     ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}
-                                </fileVersion>
+                                </fileVersion> -->
+                                <!-- This is for whenever we have a version with four components in it, like 1.0.21.1 -->
+                                <fileVersion>${project.version}</fileVersion>
                                 <txtFileVersion>${project.version}</txtFileVersion>
                                 <fileDescription>${project.name} Launcher</fileDescription>
                                 <copyright>Copyright (C) Group-Finity. All rights reserved.</copyright>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <productVersion>
+                                <!-- <productVersion>
                                     ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}
-                                </productVersion>
+                                </productVersion> -->
+                                <!-- This is for whenever we have a version with four components in it, like 1.0.21.1 -->
+                                <productVersion>${project.version}</productVersion>
                                 <txtProductVersion>${project.version}</txtProductVersion>
                                 <productName>${project.name}</productName>
                                 <companyName>Group Finity</companyName>

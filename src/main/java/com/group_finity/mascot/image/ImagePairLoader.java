@@ -32,18 +32,18 @@ public class ImagePairLoader {
      * @param scaling the scale factor of the image
      * @param filter the type of filter to use to generate the image
      */
-    public static void load(final String name, final String rightName, final Point center, final double scaling, final Filter filter) throws IOException {
+    public static void load(final String name, final String rightName, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
         String key = name + (rightName == null ? "" : rightName);
         if (ImagePairs.contains(key)) {
             return;
         }
 
-        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile())), scaling, filter);
+        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile()), opacity), scaling, filter);
         final BufferedImage rightImage;
         if (rightName == null) {
             rightImage = flip(leftImage);
         } else {
-            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(rightName).toFile())), scaling, filter);
+            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile()), opacity), scaling, filter);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
@@ -69,7 +69,7 @@ public class ImagePairLoader {
         return copy;
     }
 
-    private static BufferedImage premultiply(final BufferedImage source) {
+    private static BufferedImage premultiply(final BufferedImage source, final double opacity) {
         final BufferedImage returnImage = new BufferedImage(source.getWidth(), source.getHeight(),
                 source.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB_PRE : source.getType());
         Color colour;
@@ -79,6 +79,7 @@ public class ImagePairLoader {
             for (int x = 0; x < returnImage.getWidth(); x++) {
                 colour = new Color(source.getRGB(x, y), true);
                 components = colour.getComponents(null);
+                components[3] *= opacity;
                 components[0] = components[3] * components[0];
                 components[1] = components[3] * components[1];
                 components[2] = components[3] * components[2];

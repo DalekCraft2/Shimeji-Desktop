@@ -47,13 +47,10 @@ public class UserBehavior implements Behavior {
 
     private Mascot mascot;
 
-    private boolean hidden;
-
-    public UserBehavior(final String name, final Action action, final Configuration configuration, boolean hidden) {
+    public UserBehavior(final String name, final Action action, final Configuration configuration) {
         this.name = name;
         this.configuration = configuration;
         this.action = action;
-        this.hidden = hidden;
     }
 
     @Override
@@ -63,7 +60,6 @@ public class UserBehavior implements Behavior {
 
     @Override
     public synchronized void init(final Mascot mascot) throws CantBeAliveException {
-
         setMascot(mascot);
 
         log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), getMascot()});
@@ -72,7 +68,7 @@ public class UserBehavior implements Behavior {
             getAction().init(mascot);
             if (!getAction().hasNext()) {
                 try {
-                    mascot.setBehavior(getConfiguration().buildBehavior(getName(), mascot));
+                    mascot.setBehavior(getConfiguration().buildNextBehavior(getName(), mascot));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e);
                 }
@@ -80,7 +76,6 @@ public class UserBehavior implements Behavior {
         } catch (final VariableException e) {
             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
         }
-
     }
 
     private Configuration getConfiguration() {
@@ -109,13 +104,14 @@ public class UserBehavior implements Behavior {
             // check for hotspots
             if (!mascot.getHotspots().isEmpty()) {
                 for (final Hotspot hotspot : mascot.getHotspots()) {
-                    if (hotspot.contains(mascot, event.getPoint())) {
+                    if (hotspot.contains(mascot, event.getPoint()) &&
+                            Main.getInstance().getConfiguration(mascot.getImageSet()).isBehaviorEnabled(hotspot.getBehaviour(), mascot)) {
                         // activate hotspot
                         handled = true;
                         try {
                             getMascot().setCursorPosition(event.getPoint());
                             if (hotspot.getBehaviour() != null) {
-                                getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour()));
+                                getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                             }
                         } catch (final BehaviorInstantiationException e) {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
@@ -190,7 +186,7 @@ public class UserBehavior implements Behavior {
                                 // no need to set cursor position, it's already set
                                 if (hotspot.getBehaviour() != null) {
                                     hotspotState = HotspotState.ACTIVE;
-                                    getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour()));
+                                    getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                                 }
                             } catch (final BehaviorInstantiationException e) {
                                 throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
@@ -232,7 +228,7 @@ public class UserBehavior implements Behavior {
                     log.log(Level.INFO, "Completed behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), getMascot()});
 
                     try {
-                        getMascot().setBehavior(getConfiguration().buildBehavior(getName(), getMascot()));
+                        getMascot().setBehavior(getConfiguration().buildNextBehavior(getName(), getMascot()));
                     } catch (final BehaviorInstantiationException e) {
                         throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingActionsErrorMessage"), e);
                     }
@@ -263,10 +259,5 @@ public class UserBehavior implements Behavior {
 
     protected MascotEnvironment getEnvironment() {
         return getMascot().getEnvironment();
-    }
-
-    @Override
-    public boolean isHidden() {
-        return hidden;
     }
 }

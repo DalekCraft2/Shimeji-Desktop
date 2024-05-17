@@ -40,11 +40,4 @@ public interface Behavior {
      * @param e the event created by a mouse button being released
      */
     void mouseReleased(MouseEvent e) throws CantBeAliveException;
-
-    /**
-     * Checks whether this behavior is hidden in menus.
-     *
-     * @return whether the behavior is hidden
-     */
-    boolean isHidden();
 }

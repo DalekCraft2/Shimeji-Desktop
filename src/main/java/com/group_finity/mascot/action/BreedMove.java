@@ -67,6 +67,7 @@ public class BreedMove extends Move {
         super.tick();
 
         if (getTime() % getBornInterval() == 0 &&
+                !isTurning() &&
                 (getBornTransient() ?
                         Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Transients", "true")) :
                         Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Breeding", "true")))) {
@@ -91,10 +92,9 @@ public class BreedMove extends Move {
         mascot.setLookRight(getMascot().isLookRight());
 
         try {
-            mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour()));
+            mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour(), getMascot()));
 
             getMascot().getManager().add(mascot);
-
         } catch (final BehaviorInstantiationException | CantBeAliveException e) {
             log.log(Level.SEVERE, "Failed to create mascot \"" + mascot + "\" with behavior \"" + getBornBehaviour() + "\"", e);
             Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));

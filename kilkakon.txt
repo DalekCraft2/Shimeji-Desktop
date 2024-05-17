@@ -1,5 +1,45 @@
 Kilkakon's notes:
 
+1.0.21.1 hotfix:
+- The Theme Editor now displays using the appropriate DPI scaling
+- The font size editor and the reset to default button will operate under the effective font size after scaling
+- The Toggleable flag now works
+
+1.0.21:
+- Added Opacity slider in Settings to allow for semi transparent shimeji
+- Added Theme tab in Settings to allow for theme editing without having to resort to trial and error
+- Added the ability to set an optional background image for Window Mode, as well as different ways to size the image to fit
+- Added the ability to enable or disable behaviours by right clicking a shimeji, provided the `Toggleable` flag has been set to true on the relevant behaviour
+- Added a new configuration file, info.xml
+	This also allows setting a custom name and icon in the shimeji chooser
+	Also supports displaying a splash screen the first time a shimeji is loaded, along with credits and links
+	Clear the `InformationDismissed` setting from settings.properties if you want the splash screen to be seen again
+- Exposed more variables that are now available for conditions
+	Jump
+	- TargetX and TargetY
+	- VelocityX and VelocityY
+
+	Fall
+	- VelocityX and VelocityY
+
+	ScanMove
+	- Target
+
+	ScanJump
+	- Target
+	- VelocityX and VelocityY
+- Added new action type: ScanInteract
+	Allows for long range interactions, optionally causing the target to react
+	Supports the new `TargetLook` and `IsTurn` attributes as described below
+- Added the `TargetLook` attribute to ScanMove and ScanJump, if set to true the target shimeji will face the scanner
+- Added the `Toggleable` flag to behaviours, which allows users to enable or disable the behaviour from running at their leisure
+- Added the ability for all actions to broadcast an Affordance, other than Dragged, Regist and the Scan variants
+- Deprecated Broadcast, BroadcastJump, BroadcastMove and BroadcastStay. These actions will continue to work but there is now no difference between them and the normal variants
+- Added the ability for Move, ScanMove and ScanInteract to have a turning animation that will be used automatically if the target is behind the shimeji. Use the new `IsTurn` attribute on the animation for this purpose
+- Deprecated MoveWithTurn. This action will continue to function normally, assuming that the last animation is the IsTurn animation
+
+See https://youtu.be/rzW2czMJpXY for more details
+
 1.0.20:
 - Window Mode - run Shimeji in a Window! Ideal for streaming
 - Added ScanJump and BroadcastJump actions

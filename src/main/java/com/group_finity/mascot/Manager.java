@@ -221,7 +221,7 @@ public class Manager {
             for (final Mascot mascot : getMascots()) {
                 try {
                     Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
-                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name)));
+                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
@@ -243,7 +243,7 @@ public class Manager {
             for (final Mascot mascot : getMascots()) {
                 try {
                     if (mascot.getImageSet().equals(imageSet)) {
-                        mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name)));
+                        mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                     }
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);

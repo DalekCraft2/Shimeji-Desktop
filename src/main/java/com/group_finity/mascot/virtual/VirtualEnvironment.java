@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -60,75 +61,92 @@ class VirtualEnvironment extends Environment {
 
     @Override
     public void init() {
-        display.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
+        if (!display.isVisible()) {
+            display.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                }
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                Main.getInstance().exit();
-            }
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    Main.getInstance().exit();
+                }
 
-            @Override
-            public void windowClosed(WindowEvent e) {
-            }
+                @Override
+                public void windowClosed(WindowEvent e) {
+                }
 
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
+                @Override
+                public void windowIconified(WindowEvent e) {
+                }
 
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                }
 
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
+                @Override
+                public void windowActivated(WindowEvent e) {
+                }
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-            }
-        });
-        display.setTitle(Main.getInstance().getLanguageBundle().getString("ShimejiEE"));
-        String[] windowArray = Main.getInstance().getProperties().getProperty("WindowSize", "600x500").split("x");
-        display.getContentPane().setPreferredSize(new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1])));
-        display.getContentPane().setLayout(null);
-        display.getContentPane().setBackground(Color.decode(Main.getInstance().getProperties().getProperty("Background", "#00FF00")));
-        display.setBackground(Color.decode(Main.getInstance().getProperties().getProperty("Background", "#00FF00")));
-        display.setAutoRequestFocus(false);
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                }
+            });
+            display.setAutoRequestFocus(false);
+            display.setTitle(Main.getInstance().getLanguageBundle().getString("ShimejiEE"));
+            String[] windowArray = Main.getInstance().getProperties().getProperty("WindowSize", "600x500").split("x");
 
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(Main.ICON_FILE.toFile());
-        } catch (IOException e) {
-            // not bothering reporting errors with loading the tray icon as it would have already been reported to the user by now
-        } finally {
-            if (image == null) {
-                image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+            BufferedImage image = null;
+            try {
+                if (!Main.getInstance().getProperties().getProperty("BackgroundImage", "").isEmpty()) {
+                    image = ImageIO.read(new File(Main.getInstance().getProperties().getProperty("BackgroundImage", "")));
+                }
+            } catch (IOException ex) {
             }
+            display.setContentPane(new VirtualContentPanel(new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1])),
+                    Color.decode(Main.getInstance().getProperties().getProperty("Background", "#00FF00")),
+                    image,
+                    Main.getInstance().getProperties().getProperty("BackgroundMode", "centre")));
+            display.setBackground(display.getContentPane().getBackground());
+
+            BufferedImage icon = null;
+            try {
+                icon = ImageIO.read(Main.ICON_FILE.toFile());
+            } catch (IOException e) {
+                // not bothering reporting errors with loading the tray icon as it would have already been reported to the user by now
+            } finally {
+                if (icon == null) {
+                    icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+                }
+            }
+            display.setIconImage(icon);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    display.pack();
+                    display.setVisible(true);
+                    display.toFront();
+                }
+            });
+
+            activeIE.set(new Rectangle(-500, -500, 0, 0));
+            screenRect.setBounds(display.getContentPane().getBounds());
         }
-        display.setIconImage(image);
-
-        SwingUtilities.invokeLater(() -> {
-            display.pack();
-            display.setVisible(true);
-            display.toFront();
-        });
-
-        activeIE.set(new Rectangle(-500, -500, 0, 0));
 
         tick();
     }
 
     @Override
     public void tick() {
-        getScreenRect().setBounds(display.getContentPane().getBounds());
-        getScreen().set(getScreenRect());
+        if (display.isVisible()) {
+            getScreenRect().setBounds(display.getContentPane().getBounds());
+            getScreen().set(getScreenRect());
+        }
 
         PointerInfo info = MouseInfo.getPointerInfo();
         Point point = new Point(0, 0);
-        if (info != null) {
+        if (info != null && display.isVisible()) {
             point = info.getLocation();
             SwingUtilities.convertPointFromScreen(point, display.getContentPane());
         }
@@ -137,7 +155,9 @@ class VirtualEnvironment extends Environment {
 
     @Override
     public void dispose() {
-        display.dispose();
+        if (display != null) {
+            display.dispose();
+        }
     }
 
     public void addShimeji(final VirtualTranslucentPanel shimeji) {

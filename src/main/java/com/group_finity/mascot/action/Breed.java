@@ -89,7 +89,7 @@ public class Breed extends Animate {
         mascot.setLookRight(getMascot().isLookRight());
 
         try {
-            mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour()));
+            mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour(), getMascot()));
             getMascot().getManager().add(mascot);
         } catch (final BehaviorInstantiationException | CantBeAliveException e) {
             log.log(Level.SEVERE, "Failed to create mascot \"" + mascot + "\" with behavior \"" + getBornBehaviour() + "\"", e);

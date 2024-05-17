@@ -91,7 +91,7 @@ public class BreedJump extends Jump {
         mascot.setLookRight(getMascot().isLookRight());
 
         try {
-            mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour()));
+            mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour(), getMascot()));
 
             getMascot().getManager().add(mascot);
 

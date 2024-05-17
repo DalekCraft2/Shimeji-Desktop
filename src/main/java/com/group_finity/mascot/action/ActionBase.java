@@ -20,7 +20,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public abstract class ActionBase implements Action {
-
     private static final Logger log = Logger.getLogger(ActionBase.class.getName());
 
     public static final String PARAMETER_DURATION = "Duration";
@@ -34,6 +33,10 @@ public abstract class ActionBase implements Action {
     public static final String PARAMETER_DRAGGABLE = "Draggable";
 
     private static final boolean DEFAULT_DRAGGABLE = true;
+
+    public static final String PARAMETER_AFFORDANCE = "Affordance";
+
+    private static final String DEFAULT_AFFORDANCE = "";
 
     private Mascot mascot;
 
@@ -81,9 +84,18 @@ public abstract class ActionBase implements Action {
     @Override
     public void next() throws LostGroundException, VariableException {
         initFrame();
-        // clear affordances
-        getMascot().getAffordances().clear();
+
+        // Clear affordances
+        if (!getMascot().getAffordances().isEmpty()) {
+            getMascot().getAffordances().clear();
+        }
+        if (!getAffordance().trim().isEmpty()) {
+            getMascot().getAffordances().add(getAffordance());
+        }
+
+        // Refresh hotspots
         refreshHotspots();
+
         tick();
     }
 
@@ -105,7 +117,6 @@ public abstract class ActionBase implements Action {
 
     @Override
     public boolean hasNext() throws VariableException {
-
         final boolean effective = isEffective();
         final boolean inTime = getTime() < getDuration();
 
@@ -136,6 +147,10 @@ public abstract class ActionBase implements Action {
 
     private int getDuration() throws VariableException {
         return eval(schema.getString(PARAMETER_DURATION), Number.class, DEFAULT_DURATION).intValue();
+    }
+
+    protected String getAffordance() throws VariableException {
+        return eval(schema.getString(PARAMETER_AFFORDANCE), String.class, DEFAULT_AFFORDANCE);
     }
 
     private void setMascot(final Mascot mascot) {
@@ -179,7 +194,6 @@ public abstract class ActionBase implements Action {
     }
 
     protected <T> T eval(final String name, final Class<T> type, final T defaultValue) throws VariableException {
-
         synchronized (getVariables()) {
             final Variable variable = getVariables().getRawMap().get(name);
             if (variable != null) {

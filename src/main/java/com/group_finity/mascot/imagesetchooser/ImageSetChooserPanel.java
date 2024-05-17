@@ -18,15 +18,18 @@ import java.nio.file.Path;
  */
 public class ImageSetChooserPanel extends JPanel {
 
+    String imageSet;
+
     public ImageSetChooserPanel() {
         initComponents();
     }
 
-    public ImageSetChooserPanel(String name, String actions,
-                                String behaviors, Path imageLocation) {
+    public ImageSetChooserPanel(String imageSet, String actions,
+                                String behaviors, Path imageLocation, String caption) {
         initComponents();
 
-        this.name.setText(name);
+        this.imageSet = imageSet;
+        this.caption.setText(caption);
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
         try {
@@ -42,7 +45,7 @@ public class ImageSetChooserPanel extends JPanel {
     }
 
     public String getImageSetName() {
-        return name.getText();
+        return imageSet;
     }
 
     /**
@@ -55,7 +58,7 @@ public class ImageSetChooserPanel extends JPanel {
     private void initComponents() {
 
         checkbox = new JCheckBox();
-        name = new JLabel();
+        caption = new JLabel();
         actionsFile = new JLabel();
         behaviorsFile = new JLabel();
         image = new JLabel();
@@ -68,8 +71,8 @@ public class ImageSetChooserPanel extends JPanel {
         checkbox.setOpaque(false);
         add(checkbox, new AbsoluteConstraints(10, 30, -1, -1));
 
-        name.setText("Builder");
-        add(name, new AbsoluteConstraints(110, 10, -1, -1));
+        caption.setText("Builder");
+        add(caption, new AbsoluteConstraints(110, 10, -1, -1));
 
         actionsFile.setText("img/Builder/conf/actions.xml");
         add(actionsFile, new AbsoluteConstraints(110, 30, -1, -1));
@@ -85,9 +88,9 @@ public class ImageSetChooserPanel extends JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JLabel actionsFile;
     private JLabel behaviorsFile;
+    private JLabel caption;
     private JCheckBox checkbox;
     private JLabel image;
-    private JLabel name;
     // End of variables declaration//GEN-END:variables
 
 }

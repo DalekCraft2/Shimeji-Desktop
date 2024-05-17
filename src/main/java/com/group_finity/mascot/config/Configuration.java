@@ -29,6 +29,7 @@ public class Configuration {
     private final Map<String, String> constants = new LinkedHashMap<>(2);
     private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
     private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
+    private final Map<String, String> information = new LinkedHashMap<>(8);
     private ResourceBundle schema;
 
     public void load(final Entry configurationNode, final String imageSet) throws IOException, ConfigurationException {
@@ -86,6 +87,14 @@ public class Configuration {
         }
         log.log(Level.INFO, "Finished reading all behavior lists");
 
+        for (final Entry list : configurationNode.selectChildren(schema.getString("Information"))) {
+            log.log(Level.INFO, "Reading information list...");
+
+            loadInformation(list);
+
+            log.log(Level.INFO, "Finished reading information list");
+        }
+
         log.log(Level.INFO, "Configuration loaded successfully");
     }
 
@@ -112,6 +121,29 @@ public class Configuration {
         return factory.buildAction(params);
     }
 
+    private void loadInformation(final Entry list) {
+        for (final Entry node : list.getChildren()) {
+            if (node.getName().equals(schema.getString("Name")) ||
+                    node.getName().equals(schema.getString("PreviewImage")) ||
+                    node.getName().equals(schema.getString("SplashImage"))) {
+                information.put(node.getName(), node.getText());
+            } else if (node.getName().equals(schema.getString("Artist")) ||
+                    node.getName().equals(schema.getString("Scripter")) ||
+                    node.getName().equals(schema.getString("Commissioner")) ||
+                    node.getName().equals(schema.getString("Support"))) {
+                String nameText = node.getAttribute(schema.getString("Name")) != null ? node.getAttribute(schema.getString("Name")) : null;
+                String linkText = node.getAttribute(schema.getString("URL")) != null ? node.getAttribute(schema.getString("URL")) : null;
+
+                if (nameText != null) {
+                    information.put(node.getName() + schema.getString("Name"), nameText);
+                    if (linkText != null) {
+                        information.put(node.getName() + schema.getString("URL"), linkText);
+                    }
+                }
+            }
+        }
+    }
+
     public void validate() throws ConfigurationException {
         for (final ActionBuilder builder : getActionBuilders().values()) {
             builder.validate();
@@ -121,7 +153,7 @@ public class Configuration {
         }
     }
 
-    public Behavior buildBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
+    public Behavior buildNextBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
         final VariableMap context = new VariableMap();
         context.putAll(getConstants()); // put first so they can't override mascot
         context.put("mascot", mascot);
@@ -130,7 +162,7 @@ public class Configuration {
         long totalFrequency = 0;
         for (final BehaviorBuilder behaviorFactory : getBehaviorBuilders().values()) {
             try {
-                if (behaviorFactory.isEffective(context)) {
+                if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
                     candidates.add(behaviorFactory);
                     totalFrequency += behaviorFactory.getFrequency();
                 }
@@ -147,7 +179,7 @@ public class Configuration {
             }
             for (final BehaviorBuilder behaviorFactory : previousBehaviorFactory.getNextBehaviorBuilders()) {
                 try {
-                    if (behaviorFactory.isEffective(context)) {
+                    if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
                         candidates.add(behaviorFactory);
                         totalFrequency += behaviorFactory.getFrequency();
                     }
@@ -180,11 +212,65 @@ public class Configuration {
         return null;
     }
 
+    public Behavior buildBehavior(final String name, final Mascot mascot) throws BehaviorInstantiationException {
+        if (behaviorBuilders.containsKey(name)) {
+            if (isBehaviorEnabled(name, mascot)) {
+                return getBehaviorBuilders().get(name).buildBehavior();
+            } else {
+                if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
+                    mascot.setAnchor(new Point((int) (Math.random() * (mascot.getEnvironment().getScreen().getRight() - mascot.getEnvironment().getScreen().getLeft())) + mascot.getEnvironment().getScreen().getLeft(),
+                            mascot.getEnvironment().getScreen().getTop() - 256));
+                } else {
+                    mascot.setAnchor(new Point((int) (Math.random() * (mascot.getEnvironment().getWorkArea().getRight() - mascot.getEnvironment().getWorkArea().getLeft())) + mascot.getEnvironment().getWorkArea().getLeft(),
+                            mascot.getEnvironment().getWorkArea().getTop() - 256));
+                }
+                return buildBehavior(schema.getString(UserBehavior.BEHAVIOURNAME_FALL));
+            }
+        } else {
+            throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + name + ")");
+        }
+    }
+
     public Behavior buildBehavior(final String name) throws BehaviorInstantiationException {
         if (behaviorBuilders.containsKey(name)) {
             return getBehaviorBuilders().get(name).buildBehavior();
         } else {
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + name + ")");
+        }
+    }
+
+    public boolean isBehaviorEnabled(final BehaviorBuilder builder, final Mascot mascot) {
+        if (builder.isToggleable()) {
+            for (String behaviour : Main.getInstance().getProperties().getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/")) {
+                if (behaviour.equals(builder.getName())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean isBehaviorEnabled(final String name, final Mascot mascot) {
+        if (behaviorBuilders.containsKey(name)) {
+            return isBehaviorEnabled(getBehaviorBuilders().get(name), mascot);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isBehaviorHidden(final String name) {
+        if (behaviorBuilders.containsKey(name)) {
+            return getBehaviorBuilders().get(name).isHidden();
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isBehaviorToggleable(final String name) {
+        if (behaviorBuilders.containsKey(name)) {
+            return getBehaviorBuilders().get(name).isToggleable();
+        } else {
+            return false;
         }
     }
 
@@ -202,6 +288,14 @@ public class Configuration {
 
     public Set<String> getBehaviorNames() {
         return behaviorBuilders.keySet();
+    }
+
+    public boolean containsInformationKey(String key) {
+        return information.containsKey(key);
+    }
+
+    public String getInformation(String key) {
+        return information.get(key);
     }
 
     public ResourceBundle getSchema() {

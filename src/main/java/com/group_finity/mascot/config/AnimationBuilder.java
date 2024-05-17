@@ -36,6 +36,7 @@ public class AnimationBuilder {
     private final List<Pose> poses = new ArrayList<>();
     private final List<Hotspot> hotspots = new ArrayList<>();
     private final ResourceBundle schema;
+    private final String turn;
 
     public AnimationBuilder(final ResourceBundle schema, final Entry animationNode, final String imageSet) throws IOException {
         if (!imageSet.isEmpty()) {
@@ -44,6 +45,7 @@ public class AnimationBuilder {
 
         this.schema = schema;
         condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
+        turn = animationNode.getAttribute(schema.getString("IsTurn")) == null ? "false" : animationNode.getAttribute(schema.getString("IsTurn"));
 
         log.log(Level.INFO, "Loading animations");
 
@@ -67,6 +69,7 @@ public class AnimationBuilder {
         String soundText = frameNode.getAttribute(schema.getString("Sound"));
         final String volumeText = frameNode.getAttribute(schema.getString("Volume")) != null ? frameNode.getAttribute(schema.getString("Volume")) : "0";
 
+        final double opacity = Double.parseDouble(Main.getInstance().getProperties().getProperty("Opacity", "1.0"));
         final double scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
         String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
@@ -82,7 +85,7 @@ public class AnimationBuilder {
                 final String[] anchorCoordinates = anchorText.split(",");
                 final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
 
-                ImagePairLoader.load(imageText, imageRightText, anchor, scaling, filter);
+                ImagePairLoader.load(imageText, imageRightText, anchor, scaling, filter, opacity);
             } catch (IOException | NumberFormatException e) {
                 String error = imageText;
                 if (imageRightText != null) {
@@ -161,7 +164,7 @@ public class AnimationBuilder {
 
     public Animation buildAnimation() throws AnimationInstantiationException {
         try {
-            return new Animation(Variable.parse(condition), poses.toArray(new Pose[0]), hotspots.toArray(new Hotspot[0]));
+            return new Animation(Variable.parse(condition), poses.toArray(new Pose[0]), hotspots.toArray(new Hotspot[0]), Boolean.parseBoolean(turn));
         } catch (final VariableException e) {
             throw new AnimationInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
         }

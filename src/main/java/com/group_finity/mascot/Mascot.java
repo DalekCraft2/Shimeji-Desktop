@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,6 +70,8 @@ public class Mascot {
      * For example, its feet or its hands when hanging.
      * This will be the center when displaying the image.
      */
+    // TODO Update this doc comment, because this point is actually always flush with the ground when the mascot walks,
+    // rather than being at the center of the image at all times.
     private Point anchor = new Point(0, 0);
 
     /**
@@ -219,6 +222,7 @@ public class Mascot {
 
     private void showPopup(final int x, final int y) {
         final JPopupMenu popup = new JPopupMenu();
+        final ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
 
         popup.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -237,31 +241,31 @@ public class Mascot {
         });
 
         // "Another One!" menu item
-        final JMenuItem increaseMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("CallAnother"));
+        final JMenuItem increaseMenu = new JMenuItem(languageBundle.getString("CallAnother"));
         increaseMenu.addActionListener(event -> Main.getInstance().createMascot(imageSet));
 
         // "Bye Bye!" menu item
-        final JMenuItem disposeMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("Dismiss"));
+        final JMenuItem disposeMenu = new JMenuItem(languageBundle.getString("Dismiss"));
         disposeMenu.addActionListener(e -> dispose());
 
         // "Follow Mouse!" menu item
-        final JMenuItem gatherMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("FollowCursor"));
+        final JMenuItem gatherMenu = new JMenuItem(languageBundle.getString("FollowCursor"));
         gatherMenu.addActionListener(event -> getManager().setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER, imageSet));
 
         // "Reduce to One!" menu item
-        final JMenuItem oneMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("DismissOthers"));
+        final JMenuItem oneMenu = new JMenuItem(languageBundle.getString("DismissOthers"));
         oneMenu.addActionListener(event -> getManager().remainOne(imageSet, this));
 
         // "Reduce to One!" menu item
-        final JMenuItem onlyOneMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("DismissAllOthers"));
+        final JMenuItem onlyOneMenu = new JMenuItem(languageBundle.getString("DismissAllOthers"));
         onlyOneMenu.addActionListener(event -> getManager().remainOne(this));
 
         // "Restore IE!" menu item
-        final JMenuItem restoreMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("RestoreWindows"));
+        final JMenuItem restoreMenu = new JMenuItem(languageBundle.getString("RestoreWindows"));
         restoreMenu.addActionListener(event -> NativeFactory.getInstance().getEnvironment().restoreIE());
 
         // Debug menu item
-        final JMenuItem debugMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("RevealStatistics"));
+        final JMenuItem debugMenu = new JMenuItem(languageBundle.getString("RevealStatistics"));
         debugMenu.addActionListener(event -> {
             if (debugWindow == null) {
                 debugWindow = new DebugWindow();
@@ -270,48 +274,57 @@ public class Mascot {
         });
 
         // "Bye Everyone!" menu item
-        final JMenuItem closeMenu = new JMenuItem(Main.getInstance().getLanguageBundle().getString("DismissAll"));
+        final JMenuItem closeMenu = new JMenuItem(languageBundle.getString("DismissAll"));
         closeMenu.addActionListener(e -> Main.getInstance().exit());
 
         // "Paused" Menu item
-        final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? Main.getInstance().getLanguageBundle().getString("PauseAnimations") : Main.getInstance().getLanguageBundle().getString("ResumeAnimations"));
+        final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? languageBundle.getString("PauseAnimations") : languageBundle.getString("ResumeAnimations"));
         pauseMenu.addActionListener(event -> setPaused(!isPaused()));
 
         // Add the Behaviors submenu. It is currently slightly buggy; sometimes the menu ghosts.
-        // JLongMenu submenu = new JLongMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"), 30);
-        JMenu submenu = new JMenu(Main.getInstance().getLanguageBundle().getString("SetBehaviour"));
+        // JLongMenu submenu = new JLongMenu(languageBundle.getString("SetBehaviour"), 30);
+        JMenu submenu = new JMenu(languageBundle.getString("SetBehaviour"));
+        JMenu allowedSubmenu = new JMenu(languageBundle.getString("AllowedBehaviours"));
         submenu.setAutoscrolls(true);
         JMenuItem item;
-        Configuration config = Main.getInstance().getConfiguration(getImageSet());
-        Behavior behaviour;
+        JCheckBoxMenuItem toggleItem;
+        final Configuration config = Main.getInstance().getConfiguration(getImageSet());
         for (String behaviorName : config.getBehaviorNames()) {
             final String command = behaviorName;
             try {
-                behaviour = Main.getInstance().getConfiguration(getImageSet()).buildBehavior(command);
-                if (!behaviour.isHidden()) {
-                    item = new JMenuItem(Main.getInstance().getLanguageBundle().containsKey(behaviorName) ?
-                            Main.getInstance().getLanguageBundle().getString(behaviorName) :
-                            behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
-                    item.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(final ActionEvent e) {
-                            try {
-                                setBehavior(Main.getInstance().getConfiguration(getImageSet()).buildBehavior(command));
-                            } catch (BehaviorInstantiationException | CantBeAliveException ex) {
-                                // TODO Determine whether this catch block is supposed to dispose of the mascot
-                                log.log(Level.SEVERE, "Failed to set behavior to \"" + command + "\" for mascot \"" + this + "\"", ex);
-                                Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotSetBehaviourErrorMessage") + "\n" + ex.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                if (!config.isBehaviorHidden(command)) {
+                    String caption = behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
+                    if (config.isBehaviorEnabled(command, this) && !command.contains("/")) {
+                        item = new JMenuItem(languageBundle.containsKey(behaviorName) ?
+                                languageBundle.getString(behaviorName) :
+                                caption);
+                        item.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(final ActionEvent e) {
+                                try {
+                                    setBehavior(config.buildBehavior(command));
+                                } catch (BehaviorInstantiationException | CantBeAliveException ex) {
+                                    // TODO Determine whether this catch block is supposed to dispose of the mascot
+                                    log.log(Level.SEVERE, "Failed to set behavior to \"" + command + "\" for mascot \"" + this + "\"", ex);
+                                    Main.showError(languageBundle.getString("CouldNotSetBehaviourErrorMessage") + "\n" + ex.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+                                }
                             }
-                        }
-                    });
-                    submenu.add(item);
+                        });
+                        submenu.add(item);
+                    }
+                    if (config.isBehaviorToggleable(command) && !command.contains("/")) {
+                        toggleItem = new JCheckBoxMenuItem(caption, config.isBehaviorEnabled(command, this));
+                        toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(command, this, !config.isBehaviorEnabled(command, this)));
+                        allowedSubmenu.add(toggleItem);
+                    }
                 }
-            } catch (BehaviorInstantiationException e) {
+            } catch (RuntimeException e) {
                 // just skip if something goes wrong
             }
         }
         // Create the MenuScroller after adding all the items to the submenu, so it is positioned correctly when first shown.
         MenuScroller.setScrollerFor(submenu, 30, 125);
+        MenuScroller.setScrollerFor(allowedSubmenu, 30, 125);
 
         popup.add(increaseMenu);
         popup.addSeparator();
@@ -319,8 +332,12 @@ public class Mascot {
         popup.add(restoreMenu);
         popup.add(debugMenu);
         popup.addSeparator();
-        popup.add(submenu);
-        popup.addSeparator();
+        if (submenu.getMenuComponentCount() > 0) {
+            popup.add(submenu);
+        }
+        if (allowedSubmenu.getMenuComponentCount() > 0) {
+            popup.add(allowedSubmenu);
+        }
         popup.add(pauseMenu);
         popup.addSeparator();
         popup.add(disposeMenu);
@@ -430,7 +447,8 @@ public class Mascot {
 
     private void refreshCursor(Point position) {
         synchronized (getHotspots()) {
-            boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position));
+            boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position) &&
+                    Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
 
             refreshCursor(useHand);
         }
