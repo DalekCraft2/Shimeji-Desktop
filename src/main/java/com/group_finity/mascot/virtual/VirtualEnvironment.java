@@ -101,7 +101,7 @@ class VirtualEnvironment extends Environment {
                 if (!Main.getInstance().getProperties().getProperty("BackgroundImage", "").isEmpty()) {
                     image = ImageIO.read(new File(Main.getInstance().getProperties().getProperty("BackgroundImage", "")));
                 }
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
             }
             display.setContentPane(new VirtualContentPanel(new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1])),
                     Color.decode(Main.getInstance().getProperties().getProperty("Background", "#00FF00")),
@@ -112,7 +112,7 @@ class VirtualEnvironment extends Environment {
             BufferedImage icon = null;
             try {
                 icon = ImageIO.read(Main.ICON_FILE.toFile());
-            } catch (IOException e) {
+            } catch (IOException ignored) {
                 // not bothering reporting errors with loading the tray icon as it would have already been reported to the user by now
             } finally {
                 if (icon == null) {
@@ -121,13 +121,10 @@ class VirtualEnvironment extends Environment {
             }
             display.setIconImage(icon);
 
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    display.pack();
-                    display.setVisible(true);
-                    display.toFront();
-                }
+            SwingUtilities.invokeLater(() -> {
+                display.pack();
+                display.setVisible(true);
+                display.toFront();
             });
 
             activeIE.set(new Rectangle(-500, -500, 0, 0));

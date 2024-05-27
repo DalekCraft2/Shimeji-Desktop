@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  * @author Kilkakon
  * @since 1.0.21
  */
-// TODO Review this class after merge
 public class ScanInteract extends BorderedAction {
     private static final Logger log = Logger.getLogger(ScanInteract.class.getName());
 
@@ -59,7 +59,7 @@ public class ScanInteract extends BorderedAction {
     public boolean hasNext() throws VariableException {
         final boolean inTime = getTime() < getAnimation().getDuration();
 
-        return super.hasNext() && turning || inTime;
+        return super.hasNext() && (turning || inTime);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ScanInteract extends BorderedAction {
         getMascot().getAffordances().clear();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
-            log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
+            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
             throw new LostGroundException();
         }
 
@@ -96,23 +96,21 @@ public class ScanInteract extends BorderedAction {
             getAnimation().next(getMascot(), getTime());
 
             if (!turning && getTime() == getAnimation().getDuration() - 1 && !getBehavior().trim().isEmpty()) {
+                boolean setFirstBehavior = false;
                 try {
                     getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
-                    if (!getTargetBehavior().trim().isEmpty()) {
-                        target.get().setBehavior(Main.getInstance().getConfiguration(target.get().getImageSet()).buildBehavior(getTargetBehavior(), target.get()));
+                    setFirstBehavior = true;
+                    Mascot targetMascot = target.get();
+                    if (targetMascot != null) {
+                        if (!getTargetBehavior().trim().isEmpty()) {
+                            targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
+                        }
+                        if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
+                            targetMascot.setLookRight(!getMascot().isLookRight());
+                        }
                     }
-                    if (getTargetLook() && target.get().isLookRight() == getMascot().isLookRight()) {
-                        target.get().setLookRight(!getMascot().isLookRight());
-                    }
-                } catch (final NullPointerException e) {
-                    // TODO Do NOT catch NPEs.
-                    log.log(Level.SEVERE, "Fatal Exception", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
-                } catch (final BehaviorInstantiationException e) {
-                    log.log(Level.SEVERE, "Fatal Exception", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
-                } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Fatal Exception", e);
+                } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                    log.log(Level.SEVERE, "Failed to set behavior to \"" + (setFirstBehavior ? getTargetBehavior() : getBehavior()) + "\" for mascot \"" + (setFirstBehavior ? target.get() : getMascot()) + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
                 }
             }
@@ -122,10 +120,10 @@ public class ScanInteract extends BorderedAction {
     @Override
     protected Animation getAnimation() throws VariableException {
         List<Animation> animations = getAnimations();
-        for (int index = 0; index < animations.size(); index++) {
-            if (animations.get(index).isEffective(getVariables()) &&
-                    turning == animations.get(index).isTurn()) {
-                return animations.get(index);
+        for (Animation animation : animations) {
+            if (animation.isEffective(getVariables()) &&
+                    turning == animation.isTurn()) {
+                return animation;
             }
         }
 
@@ -136,11 +134,8 @@ public class ScanInteract extends BorderedAction {
         if (hasTurning == null) {
             hasTurning = false;
             List<Animation> animations = getAnimations();
-            for (int index = 0; index < animations.size(); index++) {
-                if (animations.get(index).isTurn()) {
-                    hasTurning = true;
-                    index = animations.size();
-                }
+            if (IntStream.range(0, animations.size()).anyMatch(index -> animations.get(index).isTurn())) {
+                hasTurning = true;
             }
         }
         return hasTurning;

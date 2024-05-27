@@ -338,6 +338,10 @@ public class Mascot {
         if (allowedSubmenu.getMenuComponentCount() > 0) {
             popup.add(allowedSubmenu);
         }
+        // Only add a second separator if either menu has a component count greater than 0. Just in case!
+        if (submenu.getMenuComponentCount() > 0 || allowedSubmenu.getMenuComponentCount() > 0) {
+            popup.addSeparator();
+        }
         popup.add(pauseMenu);
         popup.addSeparator();
         popup.add(disposeMenu);

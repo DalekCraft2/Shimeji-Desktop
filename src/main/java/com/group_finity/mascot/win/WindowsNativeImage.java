@@ -122,7 +122,7 @@ class WindowsNativeImage implements NativeImage {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        if (WindowsTranslucentWindow.USE_AWT) {
+        if (!WindowsTranslucentWindow.USE_AWT) {
             freeNative(getNativeHandle());
         }
     }

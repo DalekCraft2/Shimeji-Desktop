@@ -87,13 +87,15 @@ public class Configuration {
         }
         log.log(Level.INFO, "Finished reading all behavior lists");
 
+        log.log(Level.INFO, "Reading information");
         for (final Entry list : configurationNode.selectChildren(schema.getString("Information"))) {
-            log.log(Level.INFO, "Reading information list...");
+            log.log(Level.INFO, "Reading an information group...");
 
             loadInformation(list);
 
-            log.log(Level.INFO, "Finished reading information list");
+            log.log(Level.INFO, "Finished reading information group");
         }
+        log.log(Level.INFO, "Finished reading all information");
 
         log.log(Level.INFO, "Configuration loaded successfully");
     }
@@ -241,11 +243,7 @@ public class Configuration {
 
     public boolean isBehaviorEnabled(final BehaviorBuilder builder, final Mascot mascot) {
         if (builder.isToggleable()) {
-            for (String behaviour : Main.getInstance().getProperties().getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/")) {
-                if (behaviour.equals(builder.getName())) {
-                    return false;
-                }
-            }
+            return Arrays.stream(Main.getInstance().getProperties().getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/")).noneMatch(behaviour -> behaviour.equals(builder.getName()));
         }
         return true;
     }

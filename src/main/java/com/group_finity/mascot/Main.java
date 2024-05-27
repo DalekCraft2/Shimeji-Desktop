@@ -1099,10 +1099,10 @@ public class Main {
     }
 
     private void setMascotInformationDismissed(final String imageSet) {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         String[] data = properties.getProperty("InformationDismissed", "").split("/");
 
-        if (data.length > 0 && !data[0].equals("")) {
+        if (data.length > 0 && !data[0].isEmpty()) {
             list.addAll(Arrays.asList(data));
         }
         if (!list.contains(imageSet)) {
@@ -1113,10 +1113,10 @@ public class Main {
     }
 
     public void setMascotBehaviorEnabled(final String name, final Mascot mascot, boolean enabled) {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         String[] data = properties.getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/");
 
-        if (data.length > 0 && !data[0].equals("")) {
+        if (data.length > 0 && !data[0].isEmpty()) {
             list.addAll(Arrays.asList(data));
         }
 
@@ -1126,10 +1126,10 @@ public class Main {
             list.add(name);
         }
 
-        if (list.size() > 0) {
-            properties.setProperty("DisabledBehaviours." + mascot.getImageSet(), list.toString().replace("[", "").replace("]", "").replace(", ", "/"));
-        } else {
+        if (list.isEmpty()) {
             properties.remove("DisabledBehaviours." + mascot.getImageSet());
+        } else {
+            properties.setProperty("DisabledBehaviours." + mascot.getImageSet(), list.toString().replace("[", "").replace("]", "").replace(", ", "/"));
         }
 
         updateConfigFile();

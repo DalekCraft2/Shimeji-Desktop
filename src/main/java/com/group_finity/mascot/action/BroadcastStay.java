@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 /**
  * @author Kilkakon
  * @since 1.0.14
+ * @deprecated As of 1.0.21, integrated into {@link ActionBase} and replaced by {@link Stay}
  */
 @Deprecated
 public class BroadcastStay extends Stay {

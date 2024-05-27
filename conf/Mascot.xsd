@@ -9,10 +9,83 @@
             <documentation>The root of the Mascot XML.</documentation>
         </annotation>
         <sequence>
+            <element name="Information" type="tns:Information" maxOccurs="unbounded" minOccurs="0"/>
             <element name="Constant" type="tns:Constant" maxOccurs="unbounded" minOccurs="0"/>
             <element name="ActionList" type="tns:ActionList" maxOccurs="unbounded" minOccurs="0"/>
             <element name="BehaviorList" type="tns:BehaviorList" maxOccurs="unbounded" minOccurs="0"/>
         </sequence>
+    </complexType>
+
+    <complexType name="Information">
+        <annotation>
+            <documentation>
+                Optional information and metadata for the mascot.
+                Should be defined in "conf/info.xml", "conf/[image_set]/info.xml", or "img/[image_set]/conf/info.xml".
+                Can be defined more than once in one file.
+            </documentation>
+        </annotation>
+        <sequence>
+            <element name="Name" type="string" maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        The name displayed for the mascot on the image set chooser. Defaults to the name of the image
+                        set's folder.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="PreviewImage" type="string" maxOccurs="unbounded" minOccurs="0" default="shime1.png">
+                <annotation>
+                    <documentation>
+                        The path to the image to display for the mascot on the image set chooser. Defaults to
+                        "shime1.png".
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="SplashImage" type="string" maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        The path to the image to display on this mascot's information window.
+                        Must be defined for the information window to appear.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="Artist" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                    <documentation>The artist(s) who drew the art for this mascot.</documentation>
+                </annotation>
+            </element>
+            <element name="Scripter" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                    <documentation>The scripter(s) who created the configuration files for this mascot.</documentation>
+                </annotation>
+            </element>
+            <element name="Commissioner" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                    <documentation>The commissioner(s) who commissioned for the creation of this mascot.</documentation>
+                </annotation>
+            </element>
+            <element name="Support" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                    <documentation>The person(s) to contact for support for this mascot.</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
+    <complexType name="Contributor">
+        <annotation>
+            <documentation>A contributor for this mascot.</documentation>
+        </annotation>
+        <attribute name="Name" type="string" use="required">
+            <annotation>
+                <documentation>The name of the contributor.</documentation>
+            </annotation>
+        </attribute>
+        <attribute name="URL" type="string">
+            <annotation>
+                <documentation>The optional URL of the contributor. Can only contain one URL.</documentation>
+            </annotation>
+        </attribute>
     </complexType>
 
     <complexType name="Constant">
@@ -33,7 +106,11 @@
 
     <complexType name="ActionList">
         <annotation>
-            <documentation>A list of actions which can be performed by the mascot.</documentation>
+            <documentation>
+                A list of actions which can be performed by the mascot.
+                Should be defined in "conf/actions.xml", "conf/[image_set]/actions.xml", or
+                "img/[image_set]/conf/actions.xml". Can be defined more than once in one file.
+            </documentation>
         </annotation>
         <choice maxOccurs="unbounded" minOccurs="0">
             <element name="Action" type="tns:TopAction"/>
@@ -68,18 +145,18 @@
         <attribute name="TargetX" type="tns:IntParameter">
             <annotation>
                 <documentation>
-                    A scriptable integer representing the final x-position of the mascot when using the Jump, Move,
-                    or MoveWithTurn actions (or subclasses of them). For Jump, defaults to 0. For Move and MoveWithTurn,
-                    defaults to the maximum integer value.
+                    A scriptable integer representing the final x-position of the mascot when using the Jump or Move
+                    actions (or subclasses of them). For Jump, defaults to 0. For Move, defaults to the maximum integer
+                    value.
                 </documentation>
             </annotation>
         </attribute>
         <attribute name="TargetY" type="tns:IntParameter">
             <annotation>
                 <documentation>
-                    A scriptable integer representing the final y-position of the mascot when using the Jump, Move,
-                    or MoveWithTurn actions (or subclasses of them). For Jump, defaults to 0. For Move and MoveWithTurn,
-                    defaults to the maximum integer value.
+                    A scriptable integer representing the final y-position of the mascot when using the Jump or Move
+                    actions (or subclasses of them). For Jump, defaults to 0. For Move, defaults to the maximum integer
+                    value.
                 </documentation>
             </annotation>
         </attribute>
@@ -160,10 +237,10 @@
         <attribute name="Affordance" type="tns:StringParameter" default="">
             <annotation>
                 <documentation>
-                    A scriptable string representing the name of the affordance when using the Broadcast, BroadcastJump,
-                    BroadcastMove, BroadcastStay, ScanJump, or ScanMove actions. For the Broadcast actions, this mascot
-                    is broadcasting the affordance with this name; for the Scan actions, this mascot will be
-                    searching for another mascot broadcasting an affordance with this name. Defaults to an empty string.
+                    A scriptable string representing the name of an affordance. For ScanInteract, ScanJump, and
+                    ScanMove, this mascot will be searching for another mascot broadcasting an affordance with this
+                    name; for all other actions, this mascot will be broadcasting the affordance with this name.
+                    Defaults to an empty string.
                 </documentation>
             </annotation>
         </attribute>
@@ -271,7 +348,7 @@
                 <documentation>
                     A scriptable string representing the name of the behavior to perform whilst overlapping another
                     mascot when using the Interact action, or the name of the behavior to perform after reaching an
-                    affordance when using the ScanJump or ScanMove actions. Defaults to an empty string.
+                    affordance when using the ScanInteract, ScanJump, or ScanMove actions. Defaults to an empty string.
                 </documentation>
             </annotation>
         </attribute>
@@ -279,8 +356,17 @@
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the behavior for the target mascot to perform after
-                    this mascot has reached them when using the ScanJump or ScanMove actions. Defaults to an empty
-                    string.
+                    this mascot has reached them when using the ScanInteract, ScanJump, or ScanMove actions. Defaults to
+                    an empty string.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TargetLook" type="tns:BooleanParameter" default="false">
+            <annotation>
+                <documentation>
+                    A scriptable boolean representing whether to make the target mascot look toward this mascot after
+                    this mascot has reached them when using the ScanInteract, ScanJump, or ScanMove actions. Defaults to
+                    "false".
                 </documentation>
             </annotation>
         </attribute>
@@ -486,12 +572,20 @@
             <element name="Pose" type="tns:Pose" maxOccurs="unbounded" minOccurs="1"/>
             <element name="Hotspot" type="tns:Hotspot" maxOccurs="unbounded" minOccurs="0"/>
         </sequence>
-        <attribute name="Condition" type="tns:BooleanParameter">
+        <attribute name="Condition" type="tns:BooleanParameter" default="true">
             <annotation>
                 <documentation>
                     A scriptable boolean condition to determine whether this animation should be performed.
                     If evaluated to false, this animation will be skipped, and the next animation (if present) will be
-                    evaluated.
+                    evaluated. Defaults to "true".
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="IsTurn" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    Whether this animation is used for turning around. Used with the Move, ScanInteract, and ScanMove
+                    actions (and subclasses of them).
                 </documentation>
             </annotation>
         </attribute>
@@ -652,7 +746,11 @@
 
     <complexType name="BehaviorList">
         <annotation>
-            <documentation>A list of behaviors which can be performed by the mascot.</documentation>
+            <documentation>
+                A list of behaviors which can be performed by the mascot.
+                Should be defined in "conf/behaviors.xml", "conf/[image_set]/behaviors.xml", or
+                "img/[image_set]/conf/behaviors.xml". Can be defined more than once in one file.
+            </documentation>
         </annotation>
         <sequence>
             <choice maxOccurs="unbounded" minOccurs="1">
@@ -707,10 +805,17 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Hidden" type="boolean">
+        <attribute name="Hidden" type="boolean" default="false">
             <annotation>
                 <documentation>
-                    Whether this behavior should not show up in the context menu for this mascot.
+                    Whether this behavior should not show up in the context menu for this mascot. Defaults to "false".
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Toggleable" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    Whether this behavior should be toggleable. Defaults to "false".
                 </documentation>
             </annotation>
         </attribute>
@@ -747,8 +852,9 @@
             <annotation>
                 <documentation>
                     Whether to add these behaviors' weights (their "Frequency" attribute) to the weights of the parent
-                    behavior list when determining which behavior to perform. This will make it possible
-                    See documentation for the "Frequency" attribute for more information.
+                    behavior list when determining which behavior to perform. This will make it so the performed
+                    behavior may be either a behavior from this list or one from the parent list.
+                    See documentation for the "Behavior" tag's "Frequency" attribute for more information.
                 </documentation>
             </annotation>
         </attribute>

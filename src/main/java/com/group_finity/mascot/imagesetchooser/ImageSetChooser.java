@@ -269,7 +269,7 @@ public class ImageSetChooser extends JDialog {
         slashLabel = new JLabel();
         selectAllLabel = new JLabel();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("Shimeji-ee Image Set Chooser");
         setMinimumSize(new Dimension(670, 495));
 

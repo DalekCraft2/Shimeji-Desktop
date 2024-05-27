@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  * @author Kilkakon
@@ -64,7 +65,7 @@ public class ScanMove extends BorderedAction {
             return super.hasNext();
         }
 
-        return super.hasNext() && turning || (target != null && target.get() != null && target.get().getAffordances().contains(getAffordance()));
+        return super.hasNext() && (turning || target != null && target.get() != null && target.get().getAffordances().contains(getAffordance()));
     }
 
     @Override
@@ -130,10 +131,10 @@ public class ScanMove extends BorderedAction {
     @Override
     protected Animation getAnimation() throws VariableException {
         List<Animation> animations = getAnimations();
-        for (int index = 0; index < animations.size(); index++) {
-            if (animations.get(index).isEffective(getVariables()) &&
-                    turning == animations.get(index).isTurn()) {
-                return animations.get(index);
+        for (Animation animation : animations) {
+            if (animation.isEffective(getVariables()) &&
+                    turning == animation.isTurn()) {
+                return animation;
             }
         }
 
@@ -144,11 +145,8 @@ public class ScanMove extends BorderedAction {
         if (hasTurning == null) {
             hasTurning = false;
             List<Animation> animations = getAnimations();
-            for (int index = 0; index < animations.size(); index++) {
-                if (animations.get(index).isTurn()) {
-                    hasTurning = true;
-                    index = animations.size();
-                }
+            if (IntStream.range(0, animations.size()).anyMatch(index -> animations.get(index).isTurn())) {
+                hasTurning = true;
             }
         }
         return hasTurning;

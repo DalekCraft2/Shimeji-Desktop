@@ -73,8 +73,8 @@ public class Manager {
             public void run() {
                 while (true) {
                     try {
-                        Thread.sleep(Integer.MAX_VALUE);
-                    } catch (final InterruptedException ex) {
+                        sleep(Integer.MAX_VALUE);
+                    } catch (final InterruptedException ignored) {
                     }
                 }
             }

@@ -31,7 +31,6 @@ import java.util.stream.IntStream;
  */
 public class SettingsWindow extends JDialog {
     private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
-    private final String themeFile = "./conf/theme.properties";
     private NimRODTheme theme;
     private NimRODTheme oldTheme;
     private NimRODLookAndFeel lookAndFeel;
@@ -129,11 +128,9 @@ public class SettingsWindow extends JDialog {
         lstInteractiveWindows.setListData(listData.toArray(new String[0]));
 
         Properties themeProperties = new Properties();
-        FileInputStream input;
-        try {
-            input = new FileInputStream(themeFile);
+        try (InputStream input = Files.newInputStream(Main.THEME_FILE)) {
             themeProperties.load(input);
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
         }
         primaryColour1 = Color.decode(themeProperties.getProperty("nimrodlf.p1", "#1EA6EB"));
         primaryColour2 = Color.decode(themeProperties.getProperty("nimrodlf.p2", "#28B0F5"));
@@ -143,7 +140,7 @@ public class SettingsWindow extends JDialog {
         secondaryColour3 = Color.decode(themeProperties.getProperty("nimrodlf.s3", "#D0D0D2"));
         blackColour = Color.decode(themeProperties.getProperty("nimrodlf.b", "#000000"));
         whiteColour = Color.decode(themeProperties.getProperty("nimrodlf.w", "#FFFFFF"));
-        menuOpacity = Integer.parseInt(properties.getProperty("nimrodlf.menuOpacity", "255")) / 255;
+        menuOpacity = Integer.parseInt(properties.getProperty("nimrodlf.menuOpacity", "255")) / 255.0;
         font = Font.decode(themeProperties.getProperty("nimrodlf.font", "SansSerif-PLAIN-12"));
         pnlPrimaryColour1Preview.setBackground(primaryColour1);
         txtPrimaryColour1.setText(String.format("#%02X%02X%02X", primaryColour1.getRed(), primaryColour1.getGreen(), primaryColour1.getBlue()));
@@ -255,12 +252,7 @@ public class SettingsWindow extends JDialog {
         btnCancel.setText(language.getString("Cancel"));
 
         // come back around to this one now that the dropdown is populated
-        for (int index = 0; index < backgroundModes.length; index++) {
-            if (backgroundMode.equals(backgroundModes[index])) {
-                cmbBackgroundImageMode.setSelectedIndex(index);
-                break;
-            }
-        }
+        IntStream.range(0, backgroundModes.length).filter(index -> backgroundMode.equals(backgroundModes[index])).findFirst().ifPresent(index -> cmbBackgroundImageMode.setSelectedIndex(index));
     }
 
     public boolean display() {
@@ -1304,7 +1296,8 @@ public class SettingsWindow extends JDialog {
     private void btnDoneActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnDoneActionPerformed
     {// GEN-HEADEREND:event_btnDoneActionPerformed
         // done button
-        try {
+        // TODO Change this to not be a block after pushing changes, for cleaner Git diff
+        {
             Properties properties = Main.getInstance().getProperties();
             String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ", "/");
             String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
@@ -1336,9 +1329,11 @@ public class SettingsWindow extends JDialog {
                 }
 
                 properties.store(output, "Shimeji-ee Configuration Options");
+            } catch (IOException e) {
+                log.log(Level.SEVERE, "Failed to save settings", e);
             }
 
-            try (FileOutputStream themeOutput = new FileOutputStream(themeFile)) {
+            try (OutputStream output = Files.newOutputStream(Main.THEME_FILE)) {
                 properties = new Properties();
                 properties.setProperty("nimrodlf.p1", String.format("#%02X%02X%02X", primaryColour1.getRed(), primaryColour1.getGreen(), primaryColour1.getBlue()));
                 properties.setProperty("nimrodlf.p2", String.format("#%02X%02X%02X", primaryColour2.getRed(), primaryColour2.getGreen(), primaryColour2.getBlue()));
@@ -1357,11 +1352,10 @@ public class SettingsWindow extends JDialog {
                                         font.getStyle() == Font.ITALIC ? "ITALIC" :
                                                 "BOLDITALIC",
                         font.getSize()));
-                properties.store(themeOutput, null);
+                properties.store(output, null);
+            } catch (IOException e) {
+                log.log(Level.SEVERE, "Failed to save settings", e);
             }
-        } catch (IOException | NumberFormatException e) {
-            // TODO Add catch blocks for both settings.properties and theme.properties after merging changes
-            log.log(Level.SEVERE, "Failed to save settings", e);
         }
         dispose();
     }// GEN-LAST:event_btnDoneActionPerformed
@@ -1493,7 +1487,7 @@ public class SettingsWindow extends JDialog {
             try {
                 backgroundImage = dialog.getSelectedFile().getCanonicalPath();
                 refreshBackgroundImage();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 backgroundImage = null;
                 lblBackgroundImage.setIcon(null);
             }
@@ -1686,7 +1680,7 @@ public class SettingsWindow extends JDialog {
             UIManager.setLookAndFeel(lookAndFeel);
             SwingUtilities.updateComponentTreeUI(this);
             pack();
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (UnsupportedLookAndFeelException ignored) {
         }
     }
 

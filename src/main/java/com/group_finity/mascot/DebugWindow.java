@@ -44,7 +44,7 @@ public class DebugWindow extends JFrame {
         lblActiveIE = new JLabel();
         lblActiveIEValue = new JLabel();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         lblShimejiX.setText("Shimeji X");
 

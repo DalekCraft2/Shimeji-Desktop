@@ -9,7 +9,7 @@ Kilkakon's notes:
 - Added Opacity slider in Settings to allow for semi transparent shimeji
 - Added Theme tab in Settings to allow for theme editing without having to resort to trial and error
 - Added the ability to set an optional background image for Window Mode, as well as different ways to size the image to fit
-- Added the ability to enable or disable behaviours by right clicking a shimeji, provided the `Toggleable` flag has been set to true on the relevant behaviour
+- Added the ability to enable or disable behaviours by right-clicking a shimeji, provided the `Toggleable` flag has been set to true on the relevant behaviour
 - Added a new configuration file, info.xml
 	This also allows setting a custom name and icon in the shimeji chooser
 	Also supports displaying a splash screen the first time a shimeji is loaded, along with credits and links

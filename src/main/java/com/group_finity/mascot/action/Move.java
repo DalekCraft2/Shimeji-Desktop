@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  * Moving action.
@@ -58,10 +59,7 @@ public class Move extends BorderedAction {
             }
         }
 
-        // TODO Determine whether this condition was written incorrectly;
-        // It may have been meant to be parsed as "super.hasNext() && (turning || (!noMoveX && !noMoveY))",
-        // but I think it is currently parsed as "(super.hasNext() && turning) || (!noMoveX && !noMoveY)"
-        return super.hasNext() && turning || (!noMoveX && !noMoveY);
+        return super.hasNext() && (turning || !noMoveX && !noMoveY);
     }
 
     @Override
@@ -119,10 +117,10 @@ public class Move extends BorderedAction {
         // had to expose both animations and variables for this
         // is there a better way?
         List<Animation> animations = getAnimations();
-        for (int index = 0; index < animations.size(); index++) {
-            if (animations.get(index).isEffective(getVariables()) &&
-                    turning == animations.get(index).isTurn()) {
-                return animations.get(index);
+        for (Animation animation : animations) {
+            if (animation.isEffective(getVariables()) &&
+                    turning == animation.isTurn()) {
+                return animation;
             }
         }
 
@@ -133,11 +131,8 @@ public class Move extends BorderedAction {
         if (hasTurning == null) {
             hasTurning = false;
             List<Animation> animations = getAnimations();
-            for (int index = 0; index < animations.size(); index++) {
-                if (animations.get(index).isTurn()) {
-                    hasTurning = true;
-                    index = animations.size();
-                }
+            if (IntStream.range(0, animations.size()).anyMatch(index -> animations.get(index).isTurn())) {
+                hasTurning = true;
             }
         }
         return hasTurning;

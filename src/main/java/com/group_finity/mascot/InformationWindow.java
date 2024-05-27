@@ -9,19 +9,24 @@ import com.group_finity.mascot.config.Configuration;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.21
  */
-// TODO Review this class after merge
 public class InformationWindow extends JFrame {
+    private static final Logger log = Logger.getLogger(InformationWindow.class.getName());
     private String imageSet;
 
     /**
@@ -37,10 +42,12 @@ public class InformationWindow extends JFrame {
         this.imageSet = imageSet;
 
         // load image
-        Image image = new ImageIcon("./img/" + imageSet + "/" + config.getInformation("SplashImage")).getImage();
-        try {
-            lblSplashImage.setIcon(new ImageIcon(image));
-        } catch (Exception e) {
+        if (config.containsInformationKey("SplashImage")) {
+            Path splashImagePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(config.getInformation("SplashImage"));
+            if (Files.exists(splashImagePath)) {
+                Icon icon = new ImageIcon(splashImagePath.toString());
+                lblSplashImage.setIcon(icon);
+            }
         }
 
         // text
@@ -125,28 +132,31 @@ public class InformationWindow extends JFrame {
         html.append("</center>");
 
         pnlEditorPane.setText(html.toString());
-        pnlEditorPane.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
-                    if (st.hasMoreTokens()) {
-                        String url = st.nextToken();
-                        if (JOptionPane.showConfirmDialog(
-                                InformationWindow.this,
-                                language.getString("ConfirmVisitWebsiteMessage") + "\n" + language.getString("ExerciseCautionAndBewareSusLinksMessage") + "\n" + url,
-                                language.getString("VisitWebsite"),
-                                JOptionPane.YES_NO_OPTION) == javax.swing.JOptionPane.YES_OPTION) {
-                            try {
-                                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                                    desktop.browse(new URI(url));
+        pnlEditorPane.addHyperlinkListener(e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
+                if (st.hasMoreTokens()) {
+                    String url = st.nextToken();
+                    if (JOptionPane.showConfirmDialog(
+                            this,
+                            language.getString("ConfirmVisitWebsiteMessage") + "\n" + language.getString("ExerciseCautionAndBewareSusLinksMessage") + "\n" + url,
+                            language.getString("VisitWebsite"),
+                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        try {
+                            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                                desktop.browse(new URI(url));
+                            } else {
+                                if (desktop == null) {
+                                    log.log(Level.WARNING, "Can not open URL \"" + url + "\", as desktop operations are not supported on this platform");
                                 } else {
-                                    throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url);
+                                    log.log(Level.WARNING, "Can not open URL \"" + url + "\", as the desktop browse operation is not supported on this platform");
                                 }
-                            } catch (Exception exc) {
-                                JOptionPane.showMessageDialog(InformationWindow.this, exc.getMessage(), "Error", JOptionPane.PLAIN_MESSAGE);
+                                JOptionPane.showMessageDialog(this, Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url, "Error", JOptionPane.ERROR_MESSAGE);
                             }
+                        } catch (IOException | UnsupportedOperationException | URISyntaxException ex) {
+                            log.log(Level.SEVERE, "Failed to open URL \"" + url + "\"", ex);
+                            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -179,17 +189,16 @@ public class InformationWindow extends JFrame {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblSplashImage = new javax.swing.JLabel();
-        pnlScrollPane = new javax.swing.JScrollPane();
-        pnlEditorPane = new javax.swing.JEditorPane();
-        pnlFooter = new javax.swing.JPanel();
-        btnClose = new javax.swing.JButton();
+        lblSplashImage = new JLabel();
+        pnlScrollPane = new JScrollPane();
+        pnlEditorPane = new JEditorPane();
+        pnlFooter = new JPanel();
+        btnClose = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         pnlEditorPane.setEditable(false);
         pnlEditorPane.setBorder(null);
@@ -197,42 +206,38 @@ public class InformationWindow extends JFrame {
         pnlEditorPane.setText("");
         pnlScrollPane.setViewportView(pnlEditorPane);
 
-        pnlFooter.setPreferredSize(new java.awt.Dimension(380, 36));
-        pnlFooter.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
+        pnlFooter.setPreferredSize(new Dimension(380, 36));
+        pnlFooter.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
         btnClose.setText("Close");
-        btnClose.setMaximumSize(new java.awt.Dimension(130, 26));
-        btnClose.setMinimumSize(new java.awt.Dimension(95, 23));
+        btnClose.setMaximumSize(new Dimension(130, 26));
+        btnClose.setMinimumSize(new Dimension(95, 23));
         btnClose.setName(""); // NOI18N
-        btnClose.setPreferredSize(new java.awt.Dimension(130, 26));
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                btnCloseActionPerformed(evt);
-            }
-        });
+        btnClose.setPreferredSize(new Dimension(130, 26));
+        btnClose.addActionListener(this::btnCloseActionPerformed);
         pnlFooter.add(btnClose);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(pnlFooter, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(pnlFooter, GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
                                         .addComponent(pnlScrollPane)
-                                        .addComponent(lblSplashImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(lblSplashImage, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(lblSplashImage, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlFooter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblSplashImage, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pnlScrollPane, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pnlFooter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
 
@@ -247,42 +252,35 @@ public class InformationWindow extends JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InformationWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InformationWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InformationWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InformationWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
+            log.log(Level.SEVERE, "Failed to set Look & Feel", ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-            }
+        EventQueue.invokeLater(() -> {
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnClose;
-    private javax.swing.JLabel lblSplashImage;
-    private javax.swing.JEditorPane pnlEditorPane;
-    private javax.swing.JPanel pnlFooter;
-    private javax.swing.JScrollPane pnlScrollPane;
+    private JButton btnClose;
+    private JLabel lblSplashImage;
+    private JEditorPane pnlEditorPane;
+    private JPanel pnlFooter;
+    private JScrollPane pnlScrollPane;
     // End of variables declaration//GEN-END:variables
 }

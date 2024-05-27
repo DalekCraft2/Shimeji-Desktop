@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 /**
  * @author Kilkakon
  * @since 1.0.14
+ * @deprecated As of 1.0.21, integrated into {@link ActionBase} and replaced by {@link Animate}
  */
-// TODO Add @deprecated tags to the newly deprecated classes' Javadocs after finishing the 1.0.21/1.0.21.1 merge
 @Deprecated
 public class Broadcast extends Animate {
     private static final Logger log = Logger.getLogger(Broadcast.class.getName());

@@ -43,7 +43,7 @@ public class ImagePairLoader {
         if (rightName == null) {
             rightImage = flip(leftImage);
         } else {
-            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile()), opacity), scaling, filter);
+            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(rightName).toFile()), opacity), scaling, filter);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
@@ -79,7 +79,7 @@ public class ImagePairLoader {
             for (int x = 0; x < returnImage.getWidth(); x++) {
                 colour = new Color(source.getRGB(x, y), true);
                 components = colour.getComponents(null);
-                components[3] *= opacity;
+                components[3] *= (float) opacity;
                 components[0] = components[3] * components[0];
                 components[1] = components[3] * components[1];
                 components[2] = components[3] * components[2];
