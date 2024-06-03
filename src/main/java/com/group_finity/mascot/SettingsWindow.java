@@ -1296,66 +1296,63 @@ public class SettingsWindow extends JDialog {
     private void btnDoneActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnDoneActionPerformed
     {// GEN-HEADEREND:event_btnDoneActionPerformed
         // done button
-        // TODO Change this to not be a block after pushing changes, for cleaner Git diff
-        {
-            Properties properties = Main.getInstance().getProperties();
-            String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ", "/");
-            String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
-            Dimension window = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
+        Properties properties = Main.getInstance().getProperties();
+        String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ", "/");
+        String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
+        Dimension window = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
 
-            environmentReloadRequired = properties.getProperty("Environment", "generic").equals("virtual") != windowedMode ||
-                    !window.equals(windowSize) ||
-                    !Color.decode(properties.getProperty("Background", "#00FF00")).equals(backgroundColour) ||
-                    !properties.getProperty("BackgroundMode", "centre").equals(backgroundMode) ||
-                    !properties.getProperty("BackgroundImage", "").equalsIgnoreCase(backgroundImage == null ? "" : backgroundImage);
-            imageReloadRequired = !properties.getProperty("Filter", "false").equalsIgnoreCase(filter) ||
-                    Double.parseDouble(properties.getProperty("Scaling", "1.0")) != scaling ||
-                    Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
-            interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "").equals(interactiveWindows);
+        environmentReloadRequired = properties.getProperty("Environment", "generic").equals("virtual") != windowedMode ||
+                !window.equals(windowSize) ||
+                !Color.decode(properties.getProperty("Background", "#00FF00")).equals(backgroundColour) ||
+                !properties.getProperty("BackgroundMode", "centre").equals(backgroundMode) ||
+                !properties.getProperty("BackgroundImage", "").equalsIgnoreCase(backgroundImage == null ? "" : backgroundImage);
+        imageReloadRequired = !properties.getProperty("Filter", "false").equalsIgnoreCase(filter) ||
+                Double.parseDouble(properties.getProperty("Scaling", "1.0")) != scaling ||
+                Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
+        interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "").equals(interactiveWindows);
 
-            try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
-                properties.setProperty("AlwaysShowShimejiChooser", alwaysShowShimejiChooser.toString());
-                properties.setProperty("AlwaysShowInformationScreen", alwaysShowInformationScreen.toString());
-                properties.setProperty("Opacity", Double.toString(opacity));
-                properties.setProperty("Scaling", Double.toString(scaling));
-                properties.setProperty("Filter", filter);
-                properties.setProperty("InteractiveWindows", interactiveWindows);
-                properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
-                if (windowedMode) {
-                    properties.setProperty("WindowSize", windowSize.width + "x" + windowSize.height);
-                    properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColour.getRed(), backgroundColour.getGreen(), backgroundColour.getBlue()));
-                    properties.setProperty("BackgroundMode", backgroundMode);
-                    properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage);
-                }
-
-                properties.store(output, "Shimeji-ee Configuration Options");
-            } catch (IOException e) {
-                log.log(Level.SEVERE, "Failed to save settings", e);
+        try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
+            properties.setProperty("AlwaysShowShimejiChooser", alwaysShowShimejiChooser.toString());
+            properties.setProperty("AlwaysShowInformationScreen", alwaysShowInformationScreen.toString());
+            properties.setProperty("Opacity", Double.toString(opacity));
+            properties.setProperty("Scaling", Double.toString(scaling));
+            properties.setProperty("Filter", filter);
+            properties.setProperty("InteractiveWindows", interactiveWindows);
+            properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
+            if (windowedMode) {
+                properties.setProperty("WindowSize", windowSize.width + "x" + windowSize.height);
+                properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColour.getRed(), backgroundColour.getGreen(), backgroundColour.getBlue()));
+                properties.setProperty("BackgroundMode", backgroundMode);
+                properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage);
             }
 
-            try (OutputStream output = Files.newOutputStream(Main.THEME_FILE)) {
-                properties = new Properties();
-                properties.setProperty("nimrodlf.p1", String.format("#%02X%02X%02X", primaryColour1.getRed(), primaryColour1.getGreen(), primaryColour1.getBlue()));
-                properties.setProperty("nimrodlf.p2", String.format("#%02X%02X%02X", primaryColour2.getRed(), primaryColour2.getGreen(), primaryColour2.getBlue()));
-                properties.setProperty("nimrodlf.p3", String.format("#%02X%02X%02X", primaryColour3.getRed(), primaryColour3.getGreen(), primaryColour3.getBlue()));
-                properties.setProperty("nimrodlf.s1", String.format("#%02X%02X%02X", secondaryColour1.getRed(), secondaryColour1.getGreen(), secondaryColour1.getBlue()));
-                properties.setProperty("nimrodlf.s2", String.format("#%02X%02X%02X", secondaryColour2.getRed(), secondaryColour2.getGreen(), secondaryColour2.getBlue()));
-                properties.setProperty("nimrodlf.s3", String.format("#%02X%02X%02X", secondaryColour3.getRed(), secondaryColour3.getGreen(), secondaryColour3.getBlue()));
-                properties.setProperty("nimrodlf.b", String.format("#%02X%02X%02X", blackColour.getRed(), blackColour.getGreen(), blackColour.getBlue()));
-                properties.setProperty("nimrodlf.w", String.format("#%02X%02X%02X", whiteColour.getRed(), whiteColour.getGreen(), whiteColour.getBlue()));
-                properties.setProperty("nimrodlf.menuOpacity", String.valueOf((int) (menuOpacity * 255)));
-                properties.setProperty("nimrodlf.frameOpacity", "255");
-                properties.setProperty("nimrodlf.font", String.format("%s-%s-%d",
-                        font.getName(),
-                        font.getStyle() == Font.PLAIN ? "PLAIN" :
-                                font.getStyle() == Font.BOLD ? "BOLD" :
-                                        font.getStyle() == Font.ITALIC ? "ITALIC" :
-                                                "BOLDITALIC",
-                        font.getSize()));
-                properties.store(output, null);
-            } catch (IOException e) {
-                log.log(Level.SEVERE, "Failed to save settings", e);
-            }
+            properties.store(output, "Shimeji-ee Configuration Options");
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Failed to save settings", e);
+        }
+
+        try (OutputStream output = Files.newOutputStream(Main.THEME_FILE)) {
+            properties = new Properties();
+            properties.setProperty("nimrodlf.p1", String.format("#%02X%02X%02X", primaryColour1.getRed(), primaryColour1.getGreen(), primaryColour1.getBlue()));
+            properties.setProperty("nimrodlf.p2", String.format("#%02X%02X%02X", primaryColour2.getRed(), primaryColour2.getGreen(), primaryColour2.getBlue()));
+            properties.setProperty("nimrodlf.p3", String.format("#%02X%02X%02X", primaryColour3.getRed(), primaryColour3.getGreen(), primaryColour3.getBlue()));
+            properties.setProperty("nimrodlf.s1", String.format("#%02X%02X%02X", secondaryColour1.getRed(), secondaryColour1.getGreen(), secondaryColour1.getBlue()));
+            properties.setProperty("nimrodlf.s2", String.format("#%02X%02X%02X", secondaryColour2.getRed(), secondaryColour2.getGreen(), secondaryColour2.getBlue()));
+            properties.setProperty("nimrodlf.s3", String.format("#%02X%02X%02X", secondaryColour3.getRed(), secondaryColour3.getGreen(), secondaryColour3.getBlue()));
+            properties.setProperty("nimrodlf.b", String.format("#%02X%02X%02X", blackColour.getRed(), blackColour.getGreen(), blackColour.getBlue()));
+            properties.setProperty("nimrodlf.w", String.format("#%02X%02X%02X", whiteColour.getRed(), whiteColour.getGreen(), whiteColour.getBlue()));
+            properties.setProperty("nimrodlf.menuOpacity", String.valueOf((int) (menuOpacity * 255)));
+            properties.setProperty("nimrodlf.frameOpacity", "255");
+            properties.setProperty("nimrodlf.font", String.format("%s-%s-%d",
+                    font.getName(),
+                    font.getStyle() == Font.PLAIN ? "PLAIN" :
+                            font.getStyle() == Font.BOLD ? "BOLD" :
+                                    font.getStyle() == Font.ITALIC ? "ITALIC" :
+                                            "BOLDITALIC",
+                    font.getSize()));
+            properties.store(output, null);
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Failed to save settings", e);
         }
         dispose();
     }// GEN-LAST:event_btnDoneActionPerformed
