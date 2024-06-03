@@ -11,10 +11,9 @@ import java.awt.event.ComponentListener;
  * @author Kilkakon
  * @since 1.0.21
  */
-// TODO Review this class after merge
 public class VirtualContentPanel extends JPanel {
     private Image resizedImage;
-    private String mode = CENTRE;
+    private String mode;
 
     private static final String CENTRE = "centre";
     private static final String FIT = "fit";
