@@ -9,10 +9,10 @@
             <documentation>The root of the Mascot XML.</documentation>
         </annotation>
         <sequence>
-            <element name="Information" type="tns:Information" maxOccurs="unbounded" minOccurs="0"/>
-            <element name="Constant" type="tns:Constant" maxOccurs="unbounded" minOccurs="0"/>
-            <element name="ActionList" type="tns:ActionList" maxOccurs="unbounded" minOccurs="0"/>
-            <element name="BehaviorList" type="tns:BehaviorList" maxOccurs="unbounded" minOccurs="0"/>
+            <element name="Information" type="tns:Information" minOccurs="0" maxOccurs="unbounded"/>
+            <element name="Constant" type="tns:Constant" minOccurs="0" maxOccurs="unbounded"/>
+            <element name="ActionList" type="tns:ActionList" minOccurs="0" maxOccurs="unbounded"/>
+            <element name="BehaviorList" type="tns:BehaviorList" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
@@ -25,7 +25,7 @@
             </documentation>
         </annotation>
         <sequence>
-            <element name="Name" type="string" maxOccurs="unbounded" minOccurs="0">
+            <element name="Name" type="string" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
                     <documentation>
                         The name displayed for the mascot on the image set chooser. Defaults to the name of the image
@@ -33,7 +33,7 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="PreviewImage" type="string" maxOccurs="unbounded" minOccurs="0" default="shime1.png">
+            <element name="PreviewImage" type="string" minOccurs="0" maxOccurs="unbounded" default="shime1.png">
                 <annotation>
                     <documentation>
                         The path to the image to display for the mascot on the image set chooser. Defaults to
@@ -41,7 +41,7 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="SplashImage" type="string" maxOccurs="unbounded" minOccurs="0">
+            <element name="SplashImage" type="string" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
                     <documentation>
                         The path to the image to display on this mascot's information window.
@@ -49,22 +49,22 @@
                     </documentation>
                 </annotation>
             </element>
-            <element name="Artist" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+            <element name="Artist" type="tns:Contributor" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
                     <documentation>The artist(s) who drew the art for this mascot.</documentation>
                 </annotation>
             </element>
-            <element name="Scripter" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+            <element name="Scripter" type="tns:Contributor" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
                     <documentation>The scripter(s) who created the configuration files for this mascot.</documentation>
                 </annotation>
             </element>
-            <element name="Commissioner" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+            <element name="Commissioner" type="tns:Contributor" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
                     <documentation>The commissioner(s) who commissioned for the creation of this mascot.</documentation>
                 </annotation>
             </element>
-            <element name="Support" type="tns:Contributor" maxOccurs="unbounded" minOccurs="0">
+            <element name="Support" type="tns:Contributor" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
                     <documentation>The person(s) to contact for support for this mascot.</documentation>
                 </annotation>
@@ -112,7 +112,7 @@
                 "img/[image_set]/conf/actions.xml". Can be defined more than once in one file.
             </documentation>
         </annotation>
-        <choice maxOccurs="unbounded" minOccurs="0">
+        <choice minOccurs="0" maxOccurs="unbounded">
             <element name="Action" type="tns:TopAction"/>
         </choice>
     </complexType>
@@ -432,9 +432,9 @@
         <complexContent>
             <extension base="tns:ActionArguments">
                 <choice>
-                    <element name="Animation" type="tns:Animation" maxOccurs="unbounded" minOccurs="0"/>
+                    <element name="Animation" type="tns:Animation" minOccurs="0" maxOccurs="unbounded"/>
                     <sequence>
-                        <choice maxOccurs="unbounded" minOccurs="0">
+                        <choice minOccurs="0" maxOccurs="unbounded">
                             <element name="ActionReference" type="tns:ActionReference"/>
                             <element name="Action" type="tns:LowerAction"/>
                         </choice>
@@ -569,8 +569,8 @@
             </documentation>
         </annotation>
         <sequence>
-            <element name="Pose" type="tns:Pose" maxOccurs="unbounded" minOccurs="1"/>
-            <element name="Hotspot" type="tns:Hotspot" maxOccurs="unbounded" minOccurs="0"/>
+            <element name="Pose" type="tns:Pose" minOccurs="1" maxOccurs="unbounded"/>
+            <element name="Hotspot" type="tns:Hotspot" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
         <attribute name="Condition" type="tns:BooleanParameter" default="true">
             <annotation>
@@ -754,7 +754,7 @@
             </documentation>
         </annotation>
         <sequence>
-            <choice maxOccurs="unbounded" minOccurs="1">
+            <choice minOccurs="1" maxOccurs="unbounded">
                 <element name="Behavior" type="tns:Behavior"/>
                 <element name="Condition" type="tns:BehaviorCondition"/>
             </choice>
@@ -766,7 +766,7 @@
             <documentation>Defines a top-level behavior which can be performed by the mascot.</documentation>
         </annotation>
         <sequence>
-            <choice maxOccurs="1" minOccurs="0">
+            <choice minOccurs="0" maxOccurs="1">
                 <element name="NextBehaviorList" type="tns:NextBehaviorList"/>
             </choice>
         </sequence>
@@ -844,7 +844,7 @@
 
     <complexType name="NextBehaviorList">
         <sequence>
-            <choice maxOccurs="unbounded" minOccurs="1">
+            <choice minOccurs="1" maxOccurs="unbounded">
                 <element name="BehaviorReference" type="tns:BehaviorReference"/>
                 <element name="Condition" type="tns:BehaviorReferenceCondition"/>
             </choice>
