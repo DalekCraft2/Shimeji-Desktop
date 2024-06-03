@@ -68,10 +68,7 @@ public class Mascot {
     /**
      * The {@code Mascot}'s ground coordinates.
      * For example, its feet or its hands when hanging.
-     * This will be the center when displaying the image.
      */
-    // TODO Update this doc comment, because this point is actually always flush with the ground when the mascot walks,
-    // rather than being at the center of the image at all times.
     private Point anchor = new Point(0, 0);
 
     /**

@@ -626,11 +626,12 @@
         <attribute name="ImageAnchor" type="tns:Point">
             <annotation>
                 <documentation>
-                    The coordinates of the center of the image used for this pose, in the format "x,y". The origin
-                    ("0,0") refers to the top-left corner of the left-facing image.
+                    The offset of this pose's image, relative to the mascot's anchor (a single point used for its
+                    position), in the format "x,y". The origin ("0,0") refers to the top-left corner of the left-facing
+                    image, which will make the top-left corner of the image aligned with the mascot's position.
                     When the mascot is facing left, increasing the x-coordinate means moving the image leftward.
-                    Increasing the y-coordinate means moving the image upward. Requires that the "Image" attribute has
-                    been set.
+                    Increasing the y-coordinate means moving the image upward.
+                    Requires that the "Image" attribute has been set.
                 </documentation>
             </annotation>
         </attribute>
