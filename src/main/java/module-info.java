@@ -17,7 +17,6 @@ module com.group_finity.mascot {
     exports com.group_finity.mascot.environment;
     exports com.group_finity.mascot.exception;
     exports com.group_finity.mascot.generic;
-    exports com.group_finity.mascot.generic.jna;
     exports com.group_finity.mascot.hotspot;
     exports com.group_finity.mascot.image;
     exports com.group_finity.mascot.imagesetchooser;
