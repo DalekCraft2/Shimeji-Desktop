@@ -407,6 +407,12 @@ public class Main {
      * Creates a tray icon.
      */
     private void createTrayIcon() {
+        if (!SystemTray.isSupported()) {
+            // TODO Make an alternative way to access the tray icon's menu in case the system tray is not supported
+            log.log(Level.INFO, "System tray not supported");
+            return;
+        }
+
         log.log(Level.INFO, "Creating tray icon");
 
         // get the tray icon image
