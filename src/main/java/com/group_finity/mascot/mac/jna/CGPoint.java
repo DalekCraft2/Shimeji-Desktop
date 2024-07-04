@@ -1,8 +1,9 @@
 package com.group_finity.mascot.mac.jna;
 
 import com.sun.jna.Structure;
+import com.sun.jna.Structure.FieldOrder;
 
-@Structure.FieldOrder({"x", "y"})
+@FieldOrder({"x", "y"})
 public class CGPoint extends Structure {
     public double x, y;
 

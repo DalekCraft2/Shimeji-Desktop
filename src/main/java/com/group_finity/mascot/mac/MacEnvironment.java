@@ -6,6 +6,10 @@ import com.group_finity.mascot.mac.jna.*;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.mac.CoreFoundation;
+import com.sun.jna.platform.mac.CoreFoundation.CFArrayRef;
+import com.sun.jna.platform.mac.CoreFoundation.CFIndex;
+import com.sun.jna.platform.mac.CoreFoundation.CFStringRef;
+import com.sun.jna.platform.mac.CoreFoundation.CFTypeRef;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
@@ -18,6 +22,8 @@ import java.util.Set;
 
 /**
  * Uses the Accessibility API to obtain environment information that is difficult to obtain using Java.
+ *
+ * @author nonowarn
  */
 class MacEnvironment extends Environment {
 
@@ -45,7 +51,7 @@ class MacEnvironment extends Environment {
 
     private static Set<Long> touchedProcesses = new HashSet<>();
 
-    static final CoreFoundation.CFStringRef
+    static final CFStringRef
             kAXPosition = createCFString("AXPosition"),
             kAXSize = createCFString("AXSize"),
             kAXFocusedWindow = createCFString("AXFocusedWindow"),
@@ -158,7 +164,7 @@ class MacEnvironment extends Environment {
             return ret;
         }
 
-        CoreFoundation.CFArrayRef cfWindows = new CoreFoundation.CFArrayRef(axWindowsp.getValue());
+        CFArrayRef cfWindows = new CFArrayRef(axWindowsp.getValue());
 
         for (int i = 0, count = cfWindows.getCount(); i < count; i++) {
             Pointer p = cfWindows.getValueAtIndex(i);
@@ -184,8 +190,8 @@ class MacEnvironment extends Environment {
         carbonEx.AXUIElementSetAttributeValue(window, kAXPosition, axvalue);
     }
 
-    private static CoreFoundation.CFStringRef createCFString(String s) {
-        return CoreFoundation.CFStringRef.createCFString(s);
+    private static CFStringRef createCFString(String s) {
+        return CFStringRef.createCFString(s);
     }
 
     private static int getScreenWidth() {
@@ -237,7 +243,7 @@ class MacEnvironment extends Environment {
     }
 
     private static String getDockOrientation() {
-        CoreFoundation.CFTypeRef orientationRef =
+        CFTypeRef orientationRef =
                 carbonEx.CFPreferencesCopyValue(
                         kOrientation, kDock, carbonEx.kCurrentUser, carbonEx.kAnyHost);
 
@@ -247,12 +253,12 @@ class MacEnvironment extends Environment {
         }
 
         // Cast the property to a string ref
-        CoreFoundation.CFStringRef orientationStringRef = new CoreFoundation.CFStringRef(orientationRef.getPointer());
+        CFStringRef orientationStringRef = new CFStringRef(orientationRef.getPointer());
 
         final int bufsize = 64;
         Memory buf = new Memory(64);
         CoreFoundation.INSTANCE.CFStringGetCString(
-                orientationStringRef, buf, new CoreFoundation.CFIndex(bufsize), carbonEx.CFStringGetSystemEncoding());
+                orientationStringRef, buf, new CFIndex(bufsize), carbonEx.CFStringGetSystemEncoding());
         orientationStringRef.release();
         String ret = buf.getString(0);
         buf.clear();
