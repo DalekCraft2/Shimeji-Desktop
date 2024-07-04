@@ -136,29 +136,6 @@ class WindowsNativeImage implements NativeImage {
         flushNative(nativeHandle, rbgValues);
         // flushNative(nativeHandle, managedImage.getData());
     }
-
-    public void flush() {
-        getManagedImage().flush();
-    }
-
-    @Override
-    public Graphics2D createGraphics() {
-        return getManagedImage().createGraphics();
-    }
-
-    @Override
-    public int getWidth() {
-        return getManagedImage().getWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return getManagedImage().getHeight();
-    }
-
-    @Override
-    public Object getProperty(final String name) {
-        return getManagedImage().getProperty(name);
     }
 
     BufferedImage getManagedImage() {

@@ -3,7 +3,6 @@ package com.group_finity.mascot.generic;
 import com.group_finity.mascot.image.NativeImage;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -27,30 +26,6 @@ class GenericNativeImage implements NativeImage {
     public GenericNativeImage(final BufferedImage image) {
         managedImage = image;
         icon = new ImageIcon(image);
-    }
-
-    public void flush() {
-        getManagedImage().flush();
-    }
-
-    @Override
-    public Graphics2D createGraphics() {
-        return getManagedImage().createGraphics();
-    }
-
-    @Override
-    public int getWidth() {
-        return getManagedImage().getWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return getManagedImage().getHeight();
-    }
-
-    @Override
-    public Object getProperty(final String name) {
-        return getManagedImage().getProperty(name);
     }
 
     BufferedImage getManagedImage() {
