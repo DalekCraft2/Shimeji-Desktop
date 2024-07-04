@@ -9,6 +9,7 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
+import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.unix.X11;
 import com.sun.jna.ptr.IntByReference;
 
@@ -34,36 +35,42 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private X11NativeImage image;
 
-    // private final JPanel panel;
     private static final X11 x11 = X11.INSTANCE;
     private final X11.Display dpy = x11.XOpenDisplay(null);
     private X11.Window win = null;
-    // private float alpha = 1.0f;
+    private float alpha = 1.0f;
     private final JWindow alphaWindow = this;
 
     public X11TranslucentWindow() {
-        super();
-        // super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-        // init();
-        // panel = new JPanel() /* {
-        //     private static final long serialVersionUID = 1L;
-        //
-        //     @Override
-        //     protected void paintComponent(final Graphics g) {
-        //         g.drawImage(getImage().getManagedImage(), 0, 0, null);
-        //     }
-        // } */;
-        // setContentPane(panel);
+        super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
+        init();
 
         setBackground(new Color(0, 0, 0, 0));
+
+        JPanel panel = new JPanel() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected void paintComponent(final Graphics g) {
+                g.clearRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+                if (getImage() != null) {
+                    g.drawImage(getImage().getManagedImage(), 0, 0, null);
+                }
+            }
+        };
+        panel.setOpaque(false);
+        setContentPane(panel);
+
+        setLayout(new BorderLayout());
     }
 
-    /* private void init() {
+    private void init() {
         System.setProperty("sun.java2d.noddraw", "true");
         System.setProperty("sun.java2d.opengl", "true");
-    } */
+    }
 
-    /* @Override
+    @Override
     public void setVisible(final boolean b) {
         super.setVisible(b);
         if (b) {
@@ -72,7 +79,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
             } catch (IllegalArgumentException ignored) {
             }
         }
-    } */
+    }
 
     private Memory buffer;
     private int[] pixels;
@@ -129,31 +136,29 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
         } catch (HeadlessException ignored) {
         }
-        /* if (!alphaWindow.isVisible()) {
+        if (!alphaWindow.isVisible()) {
             alphaWindow.setVisible(true);
             // hack for initial refresh (X11)
             repaint();
-        } */
+        }
     }
 
-    /* @Override
+    @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
         if (comp instanceof JComponent) {
             final JComponent jcomp = (JComponent) comp;
             jcomp.setOpaque(false);
         }
-    } */
+    }
 
     public float getAlpha() {
-        // return alpha;
-        return getOpacity();
+        return alpha;
     }
 
     public void setAlpha(final float alpha) {
-        // this.alpha = alpha;
-        // WindowUtils.setWindowAlpha(this, this.alpha);
-        setOpacity(alpha);
+        this.alpha = alpha;
+        WindowUtils.setWindowAlpha(this, this.alpha);
     }
 
     public void setToDock(int value) {
@@ -173,15 +178,16 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
     }
 
-    /* @Override
+    @Override
     public void paint(final Graphics g) {
-        super.paint(g);
-        if (getImage() != null) {
-            g.drawImage(getImage().getManagedImage(), 0, 0, null);
-            // Draw an image with alpha value using JNI.
-            updateX11();
+        if (g instanceof Graphics2D) {
+            Graphics2D g2d = (Graphics2D) g;
+
+            // Higher-quality image
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         }
-    } */
+        super.paint(g);
+    }
 
     public X11NativeImage getImage() {
         return image;

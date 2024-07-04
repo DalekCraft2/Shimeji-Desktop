@@ -75,6 +75,20 @@ public class X {
                 | prop[offset] & 0xff;
     }
 
+    private static int bytesToInt(byte b1, byte b2, byte b3, byte b4) {
+        return (b4 & 0xff) << 24
+                | (b3 & 0xff) << 16
+                | (b2 & 0xff) << 8
+                | b1 & 0xff;
+    }
+
+    private static int bytesToInt(byte b1, byte b2, byte b3, byte b4, int offset) {
+        return ((b4 + offset) & 0xff) << 24
+                | ((b3 + offset) & 0xff) << 16
+                | ((b2 + offset) & 0xff) << 8
+                | (b1 + offset) & 0xff;
+    }
+
 
     /**
      * X Display.
@@ -255,9 +269,9 @@ public class X {
                 try {
                     curDesktop = root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
                 } catch (X11Exception e1) {
+                    throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
                     // NOTE This is a hotfix for Ubuntu because this method fails on it (at least in a VM).
-                    // throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
-                    return 0;
+                    // return 0;
                 }
             }
 
@@ -490,7 +504,7 @@ public class X {
 
             byte[] keys = new byte[8 * count];
             for (int modNr = 0; modNr < 8; modNr++) {
-                ArrayList<Byte> modifier = allModifiers[modNr];
+                List<Byte> modifier = allModifiers[modNr];
 
                 for (int keyNr = 0; keyNr < modifier.size(); keyNr++) {
                     keys[modNr * count + keyNr] = modifier.get(keyNr);
@@ -561,7 +575,7 @@ public class X {
         /**
          * Creates the window.
          *
-         * @param display   display where the window is allocated
+         * @param display display where the window is allocated
          * @param x11Window X11 window
          */
         public Window(X.Display display, X11.Window x11Window) {
@@ -581,33 +595,26 @@ public class X {
             } catch (X11Exception e) {
                 return getUtf8Property(X11.XA_STRING, X11.XA_WM_NAME);
             }
-
         }
 
         /**
          * Returns the window state.
          *
          * @return window state atoms
+         * @throws X11Exception thrown if X11 window errors occurred
          */
-        public int getState() {
-            try {
-                return getIntProperty(display.getAtom("ATOM"), "_NET_WM_STATE");
-            } catch (X11Exception e) {
-                return 0;
-            }
+        public Integer[] getState() throws X11Exception {
+            return getIntListProperty(display.getAtom("ATOM"), "_NET_WM_STATE");
         }
 
         /**
          * Returns the window type.
          *
          * @return window type atoms
+         * @throws X11Exception thrown if X11 window errors occurred
          */
-        public int getType() {
-            try {
-                return getIntProperty(display.getAtom("ATOM"), "_NET_WM_WINDOW_TYPE");
-            } catch (X11Exception e) {
-                return 0;
-            }
+        public Integer[] getType() throws X11Exception {
+            return getIntListProperty(display.getAtom("ATOM"), "_NET_WM_WINDOW_TYPE");
         }
 
         /**
@@ -672,7 +679,7 @@ public class X {
          * @return geometry of the window
          */
         public Geometry getGeometry() {
-            X11.WindowByReference junkRoot = new X11.WindowByReference();
+            WindowByReference junkRoot = new WindowByReference();
             IntByReference junkX = new IntByReference();
             IntByReference junkY = new IntByReference();
             IntByReference x = new IntByReference();
@@ -684,8 +691,8 @@ public class X {
 
             x11.XGetGeometry(display.x11Display, x11Window, junkRoot, junkX, junkY, width, height, borderWidth, depth);
 
-            x11.XTranslateCoordinates(display.x11Display, x11Window, junkRoot.getValue(), junkX.getValue(),
-                    junkY.getValue(), x, y, junkRoot);
+            x11.XTranslateCoordinates(display.x11Display, x11Window, junkRoot.getValue(), 0,
+                    0, x, y, junkRoot);
 
             return new Geometry(x.getValue(), y.getValue(), width.getValue(), height.getValue(),
                     borderWidth.getValue(), depth.getValue());
@@ -697,7 +704,7 @@ public class X {
          * @return bounding box of the window
          */
         public Rectangle getBounds() {
-            X11.WindowByReference junkRoot = new X11.WindowByReference();
+            WindowByReference junkRoot = new WindowByReference();
             IntByReference junkX = new IntByReference();
             IntByReference junkY = new IntByReference();
             IntByReference x = new IntByReference();
@@ -709,13 +716,10 @@ public class X {
 
             x11.XGetGeometry(display.x11Display, x11Window, junkRoot, junkX, junkY, width, height, borderWidth, depth);
 
-            x11.XTranslateCoordinates(display.x11Display, x11Window, junkRoot.getValue(), junkX.getValue(),
-                    junkY.getValue(), x, y, junkRoot);
+            x11.XTranslateCoordinates(display.x11Display, x11Window, junkRoot.getValue(), 0,
+                    0, x, y, junkRoot);
 
-            int xVal = x.getValue();
-            int yVal = y.getValue();
-
-            return new Rectangle(xVal, yVal, xVal + width.getValue(), yVal + height.getValue());
+            return new Rectangle(x.getValue(), y.getValue(), width.getValue(), height.getValue());
         }
 
         /**
@@ -771,7 +775,7 @@ public class X {
          *
          * @param xaPropType property type
          * @param xaPropName property name
-         * @return property value as integer or null if not found
+         * @return property value as integer, or null if not found
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public Integer getIntProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
@@ -779,11 +783,42 @@ public class X {
             if (property == null) {
                 return null;
             }
-            // NOTE This "if" statement is a hotfix.
-            if (property.length < 3) {
-                return 0;
-            }
             return bytesToInt(property);
+        }
+
+        /**
+         * Returns the property value as integer list.
+         *
+         * @param xaPropType property type
+         * @param xaPropName property name
+         * @return property value as integer list
+         * @throws X11Exception thrown if X11 window errors occurred
+         */
+        public Integer getIntProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getIntProperty(xaPropType, display.getAtom(xaPropName));
+        }
+
+        /**
+         * Returns the property value as integer list.
+         *
+         * @param xaPropType property type
+         * @param xaPropName property name
+         * @return property value as integer list, or null if not found
+         * @throws X11Exception thrown if X11 window errors occurred
+         */
+        public Integer[] getIntListProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+            byte[] property = getProperty(xaPropType, xaPropName);
+            if (property == null) {
+                return null;
+            }
+            int listLength = property.length / 4; // 4 bytes per integer
+            Integer[] list = new Integer[listLength];
+            for (int i = 0; i < list.length; i++) {
+                int byteIdx = i * 4; // Corresponding index in the byte array
+                int value = bytesToInt(property[byteIdx], property[byteIdx + 1], property[byteIdx + 2], property[byteIdx + 3]);
+                list[i] = value;
+            }
+            return list;
         }
 
         /**
@@ -794,8 +829,8 @@ public class X {
          * @return property value as integer
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public Integer getIntProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            return getIntProperty(xaPropType, display.getAtom(xaPropName));
+        public Integer[] getIntListProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getIntListProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
@@ -842,6 +877,7 @@ public class X {
             if (bytesOrig == null) {
                 return null;
             }
+
             // search for '\0'
             int i;
             for (i = 0; i < bytesOrig.length; i++) {
@@ -877,7 +913,7 @@ public class X {
          *
          * @param xaPropType property type
          * @param xaPropName property name
-         * @return property value as byte array where every '\0' character is replaced by '.'.  null if the property was not found
+         * @return property value as byte array where every '\0' character is replaced by '.', or null if the property was not found
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public byte[] getNullReplacedStringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
@@ -1025,7 +1061,7 @@ public class X {
         public byte[] getProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             X11.AtomByReference xaRetTypeRef = new X11.AtomByReference();
             IntByReference retFormatRef = new IntByReference();
-            NativeLongByReference retNitemsRef = new NativeLongByReference();
+            NativeLongByReference retNItemsRef = new NativeLongByReference();
             NativeLongByReference retBytesAfterRef = new NativeLongByReference();
             PointerByReference retPropRef = new PointerByReference();
 
@@ -1034,12 +1070,12 @@ public class X {
 
             /* MAX_PROPERTY_VALUE_LEN / 4 explanation (XGetWindowProperty manpage):
              *
-             * long_length = Specifies the length in 32-bit multiples of the
-             *               data to be retrieved.
+             * longLength = Specifies the length in 32-bit multiples of the
+             *              data to be retrieved.
              */
             if (x11.XGetWindowProperty(display.x11Display, x11Window, xaPropName, longOffset, longLength, false,
                     xaPropType, xaRetTypeRef, retFormatRef,
-                    retNitemsRef, retBytesAfterRef, retPropRef) != X11.Success) {
+                    retNItemsRef, retBytesAfterRef, retPropRef) != X11.Success) {
                 String propName = x11.XGetAtomName(display.x11Display, xaPropName);
                 throw new X11Exception("Cannot get " + propName + " property.");
             }
@@ -1055,7 +1091,7 @@ public class X {
             }
 
             int retFormat = retFormatRef.getValue();
-            long retNitems = retNitemsRef.getValue().longValue();
+            long retNItems = retNItemsRef.getValue().longValue();
 
             // null terminate the result to make string handling easier
             int nBytes;
@@ -1070,7 +1106,7 @@ public class X {
             } else {
                 throw new X11Exception("Invalid return format");
             }
-            int length = Math.min((int) retNitems * nBytes, MAX_PROPERTY_VALUE_LEN);
+            int length = Math.min((int) retNItems * nBytes, MAX_PROPERTY_VALUE_LEN);
 
             byte[] ret = retProp.getByteArray(0, length);
 
@@ -1163,6 +1199,54 @@ public class X {
             x11.XFree(children.getValue());
 
             return retVal;
+        }
+
+        public Window[] getAllSubwindows() throws X11Exception {
+            List<Window> list = new ArrayList<>();
+            recurse(list, x11, display, x11Window, 0);
+            return list.toArray(new Window[0]);
+        }
+
+        private static void recurse(List<Window> list, X11 x11, Display display, X11.Window root, int depth) {
+            X11.WindowByReference windowRef = new X11.WindowByReference();
+            X11.WindowByReference parentRef = new X11.WindowByReference();
+            PointerByReference childrenRef = new PointerByReference();
+            IntByReference childCountRef = new IntByReference();
+
+            x11.XQueryTree(display.x11Display, root, windowRef, parentRef, childrenRef, childCountRef);
+            if (childrenRef.getValue() == null) {
+                return;
+            }
+
+            long[] ids;
+
+            if (Native.LONG_SIZE == Long.BYTES) {
+                ids = childrenRef.getValue().getLongArray(0, childCountRef.getValue());
+            } else if (Native.LONG_SIZE == Integer.BYTES) {
+                int[] intIds = childrenRef.getValue().getIntArray(0, childCountRef.getValue());
+                ids = new long[intIds.length];
+                for (int i = 0; i < intIds.length; i++) {
+                    ids[i] = intIds[i];
+                }
+            } else {
+                throw new IllegalStateException("Unexpected value for Native.LONG_SIZE: " + Native.LONG_SIZE);
+            }
+
+            for (long id : ids) {
+                if (id == 0) {
+                    continue;
+                }
+                X11.Window window = new X11.Window(id);
+                list.add(new Window(display, window));
+
+                // X11.XTextProperty name = new X11.XTextProperty();
+                // x11.XGetWMName(display, window, name);
+                //
+                // System.out.println(String.join("", Collections.nCopies(depth, "  ")) + name.value);
+                // x11.XFree(name.getPointer());
+
+                recurse(list, x11, display, window, depth + 1);
+            }
         }
 
 
