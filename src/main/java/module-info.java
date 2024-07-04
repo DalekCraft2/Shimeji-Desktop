@@ -29,6 +29,7 @@ module com.group_finity.mascot {
     exports com.group_finity.mascot.win;
     exports com.group_finity.mascot.win.jna;
     exports com.group_finity.mascot.x11;
+    exports com.group_finity.mascot.x11.jna;
     exports com.joconner.i18n;
     exports hqx;
 }
