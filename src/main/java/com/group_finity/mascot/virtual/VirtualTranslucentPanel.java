@@ -1,5 +1,6 @@
 package com.group_finity.mascot.virtual;
 
+import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 
@@ -18,6 +19,16 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
      */
     private VirtualNativeImage image;
 
+    public VirtualTranslucentPanel() {
+        super();
+
+        if (Mascot.DRAW_DEBUG) {
+            setBackground(new Color(0, 0, 0, 0));
+            setOpaque(false);
+            setLayout(new BorderLayout());
+        }
+    }
+
     @Override
     public String toString() {
         return "VirtualTranslucentPanel[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
@@ -25,14 +36,35 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         if (image != null) {
             g.drawImage(image.getManagedImage(), 0, 0, null);
         }
     }
 
     @Override
+    public void paint(final Graphics g) {
+        if (g instanceof Graphics2D) {
+            Graphics2D g2d = (Graphics2D) g;
+
+            // Higher-quality image
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        }
+        super.paint(g);
+    }
+
+    @Override
     public Component asComponent() {
         return this;
+    }
+
+    @Override
+    protected void addImpl(final Component comp, final Object constraints, final int index) {
+        super.addImpl(comp, constraints, index);
+        if (Mascot.DRAW_DEBUG && comp instanceof JComponent) {
+            final JComponent jcomp = (JComponent) comp;
+            jcomp.setOpaque(false);
+        }
     }
 
     @Override
@@ -55,6 +87,9 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
 
     @Override
     public void updateImage() {
+        if (Mascot.DRAW_DEBUG) {
+            validate();
+        }
         repaint();
     }
 

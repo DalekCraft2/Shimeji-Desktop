@@ -19,6 +19,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -41,6 +42,13 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Mascot {
+    /**
+     * Whether to draw the mascots' bounds and hotspots, for debugging purposes.
+     * <p>
+     * Currently, on Windows, this will only work when rendering with AWT instead of JNA.
+     */
+    public static final boolean DRAW_DEBUG = false;
+
     private static final Logger log = Logger.getLogger(Mascot.class.getName());
 
     /**
@@ -173,6 +181,58 @@ public class Mascot {
                 }
             }
         });
+
+        if (DRAW_DEBUG) {
+            // For drawing the outlines of hotspots and the mascot's bounds, for debugging purposes
+            JComponent debugComp = new JComponent() {
+                @Override
+                public void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+
+                    // Draw hotspots
+                    g.setColor(Color.BLUE);
+                    Dimension imageSize = getImage().getSize();
+                    for (Hotspot hotspot : getHotspots()) {
+                        Shape shape = hotspot.getShape();
+                        if (shape instanceof Rectangle) {
+                            Rectangle rectangle = (Rectangle) shape;
+                            int x = lookRight ? imageSize.width - rectangle.x - rectangle.width : rectangle.x;
+                            g.drawRect(x, rectangle.y, rectangle.width, rectangle.height);
+                        } else if (shape instanceof Ellipse2D) {
+                            Ellipse2D ellipse = (Ellipse2D) shape;
+                            double x = lookRight ? imageSize.width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
+                            g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
+                        }
+                    }
+
+                    // Draw bounds
+                    g.setColor(Color.RED);
+                    Rectangle bounds = getBounds();
+                    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+                    // Draw image anchor
+                    g.setColor(Color.GREEN);
+                    Point imageAnchor = getImage().getCenter();
+                    // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
+                    g.drawOval(imageAnchor.x - 5, imageAnchor.y - 5, 10, 10);
+                    g.drawLine(imageAnchor.x - 10, imageAnchor.y, imageAnchor.x + 10, imageAnchor.y);
+                    g.drawLine(imageAnchor.x, imageAnchor.y - 10, imageAnchor.x, imageAnchor.y + 10);
+                    g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
+                    g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
+                }
+            };
+            debugComp.setBackground(new Color(0, 0, 0, 0));
+            debugComp.setOpaque(false);
+            debugComp.setPreferredSize(getWindow().asComponent().getPreferredSize());
+            getWindow().asComponent().addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    super.componentResized(e);
+                    debugComp.setPreferredSize(e.getComponent().getPreferredSize());
+                }
+            });
+            ((Container) getWindow().asComponent()).add(debugComp);
+        }
     }
 
     @Override

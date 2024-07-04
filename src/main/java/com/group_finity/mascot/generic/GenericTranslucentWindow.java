@@ -1,5 +1,6 @@
 package com.group_finity.mascot.generic;
 
+import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.platform.WindowUtils;
@@ -31,10 +32,25 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
             @Override
             protected void paintComponent(final Graphics g) {
-                g.drawImage(getImage().getManagedImage(), 0, 0, null);
+                super.paintComponent(g);
+                if (getImage() != null) {
+                    g.drawImage(getImage().getManagedImage(), 0, 0, null);
+                }
             }
         };
+
+        if (Mascot.DRAW_DEBUG) {
+            panel.setBackground(new Color(0, 0, 0, 0));
+            setBackground(new Color(0, 0, 0, 0));
+
+            panel.setOpaque(false);
+        }
+
         setContentPane(panel);
+
+        if (Mascot.DRAW_DEBUG) {
+            setLayout(new BorderLayout());
+        }
     }
 
     private void init() {
