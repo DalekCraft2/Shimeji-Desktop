@@ -199,8 +199,10 @@ class WindowsEnvironment extends Environment {
                     final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
 
                     double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-                    if (firstCallback && dpiScaleInverse != 1) {
-                        offset = (int) Math.round(offset * dpiScaleInverse);
+                    if (firstCallback) {
+                        if (dpiScaleInverse != 1) {
+                            offset = (int) Math.round(offset * dpiScaleInverse);
+                        }
                         firstCallback = false;
                     }
                     // Move the window to be on-screen
