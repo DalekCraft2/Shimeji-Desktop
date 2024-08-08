@@ -166,17 +166,11 @@ public class InformationWindow extends JFrame {
     }
 
     public boolean display() {
-        float menuScaling = Float.parseFloat(Main.getInstance().getProperties().getProperty("MenuDPI", "96")) / 96;
         pnlEditorPane.setBackground(getBackground());
         pnlEditorPane.setBorder(null);
         pnlScrollPane.setBorder(null);
         pnlScrollPane.setViewportBorder(null);
 
-        // scale controls to fit
-        lblSplashImage.setPreferredSize(new Dimension((int) (lblSplashImage.getIcon().getIconWidth() * menuScaling), (int) (lblSplashImage.getIcon().getIconHeight() * menuScaling)));
-        pnlEditorPane.setPreferredSize(new Dimension((int) (pnlEditorPane.getPreferredSize().width * menuScaling), (int) (pnlEditorPane.getPreferredSize().height * menuScaling)));
-        pnlScrollPane.setPreferredSize(new Dimension((int) (pnlScrollPane.getPreferredSize().width * menuScaling), (int) (pnlScrollPane.getPreferredSize().height * menuScaling)));
-        btnClose.setPreferredSize(new Dimension((int) (btnClose.getPreferredSize().width * menuScaling), (int) (btnClose.getPreferredSize().height * menuScaling)));
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnClose.getPreferredSize().height + 6));
         pack();
         setVisible(true);
