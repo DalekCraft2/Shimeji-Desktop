@@ -7,6 +7,7 @@ import com.group_finity.mascot.win.jna.Dwmapi;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.VersionHelpers;
 import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.platform.win32.WinDef.POINT;
 import com.sun.jna.platform.win32.WinError;
@@ -88,13 +89,15 @@ class WindowsEnvironment extends Environment {
 
     private static IeStatus getIeStatus(HWND hWnd) {
         if (User32.INSTANCE.IsWindowVisible(hWnd)) {
-            // metro apps can be closed or minimised and still be considered "visible" by User32
-            // have to consider the new cloaked variable instead
-            LongByReference flagsRef = new LongByReference();
-            HRESULT result = Dwmapi.INSTANCE.DwmGetWindowAttribute(hWnd, Dwmapi.DWMWA_CLOAKED, flagsRef.getPointer(), 8);
-            if (result.equals(WinError.S_OK) && flagsRef.getValue() != 0) // unsupported on 7 so skip the check
-            {
-                return IeStatus.IGNORED;
+            // DWMWA_CLOAKED is not supported on Windows 7 and earlier, so check that we are on at least Windows 8
+            if (VersionHelpers.IsWindows8OrGreater()) {
+                // metro apps can be closed or minimised and still be considered "visible" by User32
+                // have to consider the new cloaked variable instead
+                LongByReference flagsRef = new LongByReference();
+                HRESULT result = Dwmapi.INSTANCE.DwmGetWindowAttribute(hWnd, Dwmapi.DWMWA_CLOAKED, flagsRef.getPointer(), 8);
+                if (result.equals(WinError.S_OK) && flagsRef.getValue() != 0) {
+                    return IeStatus.IGNORED;
+                }
             }
 
             int flags = WindowsUtil.GetWindowLong(hWnd, User32.GWL_STYLE).intValue();
