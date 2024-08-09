@@ -1208,7 +1208,7 @@ public class SettingsWindow extends JDialog {
         pnlAbout.add(rigid2);
 
         lblVersion.setFont(lblVersion.getFont().deriveFont(lblVersion.getFont().getSize() + 4f));
-        lblVersion.setText("1.0.21.1");
+        lblVersion.setText("1.0.21.2");
         lblVersion.setAlignmentX(0.5F);
         pnlAbout.add(lblVersion);
         pnlAbout.add(rigid3);

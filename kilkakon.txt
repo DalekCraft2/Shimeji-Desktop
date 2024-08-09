@@ -1,5 +1,9 @@
 Kilkakon's notes:
 
+1.0.21.2:
+- Added the BornCount parameter, to allow multiple shimeji to be spawned at once.
+- Low velocities can no longer be reduced to 0 when at scale 0.5.
+
 1.0.21.1 hotfix:
 - The Theme Editor now displays using the appropriate DPI scaling
 - The font size editor and the reset to default button will operate under the effective font size after scaling

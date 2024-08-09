@@ -294,6 +294,14 @@
                 </documentation>
             </annotation>
         </attribute>
+        <attribute name="BornCount" type="tns:IntParameter" default="1">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the number of mascots to create during each breeding when using
+                    the BreedJump or BreedMove actions. Must be greater than 0. Defaults to 1.
+                </documentation>
+            </annotation>
+        </attribute>
         <attribute name="VelocityParam" type="tns:DoubleParameter" default="20">
             <annotation>
                 <documentation>

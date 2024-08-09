@@ -97,8 +97,11 @@ public class AnimationBuilder {
         }
 
         final String[] moveCoordinates = moveText.split(",");
-        final Point move = new Point((int) Math.round(Integer.parseInt(moveCoordinates[0]) * scaling),
-                (int) Math.round(Integer.parseInt(moveCoordinates[1]) * scaling));
+        int moveX = Integer.parseInt(moveCoordinates[0]);
+        int moveY = Integer.parseInt(moveCoordinates[1]);
+        moveX = Math.abs(moveX) > 0 && Math.abs(moveX * scaling) < 1 ? (moveX > 0 ? 1 : -1) : (int) Math.round(moveX * scaling);
+        moveY = Math.abs(moveY) > 0 && Math.abs(moveY * scaling) < 1 ? (moveY > 0 ? 1 : -1) : (int) Math.round(moveY * scaling);
+        final Point move = new Point(moveX, moveY);
 
         final int duration = Integer.parseInt(durationText);
 

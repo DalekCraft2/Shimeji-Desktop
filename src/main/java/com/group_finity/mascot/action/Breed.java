@@ -44,6 +44,10 @@ public class Breed extends Animate {
 
     private static final boolean DEFAULT_BORNTRANSIENT = false;
 
+    public static final String PARAMETER_BORNCOUNT = "BornCount";
+
+    private static final int DEFAULT_BORNCOUNT = 1;
+
     private double scaling;
 
     public Breed(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
@@ -54,6 +58,9 @@ public class Breed extends Animate {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
+        if (getBornCount() < 1) {
+            throw new VariableException("BornCount must be positive");
+        }
         scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
     }
 
@@ -73,28 +80,30 @@ public class Breed extends Animate {
     private void breed() throws VariableException {
         String childType = Main.getInstance().getConfiguration(getBornMascot()) != null ? getBornMascot() : getMascot().getImageSet();
 
-        // Create a mascot
-        final Mascot mascot = new Mascot(childType);
+        for (int index = 0; index < getBornCount(); index++) {
+            // Create a mascot
+            final Mascot mascot = new Mascot(childType);
 
-        log.log(Level.INFO, "Breeding mascot ({0}, {1}, {2})", new Object[]{getMascot(), this, mascot});
+            log.log(Level.INFO, "Breeding mascot ({0}, {1}, {2})", new Object[]{getMascot(), this, mascot});
 
-        // Start outside the range
-        if (getMascot().isLookRight()) {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
-                    getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
-        } else {
-            mascot.setAnchor(new Point(getMascot().getAnchor().x + (int) Math.round(getBornX() * scaling),
-                    getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
-        }
-        mascot.setLookRight(getMascot().isLookRight());
+            // Start outside the range
+            if (getMascot().isLookRight()) {
+                mascot.setAnchor(new Point(getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
+                        getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
+            } else {
+                mascot.setAnchor(new Point(getMascot().getAnchor().x + (int) Math.round(getBornX() * scaling),
+                        getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
+            }
+            mascot.setLookRight(getMascot().isLookRight());
 
-        try {
-            mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour(), getMascot()));
-            getMascot().getManager().add(mascot);
-        } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-            log.log(Level.SEVERE, "Failed to create mascot \"" + mascot + "\" with behavior \"" + getBornBehaviour() + "\"", e);
-            Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
-            mascot.dispose();
+            try {
+                mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour(), getMascot()));
+                getMascot().getManager().add(mascot);
+            } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                log.log(Level.SEVERE, "Failed to create mascot \"" + mascot + "\" with behavior \"" + getBornBehaviour() + "\"", e);
+                Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                mascot.dispose();
+            }
         }
     }
 
@@ -116,5 +125,9 @@ public class Breed extends Animate {
 
     private boolean getBornTransient() throws VariableException {
         return eval(getSchema().getString(PARAMETER_BORNTRANSIENT), Boolean.class, DEFAULT_BORNTRANSIENT);
+    }
+
+    private int getBornCount() throws VariableException {
+        return eval(getSchema().getString(PARAMETER_BORNCOUNT), Number.class, DEFAULT_BORNCOUNT).intValue();
     }
 }

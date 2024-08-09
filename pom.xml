@@ -6,7 +6,7 @@
 
     <groupId>com.group_finity</groupId>
     <artifactId>mascot</artifactId>
-    <version>1.0.21.1</version>
+    <version>1.0.21.2</version>
     <packaging>jar</packaging>
 
     <name>Shimeji-ee</name>
