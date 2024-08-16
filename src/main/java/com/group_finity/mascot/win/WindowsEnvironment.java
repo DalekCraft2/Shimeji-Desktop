@@ -4,6 +4,7 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.win.jna.Dwmapi;
+import com.group_finity.mascot.win.jna.User32Extra;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.win32.User32;
@@ -100,14 +101,12 @@ class WindowsEnvironment extends Environment {
                 }
             }
 
-            int flags = WindowsUtil.GetWindowLong(hWnd, User32.GWL_STYLE).intValue();
-
-            if ((flags & User32.WS_MAXIMIZE) != 0) {
+            if (User32Extra.INSTANCE.IsZoomed(hWnd)) {
                 // Aborted because a maximized window was found
                 return IeStatus.INVALID;
             }
 
-            if (isIE(hWnd) && (flags & User32.WS_MINIMIZE) == 0) {
+            if (isIE(hWnd) && !User32Extra.INSTANCE.IsIconic(hWnd)) {
                 // IE found
                 Rectangle ieRect = getIERect(hWnd, true);
                 if (ieRect.intersects(getScreenRect())) {
