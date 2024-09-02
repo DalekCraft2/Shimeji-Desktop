@@ -715,11 +715,16 @@
                 <Pose Image="/shime9.png" ImageAnchor="32,128" Velocity="20,-5" Duration="1"/>
             </Animation>
         </Action>
+        <Action Name="HitGround" Type="Animate" BorderType="Floor">
+            <Animation>
+                <Pose Image="/shime18.png" ImageAnchor="64,128" Velocity="0,0" Duration="4"/>
+            </Animation>
+        </Action>
         <Action Name="PullUpShimeji" Type="Sequence">
             <ActionReference Name="PullUpShimeji1"/>
             <ActionReference Name="PullUpShimeji2"/>
             <ActionReference Name="Falling" InitialVX="${mascot.lookRight ? -20 : 20}"/>
-            <ActionReference Name="Bouncing"/>
+            <ActionReference Name="HitGround"/>
             <ActionReference Name="Sprawl" Duration="40"/>
         </Action>
         <Action Name="PullUp" Type="Sequence">
