@@ -87,8 +87,8 @@
             <Behavior Name="GrabWorkAreaBottomRightWall" Frequency="100"/>
             <Behavior Name="WalkLeftAndSit" Frequency="100"/>
             <Behavior Name="WalkRightAndSit" Frequency="100"/>
-            <Behavior Name="WalkAndGrabBottomLeftWall" Frequency="100"/>
-            <Behavior Name="WalkAndGrabBottomRightWall" Frequency="100"/>
+            <Behavior Name="RunAndGrabBottomLeftWall" Frequency="100"/>
+            <Behavior Name="RunAndGrabBottomRightWall" Frequency="100"/>
             <Behavior Name="JumpFromBottomOfIE" Frequency="50" Condition="#{mascot.anchor.x &gt;= mascot.environment.activeIE.left &amp;&amp;
                 mascot.anchor.x &lt; mascot.environment.activeIE.right}"/>
 
@@ -159,9 +159,9 @@
                 mascot.anchor.x &lt; mascot.environment.activeIE.left}"/>
             <Behavior Name="ThrowIEFromRight" Frequency="20" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
                 mascot.anchor.x &gt; mascot.environment.activeIE.right}"/>
-            <Behavior Name="WalkAndThrowIEFromLeft" Frequency="20" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
+            <Behavior Name="RunAndThrowIEFromLeft" Frequency="20" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
                 mascot.anchor.x &lt; mascot.environment.activeIE.left}"/>
-            <Behavior Name="WalkAndThrowIEFromRight" Frequency="20" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
+            <Behavior Name="RunAndThrowIEFromRight" Frequency="20" Condition="#{mascot.environment.activeIE.bottom &lt; mascot.anchor.y-64 &amp;&amp;
                 mascot.anchor.x &gt; mascot.environment.activeIE.right}"/>
         </Condition>
     </BehaviorList>
