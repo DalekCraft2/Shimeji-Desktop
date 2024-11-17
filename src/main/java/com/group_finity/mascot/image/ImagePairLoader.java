@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Loads image pairs.
@@ -17,6 +18,12 @@ import java.io.IOException;
  * @author Shimeji-ee Group
  */
 public class ImagePairLoader {
+    public static ConcurrentHashMap<String, BufferedImage> cachedImages = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, BufferedImage> cachedFlippedImages = new ConcurrentHashMap<>();
+    public static double currentScaling = 1;
+    public static Filter currentFilter = Filter.NEAREST_NEIGHBOUR;
+    public static double currentOpacity = 1;
+
     public enum Filter {
         NEAREST_NEIGHBOUR,
         HQX,
@@ -33,22 +40,45 @@ public class ImagePairLoader {
      * @param filter the type of filter to use to generate the image
      */
     public static void load(final String name, final String rightName, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
+        if (scaling != currentScaling || filter != currentFilter || opacity != currentOpacity) {
+            currentScaling = scaling;
+            currentFilter = filter;
+            currentOpacity = opacity;
+            cachedImages.clear();
+            cachedFlippedImages.clear();
+        }
+
         String key = name + (rightName == null ? "" : rightName);
         if (ImagePairs.contains(key)) {
             return;
         }
 
-        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile()), opacity), scaling, filter);
+        final BufferedImage leftImage = loadImageFromFile(name);
         final BufferedImage rightImage;
         if (rightName == null) {
-            rightImage = flip(leftImage);
+            if (cachedFlippedImages.containsKey(name)) {
+                rightImage = cachedFlippedImages.get(name);
+            } else {
+                rightImage = flip(leftImage);
+                cachedFlippedImages.put(name, rightImage);
+            }
         } else {
-            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(rightName).toFile()), opacity), scaling, filter);
+            rightImage = loadImageFromFile(rightName);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
                 new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
         ImagePairs.load(key, ip);
+    }
+
+    private static BufferedImage loadImageFromFile(final String name) throws IOException {
+        if (cachedImages.containsKey(name)) {
+            return cachedImages.get(name);
+        }
+        BufferedImage returnImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile()), currentOpacity),
+            currentScaling, currentFilter);
+        cachedImages.put(name, returnImage);
+        return returnImage;
     }
 
     /**
