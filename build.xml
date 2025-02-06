@@ -31,7 +31,7 @@
     </target>
 
     <target name="zip_package">
-        <zip destfile="target/Shimeji-ee_${version}_${edition}.zip">
+        <zip destfile="target/Shimeji-ee_${project.version}_${edition}.zip">
             <fileset dir="target">
                 <include name="Shimeji-ee.jar"/>
                 <include name="Shimeji-ee.exe"/>

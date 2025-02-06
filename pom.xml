@@ -258,8 +258,6 @@
                         </goals>
                         <configuration>
                             <target>
-                                <!-- Define the "version" property for the build.xml script -->
-                                <property name="version" value="${project.version}"/>
                                 <!-- Execute the "zip" target in build.xml -->
                                 <ant antfile="${project.basedir}/build.xml">
                                     <target name="zip"/>
