@@ -1,5 +1,18 @@
 Kilkakon's notes:
 
+1.0.21.3:
+- Added ComplexJump and ComplexMove. Uses the `Characteristics` attribute to determine which logic is enabled, as a comma separated list (e.g. "Breed,Scan"). Currently supports Breed and Scan characteristics
+- Added the TargetX and TargetY variables to Scanning actions for scripts to use instead, can be null if no target is available
+- Removed the target variable from Scanning actions, as it had unfortunate under the hood implications
+- Dismissed shimeji no longer Broadcast Affordances
+- Information screen text now uses theme colours instead of a hardcoded black and blue
+- Information screen now centred correctly when opened
+- Information screen now centres the internal image when a small one is used
+- Closing the information screen using the X no longer closes Shimeji
+- Fixed Conditions being ignored on Move ActionReferences
+- General under the hood code cleanup, particularly regarding Breed and Move actions
+- Updates to Chinese translation (thank you!)
+
 1.0.21.2:
 - Added the BornCount parameter, to allow multiple shimeji to be spawned at once.
 - Low velocities can no longer be reduced to 0 when at scale 0.5.

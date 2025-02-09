@@ -12,10 +12,12 @@ import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -51,6 +53,14 @@ public class InformationWindow extends JFrame {
         }
 
         // text
+        Properties themeProperties = new Properties();
+        try (InputStream input = Files.newInputStream(Main.THEME_FILE)) {
+            themeProperties.load(input);
+        } catch (IOException ignored) {
+        }
+        Color textColour = Color.decode(themeProperties.getProperty("nimrodlf.b", "#000000"));
+        Color linkColour = Color.decode(themeProperties.getProperty("nimrodlf.p2", "#28B0F5"));
+
         final ResourceBundle language = Main.getInstance().getLanguageBundle();
         setTitle(config.containsInformationKey("Name") ? config.getInformation("Name") : language.getString("Information"));
 
@@ -67,6 +77,8 @@ public class InformationWindow extends JFrame {
         html.append(lblSplashImage.getFont().getSize());
         html.append("pt ");
         html.append(lblSplashImage.getFont().getFontName());
+        html.append("; color:");
+        html.append(String.format("#%02X%02X%02X", textColour.getRed(), textColour.getGreen(), textColour.getBlue()));
         html.append("\">");
         if (config.containsInformationKey("ArtistName")) {
             html.append(language.getString("ArtBy"));
@@ -74,6 +86,8 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("ArtistURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("ArtistURL"));
+                html.append("\" style=\"color:");
+                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("ArtistName"));
@@ -90,6 +104,8 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("ScripterURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("ScripterURL"));
+                html.append("\" style=\"color:");
+                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("ScripterName"));
@@ -106,6 +122,8 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("CommissionerURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("CommissionerURL"));
+                html.append("\" style=\"color:");
+                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("CommissionerName"));
@@ -122,6 +140,8 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("SupportURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("SupportURL"));
+                html.append("\" style=\"color:");
+                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("SupportName"));
@@ -173,6 +193,7 @@ public class InformationWindow extends JFrame {
 
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnClose.getPreferredSize().height + 6));
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
 
         return true;
@@ -185,7 +206,9 @@ public class InformationWindow extends JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        GridBagConstraints gridBagConstraints;
 
+        pnlImage = new JPanel();
         lblSplashImage = new JLabel();
         pnlScrollPane = new JScrollPane();
         pnlEditorPane = new JEditorPane();
@@ -193,6 +216,11 @@ public class InformationWindow extends JFrame {
         btnClose = new JButton();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        pnlImage.setLayout(new BoxLayout(pnlImage, BoxLayout.Y_AXIS));
+
+        lblSplashImage.setAlignmentX(0.5F);
+        pnlImage.add(lblSplashImage);
 
         pnlEditorPane.setEditable(false);
         pnlEditorPane.setBorder(null);
@@ -215,19 +243,19 @@ public class InformationWindow extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(pnlFooter, GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
-                                        .addComponent(pnlScrollPane)
-                                        .addComponent(lblSplashImage, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(pnlImage, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                                        .addComponent(pnlFooter, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(pnlScrollPane, GroupLayout.Alignment.LEADING))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(lblSplashImage, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                                .addComponent(pnlImage, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(pnlScrollPane, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -275,6 +303,7 @@ public class InformationWindow extends JFrame {
     private JLabel lblSplashImage;
     private JEditorPane pnlEditorPane;
     private JPanel pnlFooter;
+    private JPanel pnlImage;
     private JScrollPane pnlScrollPane;
     // End of variables declaration//GEN-END:variables
 }

@@ -961,7 +961,7 @@ public class SettingsWindow extends JDialog {
                                                                                         .addGroup(GroupLayout.Alignment.LEADING, pnlThemeLayout.createSequentialGroup()
                                                                                                 .addComponent(txtWhiteColour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                .addComponent(pnlWhiteColourPreviewContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                                                .addComponent(pnlWhiteColourPreviewContainer, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
                                                                                         .addGroup(pnlThemeLayout.createSequentialGroup()
                                                                                                 .addComponent(txtBlackColour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -1208,7 +1208,7 @@ public class SettingsWindow extends JDialog {
         pnlAbout.add(rigid2);
 
         lblVersion.setFont(lblVersion.getFont().deriveFont(lblVersion.getFont().getSize() + 4f));
-        lblVersion.setText("1.0.21.2");
+        lblVersion.setText("1.0.21.3");
         lblVersion.setAlignmentX(0.5F);
         pnlAbout.add(lblVersion);
         pnlAbout.add(rigid3);

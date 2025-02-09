@@ -63,7 +63,8 @@ public class ScanJump extends ActionBase {
         if (getMascot().getManager() != null) {
             target = getMascot().getManager().getMascotWithAffordance(getAffordance());
         }
-        putVariable("target", target != null ? target.get() : null);
+        putVariable(getSchema().getString("TargetX"), target != null && target.get() != null ? target.get().getAnchor().x : null);
+        putVariable(getSchema().getString("TargetY"), target != null && target.get() != null ? target.get().getAnchor().y : null);
     }
 
     @Override
@@ -83,6 +84,9 @@ public class ScanJump extends ActionBase {
         int targetX = target.get().getAnchor().x;
         int targetY = target.get().getAnchor().y;
 
+        putVariable(getSchema().getString("TargetX"), targetX);
+        putVariable(getSchema().getString("TargetY"), targetY);
+
         if (getMascot().getAnchor().x != targetX) {
             getMascot().setLookRight(getMascot().getAnchor().x < targetX);
         }
@@ -95,14 +99,14 @@ public class ScanJump extends ActionBase {
         double velocity = getVelocity() * scaling;
 
         if (distance != 0) {
-            int velocityX = (int) Math.round(velocity * distanceX / distance);
-            int velocityY = (int) Math.round(velocity * distanceY / distance);
+            double velocityX = velocity * distanceX / distance;
+            double velocityY = velocity * distanceY / distance;
 
             putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocityX);
             putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
 
-            getMascot().setAnchor(new Point(getMascot().getAnchor().x + velocityX,
-                    getMascot().getAnchor().y + velocityY));
+            getMascot().setAnchor(new Point(getMascot().getAnchor().x + (int) Math.round(velocityX),
+                    getMascot().getAnchor().y + (int) Math.round(velocityY)));
             getAnimation().next(getMascot(), getTime());
         }
 

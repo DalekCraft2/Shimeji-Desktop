@@ -146,8 +146,9 @@
             <annotation>
                 <documentation>
                     A scriptable integer representing the final x-position of the mascot when using the Jump or Move
-                    actions (or subclasses of them). For Jump, defaults to 0. For Move, defaults to the maximum integer
-                    value.
+                    actions (or subclasses of them). Works the same for the ComplexJump and ComplexMove actions if Scan
+                    features are not enabled in the "Characteristics" attribute. For Jump, defaults to 0. For Move,
+                    defaults to the maximum integer value.
                 </documentation>
             </annotation>
         </attribute>
@@ -155,8 +156,9 @@
             <annotation>
                 <documentation>
                     A scriptable integer representing the final y-position of the mascot when using the Jump or Move
-                    actions (or subclasses of them). For Jump, defaults to 0. For Move, defaults to the maximum integer
-                    value.
+                    actions (or subclasses of them). Works the same for the ComplexJump and ComplexMove actions if Scan
+                    features are not enabled in the "Characteristics" attribute. For Jump, defaults to 0. For Move,
+                    defaults to the maximum integer value.
                 </documentation>
             </annotation>
         </attribute>
@@ -239,7 +241,9 @@
                 <documentation>
                     A scriptable string representing the name of an affordance. For ScanInteract, ScanJump, and
                     ScanMove, this mascot will be searching for another mascot broadcasting an affordance with this
-                    name; for all other actions, this mascot will be broadcasting the affordance with this name.
+                    name; for most other actions, this mascot will be broadcasting the affordance with this name.
+                    For ComplexJump and ComplexMove, enabling Scan features in the "Characteristics" attribute will
+                    cause them to use the former behavior; otherwise, they will use the latter.
                     Defaults to an empty string.
                 </documentation>
             </annotation>
@@ -248,7 +252,8 @@
             <annotation>
                 <documentation>
                     A scriptable integer representing the relative x-position of the newly created mascot when using the
-                    Breed, BreedJump, or BreedMove actions. Defaults to 0.
+                    Breed, BreedJump, or BreedMove actions. Works the same for the ComplexJump and ComplexMove actions
+                    if Breed features are enabled in the "Characteristics" attribute. Defaults to 0.
                 </documentation>
             </annotation>
         </attribute>
@@ -256,7 +261,8 @@
             <annotation>
                 <documentation>
                     A scriptable integer representing the relative y-position of the newly created mascot when using the
-                    Breed, BreedJump, or BreedMove actions. Defaults to 0.
+                    Breed, BreedJump, or BreedMove actions. Works the same for the ComplexJump and ComplexMove actions
+                    if Breed features are enabled in the "Characteristics" attribute. Defaults to 0.
                 </documentation>
             </annotation>
         </attribute>
@@ -264,7 +270,9 @@
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the initial behavior of the newly created mascot when
-                    using the Breed, BreedJump, or BreedMove actions. Defaults to an empty string.
+                    using the Breed, BreedJump, or BreedMove actions. Works the same for the ComplexJump and ComplexMove
+                    actions if Breed features are enabled in the "Characteristics" attribute.
+                    Defaults to an empty string.
                 </documentation>
             </annotation>
         </attribute>
@@ -272,8 +280,9 @@
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the image set of the newly created mascot when using
-                    the Breed, BreedJump, or BreedMove actions. Defaults to an empty string, which means this mascot's
-                    image set is used.
+                    the Breed, BreedJump, or BreedMove actions. Works the same for the ComplexJump and ComplexMove
+                    actions if Breed features are enabled in the "Characteristics" attribute.
+                    Defaults to an empty string, which means this mascot's image set is used.
                 </documentation>
             </annotation>
         </attribute>
@@ -281,7 +290,9 @@
             <annotation>
                 <documentation>
                     A scriptable integer representing the interval between each breeding, in ticks, when using the
-                    BreedJump or BreedMove actions. Must be greater than 0. Defaults to 1.
+                    BreedJump or BreedMove actions. Works the same for the ComplexJump and ComplexMove actions
+                    if Breed features are enabled in the "Characteristics" attribute. Must be greater than 0.
+                    Defaults to 1.
                 </documentation>
             </annotation>
         </attribute>
@@ -289,8 +300,9 @@
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether to mark the newly created mascot as transient when using
-                    the Breed, BreedJump, or BreedMove actions. Should be used when the new mascot is intended to be
-                    temporary. Defaults to "false".
+                    the Breed, BreedJump, or BreedMove actions. Works the same for the ComplexJump and ComplexMove
+                    actions if Breed features are enabled in the "Characteristics" attribute. Should be used when the
+                    new mascot is intended to be temporary. Defaults to "false".
                 </documentation>
             </annotation>
         </attribute>
@@ -298,7 +310,9 @@
             <annotation>
                 <documentation>
                     A scriptable integer representing the number of mascots to create during each breeding when using
-                    the BreedJump or BreedMove actions. Must be greater than 0. Defaults to 1.
+                    the BreedJump or BreedMove actions. Works the same for the ComplexJump and ComplexMove actions
+                    if Breed features are enabled in the "Characteristics" attribute. Must be greater than 0.
+                    Defaults to 1.
                 </documentation>
             </annotation>
         </attribute>
@@ -306,7 +320,7 @@
             <annotation>
                 <documentation>
                     A scriptable double representing a scalar value for both the x- and y-velocities of the mascot when
-                    using the Jump or ScanJump actions (or subclasses of them). Defaults to 20.
+                    using the Jump, ScanJump, or ComplexJump actions (or subclasses of them). Defaults to 20.
                 </documentation>
             </annotation>
         </attribute>
@@ -356,7 +370,9 @@
                 <documentation>
                     A scriptable string representing the name of the behavior to perform whilst overlapping another
                     mascot when using the Interact action, or the name of the behavior to perform after reaching an
-                    affordance when using the ScanInteract, ScanJump, or ScanMove actions. Defaults to an empty string.
+                    affordance when using the ScanInteract, ScanJump, or ScanMove actions. Uses the latter behavior for
+                    the ComplexJump and ComplexMove actions if Scan features are enabled in the "Characteristics"
+                    attribute. Defaults to an empty string.
                 </documentation>
             </annotation>
         </attribute>
@@ -364,8 +380,9 @@
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the behavior for the target mascot to perform after
-                    this mascot has reached them when using the ScanInteract, ScanJump, or ScanMove actions. Defaults to
-                    an empty string.
+                    this mascot has reached them when using the ScanInteract, ScanJump, or ScanMove actions. Works the
+                    same for the ComplexJump and ComplexMove actions if Scan features are enabled in the
+                    "Characteristics" attribute. Defaults to an empty string.
                 </documentation>
             </annotation>
         </attribute>
@@ -373,8 +390,22 @@
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether to make the target mascot look toward this mascot after
-                    this mascot has reached them when using the ScanInteract, ScanJump, or ScanMove actions. Defaults to
-                    "false".
+                    this mascot has reached them when using the ScanInteract, ScanJump, or ScanMove actions. Works the
+                    same for the ComplexJump and ComplexMove actions if Scan features are enabled in the
+                    "Characteristics" attribute. Defaults to "false".
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Characteristics" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string of comma-separated values representing the features to enable when using the
+                    ComplexJump or ComplexMove actions. By default, these actions will behave like the standard Jump and
+                    Move actions respectively. However, setting this attribute to "Breed,Scan" will allow them to use
+                    Breed/Scan action attributes and features. It can also be set to only "Breed" or "Scan" to enable
+                    only those features. Without enabling these features, the Breed/Scan attributes will do nothing when
+                    applied to this action. Defaults to an empty string, which means neither of the two features are
+                    enabled.
                 </documentation>
             </annotation>
         </attribute>

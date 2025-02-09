@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
 /**
  * @author Kilkakon
@@ -56,7 +55,8 @@ public class ScanMove extends BorderedAction {
         if (getMascot().getManager() != null) {
             target = getMascot().getManager().getMascotWithAffordance(getAffordance());
         }
-        putVariable("target", target != null ? target.get() : null);
+        putVariable(getSchema().getString("TargetX"), target != null && target.get() != null ? target.get().getAnchor().x : null);
+        putVariable(getSchema().getString("TargetY"), target != null && target.get() != null ? target.get().getAnchor().y : null);
     }
 
     @Override
@@ -82,6 +82,9 @@ public class ScanMove extends BorderedAction {
 
         int targetX = target.get().getAnchor().x;
         int targetY = target.get().getAnchor().y;
+
+        putVariable(getSchema().getString("TargetX"), targetX);
+        putVariable(getSchema().getString("TargetY"), targetY);
 
         if (getMascot().getAnchor().x != targetX) {
             // Activate turning animation if we change directions
@@ -145,7 +148,7 @@ public class ScanMove extends BorderedAction {
         if (hasTurning == null) {
             hasTurning = false;
             List<Animation> animations = getAnimations();
-            if (IntStream.range(0, animations.size()).anyMatch(index -> animations.get(index).isTurn())) {
+            if (animations.stream().anyMatch(Animation::isTurn)) {
                 hasTurning = true;
             }
         }

@@ -501,6 +501,7 @@ public class Mascot {
 
         animating = false;
         getWindow().dispose();
+        getAffordances().clear();
         if (getManager() != null) {
             getManager().remove(this);
         }

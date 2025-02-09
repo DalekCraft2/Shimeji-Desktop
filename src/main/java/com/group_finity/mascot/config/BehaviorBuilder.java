@@ -71,6 +71,7 @@ public class BehaviorBuilder {
         getParams().remove(configuration.getSchema().getString("Frequency"));
         getParams().remove(configuration.getSchema().getString("Hidden"));
         getParams().remove(configuration.getSchema().getString("Condition"));
+        getParams().remove(configuration.getSchema().getString("Toggleable"));
 
         boolean nextAdditive = true;
 

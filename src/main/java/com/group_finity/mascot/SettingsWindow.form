@@ -398,7 +398,7 @@
                                                   <Group type="102" alignment="0" attributes="0">
                                                       <Component id="txtWhiteColour" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="pnlWhiteColourPreviewContainer" max="32767" attributes="0"/>
+                                                      <Component id="pnlWhiteColourPreviewContainer" max="-2" attributes="0"/>
                                                   </Group>
                                                   <Group type="102" attributes="0">
                                                       <Component id="txtBlackColour" min="-2" max="-2" attributes="0"/>
@@ -505,7 +505,7 @@
                               <Component id="txtWhiteColour" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnWhiteColourChange" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="pnlWhiteColourPreviewContainer" max="32767" attributes="0"/>
+                          <Component id="pnlWhiteColourPreviewContainer" min="-2" pref="24" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                       <Component id="lblMenuOpacity" min="-2" max="-2" attributes="0"/>
@@ -1494,7 +1494,7 @@
                     <Font component="lblVersion" property="font" relativeSize="true" size="4"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="1.0.21.2"/>
+                <Property name="text" type="java.lang.String" value="1.0.21.3"/>
                 <Property name="alignmentX" type="float" value="0.5"/>
               </Properties>
             </Component>

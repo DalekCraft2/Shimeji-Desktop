@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
 /**
  * Moving action.
@@ -29,7 +28,7 @@ public class Move extends BorderedAction {
 
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
-    private boolean turning = false;
+    protected boolean turning = false;
 
     private Boolean hasTurning = null;
 
@@ -42,24 +41,11 @@ public class Move extends BorderedAction {
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
-        boolean noMoveX = false;
-        boolean noMoveY = false;
+        // Have we reached the target coordinates?
+        boolean hasReachedTarget = targetX != Integer.MIN_VALUE && getMascot().getAnchor().x == targetX ||
+                targetY != Integer.MIN_VALUE && getMascot().getAnchor().y == targetY;
 
-        if (targetX != Integer.MIN_VALUE) {
-            // Do we need to move in the X direction?
-            if (getMascot().getAnchor().x == targetX) {
-                noMoveX = true;
-            }
-        }
-
-        if (targetY != Integer.MIN_VALUE) {
-            // Do we need to move in the Y direction?
-            if (getMascot().getAnchor().y == targetY) {
-                noMoveY = true;
-            }
-        }
-
-        return super.hasNext() && (turning || !noMoveX && !noMoveY);
+        return super.hasNext() && (!hasReachedTarget || turning);
     }
 
     @Override
@@ -131,7 +117,7 @@ public class Move extends BorderedAction {
         if (hasTurning == null) {
             hasTurning = false;
             List<Animation> animations = getAnimations();
-            if (IntStream.range(0, animations.size()).anyMatch(index -> animations.get(index).isTurn())) {
+            if (animations.stream().anyMatch(Animation::isTurn)) {
                 hasTurning = true;
             }
         }
