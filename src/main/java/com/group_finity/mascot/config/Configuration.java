@@ -162,23 +162,28 @@ public class Configuration {
 
         final Collection<BehaviorBuilder> candidates = new ArrayList<>();
         long totalFrequency = 0;
-        for (final BehaviorBuilder behaviorFactory : getBehaviorBuilders().values()) {
-            try {
-                if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
-                    candidates.add(behaviorFactory);
-                    totalFrequency += behaviorFactory.getFrequency();
+
+        final BehaviorBuilder previousBehaviorFactory;
+        if (previousName != null) {
+            previousBehaviorFactory = getBehaviorBuilders().get(previousName);
+        } else {
+            previousBehaviorFactory = null;
+        }
+
+        if (previousName == null || previousBehaviorFactory.isNextAdditive()) {
+            for (final BehaviorBuilder behaviorFactory : getBehaviorBuilders().values()) {
+                try {
+                    if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
+                        candidates.add(behaviorFactory);
+                        totalFrequency += behaviorFactory.getFrequency();
+                    }
+                } catch (final VariableException e) {
+                    log.log(Level.WARNING, "Failed to calculate the frequency of the behavior", e);
                 }
-            } catch (final VariableException e) {
-                log.log(Level.WARNING, "Failed to calculate the frequency of the behavior", e);
             }
         }
 
         if (previousName != null) {
-            final BehaviorBuilder previousBehaviorFactory = getBehaviorBuilders().get(previousName);
-            if (!previousBehaviorFactory.isNextAdditive()) {
-                totalFrequency = 0;
-                candidates.clear();
-            }
             for (final BehaviorBuilder behaviorFactory : previousBehaviorFactory.getNextBehaviorBuilders()) {
                 try {
                     if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
