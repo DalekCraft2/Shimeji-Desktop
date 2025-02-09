@@ -11,7 +11,6 @@ import com.group_finity.mascot.x11.X.Display;
 import com.group_finity.mascot.x11.X.Window;
 import com.group_finity.mascot.x11.X.X11Exception;
 import com.group_finity.mascot.x11.jna.X11Extra;
-import com.sun.jna.platform.unix.X11;
 
 import java.awt.*;
 import java.util.List;

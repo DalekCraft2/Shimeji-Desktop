@@ -6,7 +6,6 @@ package com.group_finity.mascot.x11;
 
 import com.group_finity.mascot.image.NativeImage;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
