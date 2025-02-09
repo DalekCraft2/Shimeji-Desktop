@@ -915,15 +915,6 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Action" type="string">
-            <annotation>
-                <documentation>
-                    The name of the action which will be triggered by this behavior.
-                    An Action tag with this name must exist somewhere in the actions XML.
-                    If absent, defaults to the name of the behavior.
-                </documentation>
-            </annotation>
-        </attribute>
         <attribute name="Frequency" type="int" use="required">
             <annotation>
                 <documentation>
@@ -940,13 +931,6 @@
             <annotation>
                 <documentation>
                     A scriptable boolean condition to determine whether this behavior should be performed.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="Hidden" type="boolean">
-            <annotation>
-                <documentation>
-                    Whether this behavior should not show up in the context menu for this mascot.
                 </documentation>
             </annotation>
         </attribute>
