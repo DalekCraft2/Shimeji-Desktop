@@ -9,6 +9,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.VersionHelpers;
+import com.sun.jna.platform.win32.Win32Exception;
 import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.platform.win32.WinDef.POINT;
 import com.sun.jna.platform.win32.WinError;
@@ -154,7 +155,12 @@ class WindowsEnvironment extends Environment {
             return new Rectangle();
         }
         // Get and return IE rectangle
-        final Rectangle rect = WindowUtils.getWindowLocationAndSize(ie);
+        final Rectangle rect;
+        try {
+            rect = WindowUtils.getWindowLocationAndSize(ie);
+        } catch (Win32Exception e) {
+            return new Rectangle();
+        }
         if (dpiAware) {
             double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
             if (dpiScaleInverse != 1) {
@@ -191,35 +197,39 @@ class WindowsEnvironment extends Environment {
 
             @Override
             public boolean callback(HWND hWnd, Pointer data) {
-                IeStatus result = getIeStatus(hWnd);
-                if (result == IeStatus.OUT_OF_BOUNDS) {
-                    // IE found
+                try {
+                    IeStatus result = getIeStatus(hWnd);
+                    if (result == IeStatus.OUT_OF_BOUNDS) {
+                        // IE found
 
-                    // Get the work area rectangle
-                    final Rectangle workArea = getWorkAreaRect(false);
-                    // Get IE rectangle
-                    final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
+                        // Get the work area rectangle
+                        final Rectangle workArea = getWorkAreaRect(false);
+                        // Get IE rectangle
+                        final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
 
-                    double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-                    if (firstCallback) {
-                        if (dpiScaleInverse != 1) {
-                            offset = (int) Math.round(offset * dpiScaleInverse);
+                        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+                        if (firstCallback) {
+                            if (dpiScaleInverse != 1) {
+                                offset = (int) Math.round(offset * dpiScaleInverse);
+                            }
+                            firstCallback = false;
                         }
-                        firstCallback = false;
-                    }
-                    // Move the window to be on-screen
-                    rect.setLocation(workArea.x + offset, workArea.y + offset);
-                    User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
-                    User32.INSTANCE.BringWindowToTop(hWnd);
+                        // Move the window to be on-screen
+                        rect.setLocation(workArea.x + offset, workArea.y + offset);
+                        User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
+                        User32.INSTANCE.BringWindowToTop(hWnd);
 
-                    if (dpiScaleInverse == 1) {
-                        offset += 25;
-                    } else {
-                        offset = (int) Math.round(offset + 25 * dpiScaleInverse);
+                        if (dpiScaleInverse == 1) {
+                            offset += 25;
+                        } else {
+                            offset = (int) Math.round(offset + 25 * dpiScaleInverse);
+                        }
                     }
+
+                    return true;
+                } catch (Win32Exception e) {
+                    return true;
                 }
-
-                return true;
             }
         }, null);
     }
