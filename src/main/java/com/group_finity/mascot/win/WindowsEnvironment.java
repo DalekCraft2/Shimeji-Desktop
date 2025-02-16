@@ -159,6 +159,10 @@ class WindowsEnvironment extends Environment {
         try {
             rect = WindowUtils.getWindowLocationAndSize(ie);
         } catch (Win32Exception e) {
+            if (e.getHR().intValue() != WinError.E_HANDLE) {
+                // The exception was not due to the window handle being invalid, so rethrow the exception
+                throw e;
+            }
             return new Rectangle();
         }
         if (dpiAware) {
@@ -197,39 +201,44 @@ class WindowsEnvironment extends Environment {
 
             @Override
             public boolean callback(HWND hWnd, Pointer data) {
-                try {
-                    IeStatus result = getIeStatus(hWnd);
-                    if (result == IeStatus.OUT_OF_BOUNDS) {
-                        // IE found
+                IeStatus result = getIeStatus(hWnd);
+                if (result == IeStatus.OUT_OF_BOUNDS) {
+                    // IE found
 
-                        // Get the work area rectangle
-                        final Rectangle workArea = getWorkAreaRect(false);
-                        // Get IE rectangle
-                        final Rectangle rect = WindowUtils.getWindowLocationAndSize(hWnd);
-
-                        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-                        if (firstCallback) {
-                            if (dpiScaleInverse != 1) {
-                                offset = (int) Math.round(offset * dpiScaleInverse);
-                            }
-                            firstCallback = false;
+                    // Get the work area rectangle
+                    final Rectangle workArea = getWorkAreaRect(false);
+                    // Get IE rectangle
+                    final Rectangle rect;
+                    try {
+                        rect = WindowUtils.getWindowLocationAndSize(hWnd);
+                    } catch (Win32Exception e) {
+                        if (e.getHR().intValue() != WinError.E_HANDLE) {
+                            // The exception was not due to the window handle being invalid, so rethrow the exception
+                            throw e;
                         }
-                        // Move the window to be on-screen
-                        rect.setLocation(workArea.x + offset, workArea.y + offset);
-                        User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
-                        User32.INSTANCE.BringWindowToTop(hWnd);
-
-                        if (dpiScaleInverse == 1) {
-                            offset += 25;
-                        } else {
-                            offset = (int) Math.round(offset + 25 * dpiScaleInverse);
-                        }
+                        return true;
                     }
 
-                    return true;
-                } catch (Win32Exception e) {
-                    return true;
+                    double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+                    if (firstCallback) {
+                        if (dpiScaleInverse != 1) {
+                            offset = (int) Math.round(offset * dpiScaleInverse);
+                        }
+                        firstCallback = false;
+                    }
+                    // Move the window to be on-screen
+                    rect.setLocation(workArea.x + offset, workArea.y + offset);
+                    User32.INSTANCE.MoveWindow(hWnd, rect.x, rect.y, rect.width, rect.height, true);
+                    User32.INSTANCE.BringWindowToTop(hWnd);
+
+                    if (dpiScaleInverse == 1) {
+                        offset += 25;
+                    } else {
+                        offset = (int) Math.round(offset + 25 * dpiScaleInverse);
+                    }
                 }
+
+                return true;
             }
         }, null);
     }
