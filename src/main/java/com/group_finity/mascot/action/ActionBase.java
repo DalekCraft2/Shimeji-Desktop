@@ -65,6 +65,10 @@ public abstract class ActionBase implements Action {
 
     @Override
     public void init(final Mascot mascot) throws VariableException {
+        if (mascot == null) {
+            return;
+        }
+
         setMascot(mascot);
         setTime(0);
 
@@ -83,6 +87,10 @@ public abstract class ActionBase implements Action {
 
     @Override
     public void next() throws LostGroundException, VariableException {
+        if (getMascot() == null) {
+            return;
+        }
+
         initFrame();
 
         // Clear affordances
@@ -117,6 +125,10 @@ public abstract class ActionBase implements Action {
 
     @Override
     public boolean hasNext() throws VariableException {
+        if (getMascot() == null) {
+            return false;
+        }
+
         final boolean effective = isEffective();
         final boolean inTime = getTime() < getDuration();
 

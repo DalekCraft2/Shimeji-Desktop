@@ -416,40 +416,42 @@ public class Mascot {
     }
 
     void tick() {
-        if (isAnimating()) {
-            if (getBehavior() != null) {
-                try {
-                    getBehavior().next();
-                } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
-                    dispose();
+        synchronized (this) {
+            if (isAnimating()) {
+                if (getBehavior() != null) {
+                    try {
+                        getBehavior().next();
+                    } catch (final CantBeAliveException e) {
+                        log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
+                        Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                        dispose();
+                    }
+
+                    setTime(getTime() + 1);
                 }
 
-                setTime(getTime() + 1);
-            }
+                if (debugWindow != null) {
+                    // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
+                    // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
+                    // debugWindow.setTitle(toString());
 
-            if (debugWindow != null) {
-                // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
-                // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
-                // debugWindow.setTitle(toString());
+                    debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
+                    debugWindow.setShimejiX(anchor.x);
+                    debugWindow.setShimejiY(anchor.y);
 
-                debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
-                debugWindow.setShimejiX(anchor.x);
-                debugWindow.setShimejiY(anchor.y);
+                    Area activeWindow = environment.getActiveIE();
+                    debugWindow.setWindowTitle(environment.getActiveIETitle());
+                    debugWindow.setWindowX(activeWindow.getLeft());
+                    debugWindow.setWindowY(activeWindow.getTop());
+                    debugWindow.setWindowWidth(activeWindow.getWidth());
+                    debugWindow.setWindowHeight(activeWindow.getHeight());
 
-                Area activeWindow = environment.getActiveIE();
-                debugWindow.setWindowTitle(environment.getActiveIETitle());
-                debugWindow.setWindowX(activeWindow.getLeft());
-                debugWindow.setWindowY(activeWindow.getTop());
-                debugWindow.setWindowWidth(activeWindow.getWidth());
-                debugWindow.setWindowHeight(activeWindow.getHeight());
-
-                Area workArea = environment.getWorkArea();
-                debugWindow.setEnvironmentX(workArea.getLeft());
-                debugWindow.setEnvironmentY(workArea.getTop());
-                debugWindow.setEnvironmentWidth(workArea.getWidth());
-                debugWindow.setEnvironmentHeight(workArea.getHeight());
+                    Area workArea = environment.getWorkArea();
+                    debugWindow.setEnvironmentX(workArea.getLeft());
+                    debugWindow.setEnvironmentY(workArea.getTop());
+                    debugWindow.setEnvironmentWidth(workArea.getWidth());
+                    debugWindow.setEnvironmentHeight(workArea.getHeight());
+                }
             }
         }
     }
@@ -492,18 +494,20 @@ public class Mascot {
     }
 
     public void dispose() {
-        log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
+        synchronized (this) {
+            log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
 
-        if (debugWindow != null) {
-            debugWindow.setVisible(false);
-            debugWindow = null;
-        }
+            if (debugWindow != null) {
+                debugWindow.setVisible(false);
+                debugWindow = null;
+            }
 
-        animating = false;
-        getWindow().dispose();
-        getAffordances().clear();
-        if (getManager() != null) {
-            getManager().remove(this);
+            animating = false;
+            getWindow().dispose();
+            getAffordances().clear();
+            if (getManager() != null) {
+                getManager().remove(this);
+            }
         }
     }
 
