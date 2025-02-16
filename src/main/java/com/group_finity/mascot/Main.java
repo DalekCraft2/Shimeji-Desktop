@@ -431,6 +431,7 @@ public class Main {
         try {
             // Create the tray icon
             final TrayIcon icon = new TrayIcon(image, languageBundle.getString("ShimejiEE"));
+            icon.setImageAutoSize(true);
 
             // attach menu
             icon.addMouseListener(new MouseListener() {
