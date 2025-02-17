@@ -442,7 +442,8 @@ public class Main {
                         createMascot();
                     } else if (SwingUtilities.isMiddleMouseButton(e) && e.getClickCount() == 2) {
                         // When the icon is double-middle-clicked, dispose of all mascots, but do not close the program
-                        // FIXME Java seems to think the middle mouse button is the left mouse button, so this code never gets executed
+                        /* BUG: On Windows 11, Java seems to think the middle mouse button is the left mouse button, so this code never gets executed.
+                        This is a JDK bug: https://bugs.openjdk.org/browse/JDK-8341173 */
                         if (getManager().isExitOnLastRemoved()) {
                             getManager().setExitOnLastRemoved(false);
                             getManager().disposeAll();
