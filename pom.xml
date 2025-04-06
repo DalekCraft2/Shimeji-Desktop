@@ -22,8 +22,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
         <mainClass>com.group_finity.mascot.Main</mainClass>
 
         <libPrefix>lib</libPrefix>
@@ -35,7 +34,7 @@
             <!-- AbsoluteLayout -->
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
-            <version>RELEASE240</version>
+            <version>RELEASE250</version>
             <scope>compile</scope>
         </dependency>
 
@@ -43,7 +42,7 @@
             <!-- Java Native Access Platform -->
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
-            <version>5.16.0</version>
+            <version>5.17.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -93,10 +92,9 @@
                 <!-- Compile -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
             <!-- <plugin>
@@ -214,7 +212,7 @@
                             <jre>
                                 <path>%JAVA_HOME%;%PATH%</path>
                                 <requiresJdk>true</requiresJdk>
-                                <minVersion>${maven.compiler.target}</minVersion>
+                                <minVersion>${maven.compiler.release}</minVersion>
                                 <maxVersion/>
                             </jre>
                             <versionInfo>
