@@ -69,7 +69,7 @@
     <repositories/>
 
     <build>
-        <defaultGoal>clean package</defaultGoal>
+        <defaultGoal>clean verify</defaultGoal>
         <finalName>${project.name}</finalName>
         <!-- <resources>
             <resource>
