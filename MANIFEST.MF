@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: com.group_finity.mascot.Main
-Class-Path: ./lib/jna.jar ./lib/jna-platform.jar ./lib/AbsoluteLayout.jar ./lib/nimrodlf.jar
