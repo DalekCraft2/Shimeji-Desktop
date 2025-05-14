@@ -52,6 +52,7 @@
                 <include name="licence.txt"/>
                 <include name="readme.txt"/>
                 <include name="changelog.txt"/>
+                <include name="kilkakon.txt"/>
                 <include name="img/**/*"/>
                 <include name="conf/**/*"/>
                 <exclude name="conf/behaviors.xml"/>
