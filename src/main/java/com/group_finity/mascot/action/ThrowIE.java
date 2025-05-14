@@ -11,7 +11,6 @@ import com.group_finity.mascot.script.VariableMap;
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Action of throwing a window.
@@ -20,8 +19,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class ThrowIE extends Animate {
-    private static final Logger log = Logger.getLogger(ThrowIE.class.getName());
-
     public static final String PARAMETER_INITIALVX = "InitialVX";
 
     private static final int DEFAULT_INITIALVX = 32;

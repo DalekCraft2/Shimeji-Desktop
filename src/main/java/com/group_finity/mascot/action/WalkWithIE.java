@@ -6,12 +6,12 @@ import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Action of walking with a window.
@@ -19,9 +19,8 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class WalkWithIE extends Move {
-    private static final Logger log = Logger.getLogger(WalkWithIE.class.getName());
-
     public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
 
     private static final int DEFAULT_IEOFFSETX = 0;

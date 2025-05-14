@@ -7,7 +7,6 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * A base class for actions that combine multiple actions into one in series.
@@ -16,9 +15,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public abstract class ComplexAction extends ActionBase {
-
-    private static final Logger log = Logger.getLogger(ComplexAction.class.getName());
-
     private final Action[] actions;
 
     private int currentAction;

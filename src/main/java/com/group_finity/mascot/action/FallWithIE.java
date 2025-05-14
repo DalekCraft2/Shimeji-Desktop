@@ -6,12 +6,12 @@ import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Action of falling whilst holding a window.
@@ -20,9 +20,8 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 // TODO Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.
+@Log
 public class FallWithIE extends Fall {
-    private static final Logger log = Logger.getLogger(FallWithIE.class.getName());
-
     public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
 
     private static final int DEFAULT_IEOFFSETX = 0;
