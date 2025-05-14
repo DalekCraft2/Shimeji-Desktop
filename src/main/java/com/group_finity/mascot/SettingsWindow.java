@@ -1366,12 +1366,13 @@ public class SettingsWindow extends JDialog {
 
     private void btnAddInteractiveWindowActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnAddInteractiveWindowActionPerformed
     {// GEN-HEADEREND:event_btnAddInteractiveWindowActionPerformed
-        // add button
-        String inputValue = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString("AddInteractiveWindow"), JOptionPane.QUESTION_MESSAGE).trim();
-        if (!inputValue.isEmpty() && !inputValue.contains("/")) {
-            listData.add(inputValue);
-            lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+        final var result = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString("AddInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
+        if (result == null || result.isBlank() || result.contains("/")) {
+            return;
         }
+
+        listData.add(result.trim());
+        lstInteractiveWindows.setListData(listData.toArray(new String[0]));
     }// GEN-LAST:event_btnAddInteractiveWindowActionPerformed
 
     private void btnRemoveInteractiveWindowActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnRemoveInteractiveWindowActionPerformed
