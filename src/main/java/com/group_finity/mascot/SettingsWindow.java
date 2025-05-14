@@ -8,6 +8,7 @@ package com.group_finity.mascot;
 import com.nilo.plaf.nimrod.NimRODFontDialog;
 import com.nilo.plaf.nimrod.NimRODLookAndFeel;
 import com.nilo.plaf.nimrod.NimRODTheme;
+import lombok.extern.java.Log;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -16,21 +17,22 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
  * @author Kilkakon
  */
+@Log
 public class SettingsWindow extends JDialog {
-    private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
     private NimRODTheme theme;
     private NimRODTheme oldTheme;
     private NimRODLookAndFeel lookAndFeel;

@@ -10,7 +10,6 @@ import com.group_finity.mascot.script.VariableMap;
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Falling action.
@@ -19,9 +18,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Fall extends ActionBase {
-
-    private static final Logger log = Logger.getLogger(Fall.class.getName());
-
     public static final String PARAMETER_INITIALVX = "InitialVX";
 
     private static final int DEFAULT_INITIALVX = 0;

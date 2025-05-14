@@ -10,6 +10,7 @@ import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.sound.Sounds;
 import com.nilo.plaf.nimrod.NimRODLookAndFeel;
 import com.nilo.plaf.nimrod.NimRODTheme;
+import lombok.extern.java.Log;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -24,7 +25,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -34,7 +37,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * Program entry point.
@@ -42,9 +44,8 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Main {
-    private static final Logger log = Logger.getLogger(Main.class.getName());
-
     public static final Path CONFIG_DIRECTORY = Paths.get("conf");
     public static final Path IMAGE_DIRECTORY = Paths.get("img");
     public static final Path SOUND_DIRECTORY = Paths.get("sound");

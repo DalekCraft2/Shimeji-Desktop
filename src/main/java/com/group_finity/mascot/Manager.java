@@ -4,13 +4,13 @@ import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An object that manages the list of {@link Mascot Mascots} and takes timing.
@@ -22,10 +22,8 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Manager {
-
-    private static final Logger log = Logger.getLogger(Manager.class.getName());
-
     /**
      * The duration of each tick, in milliseconds.
      */
