@@ -9,7 +9,7 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
-import lombok.extern.java.Log;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,6 +21,7 @@ import java.util.logging.Level;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Getter
 @Log
 public class BehaviorBuilder {
     private final Configuration configuration;
@@ -139,45 +140,5 @@ public class BehaviorBuilder {
         }
 
         return true;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getFrequency() {
-        return frequency;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public boolean isToggleable() {
-        return toggleable;
-    }
-
-    private String getActionName() {
-        return actionName;
-    }
-
-    private Map<String, String> getParams() {
-        return params;
-    }
-
-    private List<String> getConditions() {
-        return conditions;
-    }
-
-    private Configuration getConfiguration() {
-        return configuration;
-    }
-
-    public boolean isNextAdditive() {
-        return nextAdditive;
-    }
-
-    public List<BehaviorBuilder> getNextBehaviorBuilders() {
-        return nextBehaviorBuilders;
     }
 }

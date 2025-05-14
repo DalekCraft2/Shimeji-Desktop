@@ -1,29 +1,20 @@
 package com.group_finity.mascot.environment;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.awt.*;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@AllArgsConstructor
+@Getter
 public class Wall implements Border {
-
     private Area area;
 
     private boolean right;
-
-    public Wall(final Area area, final boolean right) {
-        this.area = area;
-        this.right = right;
-    }
-
-    public Area getArea() {
-        return area;
-    }
-
-    public boolean isRight() {
-        return right;
-    }
 
     public int getX() {
         return isRight() ? getArea().getRight() : getArea().getLeft();

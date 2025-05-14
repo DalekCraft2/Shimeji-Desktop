@@ -3,6 +3,7 @@ package com.group_finity.mascot.animation;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.image.ImagePair;
 import com.group_finity.mascot.image.ImagePairs;
+import lombok.Getter;
 
 import java.awt.*;
 
@@ -13,9 +14,9 @@ import java.awt.*;
 public class Pose {
     private final String image;
     private final String rightImage;
-    private final int dx;
-    private final int dy;
-    private final int duration;
+    @Getter private final int dx;
+    @Getter private final int dy;
+    @Getter private final int duration;
     private final String sound;
 
     public Pose(final String image) {
@@ -63,24 +64,12 @@ public class Pose {
         mascot.setSound(getSoundName());
     }
 
-    public int getDuration() {
-        return duration;
-    }
-
     public String getImageName() {
         return (image == null ? "" : image) + (rightImage == null ? "" : rightImage);
     }
 
     public ImagePair getImage() {
         return ImagePairs.getImagePair(getImageName());
-    }
-
-    public int getDx() {
-        return dx;
-    }
-
-    public int getDy() {
-        return dy;
     }
 
     public String getSoundName() {

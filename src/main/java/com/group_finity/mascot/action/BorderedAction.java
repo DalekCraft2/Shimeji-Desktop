@@ -6,6 +6,8 @@ import com.group_finity.mascot.environment.Border;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.ResourceBundle;
@@ -27,7 +29,7 @@ public abstract class BorderedAction extends ActionBase {
 
     public static final String BORDERTYPE_FLOOR = "Floor";
 
-    private Border border;
+    @Getter @Setter private Border border;
 
     public BorderedAction(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
@@ -58,14 +60,6 @@ public abstract class BorderedAction extends ActionBase {
 
     private String getBorderType() throws VariableException {
         return eval(getSchema().getString(PARAMETER_BORDERTYPE), String.class, DEFAULT_BORDERTYPE);
-    }
-
-    private void setBorder(final Border border) {
-        this.border = border;
-    }
-
-    protected Border getBorder() {
-        return border;
     }
 
 }

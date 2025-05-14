@@ -5,6 +5,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
 
 import java.util.Arrays;
 
@@ -15,8 +16,8 @@ import java.util.Arrays;
 public class Animation {
     private Variable condition;
     private final Pose[] poses;
-    private final Hotspot[] hotspots;
-    private boolean turn;
+    @Getter private final Hotspot[] hotspots;
+    @Getter private boolean turn;
 
     public Animation(final Variable condition, final Pose[] poses, final Hotspot[] hotspots, final boolean turn) {
         if (poses.length == 0) {
@@ -70,11 +71,4 @@ public class Animation {
         return poses;
     }
 
-    public Hotspot[] getHotspots() {
-        return hotspots;
-    }
-
-    public boolean isTurn() {
-        return turn;
-    }
 }

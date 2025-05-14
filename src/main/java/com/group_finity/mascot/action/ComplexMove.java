@@ -8,7 +8,7 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
-import lombok.extern.java.Log;
+import lombok.Getter;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -50,7 +50,7 @@ public class ComplexMove extends BorderedAction {
 
     private WeakReference<Mascot> target;
 
-    private boolean turning = false;
+    @Getter private boolean turning = false;
 
     private Boolean hasTurning = null;
 
@@ -217,10 +217,6 @@ public class ComplexMove extends BorderedAction {
             }
         }
         return hasTurning;
-    }
-
-    protected boolean isTurning() {
-        return turning;
     }
 
     private String getCharacteristics() throws VariableException {

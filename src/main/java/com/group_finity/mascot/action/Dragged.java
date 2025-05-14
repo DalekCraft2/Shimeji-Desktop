@@ -6,6 +6,8 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.environment.Location;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
 import java.util.List;
@@ -30,11 +32,11 @@ public class Dragged extends ActionBase {
 
     private static final int DEFAULT_OFFSETY = 120;
 
-    private double footX;
+    @Getter @Setter private double footX;
 
-    private double footDx;
+    @Getter @Setter private double footDx;
 
-    private int timeToRegist;
+    @Getter @Setter private int timeToRegist;
 
     private double scaling;
 
@@ -94,30 +96,6 @@ public class Dragged extends ActionBase {
             // action does not support hotspots
             getMascot().getHotspots().clear();
         }
-    }
-
-    public void setTimeToRegist(final int timeToRegist) {
-        this.timeToRegist = timeToRegist;
-    }
-
-    private int getTimeToRegist() {
-        return timeToRegist;
-    }
-
-    private void setFootX(final double footX) {
-        this.footX = footX;
-    }
-
-    private double getFootX() {
-        return footX;
-    }
-
-    private void setFootDx(final double footDx) {
-        this.footDx = footDx;
-    }
-
-    private double getFootDx() {
-        return footDx;
     }
 
     private int getOffsetX() throws VariableException {

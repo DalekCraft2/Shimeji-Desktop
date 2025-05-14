@@ -10,7 +10,7 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
-import lombok.extern.java.Log;
+import lombok.Getter;
 
 import java.awt.*;
 import java.io.IOException;
@@ -26,11 +26,11 @@ import java.util.logging.Level;
  */
 @Log
 public class Configuration {
-    private final Map<String, String> constants = new LinkedHashMap<>(2);
-    private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
-    private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
+    @Getter private final Map<String, String> constants = new LinkedHashMap<>(2);
+    @Getter private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
+    @Getter private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
     private final Map<String, String> information = new LinkedHashMap<>(8);
-    private ResourceBundle schema;
+    @Getter private ResourceBundle schema;
 
     public void load(final Entry configurationNode, final String imageSet) throws IOException, ConfigurationException {
         log.log(Level.INFO, "Reading configuration file...");
@@ -275,18 +275,6 @@ public class Configuration {
         }
     }
 
-    private Map<String, String> getConstants() {
-        return constants;
-    }
-
-    Map<String, ActionBuilder> getActionBuilders() {
-        return actionBuilders;
-    }
-
-    private Map<String, BehaviorBuilder> getBehaviorBuilders() {
-        return behaviorBuilders;
-    }
-
     public Set<String> getBehaviorNames() {
         return behaviorBuilders.keySet();
     }
@@ -297,9 +285,5 @@ public class Configuration {
 
     public String getInformation(String key) {
         return information.get(key);
-    }
-
-    public ResourceBundle getSchema() {
-        return schema;
     }
 }

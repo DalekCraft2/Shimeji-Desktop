@@ -8,7 +8,7 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
-import lombok.extern.java.Log;
+import lombok.Getter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -35,7 +35,7 @@ public class ScanInteract extends BorderedAction {
 
     private WeakReference<Mascot> target;
 
-    private boolean turning = false;
+    @Getter private boolean turning = false;
 
     private Boolean hasTurning = null;
 
@@ -139,10 +139,6 @@ public class ScanInteract extends BorderedAction {
             }
         }
         return hasTurning;
-    }
-
-    protected boolean isTurning() {
-        return turning;
     }
 
     private String getBehavior() throws VariableException {

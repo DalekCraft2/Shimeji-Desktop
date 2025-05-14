@@ -8,6 +8,8 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.ResourceBundle;
@@ -35,15 +37,15 @@ public abstract class ActionBase implements Action {
 
     private static final String DEFAULT_AFFORDANCE = "";
 
-    private Mascot mascot;
+    @Getter @Setter private Mascot mascot;
 
     private int startTime;
 
-    private List<Animation> animations;
+    @Getter private List<Animation> animations;
 
-    private VariableMap variables;
+    @Getter private VariableMap variables;
 
-    private ResourceBundle schema;
+    @Getter private ResourceBundle schema;
 
     public ActionBase(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         this.schema = schema;
@@ -114,10 +116,6 @@ public abstract class ActionBase implements Action {
         }
     }
 
-    protected List<Animation> getAnimations() {
-        return animations;
-    }
-
     protected abstract void tick() throws LostGroundException, VariableException;
 
     @Override
@@ -162,14 +160,6 @@ public abstract class ActionBase implements Action {
         return eval(schema.getString(PARAMETER_AFFORDANCE), String.class, DEFAULT_AFFORDANCE);
     }
 
-    private void setMascot(final Mascot mascot) {
-        this.mascot = mascot;
-    }
-
-    protected Mascot getMascot() {
-        return mascot;
-    }
-
     protected int getTime() {
         return getMascot().getTime() - startTime;
     }
@@ -192,10 +182,6 @@ public abstract class ActionBase implements Action {
         return null;
     }
 
-    protected VariableMap getVariables() {
-        return variables;
-    }
-
     protected void putVariable(final String key, final Object value) {
         synchronized (getVariables()) {
             getVariables().put(key, value);
@@ -215,9 +201,5 @@ public abstract class ActionBase implements Action {
 
     protected MascotEnvironment getEnvironment() {
         return getMascot().getEnvironment();
-    }
-
-    protected ResourceBundle getSchema() {
-        return schema;
     }
 }

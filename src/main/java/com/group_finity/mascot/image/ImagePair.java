@@ -1,5 +1,7 @@
 package com.group_finity.mascot.image;
 
+import lombok.Getter;
+
 /**
  * A pair of left and right mascot images.
  * <p>
@@ -8,8 +10,8 @@ package com.group_finity.mascot.image;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Getter
 public class ImagePair {
-
     /**
      * Image facing left.
      */
@@ -40,13 +42,5 @@ public class ImagePair {
      */
     public MascotImage getImage(final boolean lookRight) {
         return lookRight ? getRightImage() : getLeftImage();
-    }
-
-    private MascotImage getLeftImage() {
-        return leftImage;
-    }
-
-    private MascotImage getRightImage() {
-        return rightImage;
     }
 }

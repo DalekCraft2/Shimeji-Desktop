@@ -6,6 +6,8 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
 import java.util.List;
@@ -42,13 +44,13 @@ public class Fall extends ActionBase {
 
     public static final String VARIABLE_VELOCITYY = "VelocityY";
 
-    private double velocityX;
+    @Getter @Setter private double velocityX;
 
-    private double velocityY;
+    @Getter @Setter private double velocityY;
 
-    private double modX;
+    @Getter @Setter private double modX;
 
-    private double modY;
+    @Getter @Setter private double modY;
 
     protected double scaling;
 
@@ -160,37 +162,4 @@ public class Fall extends ActionBase {
     private double getResistanceY() throws VariableException {
         return eval(getSchema().getString(PARAMETER_RESISTANCEY), Number.class, DEFAULT_RESISTANCEY).doubleValue();
     }
-
-    private void setVelocityY(final double velocityY) {
-        this.velocityY = velocityY;
-    }
-
-    private double getVelocityY() {
-        return velocityY;
-    }
-
-    private void setVelocityX(final double velocityX) {
-        this.velocityX = velocityX;
-    }
-
-    private double getVelocityX() {
-        return velocityX;
-    }
-
-    private void setModX(final double modX) {
-        this.modX = modX;
-    }
-
-    private double getModX() {
-        return modX;
-    }
-
-    private void setModY(final double modY) {
-        this.modY = modY;
-    }
-
-    private double getModY() {
-        return modY;
-    }
-
 }
