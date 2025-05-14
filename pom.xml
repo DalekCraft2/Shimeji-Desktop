@@ -13,7 +13,28 @@
     <description/>
     <url>https://github.com/DalekCraft2/Shimeji-Desktop</url>
     <inceptionYear>2009</inceptionYear>
-    <licenses/>
+    <licenses>
+        <license>
+            <name>Zlib</name>
+            <url>https://www.zlib.net/zlib_license.html</url>
+            <comments>The license used for Shimeji, by Yuki Yamada of Group Finity.</comments>
+        </license>
+        <license>
+            <name>BSD-2-Clause</name>
+            <url>https://opensource.org/license/bsd-2-clause</url>
+            <comments>The license used for Shimeji-ee, by the Shimeji-ee Group.</comments>
+        </license>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/license/mit</url>
+            <comments>The license used for the i18n classes, by John O'Conner.</comments>
+        </license>
+        <license>
+            <name>LGPL-2.1-or-later</name>
+            <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1-standalone.html</url>
+            <comments>The license used for NimROD Look and Feel, by Nilo J. González.</comments>
+        </license>
+    </licenses>
 
     <scm/>
     <issueManagement/>
