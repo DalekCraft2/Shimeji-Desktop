@@ -49,7 +49,7 @@
                 <include name="ShimejiHomePage.url"/>
                 <include name="Shimeji-eeHomePage.url"/>
                 <include name="originalreadme.txt"/>
-                <include name="licence.txt"/>
+                <include name="LICENSE.txt"/>
                 <include name="readme.txt"/>
                 <include name="changelog.txt"/>
                 <include name="kilkakon.txt"/>
