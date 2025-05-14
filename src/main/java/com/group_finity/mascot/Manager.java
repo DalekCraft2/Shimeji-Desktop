@@ -7,8 +7,11 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,32 +57,10 @@ public class Manager {
      */
     private boolean exitOnLastRemoved = true;
 
-    /**
-     * Thread that loops {@link #tick()}.
-     */
-    private Thread thread;
+    /** {@link ScheduledExecutorService} which calls the {@link #tick()} method. */
+    private ScheduledExecutorService executorService;
 
-    public Manager() {
-        // This is to fix a bug in Java running on Windows
-        // Frequent calls to Thread.sleep with short lengths will mess up the Windows clock
-        // You can avoid this problem by calling long Thread.sleep.
-        new Thread() {
-            {
-                setDaemon(true);
-                start();
-            }
-
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        sleep(Integer.MAX_VALUE);
-                    } catch (final InterruptedException ignored) {
-                    }
-                }
-            }
-        };
-    }
+    public Manager() {}
 
     public void setExitOnLastRemoved(boolean exitOnLastRemoved) {
         this.exitOnLastRemoved = exitOnLastRemoved;
@@ -93,54 +74,42 @@ public class Manager {
      * Starts the thread.
      */
     public void start() {
-        if (thread != null && thread.isAlive()) {
-            // Thread is already running
+        if (executorService != null && !executorService.isShutdown()) {
+            log.warning("An attempt was made to start the scheduler, but it is already running.");
             return;
         }
 
-        thread = new Thread(() -> {
-            // I think nanoTime() is used instead of currentTimeMillis() because it may be more accurate on some systems that way.
-
-            // Previous time
-            long prev = System.nanoTime() / 1000000;
+        executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(() -> {
             try {
-                while (true) {
-                    // Current time
-                    // Loop until TICK_INTERVAL has passed.
-                    final long cur = System.nanoTime() / 1000000;
-                    if (cur - prev >= TICK_INTERVAL) {
-                        if (cur > prev + TICK_INTERVAL * 2) {
-                            prev = cur;
-                        } else {
-                            prev += TICK_INTERVAL;
-                        }
-                        // Move the mascots.
-                        tick();
-                        continue;
-                    }
-                    Thread.sleep(1, 0);
-                }
-            } catch (final InterruptedException ignored) {
-                Thread.currentThread().interrupt();
+                this.tick();
+            } catch (final Exception e) {
+                log.log(Level.SEVERE, "An error occurred while running the tick method.", e);
+                this.stop();
             }
-        }, "Ticker");
-        thread.setDaemon(false);
-        thread.start();
+        }, 0, TICK_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     /**
      * Stops the thread.
      */
     public void stop() {
-        if (thread == null || !thread.isAlive()) {
-            // Thread is no longer running
+        if (executorService == null || executorService.isShutdown()) {
+            log.warning("An attempt was made to stop the scheduler, but it is not running.");
             return;
         }
-        thread.interrupt();
+
         try {
-            thread.join();
-        } catch (InterruptedException ignored) {
+            executorService.shutdownNow();
+
+            if (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                log.log(Level.WARNING, "The executor service did not terminate in the allotted time.");
+            }
+        } catch (final InterruptedException | SecurityException e) {
+            log.log(Level.SEVERE, "Failed to shutdown the executor service.", e);
         }
+
+        executorService = null;
     }
 
     /**
