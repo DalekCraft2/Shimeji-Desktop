@@ -1,4 +1,4 @@
-==== ORIGINAL LICENSE ====
+==== Zlib license (Japanese) ====
 
 Copyright (c) 2009-2011 Yuki Yamada
 
@@ -10,20 +10,20 @@ Copyright (c) 2009-2011 Yuki Yamada
 2.ソースを変更した場合は、そのことを明示しなければなりません。オリジナルのソフトウェアであるという虚偽の表示をしてはなりません。
 3.ソースの頒布物から、この表示を削除したり、表示の内容を変更したりしてはなりません。
 
-==== TRANSLATED LICENSE ====
+==== Zlib license (English) ====
 
 --NOTE--
-This is a translated copy of the original license for reference purposes. In the case of any conflict, the original Japanese license supersedes the translation.
---KILKAKON'S NOTE--
+This is the original English text of the zlib license for reference purposes. In the case of any conflict, the Japanese license supersedes the English license.
+--SHIMEJI-EE GROUP'S NOTE--
 Sorry, I just ran this through Google Translate, but I think the message is clear enough.  This original license still holds.  When hosting this project on Google Projects, I needed to choose a license and it seems like the New BSD License fit it perfectly.
 --END NOTES--
 
 Copyright (c) 2009-2011 Yuki Yamada
 
-THE SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. The author assumes no responsibility for any damage caused by the use of this software.
+This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.
 
-Permission is granted to anyone to use, freely modify, and redistribute this software for any purpose, including commercial applications, subject to the restrictions below.
+Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
 
-1.You must not falsely represent the origin of this software. Do not claim that you created the original software. If you use the Software in a product, it would be appreciated, but not required, that you include an acknowledgment in the product documentation.
-2. If the source has been modified, this must be clearly indicated. You may not falsely represent original software.
-3. You may not remove or alter this notice from any distribution of Source.
+1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
