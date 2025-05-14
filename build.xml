@@ -48,7 +48,6 @@
                 <include name="Shimeji-ee.bat"/>
                 <include name="ShimejiHomePage.url"/>
                 <include name="Shimeji-eeHomePage.url"/>
-                <include name="originallicence.txt"/>
                 <include name="originalreadme.txt"/>
                 <include name="licence.txt"/>
                 <include name="readme.txt"/>
