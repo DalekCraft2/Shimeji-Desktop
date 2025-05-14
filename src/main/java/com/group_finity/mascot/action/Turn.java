@@ -7,15 +7,12 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.8
  */
 public class Turn extends BorderedAction {
-    private static final Logger log = Logger.getLogger(Turn.class.getName());
-
     public static final String PARAMETER_LOOKRIGHT = "LookRight";
 
     private boolean turning = false;

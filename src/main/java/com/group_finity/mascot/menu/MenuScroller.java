@@ -735,7 +735,4 @@ public class MenuScroller
             return 10;
         }
     }
-
-    // private static final Logger log = LoggerFactory.getLogger(MenuScroller.class);
-
 }

@@ -11,12 +11,12 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
+import lombok.extern.java.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Simple {@link Behavior} implementation.
@@ -24,9 +24,8 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class UserBehavior implements Behavior {
-    private static final Logger log = Logger.getLogger(UserBehavior.class.getName());
-
     public static final String BEHAVIOURNAME_FALL = "Fall";
 
     public static final String BEHAVIOURNAME_DRAGGED = "Dragged";
