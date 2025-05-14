@@ -4,6 +4,7 @@ import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -19,9 +20,9 @@ public abstract class ComplexAction extends ActionBase {
 
     private static final Logger log = Logger.getLogger(ComplexAction.class.getName());
 
-    private final Action[] actions;
+    @Getter private final Action[] actions;
 
-    private int currentAction;
+    @Getter private int currentAction;
 
     public ComplexAction(ResourceBundle schema, final VariableMap context, final Action... actions) {
         super(schema, new ArrayList<>(), context);
@@ -83,14 +84,6 @@ public abstract class ComplexAction extends ActionBase {
                 getAction().init(getMascot());
             }
         }
-    }
-
-    protected int getCurrentAction() {
-        return currentAction;
-    }
-
-    protected Action[] getActions() {
-        return actions;
     }
 
     protected Action getAction() {

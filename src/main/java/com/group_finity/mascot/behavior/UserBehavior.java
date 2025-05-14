@@ -11,6 +11,8 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +47,7 @@ public class UserBehavior implements Behavior {
 
     private final Action action;
 
-    private Mascot mascot;
+    @Getter @Setter private Mascot mascot;
 
     public UserBehavior(final String name, final Action action, final Configuration configuration) {
         this.name = name;
@@ -247,14 +249,6 @@ public class UserBehavior implements Behavior {
         } catch (final VariableException e) {
             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
         }
-    }
-
-    private void setMascot(final Mascot mascot) {
-        this.mascot = mascot;
-    }
-
-    private Mascot getMascot() {
-        return mascot;
     }
 
     protected MascotEnvironment getEnvironment() {

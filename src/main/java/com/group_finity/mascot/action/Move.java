@@ -4,6 +4,7 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Move extends BorderedAction {
 
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
-    protected boolean turning = false;
+    @Getter protected boolean turning = false;
 
     private Boolean hasTurning = null;
 
@@ -122,10 +123,6 @@ public class Move extends BorderedAction {
             }
         }
         return hasTurning;
-    }
-
-    protected boolean isTurning() {
-        return turning;
     }
 
     private int getTargetX() throws VariableException {
