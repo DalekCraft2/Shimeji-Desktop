@@ -25,13 +25,14 @@ import java.util.stream.IntStream;
 
 /**
  * @author Kilkakon
+ * @author Valkryst
  */
 public class SettingsWindow extends JDialog {
     private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
     private final ArrayList<String> listData = new ArrayList<>();
     private Boolean alwaysShowShimejiChooser = false;
     private Boolean alwaysShowInformationScreen = false;
-    private String filter = "nearest";
+    private ImageScaler imageScaler = ImageScaler.NEAREST_NEIGHBOUR;
     private double scaling = 1.0;
     private double opacity = 1.0;
     private Boolean windowedMode = false;
@@ -59,6 +60,7 @@ public class SettingsWindow extends JDialog {
         // initialise controls
         setLocationRelativeTo(null);
         grpFilter.add(radFilterNearest);
+        grpFilter.add(radFilterBilinear);
         grpFilter.add(radFilterBicubic);
         grpFilter.add(radFilterHqx);
         // TODO Hashtable is described as obsolete, so consider switching to another class
@@ -71,13 +73,9 @@ public class SettingsWindow extends JDialog {
         Properties properties = Main.getInstance().getProperties();
         alwaysShowShimejiChooser = Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"));
         alwaysShowInformationScreen = Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false"));
-        String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
-        filter = "nearest";
-        if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
-            filter = "hqx";
-        } else if (filterText.equalsIgnoreCase("bicubic")) {
-            filter = "bicubic";
-        }
+        String filterText = Main.getInstance().getProperties().getProperty("Filter", ImageScaler.NEAREST_NEIGHBOUR.name());
+        imageScaler = ImageScaler.valueOf(filterText.toUpperCase());
+
         opacity = Double.parseDouble(properties.getProperty("Opacity", "1.0"));
         scaling = Double.parseDouble(properties.getProperty("Scaling", "1.0"));
         windowedMode = properties.getProperty("Environment", "generic").equals("virtual");
@@ -90,13 +88,29 @@ public class SettingsWindow extends JDialog {
         backgroundMode = properties.getProperty("BackgroundMode", "centre");
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
-        if (filter.equals("bicubic")) {
-            radFilterBicubic.setSelected(true);
-        } else if (filter.equals("hqx")) {
-            radFilterHqx.setSelected(true);
-        } else {
-            radFilterNearest.setSelected(true);
+
+        switch (imageScaler) {
+            case NEAREST_NEIGHBOUR: {
+                radFilterNearest.setSelected(true);
+                break;
+            }
+            case BILINEAR: {
+                radFilterBilinear.setSelected(true);
+                break;
+            }
+            case BICUBIC: {
+                radFilterBicubic.setSelected(true);
+                break;
+            }
+            case HQX: {
+                radFilterHqx.setSelected(true);
+                break;
+            }
+            default: {
+                radFilterNearest.setSelected(true);
+            }
         }
+
         sldOpacity.setValue((int) (opacity * 100));
         sldScaling.setValue((int) (scaling * 10));
 
@@ -148,8 +162,9 @@ public class SettingsWindow extends JDialog {
         lblScaling.setText(language.getString("Scaling"));
         lblFilter.setText(language.getString("FilterOptions"));
         radFilterNearest.setText(language.getString("NearestNeighbour"));
-        radFilterHqx.setText(language.getString("Filter"));
+        radFilterBilinear.setText(language.getString("BilinearFilter"));
         radFilterBicubic.setText(language.getString("BicubicFilter"));
+        radFilterHqx.setText(language.getString("Filter"));
         btnAddInteractiveWindow.setText(language.getString("Add"));
         btnRemoveInteractiveWindow.setText(language.getString("Remove"));
         lblPrimaryColour1.setText(language.getString("PrimaryColour1"));
@@ -302,6 +317,7 @@ public class SettingsWindow extends JDialog {
         sldScaling = new JSlider();
         lblFilter = new JLabel();
         radFilterNearest = new JRadioButton();
+        radFilterBilinear = new JRadioButton();
         radFilterBicubic = new JRadioButton();
         radFilterHqx = new JRadioButton();
         sldOpacity = new JSlider();
@@ -435,6 +451,9 @@ public class SettingsWindow extends JDialog {
         radFilterNearest.setText("Nearest");
         radFilterNearest.addItemListener(this::radFilterItemStateChanged);
 
+        radFilterBilinear.setText("Bilinear");
+        radFilterBilinear.addItemListener(this::radFilterItemStateChanged);
+
         radFilterBicubic.setText("Bicubic");
         radFilterBicubic.addItemListener(this::radFilterItemStateChanged);
 
@@ -471,6 +490,7 @@ public class SettingsWindow extends JDialog {
                                                         .addComponent(sldOpacity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                 .addComponent(radFilterNearest)
+                                                                .addComponent(radFilterBilinear)
                                                                 .addComponent(sldScaling, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                 .addComponent(radFilterBicubic)
                                                                 .addComponent(radFilterHqx))))
@@ -497,6 +517,8 @@ public class SettingsWindow extends JDialog {
                                 .addComponent(lblFilter)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(radFilterNearest)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(radFilterBilinear)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(radFilterBicubic)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -818,7 +840,7 @@ public class SettingsWindow extends JDialog {
                 !Color.decode(properties.getProperty("Background", "#00FF00")).equals(backgroundColour) ||
                 !properties.getProperty("BackgroundMode", "centre").equals(backgroundMode) ||
                 !properties.getProperty("BackgroundImage", "").equalsIgnoreCase(backgroundImage == null ? "" : backgroundImage);
-        imageReloadRequired = !properties.getProperty("Filter", "false").equalsIgnoreCase(filter) ||
+        imageReloadRequired = !Objects.equals(properties.getProperty("Filter", ImageScaler.NEAREST_NEIGHBOUR.name()), imageScaler.name()) ||
                 Double.parseDouble(properties.getProperty("Scaling", "1.0")) != scaling ||
                 Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
         interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "").equals(interactiveWindows);
@@ -828,7 +850,7 @@ public class SettingsWindow extends JDialog {
             properties.setProperty("AlwaysShowInformationScreen", alwaysShowInformationScreen.toString());
             properties.setProperty("Opacity", Double.toString(opacity));
             properties.setProperty("Scaling", Double.toString(scaling));
-            properties.setProperty("Filter", filter);
+            properties.setProperty("Filter", imageScaler.name());
             properties.setProperty("InteractiveWindows", interactiveWindows);
             properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
             if (windowedMode) {
@@ -882,11 +904,15 @@ public class SettingsWindow extends JDialog {
             Object source = evt.getItemSelectable();
 
             if (source == radFilterNearest) {
-                filter = "nearest";
+                imageScaler = ImageScaler.NEAREST_NEIGHBOUR;
+            } else if (source == radFilterBilinear) {
+                imageScaler = ImageScaler.BILINEAR;
+            } else if (source == radFilterBicubic) {
+                imageScaler = ImageScaler.BICUBIC;
             } else if (source == radFilterHqx) {
-                filter = "hqx";
+                imageScaler = ImageScaler.HQX;
             } else {
-                filter = "bicubic";
+                imageScaler = ImageScaler.NEAREST_NEIGHBOUR;
             }
         }
     }// GEN-LAST:event_radFilterItemStateChanged
@@ -902,7 +928,7 @@ public class SettingsWindow extends JDialog {
                     radFilterHqx.setEnabled(true);
                 } else {
                     radFilterHqx.setEnabled(false);
-                    if (filter.equals("hqx")) {
+                    if (imageScaler == ImageScaler.HQX) {
                         radFilterNearest.setSelected(true);
                     }
                 }
@@ -1134,9 +1160,10 @@ public class SettingsWindow extends JDialog {
     private JPanel pnlWhiteColourPreview;
     private JPanel pnlWhiteColourPreviewContainer;
     private JPanel pnlWindowMode;
+    private JRadioButton radFilterNearest;
+    private JRadioButton radFilterBilinear;
     private JRadioButton radFilterBicubic;
     private JRadioButton radFilterHqx;
-    private JRadioButton radFilterNearest;
     private Box.Filler rigid1;
     private Box.Filler rigid2;
     private Box.Filler rigid3;

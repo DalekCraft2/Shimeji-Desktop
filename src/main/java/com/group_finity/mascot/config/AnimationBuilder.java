@@ -7,7 +7,7 @@ import com.group_finity.mascot.exception.AnimationInstantiationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.ImagePairLoader;
-import com.group_finity.mascot.image.ImagePairLoader.Filter;
+import com.group_finity.mascot.image.ImageScaler;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
 
@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
+ * @author Valkryst
  */
 public class AnimationBuilder {
     private static final Logger log = Logger.getLogger(AnimationBuilder.class.getName());
@@ -72,20 +73,14 @@ public class AnimationBuilder {
         final double opacity = Double.parseDouble(Main.getInstance().getProperties().getProperty("Opacity", "1.0"));
         final double scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
-        String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
-        Filter filter = Filter.NEAREST_NEIGHBOUR;
-        if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
-            filter = ImagePairLoader.Filter.HQX;
-        } else if (filterText.equalsIgnoreCase("bicubic")) {
-            filter = ImagePairLoader.Filter.BICUBIC;
-        }
+        final ImageScaler imageScaler = ImageScaler.valueOf(Main.getInstance().getProperties().getProperty("Filter", ImageScaler.NEAREST_NEIGHBOUR.name()));
 
         if (imageText != null) {
             try {
                 final String[] anchorCoordinates = anchorText.split(",");
                 final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
 
-                ImagePairLoader.load(imageText, imageRightText, anchor, scaling, filter, opacity);
+                ImagePairLoader.load(imageText, imageRightText, anchor, scaling, imageScaler, opacity);
             } catch (IOException | NumberFormatException e) {
                 String error = imageText;
                 if (imageRightText != null) {
