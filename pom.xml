@@ -25,11 +25,6 @@
             <comments>The license used for Shimeji-ee, by the Shimeji-ee Group.</comments>
         </license>
         <license>
-            <name>MIT</name>
-            <url>https://opensource.org/license/mit</url>
-            <comments>The license used for the i18n classes, by John O'Conner.</comments>
-        </license>
-        <license>
             <name>LGPL-2.1-or-later</name>
             <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1-standalone.html</url>
             <comments>The license used for NimROD Look and Feel, by Nilo J. González.</comments>
