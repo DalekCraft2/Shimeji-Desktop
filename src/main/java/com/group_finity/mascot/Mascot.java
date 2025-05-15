@@ -206,7 +206,7 @@ public class Mascot {
                     // Draw bounds
                     g.setColor(Color.RED);
                     Rectangle bounds = getBounds();
-                    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                    g.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
 
                     // Draw image anchor
                     g.setColor(Color.GREEN);
