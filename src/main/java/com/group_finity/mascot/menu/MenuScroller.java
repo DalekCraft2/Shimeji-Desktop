@@ -1,6 +1,8 @@
 package com.group_finity.mascot.menu;
 
 import com.group_finity.mascot.Main;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -34,10 +36,14 @@ public class MenuScroller
     private MenuScrollerItem downItem;
     private final MenuScrollerPopupMenuListener menuScrollerPopupMenuListener = new MenuScrollerPopupMenuListener();
     private final MenuScrollerMenuKeyListener menuScrollerMenuKeyListener = new MenuScrollerMenuKeyListener();
-    private int scrollCount;
-    private int interval;
-    private int topFixedCount;
-    private int bottomFixedCount;
+    /** The number of items in the scrolling portion of the menu. */
+    @Getter private int scrollCount;
+    /** The scroll interval in milliseconds. */
+    @Getter private int interval;
+    /** The number of items fixed at the top of the menu or popup menu. */
+    @Getter private int topFixedCount;
+    /** The number of items fixed at the bottom of the menu or popup menu. */
+    @Getter @Setter private int bottomFixedCount;
     private int firstIndex = 0;
     private int keepVisibleIndex = -1;
 
@@ -373,15 +379,6 @@ public class MenuScroller
     }
 
     /**
-     * Return the scroll interval in milliseconds.
-     *
-     * @return the scroll interval in milliseconds
-     */
-    public int getInterval() {
-        return interval;
-    }
-
-    /**
      * Set the scroll interval in milliseconds.
      *
      * @param interval the scroll interval in milliseconds
@@ -394,15 +391,6 @@ public class MenuScroller
         upItem.setInterval(interval);
         downItem.setInterval(interval);
         this.interval = interval;
-    }
-
-    /**
-     * Return the number of items in the scrolling portion of the menu.
-     *
-     * @return the number of items to display at a time
-     */
-    public int getScrollCount() {
-        return scrollCount;
     }
 
     /**
@@ -420,15 +408,6 @@ public class MenuScroller
     }
 
     /**
-     * Return the number of items fixed at the top of the menu or popup menu.
-     *
-     * @return the number of items
-     */
-    public int getTopFixedCount() {
-        return topFixedCount;
-    }
-
-    /**
      * Set the number of items to fix at the top of the menu or popup menu.
      *
      * @param topFixedCount the number of items
@@ -440,25 +419,6 @@ public class MenuScroller
             firstIndex += topFixedCount - this.topFixedCount;
         }
         this.topFixedCount = topFixedCount;
-    }
-
-    /**
-     * Return the number of items fixed at the bottom of the menu or popup
-     * menu.
-     *
-     * @return the number of items
-     */
-    public int getBottomFixedCount() {
-        return bottomFixedCount;
-    }
-
-    /**
-     * Set the number of items to fix at the bottom of the menu or popup menu.
-     *
-     * @param bottomFixedCount the number of items
-     */
-    public void setBottomFixedCount(int bottomFixedCount) {
-        this.bottomFixedCount = bottomFixedCount;
     }
 
     /**
