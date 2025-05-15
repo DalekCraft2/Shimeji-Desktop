@@ -49,8 +49,6 @@ public class Configuration {
 
         URL[] urls = {Main.CONFIG_DIRECTORY.toUri().toURL()};
         try (URLClassLoader loader = new URLClassLoader(urls)) {
-            // ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-            // schema = ResourceBundle.getBundle("schema", locale, loader, utf8Control);
             schema = ResourceBundle.getBundle("schema", locale, loader);
         }
 

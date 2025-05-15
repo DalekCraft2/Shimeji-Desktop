@@ -128,8 +128,6 @@ public class Main {
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
             try (URLClassLoader loader = new URLClassLoader(urls)) {
-                // ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-                // languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
                 languageBundle = ResourceBundle.getBundle("language", locale, loader);
             }
         } catch (IOException e) {
@@ -1055,8 +1053,6 @@ public class Main {
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
             try (URLClassLoader loader = new URLClassLoader(urls)) {
-                // ResourceBundle.Control utf8Control = new Utf8ResourceBundleControl(false);
-                // languageBundle = ResourceBundle.getBundle("language", locale, loader, utf8Control);
                 languageBundle = ResourceBundle.getBundle("language", locale, loader);
             }
         } catch (IOException e) {
