@@ -6,8 +6,10 @@ module com.group_finity.mascot {
     requires com.sun.jna;
     requires com.sun.jna.platform;
     requires AbsoluteLayout.RELEASE250;
-    requires nimrodlf;
     requires org.openjdk.nashorn;
+    requires org.apache.commons.exec;
+    requires com.jthemedetector;
+    requires com.formdev.flatlaf;
 
     exports com.group_finity.mascot;
     exports com.group_finity.mascot.action;
