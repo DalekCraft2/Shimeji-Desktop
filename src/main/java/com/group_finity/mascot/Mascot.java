@@ -44,8 +44,6 @@ import java.util.logging.Logger;
 public class Mascot {
     /**
      * Whether to draw the mascots' bounds and hotspots, for debugging purposes.
-     * <p>
-     * Currently, on Windows, this will only work when rendering with AWT instead of JNA.
      */
     public static final boolean DRAW_DEBUG = false;
 

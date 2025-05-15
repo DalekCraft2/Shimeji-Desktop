@@ -43,7 +43,6 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
                 protected void paintComponent(final Graphics g) {
                     super.paintComponent(g);
                     if (getImage() != null) {
-                        // Currently, on Windows, debug drawing only works with AWT.
                         g.drawImage(getImage().getManagedImage(), 0, 0, null);
                     }
                 }
