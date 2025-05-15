@@ -33,7 +33,7 @@ public class SettingsWindow extends JDialog {
     private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
     private NimRODTheme theme;
     private NimRODTheme oldTheme;
-    private NimRODLookAndFeel lookAndFeel;
+    private LookAndFeel lookAndFeel;
     private final ArrayList<String> listData = new ArrayList<>();
     private Boolean alwaysShowShimejiChooser = false;
     private Boolean alwaysShowInformationScreen = false;
@@ -180,7 +180,7 @@ public class SettingsWindow extends JDialog {
         oldTheme.setWhite(whiteColour);
         oldTheme.setMenuOpacity((int) (menuOpacity * 255));
         oldTheme.setFont(font);
-        lookAndFeel = (NimRODLookAndFeel) UIManager.getLookAndFeel();
+        lookAndFeel = UIManager.getLookAndFeel();
 
         chkWindowModeEnabled.setSelected(windowedMode);
         spnWindowWidth.setBackground(txtBackgroundColour.getBackground());

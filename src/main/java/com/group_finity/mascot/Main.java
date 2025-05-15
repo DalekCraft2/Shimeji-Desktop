@@ -1,5 +1,10 @@
 package com.group_finity.mascot;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.config.Entry;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
@@ -8,8 +13,8 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.sound.Sounds;
-import com.nilo.plaf.nimrod.NimRODLookAndFeel;
-import com.nilo.plaf.nimrod.NimRODTheme;
+import com.jthemedetecor.OsThemeDetector;
+import org.apache.commons.exec.OS;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -139,50 +144,8 @@ public class Main {
         }
 
         // load theme
-        try {
-            // default light theme
-            NimRODLookAndFeel lookAndFeel = new NimRODLookAndFeel();
-
-            // check for theme properties
-            NimRODTheme theme = null;
-            try {
-                if (Files.isRegularFile(THEME_FILE)) {
-                    theme = new NimRODTheme(THEME_FILE.toString());
-                }
-            } catch (RuntimeException exc) {
-                log.log(Level.SEVERE, "Failed to load theme properties", exc);
-            }
-
-            if (theme == null) {
-                // default back to light theme if not found/valid
-                theme = new NimRODTheme();
-                theme.setPrimary1(Color.decode("#1EA6EB"));
-                theme.setPrimary2(Color.decode("#28B0F5"));
-                theme.setPrimary3(Color.decode("#32BAFF"));
-                theme.setSecondary1(Color.decode("#BCBCBE"));
-                theme.setSecondary2(Color.decode("#C6C6C8"));
-                theme.setSecondary3(Color.decode("#D0D0D2"));
-                theme.setWhite(Color.WHITE);
-                theme.setBlack(Color.BLACK);
-                theme.setMenuOpacity(255);
-                theme.setFrameOpacity(255);
-            }
-
-            NimRODLookAndFeel.setCurrentTheme(theme);
-            JFrame.setDefaultLookAndFeelDecorated(true);
-            JDialog.setDefaultLookAndFeelDecorated(true);
-            // all done
-            lookAndFeel.initialize();
-            UIManager.setLookAndFeel(lookAndFeel);
-        } catch (HeadlessException | NumberFormatException | UnsupportedLookAndFeelException ex) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
-                     UnsupportedLookAndFeelException ex1) {
-                log.log(Level.SEVERE, "Failed to set Look & Feel", ex1);
-                exit();
-            }
-        }
+        this.updateLookAndFeel();
+        OsThemeDetector.getDetector().registerListener(ignored -> updateLookAndFeel());
 
         // Get the image sets to use
         if (!Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"))) {
@@ -1277,5 +1240,31 @@ public class Main {
         getManager().disposeAll();
         getManager().stop();
         System.exit(0);
+    }
+
+    /** Updates the {@link LookAndFeel} of the application based on the current OS and whether it's using dark/light mode. */
+    private void updateLookAndFeel() {
+        SwingUtilities.invokeLater(() -> {
+            final boolean isDark = OsThemeDetector.isSupported() && OsThemeDetector.getDetector().isDark();
+
+            if (OS.isFamilyMac()) {
+                if (isDark) {
+                    FlatMacDarkLaf.setup();
+                } else {
+                    FlatMacLightLaf.setup();
+                }
+
+
+                FlatLaf.updateUI();
+                return;
+            }
+
+            if (isDark) {
+                FlatDarkLaf.setup();
+            } else {
+                FlatLightLaf.setup();
+            }
+            FlatLaf.updateUI();
+        });
     }
 }

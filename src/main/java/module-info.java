@@ -8,6 +8,9 @@ module com.group_finity.mascot {
     requires AbsoluteLayout.RELEASE250;
     requires nimrodlf;
     requires org.openjdk.nashorn;
+    requires org.apache.commons.exec;
+    requires com.jthemedetector;
+    requires com.formdev.flatlaf;
 
     exports com.group_finity.mascot;
     exports com.group_finity.mascot.action;

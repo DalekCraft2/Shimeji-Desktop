@@ -50,6 +50,13 @@
         <libDirectory>${project.build.directory}/${libPrefix}</libDirectory>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <!-- AbsoluteLayout -->
@@ -85,9 +92,28 @@
             <version>15.6</version>
             <scope>compile</scope>
         </dependency>
-    </dependencies>
 
-    <repositories/>
+        <dependency>
+            <!-- OS Detection -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
+        <dependency>
+            <!-- OS Dark/Light Mode Detection -->
+            <groupId>com.github.Dansoftowner</groupId>
+            <artifactId>jSystemThemeDetector</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <dependency>
+            <!-- Swing UI Themes -->
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.6</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <defaultGoal>clean verify</defaultGoal>
