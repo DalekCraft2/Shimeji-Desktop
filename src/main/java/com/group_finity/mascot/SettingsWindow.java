@@ -853,7 +853,7 @@ public class SettingsWindow extends JDialog {
 
     private void btnAddInteractiveWindowActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnAddInteractiveWindowActionPerformed
     {// GEN-HEADEREND:event_btnAddInteractiveWindowActionPerformed
-        final var result = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString("AddInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
+        final String result = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString("AddInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
         if (result == null || result.isBlank() || result.contains("/")) {
             return;
         }
