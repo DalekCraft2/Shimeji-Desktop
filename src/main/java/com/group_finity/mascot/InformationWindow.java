@@ -51,9 +51,6 @@ public class InformationWindow extends JFrame {
         }
 
         // text
-        Color textColour = Color.decode("#000000");
-        Color linkColour = Color.decode("#28B0F5");
-
         final ResourceBundle language = Main.getInstance().getLanguageBundle();
         setTitle(config.containsInformationKey("Name") ? config.getInformation("Name") : language.getString("Information"));
 
@@ -70,8 +67,6 @@ public class InformationWindow extends JFrame {
         html.append(lblSplashImage.getFont().getSize());
         html.append("pt ");
         html.append(lblSplashImage.getFont().getFontName());
-        html.append("; color:");
-        html.append(String.format("#%02X%02X%02X", textColour.getRed(), textColour.getGreen(), textColour.getBlue()));
         html.append("\">");
         if (config.containsInformationKey("ArtistName")) {
             html.append(language.getString("ArtBy"));
@@ -79,8 +74,6 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("ArtistURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("ArtistURL"));
-                html.append("\" style=\"color:");
-                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("ArtistName"));
@@ -97,8 +90,6 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("ScripterURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("ScripterURL"));
-                html.append("\" style=\"color:");
-                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("ScripterName"));
@@ -115,8 +106,6 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("CommissionerURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("CommissionerURL"));
-                html.append("\" style=\"color:");
-                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("CommissionerName"));
@@ -133,8 +122,6 @@ public class InformationWindow extends JFrame {
             if (config.containsInformationKey("SupportURL")) {
                 html.append("<a href=\"");
                 html.append(config.getInformation("SupportURL"));
-                html.append("\" style=\"color:");
-                html.append(String.format("#%02X%02X%02X", linkColour.getRed(), linkColour.getGreen(), linkColour.getBlue()));
                 html.append("\">");
             }
             html.append(config.getInformation("SupportName"));
