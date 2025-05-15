@@ -5,6 +5,8 @@
  */
 package com.group_finity.mascot;
 
+import com.group_finity.mascot.image.ImageScaler;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
