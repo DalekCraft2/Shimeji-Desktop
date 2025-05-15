@@ -24,11 +24,6 @@
             <url>https://opensource.org/license/bsd-2-clause</url>
             <comments>The license used for Shimeji-ee, by the Shimeji-ee Group.</comments>
         </license>
-        <license>
-            <name>LGPL-2.1-or-later</name>
-            <url>https://www.gnu.org/licenses/old-licenses/lgpl-2.1-standalone.html</url>
-            <comments>The license used for NimROD Look and Feel, by Nilo J. González.</comments>
-        </license>
     </licenses>
 
     <scm/>
@@ -170,10 +165,6 @@
                             <classpathPrefix>${libPrefix}/</classpathPrefix>
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
-                        <manifestEntries>
-                            <!-- Manually add Nimrod L&F to the classpath because it is a system dependency -->
-                            <Class-Path>${libPrefix}/nimrodlf-1.2d.jar</Class-Path>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
