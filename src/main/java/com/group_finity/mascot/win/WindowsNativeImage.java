@@ -17,9 +17,9 @@ import java.awt.image.BufferedImage;
  *
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
+ * @author Valkryst
  */
 class WindowsNativeImage implements NativeImage {
-
     /**
      * Creates a Windows bitmap from a Java image object.
      *
@@ -148,23 +148,13 @@ class WindowsNativeImage implements NativeImage {
 
     public WindowsNativeImage(final BufferedImage image) {
         managedImage = image;
-        if (WindowsTranslucentWindow.USE_AWT) {
-            bmpHandle = null;
-        } else {
-            // bmpHandle = createNative(image.getWidth(), image.getHeight());
-            //
-            // update();
-            bmpHandle = createBitmap(image);
-        }
+        bmpHandle = null;
     }
 
     // TODO Migrate this away from using finalize().
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        if (!WindowsTranslucentWindow.USE_AWT) {
-            freeNative(getBmpHandle());
-        }
     }
 
     /**
