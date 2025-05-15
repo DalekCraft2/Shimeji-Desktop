@@ -55,7 +55,6 @@ public class Main {
     public static final Path SOUND_DIRECTORY = Paths.get("sound");
     public static final Path SETTINGS_FILE = CONFIG_DIRECTORY.resolve("settings.properties");
     public static final Path LOGGING_FILE = CONFIG_DIRECTORY.resolve("logging.properties");
-    public static final Path THEME_FILE = CONFIG_DIRECTORY.resolve("theme.properties");
     public static final Path ICON_FILE = IMAGE_DIRECTORY.resolve("icon.png");
 
     /**

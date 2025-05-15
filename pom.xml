@@ -75,17 +75,6 @@
         </dependency>
 
         <dependency>
-            <!-- Nimrod Look and Feel -->
-            <groupId>es.nilogonzalez</groupId>
-            <artifactId>nimrodlf</artifactId>
-            <version>1.2d</version>
-            <scope>system</scope>
-            <!-- Nimrod L&F has no official Maven artifact, so I am going to use the official download for now. -->
-            <!-- https://nilogonzalez.es/nimrodlf/download-en.html -->
-            <systemPath>${project.basedir}/${libPrefix}/nimrodlf-1.2d.jar</systemPath>
-        </dependency>
-
-        <dependency>
             <!-- OpenJDK Nashorn -->
             <groupId>org.openjdk.nashorn</groupId>
             <artifactId>nashorn-core</artifactId>

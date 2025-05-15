@@ -12,12 +12,10 @@ import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -53,13 +51,8 @@ public class InformationWindow extends JFrame {
         }
 
         // text
-        Properties themeProperties = new Properties();
-        try (InputStream input = Files.newInputStream(Main.THEME_FILE)) {
-            themeProperties.load(input);
-        } catch (IOException ignored) {
-        }
-        Color textColour = Color.decode(themeProperties.getProperty("nimrodlf.b", "#000000"));
-        Color linkColour = Color.decode(themeProperties.getProperty("nimrodlf.p2", "#28B0F5"));
+        Color textColour = Color.decode("#000000");
+        Color linkColour = Color.decode("#28B0F5");
 
         final ResourceBundle language = Main.getInstance().getLanguageBundle();
         setTitle(config.containsInformationKey("Name") ? config.getInformation("Name") : language.getString("Information"));
