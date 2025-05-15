@@ -81,9 +81,8 @@ public enum ImageScaler {
     private BufferedImage scaleHQX(final BufferedImage source, double scaleFactor) {
         int scaledWidth = source.getWidth();
         int scaledHeight = source.getHeight();
-        BufferedImage destination;
+        final BufferedImage destination;
 
-        // apply hqx if applicable
         int[] buffer;
         int[] rbgValues = source.getRGB(0, 0, scaledWidth, scaledHeight, null, 0, scaledWidth);
 
