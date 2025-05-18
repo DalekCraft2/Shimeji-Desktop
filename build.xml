@@ -45,11 +45,8 @@
                 <globmapper from="*.xml" to="conf/behaviors.xml"/>
             </mappedresources>
             <fileset dir=".">
-                <include name="Shimeji-ee.bat"/>
-                <include name="ShimejiHomePage.url"/>
-                <include name="Shimeji-eeHomePage.url"/>
-                <include name="originalreadme.txt"/>
                 <include name="LICENSE.txt"/>
+                <include name="originalreadme.txt"/>
                 <include name="readme.txt"/>
                 <include name="changelog.txt"/>
                 <include name="kilkakon.txt"/>

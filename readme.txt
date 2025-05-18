@@ -143,8 +143,7 @@ You can also watch the FAQ if you encounter problems: https://www.youtube.com/wa
 You can also join Kilkakon's Discord server: https://discord.gg/dcJGAn3
 
 Shimeji-ee takes a LOT of time to start if you have a lot of image sets, so give it some time. Try moving all but one
-image set from the img folder to the img/unused folder to see if you have a memory problem. If Shimeji-ee is running out
-of memory, try editing Shimeji-ee.bat and changing -Xmx1000m to a larger number.
+image set from the img folder to the img/unused folder to see if you have a memory problem.
 
 If the Shimeji-ee icon appears, but no Shimeji appear:
 
