@@ -92,6 +92,13 @@
             <artifactId>flatlaf</artifactId>
             <version>3.6</version>
         </dependency>
+
+        <dependency>
+            <!-- UI MVC Framework -->
+            <groupId>com.github.Valkryst</groupId>
+            <artifactId>VMVC</artifactId>
+            <version>2025.5.15</version>
+        </dependency>
     </dependencies>
 
     <build>
