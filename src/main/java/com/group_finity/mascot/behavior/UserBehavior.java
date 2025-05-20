@@ -62,7 +62,7 @@ public class UserBehavior implements Behavior {
     public synchronized void init(final Mascot mascot) throws CantBeAliveException {
         setMascot(mascot);
 
-        log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), getMascot()});
+        log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), mascot});
 
         try {
             getAction().init(mascot);
@@ -109,9 +109,9 @@ public class UserBehavior implements Behavior {
                         // activate hotspot
                         handled = true;
                         try {
-                            getMascot().setCursorPosition(event.getPoint());
+                            mascot.setCursorPosition(event.getPoint());
                             if (hotspot.getBehaviour() != null) {
-                                getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
+                                mascot.setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                             }
                         } catch (final BehaviorInstantiationException e) {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
@@ -133,7 +133,7 @@ public class UserBehavior implements Behavior {
             if (!handled) {
                 // Begin dragging
                 try {
-                    getMascot().setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_DRAGGED)));
+                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_DRAGGED)));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDragActionInitialiseErrorMessage"), e);
                 }
@@ -150,16 +150,16 @@ public class UserBehavior implements Behavior {
     @Override
     public synchronized void mouseReleased(final MouseEvent event) throws CantBeAliveException {
         if (SwingUtilities.isLeftMouseButton(event)) {
-            if (getMascot().isHotspotClicked()) {
-                getMascot().setCursorPosition(null);
+            if (mascot.isHotspotClicked()) {
+                mascot.setCursorPosition(null);
             }
 
             // check if we are in the middle of a drag, otherwise we do nothing
-            if (getMascot().isDragging()) {
+            if (mascot.isDragging()) {
                 try {
                     // Stop dragging
-                    getMascot().setDragging(false);
-                    getMascot().setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_THROWN)));
+                    mascot.setDragging(false);
+                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_THROWN)));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDropActionInitialiseErrorMessage"), e);
                 }
@@ -175,7 +175,7 @@ public class UserBehavior implements Behavior {
             }
 
             HotspotState hotspotState = HotspotState.INACTIVE;
-            if (getMascot().isHotspotClicked()) {
+            if (mascot.isHotspotClicked()) {
                 // activate any hotspots that emerge while mouse is held down
                 if (!mascot.getHotspots().isEmpty()) {
                     for (final Hotspot hotspot : mascot.getHotspots()) {
@@ -186,7 +186,7 @@ public class UserBehavior implements Behavior {
                                 // no need to set cursor position, it's already set
                                 if (hotspot.getBehaviour() != null) {
                                     hotspotState = HotspotState.ACTIVE;
-                                    getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
+                                    mascot.setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                                 }
                             } catch (final BehaviorInstantiationException e) {
                                 throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
@@ -197,50 +197,50 @@ public class UserBehavior implements Behavior {
                 }
 
                 if (hotspotState == HotspotState.INACTIVE) {
-                    getMascot().setCursorPosition(null);
+                    mascot.setCursorPosition(null);
                 }
             }
 
             if (hotspotState != HotspotState.ACTIVE) {
                 if (action.hasNext()) {
                     // If it goes off-screen
-                    if (getMascot().getBounds().getX() + getMascot().getBounds().getWidth()
+                    if (mascot.getBounds().getX() + mascot.getBounds().getWidth()
                             <= getEnvironment().getScreen().getLeft()
-                            || getEnvironment().getScreen().getRight() <= getMascot().getBounds().getX()
-                            || getEnvironment().getScreen().getBottom() <= getMascot().getBounds().getY()) {
-                        log.log(Level.INFO, "Out of the screen bounds ({0}, {1})", new Object[]{getMascot(), this});
+                            || getEnvironment().getScreen().getRight() <= mascot.getBounds().getX()
+                            || getEnvironment().getScreen().getBottom() <= mascot.getBounds().getY()) {
+                        log.log(Level.INFO, "Out of the screen bounds ({0}, {1})", new Object[]{mascot, this});
 
                         if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
-                            getMascot().setAnchor(new Point((int) (Math.random() * (getEnvironment().getScreen().getRight() - getEnvironment().getScreen().getLeft())) + getEnvironment().getScreen().getLeft(),
+                            mascot.setAnchor(new Point((int) (Math.random() * (getEnvironment().getScreen().getRight() - getEnvironment().getScreen().getLeft())) + getEnvironment().getScreen().getLeft(),
                                     getEnvironment().getScreen().getTop() - 256));
                         } else {
-                            getMascot().setAnchor(new Point((int) (Math.random() * (getEnvironment().getWorkArea().getRight() - getEnvironment().getWorkArea().getLeft())) + getEnvironment().getWorkArea().getLeft(),
+                            mascot.setAnchor(new Point((int) (Math.random() * (getEnvironment().getWorkArea().getRight() - getEnvironment().getWorkArea().getLeft())) + getEnvironment().getWorkArea().getLeft(),
                                     getEnvironment().getWorkArea().getTop() - 256));
                         }
 
                         try {
-                            getMascot().setBehavior(getConfiguration().buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
+                            mascot.setBehavior(getConfiguration().buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
                         } catch (final BehaviorInstantiationException e) {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
                         }
                     }
                 } else {
-                    log.log(Level.INFO, "Completed behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), getMascot()});
+                    log.log(Level.INFO, "Completed behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), mascot});
 
                     try {
-                        getMascot().setBehavior(getConfiguration().buildNextBehavior(getName(), getMascot()));
+                        mascot.setBehavior(getConfiguration().buildNextBehavior(getName(), mascot));
                     } catch (final BehaviorInstantiationException e) {
                         throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingActionsErrorMessage"), e);
                     }
                 }
             }
         } catch (final LostGroundException e) {
-            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
+            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{mascot, this});
 
             try {
-                getMascot().setCursorPosition(null);
-                getMascot().setDragging(false);
-                getMascot().setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
+                mascot.setCursorPosition(null);
+                mascot.setDragging(false);
+                mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
             } catch (final BehaviorInstantiationException ex) {
                 throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), ex);
             }
@@ -253,11 +253,7 @@ public class UserBehavior implements Behavior {
         this.mascot = mascot;
     }
 
-    private Mascot getMascot() {
-        return mascot;
-    }
-
     protected MascotEnvironment getEnvironment() {
-        return getMascot().getEnvironment();
+        return mascot.getEnvironment();
     }
 }
