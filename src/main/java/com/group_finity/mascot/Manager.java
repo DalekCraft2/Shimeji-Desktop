@@ -82,7 +82,14 @@ public class Manager {
         executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(() -> {
             try {
+                final long startTime = System.currentTimeMillis();
                 this.tick();
+                final long tickTime = System.currentTimeMillis() - startTime;
+
+                log.fine("Ending Tick (" + tickTime + "ms)");
+                if (tickTime > TICK_INTERVAL) {
+                    log.warning("Tick took " + tickTime + "ms, which is longer than the expected " + TICK_INTERVAL + "ms.");
+                }
             } catch (final Exception e) {
                 log.log(Level.SEVERE, "An error occurred while running the tick method.", e);
                 this.stop();
@@ -119,32 +126,29 @@ public class Manager {
         // Update the environmental information first
         NativeFactory.getInstance().getEnvironment().tick();
 
-        synchronized (getMascots()) {
-
+        synchronized (mascots) {
             // Add the mascots which should be added
-            for (final Mascot mascot : getAdded()) {
-                getMascots().add(mascot);
-            }
+            mascots.addAll(getAdded());
             getAdded().clear();
 
             // Remove the mascots which should be removed
             for (final Mascot mascot : getRemoved()) {
-                getMascots().remove(mascot);
+                mascots.remove(mascot);
             }
             getRemoved().clear();
 
             // Advance the mascots' time
-            for (final Mascot mascot : getMascots()) {
+            for (final Mascot mascot : mascots) {
                 mascot.tick();
             }
 
             // Advance the mascots' images and positions
-            for (final Mascot mascot : getMascots()) {
+            for (final Mascot mascot : mascots) {
                 mascot.apply();
             }
         }
 
-        if (isExitOnLastRemoved() && getMascots().isEmpty()) {
+        if (isExitOnLastRemoved() && mascots.isEmpty()) {
             // exitOnLastRemoved is true and there are no mascots left, so exit.
             Main.getInstance().exit();
         }
