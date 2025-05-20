@@ -81,8 +81,8 @@ public class Fall extends ActionBase {
             setVelocityY(getInitialVy() * scaling);
         } */
 
-        setVelocityX(getInitialVx() * scaling);
-        setVelocityY(getInitialVy() * scaling);
+        velocityX = getInitialVx() * scaling;
+        velocityY = getInitialVy() * scaling;
     }
 
     @Override
@@ -90,59 +90,61 @@ public class Fall extends ActionBase {
         Point pos = getMascot().getAnchor();
         // Check that the velocity is at least 0 so that, if a mascot starts an action with negative initial Y velocity,
         // the action is not cancelled immediately.
-        boolean onBorder = getEnvironment().getFloor().isOn(pos) && getVelocityY() >= 0 || getEnvironment().getWall().isOn(pos);
+        boolean onBorder = getEnvironment().getFloor().isOn(pos) && velocityY >= 0 || getEnvironment().getWall().isOn(pos);
         return super.hasNext() && !onBorder;
     }
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-        if (getVelocityX() != 0) {
-            getMascot().setLookRight(getVelocityX() > 0);
+        final var mascot = super.getMascot();
+        if (velocityX != 0) {
+            mascot.setLookRight(velocityX > 0);
         }
 
-        setVelocityX((getVelocityX() / scaling - getVelocityX() * getResistanceX() / scaling) * scaling);
-        setVelocityY((getVelocityY() / scaling - getVelocityY() * getResistanceY() / scaling + getGravity()) * scaling);
+        velocityX = (velocityX / scaling - velocityX * this.getResistanceX() / scaling) * scaling;
+        velocityY = (velocityY / scaling - velocityY * this.getResistanceY() / scaling + this.getGravity()) * scaling;
 
-        putVariable(getSchema().getString(VARIABLE_VELOCITYX), getVelocityX());
-        putVariable(getSchema().getString(VARIABLE_VELOCITYY), getVelocityY());
+        putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocityX);
+        putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
 
-        setModX(getModX() + getVelocityX() % 1);
-        setModY(getModY() + getVelocityY() % 1);
+        modX += velocityX % 1;
+        modY += velocityY % 1;
 
         // Movement amount
-        int dx = (int) Math.round(getVelocityX() + getModX());
-        int dy = (int) Math.round(getVelocityY() + getModY());
+        final int dx = (int) Math.round(velocityX + modX);
+        final int dy = (int) Math.round(velocityY + modY);
 
-        setModX(getModX() % 1);
-        setModY(getModY() % 1);
+        modX %= 1;
+        modY %= 1;
 
         int dev = Math.max(1, Math.max(Math.abs(dx), Math.abs(dy)));
 
-        Point start = getMascot().getAnchor();
+        final var anchor = mascot.getAnchor();
+        final var environment = super.getEnvironment();
 
         OUTER:
         for (int i = 0; i <= dev; i++) {
-            int x = start.x + dx * i / dev;
-            int y = start.y + dy * i / dev;
+            int x = anchor.x + dx * i / dev;
+            int y = anchor.y + dy * i / dev;
 
             // Move mascot
-            getMascot().setAnchor(new Point(x, y));
+            mascot.setAnchor(new Point(x, y));
             if (dy > 0) {
                 // HACK: Windows may be moved, so check them often.
                 for (int j = -80; j <= 0; j++) {
-                    getMascot().setAnchor(new Point(x, y + j));
-                    if (getEnvironment().getFloor(true).isOn(getMascot().getAnchor())) {
+                    mascot.setAnchor(new Point(x, y + j));
+                    if (environment.getFloor(true).isOn(mascot.getAnchor())) {
                         break OUTER;
                     }
                 }
             }
-            if (getEnvironment().getWall(true).isOn(getMascot().getAnchor())) {
+            if (environment.getWall(true).isOn(mascot.getAnchor())) {
                 break;
             }
         }
 
         // Animate
-        getAnimation().next(getMascot(), getTime());
+        super.getAnimation().next(mascot, super.getTime());
     }
 
     private int getInitialVx() throws VariableException {
@@ -164,37 +166,4 @@ public class Fall extends ActionBase {
     private double getResistanceY() throws VariableException {
         return eval(getSchema().getString(PARAMETER_RESISTANCEY), Number.class, DEFAULT_RESISTANCEY).doubleValue();
     }
-
-    private void setVelocityY(final double velocityY) {
-        this.velocityY = velocityY;
-    }
-
-    private double getVelocityY() {
-        return velocityY;
-    }
-
-    private void setVelocityX(final double velocityX) {
-        this.velocityX = velocityX;
-    }
-
-    private double getVelocityX() {
-        return velocityX;
-    }
-
-    private void setModX(final double modX) {
-        this.modX = modX;
-    }
-
-    private double getModX() {
-        return modX;
-    }
-
-    private void setModY(final double modY) {
-        this.modY = modY;
-    }
-
-    private double getModY() {
-        return modY;
-    }
-
 }
