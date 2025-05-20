@@ -94,7 +94,22 @@ public class Mascot {
     private Behavior behavior = null;
 
     /**
-     * Time that increases every tick of the timer.
+     * <p>Time that increases every tick of the timer.</p>
+     *
+     * <p>
+     *     While it's technically possible for this to overflow, the user would need to keep the application running
+     *     for the following amount of time for it to happen:
+     * </p>
+     *
+     * <pre>
+     *     Max Integer Value: 2,147,483,647
+     *     FPS: 60
+     *
+     *     2,147,483,647 / 60 = ~35,791,394.1 seconds
+     *     ~35,791,394.1 / 60 = ~596,523.2 minutes
+     *     ~596,523.2 / 60 = ~9,942.0 hours
+     *     ~9,942.0 / 24 = ~414.2 days
+     * </pre>
      */
     private int time = 0;
 
@@ -425,7 +440,7 @@ public class Mascot {
                         dispose();
                     }
 
-                    setTime(getTime() + 1);
+                    time++;
                 }
 
                 if (debugWindow != null) {
@@ -573,10 +588,6 @@ public class Mascot {
 
     public int getTime() {
         return time;
-    }
-
-    private void setTime(final int time) {
-        this.time = time;
     }
 
     public Behavior getBehavior() {
