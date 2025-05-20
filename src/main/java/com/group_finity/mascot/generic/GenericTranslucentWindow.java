@@ -25,7 +25,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
     public GenericTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-        init();
 
         JPanel panel = new JPanel() {
             private static final long serialVersionUID = 1L;
@@ -51,11 +50,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
         if (Mascot.DRAW_DEBUG) {
             setLayout(new BorderLayout());
         }
-    }
-
-    private void init() {
-        System.setProperty("sun.java2d.noddraw", "true");
-        System.setProperty("sun.java2d.opengl", "true");
     }
 
     @Override
