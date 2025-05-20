@@ -455,37 +455,23 @@ public class Mascot {
     }
 
     public void apply() {
-        if (isAnimating()) {
-            // Make sure there's an image
-            if (getImage() != null) {
-                // Set the window region
-                getWindow().asComponent().setBounds(getBounds());
+        if (!this.isAnimating()) {
+            return;
+        }
 
-                // Set the image
-                getWindow().setImage(getImage().getImage());
+        if (image != null) {
+            this.window.asComponent().setBounds(this.getBounds()); // Set the bounds of the window to the mascot's bounds
+            window.updateImage(); // Redraw
+        }
 
-                // Display
-                if (!getWindow().asComponent().isVisible()) {
-                    getWindow().asComponent().setVisible(true);
-                }
-
-                // Redraw
-                getWindow().updateImage();
-            } else {
-                if (getWindow().asComponent().isVisible()) {
-                    getWindow().asComponent().setVisible(false);
-                }
-            }
-
-            // play sound if requested
-            if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
-                synchronized (log) {
-                    Clip clip = Sounds.getSound(sound);
-                    if (!clip.isRunning()) {
-                        clip.stop();
-                        clip.setMicrosecondPosition(0);
-                        clip.start();
-                    }
+        // play sound if requested
+        if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
+            synchronized (log) {
+                Clip clip = Sounds.getSound(sound);
+                if (!clip.isRunning()) {
+                    clip.stop();
+                    clip.setMicrosecondPosition(0);
+                    clip.start();
                 }
             }
         }
@@ -543,7 +529,25 @@ public class Mascot {
     }
 
     public void setImage(final MascotImage image) {
+        if (this.image == null && image == null) {
+            return;
+        }
+
+        if (this.image != null && image != null && this.image.getImage().equals(image.getImage())) {
+            return;
+        }
+
         this.image = image;
+
+        final var windowComponent = window.asComponent();
+        if (image == null) {
+            windowComponent.setVisible(false);
+            return;
+        }
+
+        window.setImage(image.getImage());
+        windowComponent.setVisible(true);
+        window.updateImage();
     }
 
     public boolean isLookRight() {
