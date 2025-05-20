@@ -416,9 +416,9 @@ public class Mascot {
     void tick() {
         synchronized (this) {
             if (isAnimating()) {
-                if (getBehavior() != null) {
+                if (behavior != null) {
                     try {
-                        getBehavior().next();
+                        behavior.next();
                     } catch (final CantBeAliveException e) {
                         log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
                         Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
