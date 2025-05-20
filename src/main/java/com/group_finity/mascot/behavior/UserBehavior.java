@@ -170,8 +170,8 @@ public class UserBehavior implements Behavior {
     @Override
     public synchronized void next() throws CantBeAliveException {
         try {
-            if (getAction().hasNext()) {
-                getAction().next();
+            if (action.hasNext()) {
+                action.next();
             }
 
             HotspotState hotspotState = HotspotState.INACTIVE;
@@ -202,7 +202,7 @@ public class UserBehavior implements Behavior {
             }
 
             if (hotspotState != HotspotState.ACTIVE) {
-                if (getAction().hasNext()) {
+                if (action.hasNext()) {
                     // If it goes off-screen
                     if (getMascot().getBounds().getX() + getMascot().getBounds().getWidth()
                             <= getEnvironment().getScreen().getLeft()
