@@ -7,21 +7,20 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.20
  */
+@Log
 public class ScanJump extends ActionBase {
-    private static final Logger log = Logger.getLogger(ScanJump.class.getName());
-
     public static final String PARAMETER_BEHAVIOUR = "Behaviour";
 
     private static final String DEFAULT_BEHAVIOUR = "";

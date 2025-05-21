@@ -4,11 +4,11 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An action that does not move.
@@ -16,10 +16,8 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Stay extends BorderedAction {
-
-    private static final Logger log = Logger.getLogger(Stay.class.getName());
-
     public Stay(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
