@@ -11,6 +11,7 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 import lombok.Getter;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.io.IOException;

@@ -14,6 +14,7 @@ import com.group_finity.mascot.menu.MenuScroller;
 import com.group_finity.mascot.sound.Sounds;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 
 import javax.sound.sampled.Clip;
 import javax.swing.*;

@@ -13,12 +13,12 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Simple {@link Behavior} implementation.

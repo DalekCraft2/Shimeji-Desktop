@@ -10,6 +10,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 import lombok.Getter;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

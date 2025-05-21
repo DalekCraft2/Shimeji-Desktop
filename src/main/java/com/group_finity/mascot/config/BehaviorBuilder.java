@@ -10,6 +10,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 import lombok.Getter;
+import lombok.extern.java.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
