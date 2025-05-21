@@ -4,7 +4,6 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Looking action.
@@ -13,8 +12,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Look extends InstantAction {
-    private static final Logger log = Logger.getLogger(Look.class.getName());
-
     public static final String PARAMETER_LOOKRIGHT = "LookRight";
 
     public Look(ResourceBundle schema, final VariableMap context) {

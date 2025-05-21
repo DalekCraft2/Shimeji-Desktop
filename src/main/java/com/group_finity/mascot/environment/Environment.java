@@ -1,5 +1,7 @@
 package com.group_finity.mascot.environment;
 
+import lombok.Getter;
+
 import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Getter
 public abstract class Environment {
     protected abstract Area getWorkArea();
 
@@ -100,20 +103,8 @@ public abstract class Environment {
         getCursor().set(getCursorPos());
     }
 
-    public Area getScreen() {
-        return screen;
-    }
-
     public Collection<Area> getScreens() {
         return complexScreen.getAreas();
-    }
-
-    public ComplexArea getComplexScreen() {
-        return complexScreen;
-    }
-
-    public Location getCursor() {
-        return cursor;
     }
 
     public boolean isScreenTopBottom(final Point location) {

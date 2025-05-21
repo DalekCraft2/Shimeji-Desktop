@@ -2,6 +2,7 @@ package com.group_finity.mascot.script;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.exception.VariableException;
+import lombok.Getter;
 
 import javax.script.Bindings;
 import java.util.*;
@@ -11,12 +12,7 @@ import java.util.*;
  * @author Shimeji-ee Group
  */
 public class VariableMap extends AbstractMap<String, Object> implements Bindings {
-
-    private final Map<String, Variable> rawMap = new LinkedHashMap<>();
-
-    public Map<String, Variable> getRawMap() {
-        return rawMap;
-    }
+    @Getter private final Map<String, Variable> rawMap = new LinkedHashMap<>();
 
     public void init() {
         for (final Variable o : getRawMap().values()) {

@@ -1,29 +1,20 @@
 package com.group_finity.mascot.environment;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.awt.*;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@AllArgsConstructor
+@Getter
 public class FloorCeiling implements Border {
-
     private Area area;
 
     private boolean bottom;
-
-    public FloorCeiling(final Area area, final boolean bottom) {
-        this.area = area;
-        this.bottom = bottom;
-    }
-
-    public Area getArea() {
-        return area;
-    }
-
-    public boolean isBottom() {
-        return bottom;
-    }
 
     public int getY() {
         return isBottom() ? getArea().getBottom() : getArea().getTop();

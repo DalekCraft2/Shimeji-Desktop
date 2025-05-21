@@ -10,6 +10,7 @@ import com.group_finity.mascot.image.ImagePairLoader;
 import com.group_finity.mascot.image.ImagePairLoader.Filter;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
+import lombok.extern.java.Log;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -23,14 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class AnimationBuilder {
-    private static final Logger log = Logger.getLogger(AnimationBuilder.class.getName());
     private final String condition;
     private String imageSet = "";
     private final List<Pose> poses = new ArrayList<>();

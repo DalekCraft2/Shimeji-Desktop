@@ -4,7 +4,6 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * An action that combines multiple actions into one.
@@ -13,9 +12,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Sequence extends ComplexAction {
-
-    private static final Logger log = Logger.getLogger(Sequence.class.getName());
-
     public static final String PARAMETER_LOOP = "Loop";
 
     private static final boolean DEFAULT_LOOP = false;

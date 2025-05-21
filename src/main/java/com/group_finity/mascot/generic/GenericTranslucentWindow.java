@@ -4,6 +4,7 @@ import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.platform.WindowUtils;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,7 @@ import java.awt.*;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Getter
 class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
     private static final long serialVersionUID = 1L;
@@ -75,10 +77,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
         }
     }
 
-    public float getAlpha() {
-        return alpha;
-    }
-
     public void setAlpha(final float alpha) {
         WindowUtils.setWindowAlpha(this, alpha);
         this.alpha = alpha;
@@ -92,10 +90,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
     @Override
     public String toString() {
         return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
-    }
-
-    public GenericNativeImage getImage() {
-        return image;
     }
 
     @Override

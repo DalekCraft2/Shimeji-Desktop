@@ -9,26 +9,26 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class ActionBuilder implements IActionBuilder {
-
-    private static final Logger log = Logger.getLogger(ActionBuilder.class.getName());
-    private final String type;
-    private final String name;
-    private final String className;
-    private final Map<String, String> params = new LinkedHashMap<>();
-    private final List<AnimationBuilder> animationBuilders = new ArrayList<>();
-    private final List<IActionBuilder> actionRefs = new ArrayList<>();
+    @Getter private final String type;
+    @Getter private final String name;
+    @Getter private final String className;
+    @Getter private final Map<String, String> params = new LinkedHashMap<>();
+    @Getter private final List<AnimationBuilder> animationBuilders = new ArrayList<>();
+    @Getter private final List<IActionBuilder> actionRefs = new ArrayList<>();
     private final ResourceBundle schema;
 
     public ActionBuilder(final Configuration configuration, final Entry actionNode, final String imageSet) throws IOException {
@@ -159,30 +159,4 @@ public class ActionBuilder implements IActionBuilder {
         }
         return variables;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    private String getClassName() {
-        return className;
-    }
-
-    private Map<String, String> getParams() {
-        return params;
-    }
-
-    private List<AnimationBuilder> getAnimationBuilders() {
-        return animationBuilders;
-    }
-
-    private List<IActionBuilder> getActionRefs() {
-        return actionRefs;
-    }
-
-
 }
