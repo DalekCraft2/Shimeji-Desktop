@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>Shimeji-ee</name>
-    <description/>
+    <description>A desktop mascot that freely wanders and plays around the screen</description>
     <url>https://github.com/DalekCraft2/Shimeji-Desktop</url>
     <inceptionYear>2009</inceptionYear>
     <licenses>
@@ -25,6 +25,10 @@
             <comments>The license used for Shimeji-ee, by the Shimeji-ee Group.</comments>
         </license>
     </licenses>
+    <organization>
+        <name>Group Finity</name>
+        <url>http://www.group-finity.com/</url>
+    </organization>
 
     <scm/>
     <issueManagement/>
