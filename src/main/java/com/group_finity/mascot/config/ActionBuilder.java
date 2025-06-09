@@ -9,20 +9,19 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class ActionBuilder implements IActionBuilder {
-
-    private static final Logger log = Logger.getLogger(ActionBuilder.class.getName());
     private final String type;
     private final String name;
     private final String className;

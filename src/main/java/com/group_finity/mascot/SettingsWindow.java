@@ -5,6 +5,8 @@
  */
 package com.group_finity.mascot;
 
+import lombok.extern.java.Log;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -19,15 +21,14 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
  * @author Kilkakon
  */
+@Log
 public class SettingsWindow extends JDialog {
-    private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
     private final ArrayList<String> listData = new ArrayList<>();
     private Boolean alwaysShowShimejiChooser = false;
     private Boolean alwaysShowInformationScreen = false;

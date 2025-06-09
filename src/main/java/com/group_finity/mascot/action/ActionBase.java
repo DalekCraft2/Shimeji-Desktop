@@ -11,7 +11,6 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Abstract class that implements common functionality of actions.
@@ -20,8 +19,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public abstract class ActionBase implements Action {
-    private static final Logger log = Logger.getLogger(ActionBase.class.getName());
-
     public static final String PARAMETER_DURATION = "Duration";
 
     private static final int DEFAULT_DURATION = Integer.MAX_VALUE;

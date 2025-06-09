@@ -8,15 +8,12 @@ import com.group_finity.mascot.sound.Sounds;
 import javax.sound.sampled.Clip;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.16
  */
 public class Mute extends InstantAction {
-    private static final Logger log = Logger.getLogger(Mute.class.getName());
-
     public static final String PARAMETER_SOUND = "Sound";
 
     private static final String DEFAULT_SOUND = null;

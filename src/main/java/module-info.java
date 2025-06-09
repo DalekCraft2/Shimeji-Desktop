@@ -10,6 +10,7 @@ module com.group_finity.mascot {
     requires org.apache.commons.exec;
     requires com.jthemedetector;
     requires com.formdev.flatlaf;
+    requires static lombok;
 
     exports com.group_finity.mascot;
     exports com.group_finity.mascot.action;
