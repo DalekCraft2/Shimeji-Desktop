@@ -8,21 +8,20 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.21.3
  */
+@Log
 public class ComplexJump extends ActionBase {
-    private static final Logger log = Logger.getLogger(ComplexJump.class.getName());
-
     private final Breed.Delegate delegate = new Breed.Delegate(this);
 
     public static final String PARAMETER_CHARACTERISTICS = "Characteristics";

@@ -10,7 +10,6 @@ import com.group_finity.mascot.script.VariableMap;
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Jumping action.
@@ -19,8 +18,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Jump extends ActionBase {
-    private static final Logger log = Logger.getLogger(Jump.class.getName());
-
     public static final String PARAMETER_TARGETX = "TargetX";
 
     private static final int DEFAULT_TARGETX = 0;

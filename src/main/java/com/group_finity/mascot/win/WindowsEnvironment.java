@@ -18,11 +18,11 @@ import com.sun.jna.platform.win32.WinUser.HMONITOR;
 import com.sun.jna.platform.win32.WinUser.MONITORINFO;
 import com.sun.jna.platform.win32.WinUser.WNDENUMPROC;
 import com.sun.jna.ptr.LongByReference;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.logging.Logger;
 
 /**
  * Uses JNI to obtain environment information that is difficult to obtain with Java.
@@ -31,6 +31,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 // FIXME This environment feels slower than it used to be whenever a lot of Shimejis are moving on-screen.
+@Log
 class WindowsEnvironment extends Environment {
     private static final HashMap<HWND, Boolean> ieCache = new LinkedHashMap<>();
 
@@ -53,8 +54,6 @@ class WindowsEnvironment extends Environment {
         /** The IE is out of bounds and does not prevent other IEs from being valid. */
         OUT_OF_BOUNDS
     }
-
-    private static final Logger log = Logger.getLogger(WindowsEnvironment.class.getName());
 
     private static boolean isIE(final HWND hWnd) {
         final Boolean cachedValue = ieCache.get(hWnd);

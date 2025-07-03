@@ -12,6 +12,7 @@ import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.group_finity.mascot.menu.MenuScroller;
 import com.group_finity.mascot.sound.Sounds;
+import lombok.extern.java.Log;
 
 import javax.sound.sampled.Clip;
 import javax.swing.*;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Mascot object.
@@ -41,13 +41,12 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Mascot {
     /**
      * Whether to draw the mascots' bounds and hotspots, for debugging purposes.
      */
     public static final boolean DRAW_DEBUG = false;
-
-    private static final Logger log = Logger.getLogger(Mascot.class.getName());
 
     /**
      * The ID of the last generated {@code Mascot}.

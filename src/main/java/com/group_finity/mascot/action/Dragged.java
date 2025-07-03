@@ -10,7 +10,6 @@ import com.group_finity.mascot.script.VariableMap;
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Action for being dragged.
@@ -19,8 +18,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Dragged extends ActionBase {
-    private static final Logger log = Logger.getLogger(Dragged.class.getName());
-
     private static final String VARIABLE_FOOTX = "FootX";
 
     private static final String VARIABLE_FOOTDX = "FootDX";

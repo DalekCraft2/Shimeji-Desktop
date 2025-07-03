@@ -6,6 +6,7 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.config.Configuration;
+import lombok.extern.java.Log;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -19,14 +20,13 @@ import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.21
  */
+@Log
 public class InformationWindow extends JFrame {
-    private static final Logger log = Logger.getLogger(InformationWindow.class.getName());
     private String imageSet;
 
     /**

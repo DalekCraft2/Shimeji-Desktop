@@ -4,11 +4,11 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Action for resisting being dragged.
@@ -17,10 +17,8 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 // TODO Try to fix the typos of "resist" and "resistance" being "regist" and "registance" without breaking compatibility.
+@Log
 public class Regist extends ActionBase {
-
-    private static final Logger log = Logger.getLogger(Regist.class.getName());
-
     public Regist(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }

@@ -10,22 +10,22 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Configuration {
-    private static final Logger log = Logger.getLogger(Configuration.class.getName());
     private final Map<String, String> constants = new LinkedHashMap<>(2);
     private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
     private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
