@@ -9,22 +9,22 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.extern.java.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Getter
+@Log
 public class BehaviorBuilder {
-
-    private static final Logger log = Logger.getLogger(BehaviorBuilder.class.getName());
-
     private final Configuration configuration;
 
     private final String name;
@@ -141,45 +141,5 @@ public class BehaviorBuilder {
         }
 
         return true;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getFrequency() {
-        return frequency;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public boolean isToggleable() {
-        return toggleable;
-    }
-
-    private String getActionName() {
-        return actionName;
-    }
-
-    private Map<String, String> getParams() {
-        return params;
-    }
-
-    private List<String> getConditions() {
-        return conditions;
-    }
-
-    private Configuration getConfiguration() {
-        return configuration;
-    }
-
-    public boolean isNextAdditive() {
-        return nextAdditive;
-    }
-
-    public List<BehaviorBuilder> getNextBehaviorBuilders() {
-        return nextBehaviorBuilders;
     }
 }

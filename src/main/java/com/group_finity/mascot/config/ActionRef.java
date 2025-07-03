@@ -4,20 +4,18 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.exception.ActionInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
+import lombok.extern.java.Log;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class ActionRef implements IActionBuilder {
-
-    private static final Logger log = Logger.getLogger(ActionRef.class.getName());
-
     private final Configuration configuration;
 
     private final String name;

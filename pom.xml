@@ -42,6 +42,8 @@
 
         <libPrefix>lib</libPrefix>
         <libDirectory>${project.build.directory}/${libPrefix}</libDirectory>
+
+        <lombokVersion>1.18.38</lombokVersion>
     </properties>
 
     <repositories>
@@ -96,6 +98,13 @@
             <artifactId>flatlaf</artifactId>
             <version>3.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombokVersion}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -124,6 +133,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.0</version>
                 <configuration>
+                    <annotationProcessorPaths>
+                        <annotationProcessorPath>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombokVersion}</version>
+                        </annotationProcessorPath>
+                    </annotationProcessorPaths>
                     <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>

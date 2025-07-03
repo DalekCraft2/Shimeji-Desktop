@@ -5,7 +5,6 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Action for offsetting.
@@ -14,9 +13,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Offset extends InstantAction {
-
-    private static final Logger log = Logger.getLogger(Offset.class.getName());
-
     public static final String PARAMETER_OFFSETX = "X";
 
     private static final int DEFAULT_OFFSETX = 0;

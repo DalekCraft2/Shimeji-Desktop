@@ -7,7 +7,6 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * An action that simply executes an animation.
@@ -16,9 +15,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Animate extends BorderedAction {
-
-    private static final Logger log = Logger.getLogger(Animate.class.getName());
-
     public Animate(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }

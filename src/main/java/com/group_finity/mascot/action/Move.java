@@ -4,12 +4,13 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Moving action.
@@ -17,9 +18,8 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Move extends BorderedAction {
-    private static final Logger log = Logger.getLogger(Move.class.getName());
-
     public static final String PARAMETER_TARGETX = "TargetX";
 
     private static final int DEFAULT_TARGETX = Integer.MAX_VALUE;
@@ -28,7 +28,7 @@ public class Move extends BorderedAction {
 
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
-    protected boolean turning = false;
+    @Getter protected boolean turning = false;
 
     private Boolean hasTurning = null;
 
@@ -122,10 +122,6 @@ public class Move extends BorderedAction {
             }
         }
         return hasTurning;
-    }
-
-    protected boolean isTurning() {
-        return turning;
     }
 
     private int getTargetX() throws VariableException {

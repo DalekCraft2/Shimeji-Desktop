@@ -2,6 +2,8 @@ package com.group_finity.mascot.script;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.exception.VariableException;
+import lombok.Getter;
+import lombok.Setter;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngine;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
@@ -13,16 +15,15 @@ import javax.script.ScriptException;
  * @author Shimeji-ee Group
  */
 public class Script extends Variable {
-
     private static final NashornScriptEngine ENGINE = (NashornScriptEngine) new NashornScriptEngineFactory().getScriptEngine(new ScriptFilter());
 
-    private final String source;
+    @Getter private final String source;
 
-    private final boolean clearAtInitFrame;
+    @Getter private final boolean clearAtInitFrame;
 
-    private final CompiledScript compiled;
+    @Getter private final CompiledScript compiled;
 
-    private Object value;
+    @Getter @Setter private Object value;
 
     public Script(final String source, final boolean clearAtInitFrame) throws VariableException {
         this.source = source;
@@ -65,25 +66,5 @@ public class Script extends Variable {
         }
 
         return getValue();
-    }
-
-    private void setValue(final Object value) {
-        this.value = value;
-    }
-
-    private Object getValue() {
-        return value;
-    }
-
-    private boolean isClearAtInitFrame() {
-        return clearAtInitFrame;
-    }
-
-    private CompiledScript getCompiled() {
-        return compiled;
-    }
-
-    private String getSource() {
-        return source;
     }
 }

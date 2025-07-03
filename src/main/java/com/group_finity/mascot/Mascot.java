@@ -12,6 +12,9 @@ import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.group_finity.mascot.menu.MenuScroller;
 import com.group_finity.mascot.sound.Sounds;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.java.Log;
 
 import javax.sound.sampled.Clip;
 import javax.swing.*;
@@ -25,7 +28,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Mascot object.
@@ -41,13 +43,12 @@ import java.util.logging.Logger;
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Mascot {
     /**
      * Whether to draw the mascots' bounds and hotspots, for debugging purposes.
      */
     public static final boolean DRAW_DEBUG = false;
-
-    private static final Logger log = Logger.getLogger(Mascot.class.getName());
 
     /**
      * The ID of the last generated {@code Mascot}.
@@ -60,69 +61,70 @@ public class Mascot {
      */
     private final int id;
 
-    private String imageSet;
+    @Getter @Setter private String imageSet;
+
     /**
      * The window that displays the {@code Mascot}.
      */
-    private final TranslucentWindow window = NativeFactory.getInstance().newTransparentWindow();
+    @Getter private final TranslucentWindow window = NativeFactory.getInstance().newTransparentWindow();
 
     /**
      * The {@link Manager} that manages this {@code Mascot}.
      */
-    private Manager manager = null;
+    @Getter @Setter private Manager manager = null;
 
     /**
      * The {@code Mascot}'s ground coordinates.
      * For example, its feet or its hands when hanging.
      */
-    private Point anchor = new Point(0, 0);
+    @Getter @Setter private Point anchor = new Point(0, 0);
 
     /**
      * The image to display.
      */
-    private MascotImage image = null;
+    @Getter @Setter private MascotImage image = null;
 
     /**
      * Whether the {@code Mascot} is facing right.
      * The original image is treated as facing left, so setting this to {@code true} will cause it to be reversed.
      */
-    private boolean lookRight = false;
+    @Getter @Setter private boolean lookRight = false;
 
     /**
      * An object that represents the long-term behavior of this {@code Mascot}.
      */
-    private Behavior behavior = null;
+    @Getter private Behavior behavior = null;
 
     /**
      * Time that increases every tick of the timer.
      */
-    private int time = 0;
+    @Getter @Setter private int time = 0;
 
     /**
      * Whether the animation is running.
      */
-    private boolean animating = true;
+    @Getter @Setter private boolean animating = true;
 
-    private boolean paused = false;
+    @Getter @Setter private boolean paused = false;
 
     /**
      * Set by behaviours when the {@code Mascot} is being dragged by the mouse cursor,
      * as opposed to hotspots or the like.
      */
-    private boolean dragging = false;
+    @Getter @Setter private boolean dragging = false;
 
     /**
      * Mascot display environment.
      */
-    private MascotEnvironment environment = new MascotEnvironment(this);
+    @Getter private MascotEnvironment environment = new MascotEnvironment(this);
 
-    private String sound = null;
+    @Getter @Setter private String sound = null;
 
     protected DebugWindow debugWindow = null;
 
-    private final List<String> affordances = new ArrayList<>(5);
+    @Getter private final List<String> affordances = new ArrayList<>(5);
 
-    private final List<Hotspot> hotspots = new ArrayList<>(5);
+    @Getter private final List<Hotspot> hotspots = new ArrayList<>(5);
 
     /**
      * Set by behaviours when the user has triggered a hotspot on this {@code Mascot},
@@ -522,38 +524,6 @@ public class Mascot {
         getWindow().asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
     }
 
-    public Manager getManager() {
-        return manager;
-    }
-
-    public void setManager(final Manager manager) {
-        this.manager = manager;
-    }
-
-    public Point getAnchor() {
-        return anchor;
-    }
-
-    public void setAnchor(Point anchor) {
-        this.anchor = anchor;
-    }
-
-    public MascotImage getImage() {
-        return image;
-    }
-
-    public void setImage(final MascotImage image) {
-        this.image = image;
-    }
-
-    public boolean isLookRight() {
-        return lookRight;
-    }
-
-    public void setLookRight(final boolean lookRight) {
-        this.lookRight = lookRight;
-    }
-
     public Rectangle getBounds() {
         if (getImage() != null) {
             // Find the window area from the ground coordinates and image center coordinates. The center has already been adjusted for scaling.
@@ -567,18 +537,6 @@ public class Mascot {
         }
     }
 
-    public int getTime() {
-        return time;
-    }
-
-    private void setTime(final int time) {
-        this.time = time;
-    }
-
-    public Behavior getBehavior() {
-        return behavior;
-    }
-
     public void setBehavior(final Behavior behavior) throws CantBeAliveException {
         this.behavior = behavior;
         this.behavior.init(this);
@@ -590,62 +548,6 @@ public class Mascot {
 
     public int getTotalCount() {
         return manager != null ? getManager().getCount() : 0;
-    }
-
-    private boolean isAnimating() {
-        return animating && !paused;
-    }
-
-    private void setAnimating(final boolean animating) {
-        this.animating = animating;
-    }
-
-    private TranslucentWindow getWindow() {
-        return window;
-    }
-
-    public MascotEnvironment getEnvironment() {
-        return environment;
-    }
-
-    public List<String> getAffordances() {
-        return affordances;
-    }
-
-    public List<Hotspot> getHotspots() {
-        return hotspots;
-    }
-
-    public void setImageSet(final String set) {
-        imageSet = set;
-    }
-
-    public String getImageSet() {
-        return imageSet;
-    }
-
-    public String getSound() {
-        return sound;
-    }
-
-    public void setSound(final String name) {
-        sound = name;
-    }
-
-    public boolean isPaused() {
-        return paused;
-    }
-
-    public void setPaused(final boolean paused) {
-        this.paused = paused;
-    }
-
-    public boolean isDragging() {
-        return dragging;
-    }
-
-    public void setDragging(final boolean isDragging) {
-        dragging = isDragging;
     }
 
     public boolean isHotspotClicked() {

@@ -1,6 +1,8 @@
 package com.group_finity.mascot.hotspot;
 
 import com.group_finity.mascot.Mascot;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.awt.*;
 
@@ -13,15 +15,11 @@ import java.awt.*;
  * @author Kilkakon
  * @since 1.0.19
  */
+@AllArgsConstructor
+@Getter
 public class Hotspot {
     private final String behaviour;
-
     private final Shape shape;
-
-    public Hotspot(String behaviour, Shape shape) {
-        this.behaviour = behaviour;
-        this.shape = shape;
-    }
 
     public boolean contains(Mascot mascot, Point point) {
         // flip if facing right
@@ -30,13 +28,5 @@ public class Hotspot {
         }
 
         return shape.contains(point);
-    }
-
-    public String getBehaviour() {
-        return behaviour;
-    }
-
-    public Shape getShape() {
-        return shape;
     }
 }

@@ -10,27 +10,28 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import lombok.Getter;
+import lombok.extern.java.Log;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
+@Log
 public class Configuration {
-    private static final Logger log = Logger.getLogger(Configuration.class.getName());
-    private final Map<String, String> constants = new LinkedHashMap<>(2);
-    private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
-    private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
+    @Getter private final Map<String, String> constants = new LinkedHashMap<>(2);
+    @Getter private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
+    @Getter private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
     private final Map<String, String> information = new LinkedHashMap<>(8);
-    private ResourceBundle schema;
+    @Getter private ResourceBundle schema;
 
     public void load(final Entry configurationNode, final String imageSet) throws IOException, ConfigurationException {
         log.log(Level.INFO, "Reading configuration file...");
@@ -275,18 +276,6 @@ public class Configuration {
         }
     }
 
-    private Map<String, String> getConstants() {
-        return constants;
-    }
-
-    Map<String, ActionBuilder> getActionBuilders() {
-        return actionBuilders;
-    }
-
-    private Map<String, BehaviorBuilder> getBehaviorBuilders() {
-        return behaviorBuilders;
-    }
-
     public Set<String> getBehaviorNames() {
         return behaviorBuilders.keySet();
     }
@@ -297,9 +286,5 @@ public class Configuration {
 
     public String getInformation(String key) {
         return information.get(key);
-    }
-
-    public ResourceBundle getSchema() {
-        return schema;
     }
 }
