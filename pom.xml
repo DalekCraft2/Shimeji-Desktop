@@ -94,7 +94,7 @@
             <!-- Swing UI Themes -->
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.6</version>
+            <version>3.6.1</version>
         </dependency>
     </dependencies>
 
