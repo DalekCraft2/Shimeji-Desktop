@@ -32,7 +32,7 @@ Shimeji by Kilkakon and other members of the community.
 5. [Advanced Configuration](#advanced-configuration)
 6. [How to Quit](#how-to-quit)
 7. [How to Uninstall](#how-to-uninstall)
-8. [Source](#source)
+8. [Licensing](#licensing)
 9. [Trouble Shooting](#trouble-shooting)
 
 ## Links
@@ -146,7 +146,20 @@ Right-click the tray icon of Shimeji-ee, and select "Dismiss All".
 
 Delete the unzipped folder.
 
-## Source
+## Building
+
+1. Download the source code. This can be done by either downloading a ZIP file containing the source or using Git to
+   clone the repository to your computer. Both options are available through the green "Code" button at the top of the
+   GitHub page. Git is recommended if you plan to contribute changes to this repository.
+2. Install Java 11 or newer.
+3. Install [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/).
+4. Open the source code directory in the IDE.
+5. Open the Maven tool window on the right side of the UI. The icon to open the window should look like an "m".
+6. Right-click the "Shimeji-ee" item and select "Run Maven build". This will build the project and output the files to
+   the `target/` directory. The distributable files should be 3 ZIP files named
+   `Shimeji-ee_[version]_[Calm/Professional/Mischievous].zip`.
+
+## Licensing
 
 Programmers may feel free to use the source. The Shimeji-ee source is under the New BSD license.
 

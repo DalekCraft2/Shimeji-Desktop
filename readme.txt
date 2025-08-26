@@ -15,7 +15,7 @@ by Kilkakon and other members of the community.
 5. Advanced Configuration
 6. How to Quit
 7. How to Uninstall
-8. Source
+8. Licensing
 9. Trouble Shooting
 
 ==== Links ====
@@ -128,7 +128,7 @@ Right-click the tray icon of Shimeji-ee, and select "Dismiss All".
 
 Delete the unzipped folder.
 
-==== Source ====
+==== Licensing ====
 
 Programmers may feel free to use the source. The Shimeji-ee source is under the New BSD license.
 
