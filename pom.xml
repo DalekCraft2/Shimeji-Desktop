@@ -56,7 +56,7 @@
             <!-- AbsoluteLayout -->
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
-            <version>RELEASE260</version>
+            <version>RELEASE270</version>
             <scope>compile</scope>
         </dependency>
 
