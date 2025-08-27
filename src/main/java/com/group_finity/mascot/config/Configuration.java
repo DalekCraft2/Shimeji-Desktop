@@ -33,7 +33,7 @@ public class Configuration {
     private ResourceBundle schema;
 
     public void load(final Entry configurationNode, final String imageSet) throws IOException, ConfigurationException {
-        log.log(Level.INFO, "Reading configuration file...");
+        log.log(Level.FINE, "Reading configuration file...");
 
         // prepare schema
         Locale locale;
@@ -45,7 +45,7 @@ public class Configuration {
         } else {
             locale = Locale.US;
         }
-        log.log(Level.INFO, "Using " + locale.toLanguageTag() + " schema");
+        log.log(Level.FINE, "Using " + locale.toLanguageTag() + " schema");
 
         URL[] urls = {Main.CONFIG_DIRECTORY.toUri().toURL()};
         try (URLClassLoader loader = new URLClassLoader(urls)) {
@@ -57,9 +57,9 @@ public class Configuration {
                     constant.getAttribute(schema.getString("Value")));
         }
 
-        log.log(Level.INFO, "Reading action lists");
+        log.log(Level.FINE, "Reading action lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
-            log.log(Level.INFO, "Reading an action list...");
+            log.log(Level.FINE, "Reading an action list...");
 
             for (final Entry node : list.selectChildren(schema.getString("Action"))) {
                 final ActionBuilder action = new ActionBuilder(this, node, imageSet);
@@ -71,31 +71,31 @@ public class Configuration {
                 getActionBuilders().put(action.getName(), action);
             }
 
-            log.log(Level.INFO, "Finished reading an action list");
+            log.log(Level.FINE, "Finished reading an action list");
         }
-        log.log(Level.INFO, "Finished reading all action lists");
+        log.log(Level.FINE, "Finished reading all action lists");
 
-        log.log(Level.INFO, "Reading behavior lists");
+        log.log(Level.FINE, "Reading behavior lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("BehaviourList"))) {
-            log.log(Level.INFO, "Reading a behavior list...");
+            log.log(Level.FINE, "Reading a behavior list...");
 
             loadBehaviors(list, new ArrayList<>());
 
-            log.log(Level.INFO, "Finished reading a behavior list");
+            log.log(Level.FINE, "Finished reading a behavior list");
         }
-        log.log(Level.INFO, "Finished reading all behavior lists");
+        log.log(Level.FINE, "Finished reading all behavior lists");
 
-        log.log(Level.INFO, "Reading information");
+        log.log(Level.FINE, "Reading information");
         for (final Entry list : configurationNode.selectChildren(schema.getString("Information"))) {
-            log.log(Level.INFO, "Reading an information group...");
+            log.log(Level.FINE, "Reading an information group...");
 
             loadInformation(list);
 
-            log.log(Level.INFO, "Finished reading information group");
+            log.log(Level.FINE, "Finished reading information group");
         }
-        log.log(Level.INFO, "Finished reading all information");
+        log.log(Level.FINE, "Finished reading all information");
 
-        log.log(Level.INFO, "Configuration loaded successfully");
+        log.log(Level.FINE, "Configuration loaded successfully");
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions) {

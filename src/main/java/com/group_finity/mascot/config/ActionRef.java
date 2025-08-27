@@ -30,7 +30,7 @@ public class ActionRef implements IActionBuilder {
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
         getParams().putAll(refNode.getAttributes());
 
-        log.log(Level.INFO, "Finished loading action reference: {0}", this);
+        log.log(Level.FINE, "Finished loading action reference: {0}", this);
     }
 
     @Override

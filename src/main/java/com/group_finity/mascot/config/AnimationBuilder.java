@@ -47,7 +47,7 @@ public class AnimationBuilder {
         condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
         turn = animationNode.getAttribute(schema.getString("IsTurn")) == null ? "false" : animationNode.getAttribute(schema.getString("IsTurn"));
 
-        log.log(Level.INFO, "Loading animations");
+        log.log(Level.FINE, "Loading animations");
 
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Pose"))) {
             poses.add(loadPose(frameNode));
@@ -57,7 +57,7 @@ public class AnimationBuilder {
             hotspots.add(loadHotspot(frameNode));
         }
 
-        log.log(Level.INFO, "Finished loading animations");
+        log.log(Level.FINE, "Finished loading animations");
     }
 
     private Pose loadPose(final Entry frameNode) throws IOException {
@@ -128,7 +128,7 @@ public class AnimationBuilder {
 
         final Pose pose = new Pose(imageText, imageRightText, move.x, move.y, duration, soundText);
 
-        log.log(Level.INFO, "Finished loading pose: {0}", pose);
+        log.log(Level.FINE, "Finished loading pose: {0}", pose);
 
         return pose;
     }
@@ -160,7 +160,7 @@ public class AnimationBuilder {
 
         final Hotspot hotspot = new Hotspot(behaviourText, shape);
 
-        log.log(Level.INFO, "Finished loading hotspot: {0}", hotspot);
+        log.log(Level.FINE, "Finished loading hotspot: {0}", hotspot);
 
         return hotspot;
     }

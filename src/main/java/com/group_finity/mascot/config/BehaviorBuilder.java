@@ -63,7 +63,7 @@ public class BehaviorBuilder {
             toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Toggleable")));
         }
 
-        log.log(Level.INFO, "Loading behavior: {0}", this);
+        log.log(Level.FINE, "Loading behavior: {0}", this);
 
         getParams().putAll(behaviorNode.getAttributes());
         getParams().remove(configuration.getSchema().getString("Name"));
@@ -83,7 +83,7 @@ public class BehaviorBuilder {
 
         this.nextAdditive = nextAdditive;
 
-        log.log(Level.INFO, "Finished loading behavior: {0}", this);
+        log.log(Level.FINE, "Finished loading behavior: {0}", this);
     }
 
     @Override
