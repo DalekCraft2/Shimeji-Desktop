@@ -57,7 +57,6 @@
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>RELEASE270</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -65,7 +64,6 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
             <version>5.17.0</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -73,7 +71,6 @@
             <groupId>org.openjdk.nashorn</groupId>
             <artifactId>nashorn-core</artifactId>
             <version>15.7</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
