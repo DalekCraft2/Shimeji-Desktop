@@ -66,7 +66,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     private void init() {
-        System.setProperty("sun.java2d.noddraw", "true");
+        System.setProperty("sun.java2d.d3d", "false");
         System.setProperty("sun.java2d.opengl", "true");
     }
 
