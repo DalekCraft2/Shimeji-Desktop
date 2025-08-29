@@ -6,17 +6,13 @@ package com.group_finity.mascot.x11;
 
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
-import com.sun.jna.Memory;
-import com.sun.jna.Native;
-import com.sun.jna.NativeLong;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.unix.X11;
 import com.sun.jna.ptr.IntByReference;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Image window with alpha value.
@@ -39,7 +35,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     private final X11.Display dpy = x11.XOpenDisplay(null);
     private X11.Window win = null;
     private float alpha = 1.0f;
-    private final JWindow alphaWindow = this;
 
     public X11TranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
@@ -63,6 +58,22 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         setContentPane(panel);
 
         setLayout(new BorderLayout());
+
+        // Fix for JDK-8016530 (https://bugs.openjdk.org/browse/JDK-8016530), from https://stackoverflow.com/a/75807264
+        AtomicBoolean updating = new AtomicBoolean();
+        addPropertyChangeListener("graphicsConfiguration", evt -> {
+            if (updating.compareAndSet(false, true)) {
+                /*
+                 * trigger frame to pick a graphics context with transparency support again
+                 */
+                try {
+                    setBackground(new Color(0, 0, 0, 255));
+                    setBackground(new Color(0, 0, 0, 0));
+                } finally {
+                    updating.set(false);
+                }
+            }
+        });
     }
 
     private void init() {
@@ -78,68 +89,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
                 WindowUtils.setWindowTransparent(this, true);
             } catch (IllegalArgumentException ignored) {
             }
-        }
-    }
-
-    private Memory buffer;
-    private int[] pixels;
-
-    private void updateX11() {
-        // FIXME This does not work with setAlpha()/setOpacity(). It always draws the image as if the alpha is 1.0.
-        try {
-            if (win == null) {
-                win = new X11.Window(Native.getWindowID(alphaWindow));
-            }
-            int w = image.getWidth();
-            int h = image.getHeight();
-            alphaWindow.setSize(w, h);
-
-
-            if (buffer == null || buffer.size() != (long) w * h * 4) {
-                buffer = new Memory((long) w * h * 4);
-                pixels = new int[w * h];
-            }
-
-            BufferedImage buf = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
-            Graphics g = buf.getGraphics();
-            g.drawImage(image.getManagedImage(), 0, 0, w, h, null);
-
-            X11.GC gc = x11.XCreateGC(dpy, win, new NativeLong(0), null);
-
-            try {
-                Raster raster = buf.getData();
-                int[] pixel = new int[4];
-
-                for (int y = 0; y < h; y++) {
-                    for (int x = 0; x < w; x++) {
-                        raster.getPixel(x, y, pixel);
-                        int alpha = (pixel[3] & 0xFF) << 24;
-                        int red = pixel[2] & 0xFF;
-                        int green = (pixel[1] & 0xFF) << 8;
-                        int blue = (pixel[0] & 0xFF) << 16;
-                        pixels[y * w + x] = alpha | red | green | blue;
-                    }
-                }
-                X11.XImage image = x11.XCreateImage(dpy, null,
-                        32, X11.ZPixmap,
-                        0, buffer, w, h, 32, w * 4);
-                buffer.write(0, pixels, 0, pixels.length);
-
-                x11.XPutImage(dpy, win, gc, image, 0, 0, 0, 0, w, h);
-                x11.XFree(image.getPointer());
-
-            } finally {
-                if (gc != null) {
-                    x11.XFreeGC(dpy, gc);
-                }
-            }
-
-        } catch (HeadlessException ignored) {
-        }
-        if (!alphaWindow.isVisible()) {
-            alphaWindow.setVisible(true);
-            // hack for initial refresh (X11)
-            repaint();
         }
     }
 
@@ -201,7 +150,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     @Override
     public void updateImage() {
         validate();
-        // repaint();
-        updateX11();
+        repaint();
     }
 }
