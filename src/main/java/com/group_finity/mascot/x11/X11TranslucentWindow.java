@@ -157,8 +157,8 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     public void setAlpha(final float alpha) {
+        WindowUtils.setWindowAlpha(this, alpha);
         this.alpha = alpha;
-        WindowUtils.setWindowAlpha(this, this.alpha);
     }
 
     public void setToDock(int value) {
