@@ -29,6 +29,11 @@ class MacTranslucentWindow implements TranslucentWindow {
     }
 
     @Override
+    public String toString() {
+        return "MacTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + asComponent().getBounds() + "]";
+    }
+
+    @Override
     public void setImage(NativeImage image) {
         imageChanged = oldImage != null && image != oldImage;
         oldImage = image;

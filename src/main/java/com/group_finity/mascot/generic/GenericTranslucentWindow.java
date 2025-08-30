@@ -91,7 +91,7 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public String toString() {
-        return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+        return "GenericTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
     }
 
     public GenericNativeImage getImage() {

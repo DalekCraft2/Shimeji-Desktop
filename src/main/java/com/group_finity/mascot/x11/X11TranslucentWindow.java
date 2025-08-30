@@ -124,7 +124,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public String toString() {
-        return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+        return "X11TranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
     }
 
     @Override

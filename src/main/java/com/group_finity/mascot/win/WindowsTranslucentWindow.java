@@ -70,7 +70,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public String toString() {
-        return "LayeredWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+        return "WindowsTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
     }
 
     @Override
