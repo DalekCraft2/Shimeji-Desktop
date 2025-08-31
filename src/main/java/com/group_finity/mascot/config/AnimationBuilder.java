@@ -19,7 +19,6 @@ import java.awt.geom.Ellipse2D;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -76,8 +75,8 @@ public class AnimationBuilder {
     }
 
     private Pose loadPose(final Entry frameNode) throws IOException {
-        final Path imagePath = frameNode.getAttribute(schema.getString("Image")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("Image"))) : null;
-        final Path imageRightPath = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))) : null;
+        final Path imagePath = frameNode.getAttribute(schema.getString("Image")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("Image"))) : null;
+        final Path imageRightPath = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))) : null;
         final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor"));
         final String moveText = frameNode.getAttribute(schema.getString("Velocity"));
         final String durationText = frameNode.getAttribute(schema.getString("Duration"));

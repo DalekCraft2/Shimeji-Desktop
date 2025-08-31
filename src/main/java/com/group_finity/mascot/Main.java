@@ -35,7 +35,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -51,9 +50,9 @@ import java.util.logging.Logger;
 public class Main {
     private static final Logger log = Logger.getLogger(Main.class.getName());
 
-    public static final Path CONFIG_DIRECTORY = Paths.get("conf");
-    public static final Path IMAGE_DIRECTORY = Paths.get("img");
-    public static final Path SOUND_DIRECTORY = Paths.get("sound");
+    public static final Path CONFIG_DIRECTORY = Path.of("conf");
+    public static final Path IMAGE_DIRECTORY = Path.of("img");
+    public static final Path SOUND_DIRECTORY = Path.of("sound");
     public static final Path SETTINGS_FILE = CONFIG_DIRECTORY.resolve("settings.properties");
     public static final Path LOGGING_FILE = CONFIG_DIRECTORY.resolve("logging.properties");
     public static final Path ICON_FILE = IMAGE_DIRECTORY.resolve("icon.png");

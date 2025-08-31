@@ -124,7 +124,7 @@ class X11Environment extends Environment {
         badTypeList.add(display.getAtom("_NET_WM_WINDOW_TYPE_SPLASH").intValue());
         badTypeList.add(display.getAtom("_NET_WM_WINDOW_TYPE_DIALOG").intValue());
         // TODO Change this proprietary config format to use the existing one
-        /* try (InputStream fstream = Files.newInputStream(Paths.get("window.conf")); DataInputStream in = new DataInputStream(fstream); InputStreamReader inr = new InputStreamReader(in); BufferedReader br = new BufferedReader(inr)) {
+        /* try (InputStream fstream = Files.newInputStream(Path.of("window.conf")); DataInputStream in = new DataInputStream(fstream); InputStreamReader inr = new InputStreamReader(in); BufferedReader br = new BufferedReader(inr)) {
             String strLine;
             int z = 0;
             while ((strLine = br.readLine()) != null) {
