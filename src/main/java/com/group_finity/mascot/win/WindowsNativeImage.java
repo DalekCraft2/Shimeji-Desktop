@@ -1,11 +1,6 @@
 package com.group_finity.mascot.win;
 
 import com.group_finity.mascot.image.NativeImage;
-import com.sun.jna.platform.win32.GDI32;
-import com.sun.jna.platform.win32.WinDef.HBITMAP;
-import com.sun.jna.platform.win32.WinGDI;
-import com.sun.jna.platform.win32.WinGDI.BITMAP;
-import com.sun.jna.platform.win32.WinGDI.BITMAPINFO;
 
 import java.awt.image.BufferedImage;
 
