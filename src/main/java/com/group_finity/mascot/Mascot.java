@@ -670,8 +670,9 @@ public class Mascot {
     }
 
     public VariableMap getVariables() {
-        if (variables == null)
+        if (variables == null) {
             variables = new VariableMap();
+        }
         return variables;
     }
 }

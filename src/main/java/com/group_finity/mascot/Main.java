@@ -30,7 +30,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -102,12 +104,13 @@ public class Main {
 
     public static void showError(String message, Throwable exception) {
         do {
-            if (exception.getClass().getName().startsWith("com.group_finity.mascot.exception"))
+            if (exception.getClass().getName().startsWith("com.group_finity.mascot.exception")) {
                 message += "\n" + exception.getMessage();
-            else if (exception instanceof SAXParseException)
+            } else if (exception instanceof SAXParseException) {
                 message += "\n" + "Line " + ((SAXParseException) exception).getLineNumber() + ": " + exception.getMessage();
-            else
+            } else {
                 message += "\n" + exception;
+            }
             exception = exception.getCause();
         }
         while (exception != null);
@@ -405,8 +408,9 @@ public class Main {
         try {
             // Create the tray icon
             String tooltip = properties.getProperty("ShimejiEENameOverride", "").trim();
-            if (tooltip.isEmpty())
+            if (tooltip.isEmpty()) {
                 tooltip = languageBundle.getString("ShimejiEE");
+            }
             final TrayIcon icon = new TrayIcon(image, tooltip);
             icon.setImageAutoSize(true);
 

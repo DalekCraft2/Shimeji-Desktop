@@ -94,8 +94,9 @@ class VirtualEnvironment extends Environment {
             });
             display.setAutoRequestFocus(false);
             String title = Main.getInstance().getProperties().getProperty("ShimejiEENameOverride", "").trim();
-            if (title.isEmpty())
+            if (title.isEmpty()) {
                 title = Main.getInstance().getLanguageBundle().getString("ShimejiEE");
+            }
             display.setTitle(title);
             String[] windowArray = Main.getInstance().getProperties().getProperty("WindowSize", "600x500").split("x");
 

@@ -105,12 +105,14 @@ public class SettingsWindow extends JDialog {
         sldScaling.setValue((int) (scaling * 10));
 
         for (String item : properties.getProperty("InteractiveWindows", "").split("/"))
-            if (!item.trim().isEmpty())
+            if (!item.trim().isEmpty()) {
                 listData.add(item);
+            }
         lstInteractiveWindows.setListData(listData.toArray(new String[0]));
         for (String item : properties.getProperty("InteractiveWindowsBlacklist", "").split("/"))
-            if (!item.trim().isEmpty())
+            if (!item.trim().isEmpty()) {
                 blacklistData.add(item);
+            }
         lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
 
         chkWindowModeEnabled.setSelected(windowedMode);

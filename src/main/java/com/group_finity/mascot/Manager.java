@@ -60,7 +60,8 @@ public class Manager {
     /** {@link ScheduledExecutorService} which calls the {@link #tick()} method. */
     private ScheduledExecutorService executorService;
 
-    public Manager() {}
+    public Manager() {
+    }
 
     public void setExitOnLastRemoved(boolean exitOnLastRemoved) {
         this.exitOnLastRemoved = exitOnLastRemoved;
@@ -275,7 +276,7 @@ public class Manager {
      * Dismisses mascots which use the specified image set until only the specified mascot remains.
      *
      * @param imageSet the image set for which to check
-     * @param mascot   the mascot to not dismiss
+     * @param mascot the mascot to not dismiss
      */
     public void remainOne(String imageSet, Mascot mascot) {
         synchronized (getMascots()) {
