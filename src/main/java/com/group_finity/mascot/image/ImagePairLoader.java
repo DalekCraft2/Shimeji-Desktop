@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Loads image pairs.
@@ -26,24 +27,24 @@ public class ImagePairLoader {
     /**
      * Loads an image pair.
      *
-     * @param name file name of left-facing image to load
-     * @param rightName file name of right-facing image to load
+     * @param path file path of left-facing image to load
+     * @param rightPath file path of right-facing image to load
      * @param center image center coordinate
      * @param scaling the scale factor of the image
      * @param filter the type of filter to use to generate the image
      */
-    public static void load(final String name, final String rightName, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
-        String key = name + (rightName == null ? "" : rightName);
+    public static void load(final Path path, final Path rightPath, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
+        String key = path.toString() + (rightPath == null ? "" : rightPath);
         if (ImagePairs.contains(key)) {
             return;
         }
 
-        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(name).toFile()), opacity), scaling, filter);
+        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(path).toFile()), opacity), scaling, filter);
         final BufferedImage rightImage;
-        if (rightName == null) {
+        if (rightPath == null) {
             rightImage = flip(leftImage);
         } else {
-            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(rightName).toFile()), opacity), scaling, filter);
+            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(rightPath).toFile()), opacity), scaling, filter);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),

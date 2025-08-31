@@ -96,7 +96,7 @@ public class Breed extends Animate {
                     action.getMascot().getManager().add(mascot);
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.log(Level.SEVERE, "Failed to create mascot \"" + mascot + "\" with behavior \"" + getBornBehaviour() + "\"", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage"), e);
                     mascot.dispose();
                 }
             }

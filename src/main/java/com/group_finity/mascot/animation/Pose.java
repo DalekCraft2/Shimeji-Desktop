@@ -5,44 +5,45 @@ import com.group_finity.mascot.image.ImagePair;
 import com.group_finity.mascot.image.ImagePairs;
 
 import java.awt.*;
+import java.nio.file.Path;
 
 /**
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
  */
 public class Pose {
-    private final String image;
-    private final String rightImage;
+    private final Path image;
+    private final Path rightImage;
     private final int dx;
     private final int dy;
     private final int duration;
     private final String sound;
 
-    public Pose(final String image) {
-        this(image, "", 0, 0, 1);
+    public Pose(final Path image) {
+        this(image, null, 0, 0, 1);
     }
 
-    public Pose(final String image, final int duration) {
-        this(image, "", 0, 0, duration);
+    public Pose(final Path image, final int duration) {
+        this(image, null, 0, 0, duration);
     }
 
-    public Pose(final String image, final int dx, final int dy, final int duration) {
-        this(image, "", dx, dy, duration);
+    public Pose(final Path image, final int dx, final int dy, final int duration) {
+        this(image, null, dx, dy, duration);
     }
 
-    public Pose(final String image, final String rightImage) {
+    public Pose(final Path image, final Path rightImage) {
         this(image, rightImage, 0, 0, 1);
     }
 
-    public Pose(final String image, final String rightImage, final int duration) {
+    public Pose(final Path image, final Path rightImage, final int duration) {
         this(image, rightImage, 0, 0, duration);
     }
 
-    public Pose(final String image, final String rightImage, final int dx, final int dy, final int duration) {
+    public Pose(final Path image, final Path rightImage, final int dx, final int dy, final int duration) {
         this(image, rightImage, dx, dy, duration, null);
     }
 
-    public Pose(final String image, final String rightImage, final int dx, final int dy, final int duration, final String sound) {
+    public Pose(final Path image, final Path rightImage, final int dx, final int dy, final int duration, final String sound) {
         this.image = image;
         this.rightImage = rightImage;
         this.dx = dx;
@@ -68,7 +69,7 @@ public class Pose {
     }
 
     public String getImageName() {
-        return (image == null ? "" : image) + (rightImage == null ? "" : rightImage);
+        return (image == null ? "" : image.toString()) + (rightImage == null ? "" : rightImage.toString());
     }
 
     public ImagePair getImage() {

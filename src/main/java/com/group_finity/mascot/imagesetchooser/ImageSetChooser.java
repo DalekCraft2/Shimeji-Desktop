@@ -52,9 +52,7 @@ public class ImageSetChooser extends JDialog {
             }
             return Files.isDirectory(dir.toPath().resolve(name));
         };
-
-        File dir = Main.IMAGE_DIRECTORY.toFile();
-        String[] children = dir.list(fileFilter);
+        String[] children = Main.IMAGE_DIRECTORY.toFile().list(fileFilter);
 
         // Create ImageSetChooserPanels for ShimejiList
         boolean onList1 = true;    // Toggle adding between the two lists
@@ -206,11 +204,11 @@ public class ImageSetChooser extends JDialog {
             }
         }
 
-        setUpList1();
+        setUpList(jList1);
         jList1.setListData(data1.toArray(new ImageSetChooserPanel[0]));
         jList1.setSelectedIndices(convertIntegers(si1));
 
-        setUpList2();
+        setUpList(jList2);
         jList2.setListData(data2.toArray(new ImageSetChooserPanel[0]));
         jList2.setSelectedIndices(convertIntegers(si2));
     }
@@ -223,6 +221,10 @@ public class ImageSetChooser extends JDialog {
         cancelButton.setText(Main.getInstance().getLanguageBundle().getString("Cancel"));
         clearAllLabel.setText(Main.getInstance().getLanguageBundle().getString("ClearAll"));
         selectAllLabel.setText(Main.getInstance().getLanguageBundle().getString("SelectAll"));
+        clearAllLabel.setFont(clearAllLabel.getFont().deriveFont(Font.BOLD));
+        selectAllLabel.setFont(selectAllLabel.getFont().deriveFont(Font.BOLD));
+        clearAllLabel.setForeground(UIManager.getColor("Button.focus"));
+        selectAllLabel.setForeground(UIManager.getColor("Button.focus"));
         setVisible(true);
         if (closeProgram) {
             return null;
@@ -316,7 +318,6 @@ public class ImageSetChooser extends JDialog {
 
         jPanel4.setLayout(new BoxLayout(jPanel4, BoxLayout.LINE_AXIS));
 
-        clearAllLabel.setForeground(new Color(0, 0, 204));
         clearAllLabel.setText("Clear All");
         clearAllLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         clearAllLabel.addMouseListener(new MouseAdapter() {
@@ -330,7 +331,6 @@ public class ImageSetChooser extends JDialog {
         slashLabel.setText(" / ");
         jPanel4.add(slashLabel);
 
-        selectAllLabel.setForeground(new Color(0, 0, 204));
         selectAllLabel.setText("Select All");
         selectAllLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         selectAllLabel.addMouseListener(new MouseAdapter() {
@@ -415,40 +415,8 @@ public class ImageSetChooser extends JDialog {
         return integers.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private void setUpList1() {
-        jList1.setSelectionModel(new DefaultListSelectionModel() {
-            private int i0 = -1;
-            private int i1 = -1;
-
-            @Override
-            public void setSelectionInterval(int index0, int index1) {
-                // These statements ensure that the buttons do not flicker whenever the cursor is dragged over them
-                // This code was made by Francisco on StackOverflow (https://stackoverflow.com/a/5831609)
-                if (i0 == index0 && i1 == index1) {
-                    if (getValueIsAdjusting()) {
-                        setValueIsAdjusting(false);
-                        setSelection(index0, index1);
-                    }
-                } else {
-                    i0 = index0;
-                    i1 = index1;
-                    setValueIsAdjusting(false);
-                    setSelection(index0, index1);
-                }
-            }
-
-            private void setSelection(int index0, int index1) {
-                if (isSelectedIndex(index0)) {
-                    removeSelectionInterval(index0, index1);
-                } else {
-                    addSelectionInterval(index0, index1);
-                }
-            }
-        });
-    }
-
-    private void setUpList2() {
-        jList2.setSelectionModel(new DefaultListSelectionModel() {
+    private void setUpList(JList<?> list) {
+        list.setSelectionModel(new DefaultListSelectionModel() {
             private int i0 = -1;
             private int i1 = -1;
 

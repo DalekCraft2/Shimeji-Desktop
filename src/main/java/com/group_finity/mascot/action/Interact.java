@@ -37,12 +37,12 @@ public class Interact extends Animate {
     protected void tick() throws LostGroundException, VariableException {
         super.tick();
 
-        if (getTime() == getAnimation().getDuration() - 1 && !getBehavior().trim().isEmpty()) {
+        if ((getTime() == getAnimation().getDuration() - 1 || getAnimation().getDuration() == 1) && !getBehavior().trim().isEmpty()) {
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                 log.log(Level.SEVERE, "Failed to set behavior to \"" + getBehavior() + "\" for mascot \"" + getMascot() + "\"", e);
-                Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
             }
         }
     }

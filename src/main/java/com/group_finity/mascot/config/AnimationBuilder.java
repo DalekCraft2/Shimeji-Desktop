@@ -4,6 +4,7 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.animation.Pose;
 import com.group_finity.mascot.exception.AnimationInstantiationException;
+import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.ImagePairLoader;
@@ -38,7 +39,7 @@ public class AnimationBuilder {
     private final ResourceBundle schema;
     private final String turn;
 
-    public AnimationBuilder(final ResourceBundle schema, final Entry animationNode, final String imageSet) throws IOException {
+    public AnimationBuilder(final ResourceBundle schema, final Entry animationNode, final String imageSet) throws ConfigurationException {
         if (!imageSet.isEmpty()) {
             this.imageSet = imageSet;
         }
@@ -50,19 +51,33 @@ public class AnimationBuilder {
         log.log(Level.FINE, "Loading animations");
 
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Pose"))) {
-            poses.add(loadPose(frameNode));
+            try {
+                poses.add(loadPose(frameNode));
+            } catch (IOException e) {
+                throw new ConfigurationException(e);
+            } catch (RuntimeException e) {
+                log.log(Level.SEVERE, "Failed to load pose: {0}", e);
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage") + " " + frameNode.getAttributes().toString(), e);
+            }
         }
 
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Hotspot"))) {
-            hotspots.add(loadHotspot(frameNode));
+            try {
+                hotspots.add(loadHotspot(frameNode));
+            } catch (IOException e) {
+                throw new ConfigurationException(e);
+            } catch (RuntimeException e) {
+                log.log(Level.SEVERE, "Failed to load hotspot: {0}", e);
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage") + " " + frameNode.getAttributes().toString(), e);
+            }
         }
 
         log.log(Level.FINE, "Finished loading animations");
     }
 
     private Pose loadPose(final Entry frameNode) throws IOException {
-        final String imageText = frameNode.getAttribute(schema.getString("Image")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("Image"))).toString() : null;
-        final String imageRightText = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))).toString() : null;
+        final Path imagePath = frameNode.getAttribute(schema.getString("Image")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("Image"))) : null;
+        final Path imageRightPath = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Paths.get(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))) : null;
         final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor"));
         final String moveText = frameNode.getAttribute(schema.getString("Velocity"));
         final String durationText = frameNode.getAttribute(schema.getString("Duration"));
@@ -80,18 +95,18 @@ public class AnimationBuilder {
             filter = ImagePairLoader.Filter.BICUBIC;
         }
 
-        if (imageText != null) {
-            try {
-                final String[] anchorCoordinates = anchorText.split(",");
-                final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
+        if (imagePath != null) {
+            final String[] anchorCoordinates = anchorText.split(",");
+            final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
 
-                ImagePairLoader.load(imageText, imageRightText, anchor, scaling, filter, opacity);
+            try {
+                ImagePairLoader.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
             } catch (IOException | NumberFormatException e) {
-                String error = imageText;
-                if (imageRightText != null) {
-                    error += ", " + imageRightText;
+                String error = imagePath.toString();
+                if (imageRightPath != null) {
+                    error += ", " + imageRightPath;
                 }
-                log.log(Level.SEVERE, "Failed to load image" + (imageRightText != null ? "s" : "") + ": " + error, e);
+                log.log(Level.SEVERE, "Failed to load image" + (imageRightPath != null ? "s" : "") + ": " + error, e);
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + error, e);
             }
         }
@@ -99,9 +114,8 @@ public class AnimationBuilder {
         final String[] moveCoordinates = moveText.split(",");
         int moveX = Integer.parseInt(moveCoordinates[0]);
         int moveY = Integer.parseInt(moveCoordinates[1]);
-        moveX = Math.abs(moveX) > 0 && Math.abs(moveX * scaling) < 1 ? (moveX > 0 ? 1 : -1) : (int) Math.round(moveX * scaling);
-        moveY = Math.abs(moveY) > 0 && Math.abs(moveY * scaling) < 1 ? (moveY > 0 ? 1 : -1) : (int) Math.round(moveY * scaling);
-        final Point move = new Point(moveX, moveY);
+        moveX = Math.abs(moveX) > 0 && Math.abs(moveX * scaling) < 1 ? moveX > 0 ? 1 : -1 : (int) Math.round(moveX * scaling);
+        moveY = Math.abs(moveY) > 0 && Math.abs(moveY * scaling) < 1 ? moveY > 0 ? 1 : -1 : (int) Math.round(moveY * scaling);
 
         final int duration = Integer.parseInt(durationText);
 
@@ -126,7 +140,7 @@ public class AnimationBuilder {
             }
         }
 
-        final Pose pose = new Pose(imageText, imageRightText, move.x, move.y, duration, soundText);
+        final Pose pose = new Pose(imagePath, imageRightPath, moveX, moveY, duration, soundText);
 
         log.log(Level.FINE, "Finished loading pose: {0}", pose);
 

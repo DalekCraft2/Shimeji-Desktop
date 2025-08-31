@@ -30,6 +30,7 @@ public class ImageSetChooserPanel extends JPanel {
 
         this.imageSet = imageSet;
         this.caption.setText(caption);
+        this.caption.setFont(this.caption.getFont().deriveFont(Font.BOLD));
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
         try {
@@ -63,7 +64,7 @@ public class ImageSetChooserPanel extends JPanel {
         behaviorsFile = new JLabel();
         image = new JLabel();
 
-        setBorder(BorderFactory.createEtchedBorder());
+        setOpaque(false);
         setMinimumSize(new Dimension(248, 80));
         setPreferredSize(new Dimension(248, 80));
         setLayout(new AbsoluteLayout());

@@ -13,7 +13,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Sequence extends ComplexAction {
-
     private static final Logger log = Logger.getLogger(Sequence.class.getName());
 
     public static final String PARAMETER_LOOP = "Loop";
@@ -26,7 +25,6 @@ public class Sequence extends ComplexAction {
 
     @Override
     public boolean hasNext() throws VariableException {
-
         seek();
 
         return super.hasNext();

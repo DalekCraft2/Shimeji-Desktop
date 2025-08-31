@@ -223,8 +223,8 @@
         <attribute name="OffsetX" type="tns:IntParameter" default="0">
             <annotation>
                 <documentation>
-                    A scriptable integer representing the x-offset of the mascot when using the Dragged action. Defaults
-                    to 0.
+                    A scriptable integer representing the x-offset of the mascot when using the Dragged or Regist
+                    actions. Defaults to 0.
                 </documentation>
             </annotation>
         </attribute>
@@ -235,6 +235,34 @@
                     to 120.
                 </documentation>
             </annotation>
+        </attribute>
+        <attribute name="OffsetType" default="ImageAnchor">
+            <annotation>
+                <documentation>
+                    A scriptable enum representing how the offset coordinates (the "OffsetX" and "OffsetY" attributes)
+                    should be interpreted when using the Dragged or Regist actions. Defaults to "ImageAnchor".
+                </documentation>
+            </annotation>
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="ImageAnchor">
+                        <annotation>
+                            <documentation>
+                                An offset of (0, 0) is placed at the image anchor. Positive values move the offset left
+                                and up.
+                            </documentation>
+                        </annotation>
+                    </enumeration>
+                    <enumeration value="Origin">
+                        <annotation>
+                            <documentation>
+                                An offset of (0, 0) is placed at the image origin (the upper-left corner of the image).
+                                Positive values move the offset right and down.
+                            </documentation>
+                        </annotation>
+                    </enumeration>
+                </restriction>
+            </simpleType>
         </attribute>
         <attribute name="Affordance" type="tns:StringParameter" default="">
             <annotation>

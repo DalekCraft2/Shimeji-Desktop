@@ -114,7 +114,7 @@ public class UserBehavior implements Behavior {
                                 getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                             }
                         } catch (final BehaviorInstantiationException e) {
-                            throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
+                            throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e);
                         }
                         break;
                     }
@@ -189,7 +189,7 @@ public class UserBehavior implements Behavior {
                                     getMascot().setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                                 }
                             } catch (final BehaviorInstantiationException e) {
-                                throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage") + " " + hotspot.getBehaviour(), e);
+                                throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e);
                             }
                             break;
                         }

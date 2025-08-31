@@ -9,6 +9,12 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -29,6 +35,7 @@ import java.util.stream.IntStream;
 public class SettingsWindow extends JDialog {
     private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
     private final ArrayList<String> listData = new ArrayList<>();
+    private final ArrayList<String> blacklistData = new ArrayList<>();
     private Boolean alwaysShowShimejiChooser = false;
     private Boolean alwaysShowInformationScreen = false;
     private String filter = "nearest";
@@ -36,13 +43,12 @@ public class SettingsWindow extends JDialog {
     private double opacity = 1.0;
     private Boolean windowedMode = false;
     private Dimension windowSize = new Dimension(600, 500);
-    private Dimension buttonSize;
-    private Dimension aboutButtonSize;
     private Color backgroundColour = new Color(0, 255, 0);
     private String backgroundMode = "centre";
     private String backgroundImage = null;
     private final String[] backgroundModes = {"centre", "fill", "fit", "stretch"};
 
+    private Boolean suppressTextChanged = true;
     private Boolean imageReloadRequired = false;
     private Boolean interactiveWindowReloadRequired = false;
     private Boolean environmentReloadRequired = false;
@@ -83,8 +89,6 @@ public class SettingsWindow extends JDialog {
         windowedMode = properties.getProperty("Environment", "generic").equals("virtual");
         String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
         windowSize = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
-        buttonSize = btnDone.getPreferredSize();
-        aboutButtonSize = btnWebsite.getPreferredSize();
         backgroundColour = Color.decode(properties.getProperty("Background", "#00FF00"));
         backgroundImage = properties.getProperty("BackgroundImage", "");
         backgroundMode = properties.getProperty("BackgroundMode", "centre");
@@ -100,16 +104,14 @@ public class SettingsWindow extends JDialog {
         sldOpacity.setValue((int) (opacity * 100));
         sldScaling.setValue((int) (scaling * 10));
 
-        listData.addAll(Arrays.asList(properties.getProperty("InteractiveWindows", "").split("/")));
-        // This prevents the UI list from having empty entries,
-        // and prevents those empty entries from being saved to settings.properties
-        for (int i = 0; i < listData.size(); i++) {
-            if (listData.get(i).trim().isEmpty()) {
-                listData.remove(i);
-                i--;
-            }
-        }
+        for (String item : properties.getProperty("InteractiveWindows", "").split("/"))
+            if (!item.trim().isEmpty())
+                listData.add(item);
         lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+        for (String item : properties.getProperty("InteractiveWindowsBlacklist", "").split("/"))
+            if (!item.trim().isEmpty())
+                blacklistData.add(item);
+        lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
 
         chkWindowModeEnabled.setSelected(windowedMode);
         spnWindowWidth.setBackground(txtBackgroundColour.getBackground());
@@ -142,6 +144,8 @@ public class SettingsWindow extends JDialog {
         pnlTabs.setTitleAt(1, language.getString("InteractiveWindows"));
         pnlTabs.setTitleAt(2, language.getString("WindowMode"));
         pnlTabs.setTitleAt(3, language.getString("About"));
+        lblShimejiEE.setText(language.getString("ShimejiEE"));
+        lblDevelopedBy.setText(language.getString("DevelopedBy"));
         chkAlwaysShowShimejiChooser.setText(language.getString("AlwaysShowShimejiChooser"));
         chkAlwaysShowInformationScreen.setText(language.getString("AlwaysShowInformationScreen"));
         lblOpacity.setText(language.getString("Opacity"));
@@ -150,11 +154,12 @@ public class SettingsWindow extends JDialog {
         radFilterNearest.setText(language.getString("NearestNeighbour"));
         radFilterHqx.setText(language.getString("Filter"));
         radFilterBicubic.setText(language.getString("BicubicFilter"));
+        pnlInteractiveTabs.setTitleAt(0, language.getString("Whitelist"));
+        pnlInteractiveTabs.setTitleAt(1, language.getString("Blacklist"));
         btnAddInteractiveWindow.setText(language.getString("Add"));
         btnRemoveInteractiveWindow.setText(language.getString("Remove"));
         lblPrimaryColour1.setText(language.getString("PrimaryColour1"));
         lblPrimaryColour2.setText(language.getString("PrimaryColour2"));
-        lblPrimaryColour3.setText(language.getString("PrimaryColour3"));
         lblSecondaryColour1.setText(language.getString("SecondaryColour1"));
         lblSecondaryColour2.setText(language.getString("SecondaryColour2"));
         lblSecondaryColour3.setText(language.getString("SecondaryColour3"));
@@ -193,18 +198,13 @@ public class SettingsWindow extends JDialog {
         pnlInteractiveButtons.setPreferredSize(new Dimension(pnlInteractiveButtons.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height + 6));
         txtPrimaryColour1.setPreferredSize(new Dimension(txtPrimaryColour1.getPreferredSize().width, txtPrimaryColour1.getPreferredSize().height));
         txtPrimaryColour2.setPreferredSize(new Dimension(txtPrimaryColour2.getPreferredSize().width, txtPrimaryColour2.getPreferredSize().height));
-        txtPrimaryColour3.setPreferredSize(new Dimension(txtPrimaryColour3.getPreferredSize().width, txtPrimaryColour3.getPreferredSize().height));
         txtSecondaryColour1.setPreferredSize(new Dimension(txtSecondaryColour1.getPreferredSize().width, txtSecondaryColour1.getPreferredSize().height));
         txtSecondaryColour2.setPreferredSize(new Dimension(txtSecondaryColour2.getPreferredSize().width, txtSecondaryColour2.getPreferredSize().height));
         txtSecondaryColour3.setPreferredSize(new Dimension(txtSecondaryColour3.getPreferredSize().width, txtSecondaryColour3.getPreferredSize().height));
         txtBlackColour.setPreferredSize(new Dimension(txtBlackColour.getPreferredSize().width, txtBlackColour.getPreferredSize().height));
         txtWhiteColour.setPreferredSize(new Dimension(txtWhiteColour.getPreferredSize().width, txtWhiteColour.getPreferredSize().height));
-        pnlPrimaryColour1PreviewContainer.setPreferredSize(new Dimension(pnlPrimaryColour1PreviewContainer.getPreferredSize().width, pnlPrimaryColour1PreviewContainer.getPreferredSize().height));
-        pnlPrimaryColour1Preview.setPreferredSize(new Dimension(pnlPrimaryColour1Preview.getPreferredSize().width, pnlPrimaryColour1Preview.getPreferredSize().height));
         pnlPrimaryColour2PreviewContainer.setPreferredSize(new Dimension(pnlPrimaryColour2PreviewContainer.getPreferredSize().width, pnlPrimaryColour2PreviewContainer.getPreferredSize().height));
         pnlPrimaryColour2Preview.setPreferredSize(new Dimension(pnlPrimaryColour2Preview.getPreferredSize().width, pnlPrimaryColour2Preview.getPreferredSize().height));
-        pnlPrimaryColour3PreviewContainer.setPreferredSize(new Dimension(pnlPrimaryColour3PreviewContainer.getPreferredSize().width, pnlPrimaryColour3PreviewContainer.getPreferredSize().height));
-        pnlPrimaryColour3Preview.setPreferredSize(new Dimension(pnlPrimaryColour3Preview.getPreferredSize().width, pnlPrimaryColour3Preview.getPreferredSize().height));
         pnlSecondaryColour1PreviewContainer.setPreferredSize(new Dimension(pnlSecondaryColour1PreviewContainer.getPreferredSize().width, pnlSecondaryColour1PreviewContainer.getPreferredSize().height));
         pnlSecondaryColour1Preview.setPreferredSize(new Dimension(pnlSecondaryColour1Preview.getPreferredSize().width, pnlSecondaryColour1Preview.getPreferredSize().height));
         pnlSecondaryColour2PreviewContainer.setPreferredSize(new Dimension(pnlSecondaryColour2PreviewContainer.getPreferredSize().width, pnlSecondaryColour2PreviewContainer.getPreferredSize().height));
@@ -217,7 +217,6 @@ public class SettingsWindow extends JDialog {
         pnlWhiteColourPreview.setPreferredSize(new Dimension(pnlWhiteColourPreview.getPreferredSize().width, pnlWhiteColourPreview.getPreferredSize().height));
         btnPrimaryColour1Change.setPreferredSize(new Dimension(btnPrimaryColour1Change.getPreferredSize().width, btnPrimaryColour1Change.getPreferredSize().height));
         btnPrimaryColour2Change.setPreferredSize(new Dimension(btnPrimaryColour2Change.getPreferredSize().width, btnPrimaryColour2Change.getPreferredSize().height));
-        btnPrimaryColour3Change.setPreferredSize(new Dimension(btnPrimaryColour3Change.getPreferredSize().width, btnPrimaryColour3Change.getPreferredSize().height));
         btnSecondaryColour1Change.setPreferredSize(new Dimension(btnSecondaryColour1Change.getPreferredSize().width, btnSecondaryColour1Change.getPreferredSize().height));
         btnSecondaryColour2Change.setPreferredSize(new Dimension(btnSecondaryColour2Change.getPreferredSize().width, btnSecondaryColour2Change.getPreferredSize().height));
         btnSecondaryColour3Change.setPreferredSize(new Dimension(btnSecondaryColour3Change.getPreferredSize().width, btnSecondaryColour3Change.getPreferredSize().height));
@@ -250,7 +249,9 @@ public class SettingsWindow extends JDialog {
         btnCancel.setPreferredSize(new Dimension(btnCancel.getPreferredSize().width, btnCancel.getPreferredSize().height));
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnDone.getPreferredSize().height + 6));
         pack();
+        suppressTextChanged = false;
         setVisible(true);
+        suppressTextChanged = true;
 
         return true;
     }
@@ -270,7 +271,7 @@ public class SettingsWindow extends JDialog {
             }
         } catch (IOException | UnsupportedOperationException | URISyntaxException e) {
             log.log(Level.SEVERE, "Failed to open URL \"" + url + "\"", e);
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -295,6 +296,8 @@ public class SettingsWindow extends JDialog {
     private void initComponents() {
 
         grpFilter = new ButtonGroup();
+        jScrollPane1 = new JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         pnlTabs = new JTabbedPane();
         pnlGeneral = new JPanel();
         chkAlwaysShowShimejiChooser = new JCheckBox();
@@ -308,11 +311,16 @@ public class SettingsWindow extends JDialog {
         lblOpacity = new JLabel();
         chkAlwaysShowInformationScreen = new JCheckBox();
         pnlInteractiveWindows = new JPanel();
+        pnlInteractiveTabs = new JTabbedPane();
+        pnlWhitelistTab = new JPanel();
+        jScrollPane2 = new JScrollPane();
+        lstInteractiveWindows = new JList<>();
+        pnlBlacklistTab = new JPanel();
+        jScrollPane3 = new JScrollPane();
+        lstInteractiveWindowsBlacklist = new JList<>();
         pnlInteractiveButtons = new JPanel();
         btnAddInteractiveWindow = new JButton();
         btnRemoveInteractiveWindow = new JButton();
-        jScrollPane1 = new JScrollPane();
-        lstInteractiveWindows = new JList<>();
         btnChangeFont = new JButton();
         btnReset = new JButton();
         lblPrimaryColour1 = new JLabel();
@@ -329,13 +337,6 @@ public class SettingsWindow extends JDialog {
         pnlPrimaryColour2Preview = new JPanel();
         gluePrimaryColour2b = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
         btnPrimaryColour2Change = new JButton();
-        lblPrimaryColour3 = new JLabel();
-        txtPrimaryColour3 = new JTextField();
-        pnlPrimaryColour3PreviewContainer = new JPanel();
-        gluePrimaryColour3a = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlPrimaryColour3Preview = new JPanel();
-        gluePrimaryColour3b = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnPrimaryColour3Change = new JButton();
         lblSecondaryColour1 = new JLabel();
         txtSecondaryColour1 = new JTextField();
         pnlSecondaryColour1PreviewContainer = new JPanel();
@@ -373,6 +374,7 @@ public class SettingsWindow extends JDialog {
         pnlWhiteColourPreview = new JPanel();
         glueWhiteColourb = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
         btnWhiteColourChange = new JButton();
+        pnlScrollPane = new JScrollPane();
         pnlWindowMode = new JPanel();
         chkWindowModeEnabled = new JCheckBox();
         lblDimensions = new JLabel();
@@ -412,6 +414,10 @@ public class SettingsWindow extends JDialog {
         pnlFooter = new JPanel();
         btnDone = new JButton();
         btnCancel = new JButton();
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -476,7 +482,7 @@ public class SettingsWindow extends JDialog {
                                                                 .addComponent(radFilterHqx))))
                                         .addComponent(lblOpacity)
                                         .addComponent(chkAlwaysShowInformationScreen))
-                                .addContainerGap(80, Short.MAX_VALUE))
+                                .addContainerGap(26, Short.MAX_VALUE))
         );
         pnlGeneralLayout.setVerticalGroup(
                 pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -501,10 +507,78 @@ public class SettingsWindow extends JDialog {
                                 .addComponent(radFilterBicubic)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(radFilterHqx)
-                                .addContainerGap(75, Short.MAX_VALUE))
+                                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pnlTabs.addTab("General", pnlGeneral);
+
+        lstInteractiveWindows.setModel(new AbstractListModel<>() {
+            final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+            @Override
+            public int getSize() {
+                return strings.length;
+            }
+
+            @Override
+            public String getElementAt(int index) {
+                return strings[index];
+            }
+        });
+        jScrollPane2.setViewportView(lstInteractiveWindows);
+
+        GroupLayout pnlWhitelistTabLayout = new GroupLayout(pnlWhitelistTab);
+        pnlWhitelistTab.setLayout(pnlWhitelistTabLayout);
+        pnlWhitelistTabLayout.setHorizontalGroup(
+                pnlWhitelistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+        pnlWhitelistTabLayout.setVerticalGroup(
+                pnlWhitelistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+
+        pnlInteractiveTabs.addTab("Whitelist", pnlWhitelistTab);
+
+        lstInteractiveWindowsBlacklist.setModel(new AbstractListModel<>() {
+            final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+            @Override
+            public int getSize() {
+                return strings.length;
+            }
+
+            @Override
+            public String getElementAt(int index) {
+                return strings[index];
+            }
+        });
+        jScrollPane3.setViewportView(lstInteractiveWindowsBlacklist);
+
+        GroupLayout pnlBlacklistTabLayout = new GroupLayout(pnlBlacklistTab);
+        pnlBlacklistTab.setLayout(pnlBlacklistTabLayout);
+        pnlBlacklistTabLayout.setHorizontalGroup(
+                pnlBlacklistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+        pnlBlacklistTabLayout.setVerticalGroup(
+                pnlBlacklistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+
+        pnlInteractiveTabs.addTab("Blacklist", pnlBlacklistTab);
 
         pnlInteractiveButtons.setPreferredSize(new Dimension(380, 36));
         pnlInteractiveButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -524,37 +598,22 @@ public class SettingsWindow extends JDialog {
         btnRemoveInteractiveWindow.addActionListener(this::btnRemoveInteractiveWindowActionPerformed);
         pnlInteractiveButtons.add(btnRemoveInteractiveWindow);
 
-        lstInteractiveWindows.setModel(new AbstractListModel<>() {
-            final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-
-            @Override
-            public int getSize() {
-                return strings.length;
-            }
-
-            @Override
-            public String getElementAt(int index) {
-                return strings[index];
-            }
-        });
-        jScrollPane1.setViewportView(lstInteractiveWindows);
-
         GroupLayout pnlInteractiveWindowsLayout = new GroupLayout(pnlInteractiveWindows);
         pnlInteractiveWindows.setLayout(pnlInteractiveWindowsLayout);
         pnlInteractiveWindowsLayout.setHorizontalGroup(
                 pnlInteractiveWindowsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, pnlInteractiveWindowsLayout.createSequentialGroup()
+                        .addGroup(pnlInteractiveWindowsLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(pnlInteractiveWindowsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jScrollPane1)
-                                        .addComponent(pnlInteractiveButtons, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(pnlInteractiveWindowsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(pnlInteractiveButtons, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                        .addComponent(pnlInteractiveTabs))
                                 .addContainerGap())
         );
         pnlInteractiveWindowsLayout.setVerticalGroup(
                 pnlInteractiveWindowsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(GroupLayout.Alignment.TRAILING, pnlInteractiveWindowsLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane1)
+                                .addComponent(pnlInteractiveTabs)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(pnlInteractiveButtons, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
@@ -571,9 +630,39 @@ public class SettingsWindow extends JDialog {
 
         lblBackground.setText("Background");
 
-        txtBackgroundColour.setEditable(false);
         txtBackgroundColour.setText("#00FF00");
         txtBackgroundColour.setPreferredSize(new Dimension(70, 24));
+        txtBackgroundColour.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                colourTextChanged(txtBackgroundColour);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                colourTextChanged(txtBackgroundColour);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                colourTextChanged(txtBackgroundColour);
+            }
+        });
+        ((AbstractDocument) txtBackgroundColour.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass filterBypass, int offset, String text, AttributeSet attributes) throws BadLocationException {
+                if (text != null && text.matches("[#0-9a-fA-F]*") && filterBypass.getDocument().getLength() + text.length() <= 7) {
+                    super.insertString(filterBypass, offset, text, attributes);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass filterBypass, int offset, int length, String text, AttributeSet attributes) throws BadLocationException {
+                if (text != null && text.matches("[#0-9a-fA-F]*") && filterBypass.getDocument().getLength() - length + text.length() <= 7) {
+                    super.replace(filterBypass, offset, length, text, attributes);
+                }
+            }
+        });
 
         btnBackgroundColourChange.setText("Change");
         btnBackgroundColourChange.addActionListener(this::btnBackgroundColourChangeActionPerformed);
@@ -665,7 +754,7 @@ public class SettingsWindow extends JDialog {
                                                                         .addComponent(btnBackgroundImageRemove, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                         .addComponent(btnBackgroundImageChange, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                         .addComponent(cmbBackgroundImageMode, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                                .addContainerGap(139, Short.MAX_VALUE))
+                                .addContainerGap(85, Short.MAX_VALUE))
         );
         pnlWindowModeLayout.setVerticalGroup(
                 pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -699,7 +788,7 @@ public class SettingsWindow extends JDialog {
                                                 .addGap(4, 4, 4)
                                                 .addComponent(lblBackgroundImageCaption))
                                         .addComponent(pnlBackgroundImage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(150, Short.MAX_VALUE))
+                                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         pnlTabs.addTab("WindowMode", pnlWindowMode);
@@ -720,7 +809,7 @@ public class SettingsWindow extends JDialog {
         pnlAbout.add(rigid2);
 
         lblVersion.setFont(lblVersion.getFont().deriveFont(lblVersion.getFont().getSize() + 4f));
-        lblVersion.setText("1.0.21.3");
+        lblVersion.setText("1.0.22");
         lblVersion.setAlignmentX(0.5F);
         pnlAbout.add(lblVersion);
         pnlAbout.add(rigid3);
@@ -810,6 +899,7 @@ public class SettingsWindow extends JDialog {
         // done button
         Properties properties = Main.getInstance().getProperties();
         String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ", "/");
+        String interactiveWindowsBlacklist = blacklistData.toString().replace("[", "").replace("]", "").replace(", ", "/");
         String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
         Dimension window = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
 
@@ -821,7 +911,8 @@ public class SettingsWindow extends JDialog {
         imageReloadRequired = !properties.getProperty("Filter", "false").equalsIgnoreCase(filter) ||
                 Double.parseDouble(properties.getProperty("Scaling", "1.0")) != scaling ||
                 Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
-        interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "").equals(interactiveWindows);
+        interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "").equals(interactiveWindows) ||
+                !properties.getProperty("InteractiveWindowsBlacklist", "").equals(interactiveWindowsBlacklist);
 
         try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
             properties.setProperty("AlwaysShowShimejiChooser", alwaysShowShimejiChooser.toString());
@@ -853,21 +944,31 @@ public class SettingsWindow extends JDialog {
 
     private void btnAddInteractiveWindowActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnAddInteractiveWindowActionPerformed
     {// GEN-HEADEREND:event_btnAddInteractiveWindowActionPerformed
-        final String result = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString("AddInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
-        if (result == null || result.isBlank() || result.contains("/")) {
-            return;
+        String inputValue = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString(pnlInteractiveTabs.getSelectedIndex() == 0 ? "AddInteractiveWindow" : "BlacklistInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
+        if (inputValue != null && !inputValue.trim().isEmpty() && !inputValue.contains("/")) {
+            if (pnlInteractiveTabs.getSelectedIndex() == 0) {
+                listData.add(inputValue.trim());
+                lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+            } else {
+                blacklistData.add(inputValue.trim());
+                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
+            }
         }
-
-        listData.add(result.trim());
-        lstInteractiveWindows.setListData(listData.toArray(new String[0]));
     }// GEN-LAST:event_btnAddInteractiveWindowActionPerformed
 
     private void btnRemoveInteractiveWindowActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnRemoveInteractiveWindowActionPerformed
     {// GEN-HEADEREND:event_btnRemoveInteractiveWindowActionPerformed
         // delete button
-        if (lstInteractiveWindows.getSelectedIndex() != -1) {
-            listData.remove(lstInteractiveWindows.getSelectedIndex());
-            lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+        if (pnlInteractiveTabs.getSelectedIndex() == 0) {
+            if (lstInteractiveWindows.getSelectedIndex() != -1) {
+                listData.remove(lstInteractiveWindows.getSelectedIndex());
+                lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+            }
+        } else {
+            if (lstInteractiveWindowsBlacklist.getSelectedIndex() != -1) {
+                blacklistData.remove(lstInteractiveWindowsBlacklist.getSelectedIndex());
+                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
+            }
         }
     }// GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed
 
@@ -1002,6 +1103,29 @@ public class SettingsWindow extends JDialog {
         alwaysShowInformationScreen = evt.getStateChange() == ItemEvent.SELECTED;
     }// GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
 
+    private void colourTextChanged(JTextField field) {
+        if (suppressTextChanged || !isVisible()) {
+            return;
+        }
+
+        String text = field.getText();
+        if (text == null) {
+            return;
+        }
+        if (text.length() != 7 || !text.matches("#[0-9a-fA-F]{6}")) {
+            return;
+        }
+
+        Color newColour = Color.decode(text);
+
+        if (field.equals(txtBackgroundColour)) {
+            if (!newColour.equals(backgroundColour)) {
+                backgroundColour = Color.decode(text);
+                pnlBackgroundPreview.setBackground(backgroundColour);
+            }
+        }
+    }
+
     private Color chooseColour(Color colour, JTextField field, JPanel preview, String title) {
         Color newColour = JColorChooser.showDialog(this, Main.getInstance().getLanguageBundle().getString(title), colour);
 
@@ -1049,7 +1173,6 @@ public class SettingsWindow extends JDialog {
     private JButton btnPatreon;
     private JButton btnPrimaryColour1Change;
     private JButton btnPrimaryColour2Change;
-    private JButton btnPrimaryColour3Change;
     private JButton btnRemoveInteractiveWindow;
     private JButton btnReset;
     private JButton btnSecondaryColour1Change;
@@ -1071,8 +1194,6 @@ public class SettingsWindow extends JDialog {
     private Box.Filler gluePrimaryColour1b;
     private Box.Filler gluePrimaryColour2a;
     private Box.Filler gluePrimaryColour2b;
-    private Box.Filler gluePrimaryColour3a;
-    private Box.Filler gluePrimaryColour3b;
     private Box.Filler glueSecondaryColour1a;
     private Box.Filler glueSecondaryColour1b;
     private Box.Filler glueSecondaryColour2a;
@@ -1083,6 +1204,9 @@ public class SettingsWindow extends JDialog {
     private Box.Filler glueWhiteColourb;
     private ButtonGroup grpFilter;
     private JScrollPane jScrollPane1;
+    private JScrollPane jScrollPane2;
+    private JScrollPane jScrollPane3;
+    private JTextArea jTextArea1;
     private JLabel lblBackground;
     private JLabel lblBackgroundColour;
     private JLabel lblBackgroundImage;
@@ -1098,7 +1222,6 @@ public class SettingsWindow extends JDialog {
     private JLabel lblOpacity;
     private JLabel lblPrimaryColour1;
     private JLabel lblPrimaryColour2;
-    private JLabel lblPrimaryColour3;
     private JLabel lblScaling;
     private JLabel lblSecondaryColour1;
     private JLabel lblSecondaryColour2;
@@ -1107,6 +1230,7 @@ public class SettingsWindow extends JDialog {
     private JLabel lblVersion;
     private JLabel lblWhiteColour;
     private JList<String> lstInteractiveWindows;
+    private JList<String> lstInteractiveWindowsBlacklist;
     private JPanel pnlAbout;
     private JPanel pnlAboutButtons;
     private JPanel pnlBackgroundImage;
@@ -1114,16 +1238,17 @@ public class SettingsWindow extends JDialog {
     private JPanel pnlBackgroundPreviewContainer;
     private JPanel pnlBlackColourPreview;
     private JPanel pnlBlackColourPreviewContainer;
+    private JPanel pnlBlacklistTab;
     private JPanel pnlFooter;
     private JPanel pnlGeneral;
     private JPanel pnlInteractiveButtons;
+    private JTabbedPane pnlInteractiveTabs;
     private JPanel pnlInteractiveWindows;
     private JPanel pnlPrimaryColour1Preview;
     private JPanel pnlPrimaryColour1PreviewContainer;
     private JPanel pnlPrimaryColour2Preview;
     private JPanel pnlPrimaryColour2PreviewContainer;
-    private JPanel pnlPrimaryColour3Preview;
-    private JPanel pnlPrimaryColour3PreviewContainer;
+    private JScrollPane pnlScrollPane;
     private JPanel pnlSecondaryColour1Preview;
     private JPanel pnlSecondaryColour1PreviewContainer;
     private JPanel pnlSecondaryColour2Preview;
@@ -1133,6 +1258,7 @@ public class SettingsWindow extends JDialog {
     private JTabbedPane pnlTabs;
     private JPanel pnlWhiteColourPreview;
     private JPanel pnlWhiteColourPreviewContainer;
+    private JPanel pnlWhitelistTab;
     private JPanel pnlWindowMode;
     private JRadioButton radFilterBicubic;
     private JRadioButton radFilterHqx;
@@ -1150,7 +1276,6 @@ public class SettingsWindow extends JDialog {
     private JTextField txtBlackColour;
     private JTextField txtPrimaryColour1;
     private JTextField txtPrimaryColour2;
-    private JTextField txtPrimaryColour3;
     private JTextField txtSecondaryColour1;
     private JTextField txtSecondaryColour2;
     private JTextField txtSecondaryColour3;

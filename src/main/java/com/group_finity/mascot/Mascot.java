@@ -11,6 +11,7 @@ import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.group_finity.mascot.menu.MenuScroller;
+import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
 
 import javax.sound.sampled.Clip;
@@ -131,6 +132,8 @@ public class Mascot {
      */
     private Point cursor = null;
 
+    private VariableMap variables = null;
+
     public Mascot(final String imageSet) {
         id = lastId.incrementAndGet();
         this.imageSet = imageSet;
@@ -250,7 +253,7 @@ public class Mascot {
                     getBehavior().mousePressed(event);
                 } catch (final CantBeAliveException e) {
                     log.log(Level.SEVERE, "Severe error in mouse press handler for mascot \"" + this + "\"", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
                     dispose();
                 }
             }
@@ -268,7 +271,7 @@ public class Mascot {
                     getBehavior().mouseReleased(event);
                 } catch (final CantBeAliveException e) {
                     log.log(Level.SEVERE, "Severe error in mouse release handler for mascot \"" + this + "\"", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
                     dispose();
                 }
             }
@@ -361,7 +364,7 @@ public class Mascot {
                                 } catch (BehaviorInstantiationException | CantBeAliveException ex) {
                                     // TODO Determine whether this catch block is supposed to dispose of the mascot
                                     log.log(Level.SEVERE, "Failed to set behavior to \"" + command + "\" for mascot \"" + this + "\"", ex);
-                                    Main.showError(languageBundle.getString("CouldNotSetBehaviourErrorMessage") + "\n" + ex.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+                                    Main.showError(languageBundle.getString("CouldNotSetBehaviourErrorMessage"), ex);
                                 }
                             }
                         });
@@ -421,7 +424,7 @@ public class Mascot {
                         getBehavior().next();
                     } catch (final CantBeAliveException e) {
                         log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
-                        Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                        Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), e);
                         dispose();
                     }
 
@@ -664,5 +667,11 @@ public class Mascot {
         } else {
             refreshCursor(point);
         }
+    }
+
+    public VariableMap getVariables() {
+        if (variables == null)
+            variables = new VariableMap();
+        return variables;
     }
 }

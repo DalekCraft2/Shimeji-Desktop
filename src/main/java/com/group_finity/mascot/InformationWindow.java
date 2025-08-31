@@ -156,7 +156,7 @@ public class InformationWindow extends JFrame {
                             }
                         } catch (IOException | UnsupportedOperationException | URISyntaxException ex) {
                             log.log(Level.SEVERE, "Failed to open URL \"" + url + "\"", ex);
-                            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }

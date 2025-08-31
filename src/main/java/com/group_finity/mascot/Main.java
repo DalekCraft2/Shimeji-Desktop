@@ -17,6 +17,7 @@ import com.jthemedetecor.OsThemeDetector;
 import org.apache.commons.exec.OS;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -100,6 +101,20 @@ public class Main {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    public static void showError(String message, Throwable exception) {
+        do {
+            if (exception.getClass().getName().startsWith("com.group_finity.mascot.exception"))
+                message += "\n" + exception.getMessage();
+            else if (exception instanceof SAXParseException)
+                message += "\n" + "Line " + ((SAXParseException) exception).getLineNumber() + ": " + exception.getMessage();
+            else
+                message += "\n" + exception;
+            exception = exception.getCause();
+        }
+        while (exception != null);
+        showError(message + "\n" + instance.languageBundle.getString("SeeLogForDetails"));
+    }
+
     public static void main(final String[] args) {
         try {
             getInstance().run();
@@ -151,25 +166,25 @@ public class Main {
                     imageSets.add(set.trim());
                 }
         }
-        if (imageSets.isEmpty()) {
-            imageSets = new ImageSetChooser(frame, true).display();
-            if (imageSets == null) {
-                exit();
+        do {
+            if (imageSets.isEmpty()) {
+                imageSets = new ImageSetChooser(frame, true).display();
+                if (imageSets == null) {
+                    exit();
+                }
             }
-        }
 
-        // Load mascot configurations
-        for (int index = 0; index < imageSets.size(); index++) {
-            if (!loadConfiguration(imageSets.get(index))) {
-                // failed validation
-                configurations.remove(imageSets.get(index));
-                imageSets.remove(imageSets.get(index));
-                index--;
+            // Load mascot configurations
+            for (int index = 0; index < imageSets.size(); index++) {
+                if (!loadConfiguration(imageSets.get(index))) {
+                    // failed validation
+                    configurations.remove(imageSets.get(index));
+                    imageSets.remove(imageSets.get(index));
+                    index--;
+                }
             }
         }
-        if (imageSets.isEmpty()) {
-            exit();
-        }
+        while (imageSets.isEmpty());
 
         // Create the tray icon
         createTrayIcon();
@@ -357,7 +372,7 @@ public class Main {
             return true;
         } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException e) {
             log.log(Level.SEVERE, "Failed to load configuration files", e);
-            showError(languageBundle.getString("FailedLoadConfigErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedLoadConfigErrorMessage"), e);
         }
 
         return false;
@@ -381,7 +396,7 @@ public class Main {
             image = ImageIO.read(ICON_FILE.toFile());
         } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
-            showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage"), e);
         } finally {
             if (image == null) {
                 image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
@@ -390,7 +405,10 @@ public class Main {
 
         try {
             // Create the tray icon
-            final TrayIcon icon = new TrayIcon(image, languageBundle.getString("ShimejiEE"));
+            String tooltip = properties.getProperty("ShimejiEENameOverride", "").trim();
+            if (tooltip.isEmpty())
+                tooltip = languageBundle.getString("ShimejiEE");
+            final TrayIcon icon = new TrayIcon(image, tooltip);
             icon.setImageAutoSize(true);
 
             // attach menu
@@ -581,14 +599,26 @@ public class Main {
                     final JButton btnChooseShimeji = new JButton(languageBundle.getString("ChooseShimeji"));
                     btnChooseShimeji.addActionListener(event12 -> {
                         form.dispose();
+                        if (!getManager().isPaused()) {
+                            getManager().togglePauseAll(); // needed to stop the guys from potentially throwing away settings
+                        }
+
                         ImageSetChooser chooser = new ImageSetChooser(frame, true);
                         chooser.setIconImage(icon.getImage());
                         setActiveImageSets(chooser.display());
+
+                        if (getManager().isPaused()) {
+                            getManager().togglePauseAll();
+                        }
                     });
 
                     final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
                     btnSettings.addActionListener(event1 -> {
                         form.dispose();
+                        if (!getManager().isPaused()) {
+                            getManager().togglePauseAll(); // needed to stop the guys from potentially throwing away settings
+                        }
+
                         SettingsWindow dialog = new SettingsWindow(frame, true);
                         dialog.setIconImage(icon.getImage());
                         dialog.init();
@@ -619,6 +649,10 @@ public class Main {
                             }
 
                             getManager().setExitOnLastRemoved(isExit);
+                        } else {
+                            if (getManager().isPaused()) {
+                                getManager().togglePauseAll();
+                            }
                         }
                         if (dialog.getInteractiveWindowReloadRequired()) {
                             NativeFactory.getInstance().getEnvironment().refreshCache();
@@ -906,7 +940,7 @@ public class Main {
                     panel.add(btnDismissAll, gridBag);
 
                     form.setIconImage(icon.getImage());
-                    form.setTitle(languageBundle.getString("ShimejiEE"));
+                    form.setTitle(icon.getToolTip());
                     form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     form.setAlwaysOnTop(true);
 
@@ -961,6 +995,7 @@ public class Main {
             SystemTray.getSystemTray().add(icon);
         } catch (final AWTException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
+            // TODO: Figure out whether it is better to use the showError(String, Throwable) method for this
             showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
             exit();
         }
@@ -998,15 +1033,15 @@ public class Main {
         } catch (final BehaviorInstantiationException e) {
             // Not sure why this says "first action" instead of "first behavior", but changing it would require changing all of the translations, so...
             log.log(Level.SEVERE, "Failed to initialize the first action for mascot \"" + mascot + "\"", e);
-            showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage"), e);
             mascot.dispose();
         } catch (final CantBeAliveException e) {
             log.log(Level.SEVERE, "Could not create mascot \"" + mascot + "\"", e);
-            showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage") + "\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage"), e);
             mascot.dispose();
         } catch (RuntimeException e) {
             log.log(Level.SEVERE, "Could not create mascot \"" + mascot + "\"", e);
-            showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + " " + imageSet + ".\n" + e.getMessage() + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + " " + imageSet, e);
             mascot.dispose();
         }
     }

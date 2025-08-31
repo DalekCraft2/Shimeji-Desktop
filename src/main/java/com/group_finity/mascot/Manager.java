@@ -193,7 +193,7 @@ public class Manager {
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
                     mascot.dispose();
                 }
             }
@@ -216,7 +216,7 @@ public class Manager {
                     }
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
                     mascot.dispose();
                 }
             }
@@ -319,10 +319,7 @@ public class Manager {
 
     public void togglePauseAll() {
         synchronized (getMascots()) {
-            boolean isPaused = false;
-            if (!getMascots().isEmpty()) {
-                isPaused = getMascots().get(0).isPaused();
-            }
+            boolean isPaused = getMascots().stream().allMatch(Mascot::isPaused);
 
             for (final Mascot mascot : getMascots()) {
                 mascot.setPaused(!isPaused);
@@ -331,12 +328,10 @@ public class Manager {
     }
 
     public boolean isPaused() {
-        boolean isPaused = false;
+        boolean isPaused;
 
         synchronized (getMascots()) {
-            if (!getMascots().isEmpty()) {
-                isPaused = getMascots().get(0).isPaused();
-            }
+            isPaused = getMascots().stream().allMatch(Mascot::isPaused);
         }
 
         return isPaused;

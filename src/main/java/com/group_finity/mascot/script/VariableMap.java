@@ -11,7 +11,6 @@ import java.util.*;
  * @author Shimeji-ee Group
  */
 public class VariableMap extends AbstractMap<String, Object> implements Bindings {
-
     private final Map<String, Variable> rawMap = new LinkedHashMap<>();
 
     public Map<String, Variable> getRawMap() {
@@ -31,12 +30,9 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
     }
 
     private final Set<Map.Entry<String, Object>> entrySet = new AbstractSet<>() {
-
         @Override
         public Iterator<Map.Entry<String, Object>> iterator() {
-
             return new Iterator<>() {
-
                 private Iterator<Map.Entry<String, Variable>> rawIterator = getRawMap().entrySet()
                         .iterator();
 
@@ -51,7 +47,6 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
                     final Variable value = rawKeyValue.getValue();
 
                     return new Map.Entry<>() {
-
                         @Override
                         public String getKey() {
                             return rawKeyValue.getKey();
@@ -70,7 +65,6 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
                         public Object setValue(final Object value) {
                             throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("SetValueNotSupportedErrorMessage"));
                         }
-
                     };
                 }
 
@@ -78,7 +72,6 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
                 public void remove() {
                     rawIterator.remove();
                 }
-
             };
         }
 
@@ -86,7 +79,6 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         public int size() {
             return getRawMap().size();
         }
-
     };
 
     @Override
@@ -105,7 +97,5 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         }
 
         return result;
-
     }
-
 }

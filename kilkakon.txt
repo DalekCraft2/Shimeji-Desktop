@@ -1,5 +1,28 @@
 Kilkakon's notes:
 
+1.0.22:
+- Added shimeji Variables. Use in conditions with the `mascot.variables[ 'example' ]` syntax to restore variables that will persist for the lifetime of the individual shimeji
+- Added the Interactive Window blacklist, which allows users to specify windows that will not be interactive, regardless of what is set in the Interactive Windows list. If only the blacklist is in use, then all windows not caught by the list will be interactive
+- Added `ShimejiEENameOverride` to settings.properties. When set the given string will be used for the menu caption and system tray tooltip, instead of what's set in language.properties
+- Added OffsetType to the Dragged action. Valid options are `ImageAnchor` (the default, which starts from the ImageAnchor, with positive values going up and left) or `Origin` (which starts from the origin of the image, with positive values going right and down)
+- Added OffsetX, OffsetY and OffsetType to the Regist [sic] action, which operate in the same way as Dragged
+- Added descriptive help text to the Theme Editor in Settings
+- Enabled the colour text fields in the Theme Editor and Window Mode tabs in Settings for direct input
+- Removed Primary 3 from the Theme Editor as Shimeji-ee does not use this colour
+- Fixed ScanInteract, Interact and Transformation from not firing when they had a duration of 1
+- Fixed Dragged randomly failing and causing the Shimeji to respawn from the top of the screen
+- Rewrote file loading so Shimeji-ee can find image files on Japanese computers
+- Shimeji Chooser will now automatically appear if no shimeji were successfully loaded, to avoid users having to manually correct settings.properties when shimeji folders are swapped out. The Chooser will continue to reappear until a shimeji loads successfully or the user closes it
+- Shimeji Chooser now displays shimeji names in bold and uses theme colours for the list and clickable labels
+- Shimeji Chooser and Settings screens will pause shimeji while open (to prevent softlocks when they are thrown off screen)
+- Shimeji Chooser and Information screens will now use the shimeji tray icon
+- Pause Animations button will now pause shimeji if any are unpaused, only changing to Resume Animations if all shimeji are paused
+- Added detailed information to error messages to assist in user debugging
+- Code cleanup: Fixed under the hood null exception when cancelling the Interactive Window prompt
+- Updates to Arabic, Catalan, French, Polish and Spanish translations (thank you!)
+
+See https://youtu.be/CV46UPIDdYM for more details
+
 1.0.21.3:
 - Added ComplexJump and ComplexMove. Uses the `Characteristics` attribute to determine which logic is enabled, as a comma separated list (e.g. "Breed,Scan"). Currently supports Breed and Scan characteristics
 - Added the TargetX and TargetY variables to Scanning actions for scripts to use instead, can be null if no target is available

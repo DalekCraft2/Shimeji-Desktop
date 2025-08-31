@@ -10,7 +10,6 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
@@ -31,7 +30,7 @@ public class ActionBuilder implements IActionBuilder {
     private final List<IActionBuilder> actionRefs = new ArrayList<>();
     private final ResourceBundle schema;
 
-    public ActionBuilder(final Configuration configuration, final Entry actionNode, final String imageSet) throws IOException {
+    public ActionBuilder(final Configuration configuration, final Entry actionNode, final String imageSet) throws ConfigurationException {
         schema = configuration.getSchema();
         name = actionNode.getAttribute(schema.getString("Name"));
         type = actionNode.getAttribute(schema.getString("Type"));
@@ -39,17 +38,21 @@ public class ActionBuilder implements IActionBuilder {
 
         log.log(Level.FINE, "Loading action: {0}", this);
 
-        getParams().putAll(actionNode.getAttributes());
-        for (final Entry node : actionNode.selectChildren(schema.getString("Animation"))) {
-            getAnimationBuilders().add(new AnimationBuilder(schema, node, imageSet));
-        }
-
-        for (final Entry node : actionNode.getChildren()) {
-            if (node.getName().equals(schema.getString("ActionReference"))) {
-                getActionRefs().add(new ActionRef(configuration, node));
-            } else if (node.getName().equals(schema.getString("Action"))) {
-                getActionRefs().add(new ActionBuilder(configuration, node, imageSet));
+        try {
+            getParams().putAll(actionNode.getAttributes());
+            for (final Entry node : actionNode.selectChildren(schema.getString("Animation"))) {
+                getAnimationBuilders().add(new AnimationBuilder(schema, node, imageSet));
             }
+
+            for (final Entry node : actionNode.getChildren()) {
+                if (node.getName().equals(schema.getString("ActionReference"))) {
+                    getActionRefs().add(new ActionRef(configuration, node));
+                } else if (node.getName().equals(schema.getString("Action"))) {
+                    getActionRefs().add(new ActionBuilder(configuration, node, imageSet));
+                }
+            }
+        } catch (ConfigurationException e) {
+            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage") + " \"" + name + "\" " + Main.getInstance().getLanguageBundle().getString("ForShimeji") + " \"" + imageSet + "\".", e);
         }
 
         log.log(Level.FINE, "Finished loading action: {0}", this);

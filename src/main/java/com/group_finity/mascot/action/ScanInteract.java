@@ -96,7 +96,7 @@ public class ScanInteract extends BorderedAction {
 
             getAnimation().next(getMascot(), getTime());
 
-            if (!turning && getTime() == getAnimation().getDuration() - 1 && !getBehavior().trim().isEmpty()) {
+            if (!turning && (getTime() == getAnimation().getDuration() - 1 || getAnimation().getDuration() == 1) && !getBehavior().trim().isEmpty()) {
                 boolean setFirstBehavior = false;
                 try {
                     getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
@@ -112,7 +112,7 @@ public class ScanInteract extends BorderedAction {
                     }
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.log(Level.SEVERE, "Failed to set behavior to \"" + (setFirstBehavior ? getTargetBehavior() : getBehavior()) + "\" for mascot \"" + (setFirstBehavior ? target.get() : getMascot()) + "\"", e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage") + "\n" + e.getMessage() + "\n" + Main.getInstance().getLanguageBundle().getString("SeeLogForDetails"));
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
                 }
             }
         }

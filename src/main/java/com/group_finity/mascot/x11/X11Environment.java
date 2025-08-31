@@ -65,6 +65,7 @@ class X11Environment extends Environment {
      */
     private int xOffset, yOffset, wMod, hMod = 0;
     private String[] windowTitles = null;
+    private String[] windowTitlesBlacklist = null;
 
 
     /**
@@ -303,21 +304,46 @@ class X11Environment extends Environment {
             return false;
         }
 
-        if (windowTitles == null) {
-            windowTitles = Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/");
+        // blacklist takes precedence over whitelist
+        boolean blacklistInUse = false;
+        if (windowTitlesBlacklist == null) {
+            windowTitlesBlacklist = Main.getInstance().getProperties().getProperty("InteractiveWindowsBlacklist", "").split("/");
         }
-
-        for (String windowTitle : windowTitles) {
-            if (!windowTitle.trim().isEmpty() && ieTitle.contains(windowTitle)) {
-                // Window is IE
-                ieCache.put(window, true);
-                return true;
+        for (String windowTitle : windowTitlesBlacklist) {
+            if (!windowTitle.trim().isEmpty()) {
+                blacklistInUse = true;
+                if (ieTitle.contains(windowTitle)) {
+                    ieCache.put(window, false);
+                    return false;
+                }
             }
         }
 
-        // Window is not IE
-        ieCache.put(window, false);
-        return false;
+        // whitelist
+        boolean whitelistInUse = false;
+        if (windowTitles == null) {
+            windowTitles = Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/");
+        }
+        for (String windowTitle : windowTitles) {
+            if (!windowTitle.trim().isEmpty()) {
+                // Window is IE
+                whitelistInUse = true;
+                if (ieTitle.contains(windowTitle)) {
+                    ieCache.put(window, true);
+                    return true;
+                }
+            }
+        }
+
+        if (whitelistInUse || !blacklistInUse) {
+            // Window is not IE
+            ieCache.put(window, false);
+            return false;
+        } else {
+            // Window is IE
+            ieCache.put(window, true);
+            return true;
+        }
     }
 
     private IeStatus getIeStatus(Window window) {
@@ -556,6 +582,7 @@ class X11Environment extends Environment {
         ieContainer.clear(); // will be repopulated next isIE call
         ieCache.clear();
         windowTitles = null;
+        windowTitlesBlacklist = null;
         curActiveWin.clear();
         curVisibleWin.clear();
     }

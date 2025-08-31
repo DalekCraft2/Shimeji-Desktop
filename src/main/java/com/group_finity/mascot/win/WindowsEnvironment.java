@@ -43,6 +43,8 @@ class WindowsEnvironment extends Environment {
 
     private static String[] windowTitles = null;
 
+    private static String[] windowTitlesBlacklist = null;
+
     private enum IeStatus {
         /** The IE is valid. */
         VALID,
@@ -72,21 +74,46 @@ class WindowsEnvironment extends Environment {
             return false;
         }
 
-        if (windowTitles == null) {
-            windowTitles = Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/");
+        // blacklist takes precedence over whitelist
+        boolean blacklistInUse = false;
+        if (windowTitlesBlacklist == null) {
+            windowTitlesBlacklist = Main.getInstance().getProperties().getProperty("InteractiveWindowsBlacklist", "").split("/");
         }
-
-        for (String windowTitle : windowTitles) {
-            if (!windowTitle.trim().isEmpty() && ieTitle.contains(windowTitle)) {
-                // Window is IE
-                ieCache.put(hWnd, true);
-                return true;
+        for (String windowTitle : windowTitlesBlacklist) {
+            if (!windowTitle.trim().isEmpty()) {
+                blacklistInUse = true;
+                if (ieTitle.contains(windowTitle)) {
+                    ieCache.put(hWnd, false);
+                    return false;
+                }
             }
         }
 
-        // Window is not IE
-        ieCache.put(hWnd, false);
-        return false;
+        // whitelist
+        boolean whitelistInUse = false;
+        if (windowTitles == null) {
+            windowTitles = Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/");
+        }
+        for (String windowTitle : windowTitles) {
+            if (!windowTitle.trim().isEmpty()) {
+                // Window is IE
+                whitelistInUse = true;
+                if (ieTitle.contains(windowTitle)) {
+                    ieCache.put(hWnd, true);
+                    return true;
+                }
+            }
+        }
+
+        if (whitelistInUse || !blacklistInUse) {
+            // Window is not IE
+            ieCache.put(hWnd, false);
+            return false;
+        } else {
+            // Window is IE
+            ieCache.put(hWnd, true);
+            return true;
+        }
     }
 
     private static IeStatus getIeStatus(HWND hWnd) {
@@ -327,5 +354,6 @@ class WindowsEnvironment extends Environment {
     public void refreshCache() {
         ieCache.clear(); // will be repopulated next isIE call
         windowTitles = null;
+        windowTitlesBlacklist = null;
     }
 }
