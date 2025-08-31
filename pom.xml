@@ -198,20 +198,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- Parse version components and create properties for them -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.6.1</version>
-                <executions>
-                    <execution>
-                        <id>parse-version</id>
-                        <goals>
-                            <goal>parse-version</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <!-- Create an .exe file to run the application -->
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
@@ -246,26 +232,8 @@
                                 <maxVersion/>
                             </jre>
                             <versionInfo>
-                                <!--suppress UnresolvedMavenProperty -->
-                                <!-- <fileVersion>
-                                    ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}
-                                </fileVersion> -->
-                                <!-- This is for whenever we have a version with four components in it, like 1.0.21.1 -->
-                                <fileVersion>${project.version}</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
                                 <fileDescription>${project.name} Launcher</fileDescription>
                                 <copyright>Copyright (C) Group-Finity. All rights reserved.</copyright>
-                                <!--suppress UnresolvedMavenProperty -->
-                                <!-- <productVersion>
-                                    ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}
-                                </productVersion> -->
-                                <!-- This is for whenever we have a version with four components in it, like 1.0.21.1 -->
-                                <productVersion>${project.version}</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
-                                <productName>${project.name}</productName>
-                                <companyName>Group Finity</companyName>
-                                <internalName>${project.artifactId}</internalName>
-                                <originalFilename>${project.build.finalName}.exe</originalFilename>
                             </versionInfo>
                         </configuration>
                     </execution>
