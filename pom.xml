@@ -173,6 +173,10 @@
                             <classpathPrefix>${libPrefix}/</classpathPrefix>
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <!-- This fixes a warning involving restricted native access on JDK 24+ -->
+                            <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
