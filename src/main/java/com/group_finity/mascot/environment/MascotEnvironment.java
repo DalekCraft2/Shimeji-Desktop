@@ -50,7 +50,7 @@ public class MascotEnvironment {
                     }
                 }
 
-                // NOTE For Windows multi-monitor support:  The mascot may be included on multiple monitors at the same time,
+                // NOTE For Windows multi-monitor support: The mascot may be included on multiple monitors at the same time,
                 // in which case the current monitor takes priority.
                 if (currentWorkArea.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
                     return currentWorkArea;

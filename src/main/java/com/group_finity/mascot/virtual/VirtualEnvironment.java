@@ -132,7 +132,7 @@ class VirtualEnvironment extends Environment {
             });
 
             activeIE.set(new Rectangle(-500, -500, 0, 0));
-            screenRect.setBounds(display.getContentPane().getBounds());
+            screenRect.setSize(display.getContentPane().getSize());
         }
 
         tick();
@@ -141,7 +141,7 @@ class VirtualEnvironment extends Environment {
     @Override
     public void tick() {
         if (display.isVisible()) {
-            getScreenRect().setBounds(display.getContentPane().getBounds());
+            getScreenRect().setSize(display.getContentPane().getSize());
             getScreen().set(getScreenRect());
         }
 
