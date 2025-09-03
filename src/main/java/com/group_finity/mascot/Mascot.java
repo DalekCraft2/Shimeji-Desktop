@@ -320,7 +320,7 @@ public class Mascot {
 
         // "Restore IE!" menu item
         final JMenuItem restoreMenu = new JMenuItem(languageBundle.getString("RestoreWindows"));
-        restoreMenu.addActionListener(event -> NativeFactory.getInstance().getEnvironment().restoreIE());
+        restoreMenu.addActionListener(event -> getEnvironment().restoreIE());
 
         // Debug menu item
         final JMenuItem debugMenu = new JMenuItem(languageBundle.getString("RevealStatistics"));
