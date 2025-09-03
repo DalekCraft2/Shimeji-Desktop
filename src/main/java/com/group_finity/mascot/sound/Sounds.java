@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Sounds {
     private static final ConcurrentHashMap<String, Clip> SOUNDS = new ConcurrentHashMap<>();
 
-    public static void load(final String fileName, final Clip clip) {
+    public static void put(final String fileName, final Clip clip) {
         if (!SOUNDS.containsKey(fileName)) {
             SOUNDS.put(fileName, clip);
         }

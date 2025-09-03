@@ -27,6 +27,6 @@ public class SoundLoader {
             }
         });
 
-        Sounds.load(name + volume, clip);
+        Sounds.put(name + volume, clip);
     }
 }

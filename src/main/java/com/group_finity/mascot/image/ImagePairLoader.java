@@ -49,7 +49,7 @@ public class ImagePairLoader {
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
                 new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
-        ImagePairs.load(key, ip);
+        ImagePairs.put(key, ip);
     }
 
     /**

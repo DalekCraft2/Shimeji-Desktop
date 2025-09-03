@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ImagePairs {
     private static ConcurrentHashMap<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
 
-    public static void load(final String filename, final ImagePair imagepair) {
+    public static void put(final String filename, final ImagePair imagepair) {
         if (!imagePairs.containsKey(filename)) {
             imagePairs.put(filename, imagepair);
         }
