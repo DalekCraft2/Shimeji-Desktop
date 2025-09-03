@@ -62,6 +62,12 @@ public class Mascot {
     private final int id;
 
     private String imageSet;
+
+    /**
+     * Mascot display environment.
+     */
+    private final MascotEnvironment environment = new MascotEnvironment(this);
+
     /**
      * The window that displays the {@code Mascot}.
      */
@@ -111,11 +117,6 @@ public class Mascot {
      * as opposed to hotspots or the like.
      */
     private boolean dragging = false;
-
-    /**
-     * Mascot display environment.
-     */
-    private MascotEnvironment environment = new MascotEnvironment(this);
 
     private String sound = null;
 
