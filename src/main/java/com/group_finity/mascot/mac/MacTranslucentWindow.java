@@ -1,3 +1,7 @@
+/*
+ * Created by nonowarn
+ * https://github.com/nonowarn/shimeji4mac
+ */
 package com.group_finity.mascot.mac;
 
 import com.group_finity.mascot.NativeFactory;
@@ -7,6 +11,9 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author nonowarn
+ */
 class MacTranslucentWindow implements TranslucentWindow {
     private TranslucentWindow delegate;
     private boolean imageChanged = false;

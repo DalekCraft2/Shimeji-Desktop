@@ -1,3 +1,7 @@
+/*
+ * Created by nonowarn
+ * https://github.com/nonowarn/shimeji4mac
+ */
 package com.group_finity.mascot.mac;
 
 import com.group_finity.mascot.environment.Area;

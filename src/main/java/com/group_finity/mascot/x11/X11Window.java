@@ -6,6 +6,9 @@ package com.group_finity.mascot.x11;
 
 import java.awt.*;
 
+/**
+ * @author asdfman
+ */
 public class X11Window {
 
     private final Point window_anchor = new Point();

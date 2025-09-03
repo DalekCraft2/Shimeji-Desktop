@@ -1,7 +1,6 @@
 /*
- * Created by asdfman and Ygarr
+ * Created by asdfman
  * https://github.com/asdfman/linux-shimeji
- * https://github.com/Ygarr/linux-shimeji
  */
 package com.group_finity.mascot.x11;
 

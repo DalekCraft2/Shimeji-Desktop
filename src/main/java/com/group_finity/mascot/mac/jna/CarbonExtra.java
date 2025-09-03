@@ -1,3 +1,7 @@
+/*
+ * Created by nonowarn
+ * https://github.com/nonowarn/shimeji4mac
+ */
 package com.group_finity.mascot.mac.jna;
 
 import com.sun.jna.Library;
@@ -9,6 +13,9 @@ import com.sun.jna.platform.mac.CoreFoundation.CFTypeRef;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
+/**
+ * @author nonowarn
+ */
 public interface CarbonExtra extends Library {
     CarbonExtra INSTANCE = Native.load("Carbon", CarbonExtra.class);
 
