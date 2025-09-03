@@ -191,64 +191,15 @@ public class SettingsWindow extends JDialog {
     }
 
     public boolean display() {
-        // scale controls to fit
         getContentPane().setPreferredSize(new Dimension(600, 497));
-        sldOpacity.setPreferredSize(new Dimension(sldOpacity.getPreferredSize().width, sldOpacity.getPreferredSize().height));
-        sldScaling.setPreferredSize(new Dimension(sldScaling.getPreferredSize().width, sldScaling.getPreferredSize().height));
-        btnAddInteractiveWindow.setPreferredSize(new Dimension(btnAddInteractiveWindow.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height));
-        btnRemoveInteractiveWindow.setPreferredSize(new Dimension(btnRemoveInteractiveWindow.getPreferredSize().width, btnRemoveInteractiveWindow.getPreferredSize().height));
         pnlInteractiveButtons.setPreferredSize(new Dimension(pnlInteractiveButtons.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height + 6));
-        txtPrimaryColour1.setPreferredSize(new Dimension(txtPrimaryColour1.getPreferredSize().width, txtPrimaryColour1.getPreferredSize().height));
-        txtPrimaryColour2.setPreferredSize(new Dimension(txtPrimaryColour2.getPreferredSize().width, txtPrimaryColour2.getPreferredSize().height));
-        txtSecondaryColour1.setPreferredSize(new Dimension(txtSecondaryColour1.getPreferredSize().width, txtSecondaryColour1.getPreferredSize().height));
-        txtSecondaryColour2.setPreferredSize(new Dimension(txtSecondaryColour2.getPreferredSize().width, txtSecondaryColour2.getPreferredSize().height));
-        txtSecondaryColour3.setPreferredSize(new Dimension(txtSecondaryColour3.getPreferredSize().width, txtSecondaryColour3.getPreferredSize().height));
-        txtBlackColour.setPreferredSize(new Dimension(txtBlackColour.getPreferredSize().width, txtBlackColour.getPreferredSize().height));
-        txtWhiteColour.setPreferredSize(new Dimension(txtWhiteColour.getPreferredSize().width, txtWhiteColour.getPreferredSize().height));
-        pnlPrimaryColour2PreviewContainer.setPreferredSize(new Dimension(pnlPrimaryColour2PreviewContainer.getPreferredSize().width, pnlPrimaryColour2PreviewContainer.getPreferredSize().height));
-        pnlPrimaryColour2Preview.setPreferredSize(new Dimension(pnlPrimaryColour2Preview.getPreferredSize().width, pnlPrimaryColour2Preview.getPreferredSize().height));
-        pnlSecondaryColour1PreviewContainer.setPreferredSize(new Dimension(pnlSecondaryColour1PreviewContainer.getPreferredSize().width, pnlSecondaryColour1PreviewContainer.getPreferredSize().height));
-        pnlSecondaryColour1Preview.setPreferredSize(new Dimension(pnlSecondaryColour1Preview.getPreferredSize().width, pnlSecondaryColour1Preview.getPreferredSize().height));
-        pnlSecondaryColour2PreviewContainer.setPreferredSize(new Dimension(pnlSecondaryColour2PreviewContainer.getPreferredSize().width, pnlSecondaryColour2PreviewContainer.getPreferredSize().height));
-        pnlSecondaryColour2Preview.setPreferredSize(new Dimension(pnlSecondaryColour2Preview.getPreferredSize().width, pnlSecondaryColour2Preview.getPreferredSize().height));
-        pnlSecondaryColour3PreviewContainer.setPreferredSize(new Dimension(pnlSecondaryColour3PreviewContainer.getPreferredSize().width, pnlSecondaryColour3PreviewContainer.getPreferredSize().height));
-        pnlSecondaryColour3Preview.setPreferredSize(new Dimension(pnlSecondaryColour3Preview.getPreferredSize().width, pnlSecondaryColour3Preview.getPreferredSize().height));
-        pnlBlackColourPreviewContainer.setPreferredSize(new Dimension(pnlBlackColourPreviewContainer.getPreferredSize().width, pnlBlackColourPreviewContainer.getPreferredSize().height));
-        pnlBlackColourPreview.setPreferredSize(new Dimension(pnlBlackColourPreview.getPreferredSize().width, pnlBlackColourPreview.getPreferredSize().height));
-        pnlWhiteColourPreviewContainer.setPreferredSize(new Dimension(pnlWhiteColourPreviewContainer.getPreferredSize().width, pnlWhiteColourPreviewContainer.getPreferredSize().height));
-        pnlWhiteColourPreview.setPreferredSize(new Dimension(pnlWhiteColourPreview.getPreferredSize().width, pnlWhiteColourPreview.getPreferredSize().height));
-        btnPrimaryColour1Change.setPreferredSize(new Dimension(btnPrimaryColour1Change.getPreferredSize().width, btnPrimaryColour1Change.getPreferredSize().height));
-        btnPrimaryColour2Change.setPreferredSize(new Dimension(btnPrimaryColour2Change.getPreferredSize().width, btnPrimaryColour2Change.getPreferredSize().height));
-        btnSecondaryColour1Change.setPreferredSize(new Dimension(btnSecondaryColour1Change.getPreferredSize().width, btnSecondaryColour1Change.getPreferredSize().height));
-        btnSecondaryColour2Change.setPreferredSize(new Dimension(btnSecondaryColour2Change.getPreferredSize().width, btnSecondaryColour2Change.getPreferredSize().height));
-        btnSecondaryColour3Change.setPreferredSize(new Dimension(btnSecondaryColour3Change.getPreferredSize().width, btnSecondaryColour3Change.getPreferredSize().height));
-        btnBlackColourChange.setPreferredSize(new Dimension(btnBlackColourChange.getPreferredSize().width, btnBlackColourChange.getPreferredSize().height));
-        btnWhiteColourChange.setPreferredSize(new Dimension(btnWhiteColourChange.getPreferredSize().width, btnWhiteColourChange.getPreferredSize().height));
-        sldMenuOpacity.setPreferredSize(new Dimension(sldMenuOpacity.getPreferredSize().width, sldMenuOpacity.getPreferredSize().height));
-        btnChangeFont.setPreferredSize(new Dimension(btnChangeFont.getPreferredSize().width, btnChangeFont.getPreferredSize().height));
-        btnReset.setPreferredSize(new Dimension(btnReset.getPreferredSize().width, btnReset.getPreferredSize().height));
-        spnWindowWidth.setPreferredSize(new Dimension(spnWindowWidth.getPreferredSize().width, spnWindowWidth.getPreferredSize().height));
-        spnWindowHeight.setPreferredSize(new Dimension(spnWindowHeight.getPreferredSize().width, spnWindowHeight.getPreferredSize().height));
-        txtBackgroundColour.setPreferredSize(new Dimension(txtBackgroundColour.getPreferredSize().width, txtBackgroundColour.getPreferredSize().height));
-        pnlBackgroundPreviewContainer.setPreferredSize(new Dimension(pnlBackgroundPreviewContainer.getPreferredSize().width, pnlBackgroundPreviewContainer.getPreferredSize().height));
-        pnlBackgroundPreview.setPreferredSize(new Dimension(pnlBackgroundPreview.getPreferredSize().width, pnlBackgroundPreview.getPreferredSize().height));
-        btnBackgroundColourChange.setPreferredSize(new Dimension(btnBackgroundColourChange.getPreferredSize().width, btnBackgroundColourChange.getPreferredSize().height));
-        btnBackgroundImageChange.setPreferredSize(new Dimension(btnBackgroundImageChange.getPreferredSize().width, btnBackgroundImageChange.getPreferredSize().height));
-        btnBackgroundImageRemove.setPreferredSize(new Dimension(btnBackgroundImageRemove.getPreferredSize().width, btnBackgroundImageRemove.getPreferredSize().height));
         cmbBackgroundImageMode.setPreferredSize(btnBackgroundImageRemove.getPreferredSize());
-        pnlBackgroundImage.setPreferredSize(new Dimension(pnlBackgroundImage.getPreferredSize().width, pnlBackgroundImage.getPreferredSize().height));
         pnlBackgroundImage.setMaximumSize(pnlBackgroundImage.getPreferredSize());
-        lblIcon.setPreferredSize(new Dimension(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height));
         lblIcon.setMaximumSize(lblIcon.getPreferredSize());
         if (!getIconImages().isEmpty()) {
             lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_DEFAULT)));
         }
-        btnWebsite.setPreferredSize(new Dimension(btnWebsite.getPreferredSize().width, btnWebsite.getPreferredSize().height));
-        btnDiscord.setPreferredSize(new Dimension(btnDiscord.getPreferredSize().width, btnDiscord.getPreferredSize().height));
-        btnPatreon.setPreferredSize(new Dimension(btnPatreon.getPreferredSize().width, btnPatreon.getPreferredSize().height));
         pnlAboutButtons.setPreferredSize(new Dimension(pnlAboutButtons.getPreferredSize().width, btnWebsite.getPreferredSize().height + 6));
-        btnDone.setPreferredSize(new Dimension(btnDone.getPreferredSize().width, btnDone.getPreferredSize().height));
-        btnCancel.setPreferredSize(new Dimension(btnCancel.getPreferredSize().width, btnCancel.getPreferredSize().height));
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnDone.getPreferredSize().height + 6));
         pack();
         suppressTextChanged = false;
