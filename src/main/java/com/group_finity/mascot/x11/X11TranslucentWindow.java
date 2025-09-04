@@ -63,12 +63,21 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public void setVisible(final boolean b) {
-        super.setVisible(b);
-        if (b) {
-            try {
-                WindowUtils.setWindowTransparent(this, true);
-            } catch (IllegalArgumentException ignored) {
+        /*
+         * On Linux, setting the window to visible, then invisible, and then visible again will make an icon for the
+         * window appear in the taskbar, which should not happen. The workaround is to simply never call
+         * super.setVisible(false), and use WindowUtils.setWindowAlpha() to hide the window instead.
+         */
+        try {
+            if (b) {
+                if (!isVisible()) {
+                    super.setVisible(true);
+                }
+                WindowUtils.setWindowAlpha(this, 1.0f);
+            } else {
+                WindowUtils.setWindowAlpha(this, 0.0f);
             }
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
