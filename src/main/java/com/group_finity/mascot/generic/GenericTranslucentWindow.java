@@ -14,8 +14,6 @@ import java.awt.*;
  * @author Shimeji-ee Group
  */
 class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
-    private static final long serialVersionUID = 1L;
-
     /**
      * Image to display.
      */
@@ -25,8 +23,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 
         JPanel panel = new JPanel() {
-            private static final long serialVersionUID = 1L;
-
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);

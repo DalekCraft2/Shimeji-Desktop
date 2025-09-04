@@ -16,8 +16,6 @@ import java.awt.*;
  * @author Valkryst
  */
 class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
-    private static final long serialVersionUID = 1L;
-
     /**
      * Image to display.
      */
@@ -30,8 +28,6 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
         if (Mascot.DRAW_DEBUG) {
             JPanel panel = new JPanel() {
-                private static final long serialVersionUID = 1L;
-
                 @Override
                 protected void paintComponent(final Graphics g) {
                     super.paintComponent(g);

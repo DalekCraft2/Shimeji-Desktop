@@ -1272,8 +1272,6 @@ public class X {
      * General exception which is thrown when an X11 window error occurred.
      */
     public static class X11Exception extends Exception {
-        private static final long serialVersionUID = 1L;
-
         public X11Exception() {
         }
 

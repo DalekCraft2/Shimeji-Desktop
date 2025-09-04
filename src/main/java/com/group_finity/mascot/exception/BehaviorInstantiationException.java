@@ -5,9 +5,6 @@ package com.group_finity.mascot.exception;
  * @author Shimeji-ee Group
  */
 public class BehaviorInstantiationException extends Exception {
-
-    private static final long serialVersionUID = 1L;
-
     public BehaviorInstantiationException(final String message) {
         super(message);
     }
