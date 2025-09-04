@@ -27,7 +27,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     private static final long serialVersionUID = 1L;
 
     /**
-     * To view images.
+     * Image to display.
      */
     private X11NativeImage image;
 
