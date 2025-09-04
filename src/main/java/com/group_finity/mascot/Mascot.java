@@ -101,7 +101,22 @@ public class Mascot {
     private Behavior behavior = null;
 
     /**
-     * Time that increases every tick of the timer.
+     * <p>Time that increases every tick of the timer.</p>
+     *
+     * <p>
+     *     While it's technically possible for this to overflow, the user would need to keep the application running
+     *     for the following amount of time for it to happen:
+     * </p>
+     *
+     * <pre>
+     *     Max Integer Value: 2,147,483,647
+     *     FPS: 60
+     *
+     *     2,147,483,647 / 60 = ~35,791,394.1 seconds
+     *     ~35,791,394.1 / 60 = ~596,523.2 minutes
+     *     ~596,523.2 / 60 = ~9,942.0 hours
+     *     ~9,942.0 / 24 = ~414.2 days
+     * </pre>
      */
     private int time = 0;
 
@@ -420,16 +435,16 @@ public class Mascot {
     void tick() {
         synchronized (this) {
             if (isAnimating()) {
-                if (getBehavior() != null) {
+                if (behavior != null) {
                     try {
-                        getBehavior().next();
+                        behavior.next();
                     } catch (final CantBeAliveException e) {
                         log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
                         Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), e);
                         dispose();
                     }
 
-                    setTime(getTime() + 1);
+                    time++;
                 }
 
                 if (debugWindow != null) {
@@ -459,37 +474,23 @@ public class Mascot {
     }
 
     public void apply() {
-        if (isAnimating()) {
-            // Make sure there's an image
-            if (getImage() != null) {
-                // Set the window region
-                getWindow().asComponent().setBounds(getBounds());
+        if (!this.isAnimating()) {
+            return;
+        }
 
-                // Set the image
-                getWindow().setImage(getImage().getImage());
+        if (image != null) {
+            this.window.asComponent().setBounds(this.getBounds()); // Set the bounds of the window to the mascot's bounds
+            window.updateImage(); // Redraw
+        }
 
-                // Display
-                if (!getWindow().asComponent().isVisible()) {
-                    getWindow().asComponent().setVisible(true);
-                }
-
-                // Redraw
-                getWindow().updateImage();
-            } else {
-                if (getWindow().asComponent().isVisible()) {
-                    getWindow().asComponent().setVisible(false);
-                }
-            }
-
-            // play sound if requested
-            if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
-                synchronized (log) {
-                    Clip clip = Sounds.getSound(sound);
-                    if (!clip.isRunning()) {
-                        clip.stop();
-                        clip.setMicrosecondPosition(0);
-                        clip.start();
-                    }
+        // play sound if requested
+        if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
+            synchronized (log) {
+                Clip clip = Sounds.getSound(sound);
+                if (!clip.isRunning()) {
+                    clip.stop();
+                    clip.setMicrosecondPosition(0);
+                    clip.start();
                 }
             }
         }
@@ -547,7 +548,25 @@ public class Mascot {
     }
 
     public void setImage(final MascotImage image) {
+        if (this.image == null && image == null) {
+            return;
+        }
+
+        if (this.image != null && image != null && this.image.getImage().equals(image.getImage())) {
+            return;
+        }
+
         this.image = image;
+
+        final var windowComponent = window.asComponent();
+        if (image == null) {
+            windowComponent.setVisible(false);
+            return;
+        }
+
+        window.setImage(image.getImage());
+        windowComponent.setVisible(true);
+        window.updateImage();
     }
 
     public boolean isLookRight() {
@@ -573,10 +592,6 @@ public class Mascot {
 
     public int getTime() {
         return time;
-    }
-
-    private void setTime(final int time) {
-        this.time = time;
     }
 
     public Behavior getBehavior() {
