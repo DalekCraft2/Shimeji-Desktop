@@ -7,8 +7,6 @@ package com.group_finity.mascot.x11;
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.platform.WindowUtils;
-import com.sun.jna.platform.unix.X11;
-import com.sun.jna.ptr.IntByReference;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,10 +26,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      * Image to display.
      */
     private X11NativeImage image;
-
-    private static final X11 x11 = X11.INSTANCE;
-    private final X11.Display dpy = x11.XOpenDisplay(null);
-    private X11.Window win = null;
 
     public X11TranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
@@ -97,13 +91,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
             jcomp.setOpaque(false);
         }
     }
-
-    public void setToDock(int value) {
-        IntByReference dockAtom = new IntByReference(value);
-        x11.XChangeProperty(dpy, win, x11.XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", false),
-                x11.XA_ATOM, 32, x11.PropModeReplace, dockAtom.getPointer(), 1);
-    }
-
 
     @Override
     public Component asComponent() {
