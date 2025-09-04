@@ -21,8 +21,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private GenericNativeImage image;
 
-    private float alpha = 1.0f;
-
     public GenericTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 
@@ -73,15 +71,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
             final JComponent jcomp = (JComponent) comp;
             jcomp.setOpaque(false);
         }
-    }
-
-    public float getAlpha() {
-        return alpha;
-    }
-
-    public void setAlpha(final float alpha) {
-        WindowUtils.setWindowAlpha(this, alpha);
-        this.alpha = alpha;
     }
 
     @Override

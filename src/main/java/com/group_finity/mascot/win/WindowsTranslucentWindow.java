@@ -10,8 +10,6 @@ import java.awt.*;
 /**
  * Image window with alpha value.
  * {@link WindowsNativeImage} set with {@link #setImage(NativeImage)} can be displayed on the desktop.
- * <p>
- * You can also specify the alpha when displaying with {@link #setAlpha(int)}.
  *
  * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
  * @author Shimeji-ee Group
@@ -24,11 +22,6 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
      * Image to display.
      */
     private WindowsNativeImage image;
-
-    /**
-     * Display concentration. 0 = not displayed at all, 255 = completely displayed.
-     */
-    private int alpha = 255;
 
     public WindowsTranslucentWindow() {
         super();
@@ -95,14 +88,6 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     @Override
     public void setImage(final NativeImage image) {
         this.image = (WindowsNativeImage) image;
-    }
-
-    public int getAlpha() {
-        return alpha;
-    }
-
-    public void setAlpha(final int alpha) {
-        this.alpha = alpha;
     }
 
     @Override
