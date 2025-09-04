@@ -213,6 +213,8 @@ public class ImageSetChooser extends JDialog {
         setUpList(jList2);
         jList2.setListData(data2.toArray(new ImageSetChooserPanel[0]));
         jList2.setSelectedIndices(convertIntegers(si2));
+
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(9);
     }
 
     public ArrayList<String> display() {
