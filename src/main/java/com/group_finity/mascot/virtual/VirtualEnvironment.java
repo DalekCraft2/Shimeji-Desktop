@@ -156,9 +156,7 @@ class VirtualEnvironment extends Environment {
 
     @Override
     public void dispose() {
-        if (display != null) {
-            display.dispose();
-        }
+        display.dispose();
     }
 
     public void addShimeji(final VirtualTranslucentPanel shimeji) {
