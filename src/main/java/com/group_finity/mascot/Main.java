@@ -160,7 +160,7 @@ public class Main {
         }
 
         // load theme
-        this.updateLookAndFeel();
+        updateLookAndFeel();
         OsThemeDetector.getDetector().registerListener(ignored -> updateLookAndFeel());
 
         // Get the image sets to use

@@ -250,7 +250,7 @@ public class SettingsWindow extends JDialog {
 
         grpFilter = new ButtonGroup();
         jScrollPane1 = new JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextArea1 = new JTextArea();
         pnlTabs = new JTabbedPane();
         pnlGeneral = new JPanel();
         chkAlwaysShowShimejiChooser = new JCheckBox();

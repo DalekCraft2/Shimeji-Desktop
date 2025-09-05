@@ -3,6 +3,7 @@ package com.group_finity.mascot.action;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
+import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
@@ -96,13 +97,13 @@ public class Fall extends ActionBase {
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-        final var mascot = super.getMascot();
+        final Mascot mascot = getMascot();
         if (velocityX != 0) {
             mascot.setLookRight(velocityX > 0);
         }
 
-        velocityX = (velocityX / scaling - velocityX * this.getResistanceX() / scaling) * scaling;
-        velocityY = (velocityY / scaling - velocityY * this.getResistanceY() / scaling + this.getGravity()) * scaling;
+        velocityX = (velocityX / scaling - velocityX * getResistanceX() / scaling) * scaling;
+        velocityY = (velocityY / scaling - velocityY * getResistanceY() / scaling + getGravity()) * scaling;
 
         putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocityX);
         putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
@@ -119,8 +120,8 @@ public class Fall extends ActionBase {
 
         int dev = Math.max(1, Math.max(Math.abs(dx), Math.abs(dy)));
 
-        final var anchor = mascot.getAnchor();
-        final var environment = super.getEnvironment();
+        final Point anchor = mascot.getAnchor();
+        final MascotEnvironment environment = getEnvironment();
 
         OUTER:
         for (int i = 0; i <= dev; i++) {
@@ -144,7 +145,7 @@ public class Fall extends ActionBase {
         }
 
         // Animate
-        super.getAnimation().next(mascot, super.getTime());
+        getAnimation().next(mascot, getTime());
     }
 
     private int getInitialVx() throws VariableException {

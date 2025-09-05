@@ -48,7 +48,7 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public void setVisible(final boolean b) {
-        if (super.isVisible() == b) {
+        if (isVisible() == b) {
             return;
         }
 

@@ -104,8 +104,8 @@ public class Mascot {
      * <p>Time that increases every tick of the timer.</p>
      *
      * <p>
-     *     While it's technically possible for this to overflow, the user would need to keep the application running
-     *     for the following amount of time for it to happen:
+     * While it's technically possible for this to overflow, the user would need to keep the application running
+     * for the following amount of time for it to happen:
      * </p>
      *
      * <pre>
@@ -474,12 +474,12 @@ public class Mascot {
     }
 
     public void apply() {
-        if (!this.isAnimating()) {
+        if (!isAnimating()) {
             return;
         }
 
         if (image != null) {
-            this.window.asComponent().setBounds(this.getBounds()); // Set the bounds of the window to the mascot's bounds
+            window.asComponent().setBounds(getBounds()); // Set the bounds of the window to the mascot's bounds
             window.updateImage(); // Redraw
         }
 
@@ -558,7 +558,7 @@ public class Mascot {
 
         this.image = image;
 
-        final var windowComponent = window.asComponent();
+        final Component windowComponent = window.asComponent();
         if (image == null) {
             windowComponent.setVisible(false);
             return;

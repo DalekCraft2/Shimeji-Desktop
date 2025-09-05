@@ -60,9 +60,6 @@ public class Manager {
     /** {@link ScheduledExecutorService} which calls the {@link #tick()} method. */
     private ScheduledExecutorService executorService;
 
-    public Manager() {
-    }
-
     public void setExitOnLastRemoved(boolean exitOnLastRemoved) {
         this.exitOnLastRemoved = exitOnLastRemoved;
     }
@@ -84,7 +81,7 @@ public class Manager {
         executorService.scheduleAtFixedRate(() -> {
             try {
                 final long startTime = System.currentTimeMillis();
-                this.tick();
+                tick();
                 final long tickTime = System.currentTimeMillis() - startTime;
 
                 log.fine("Ending Tick (" + tickTime + "ms)");
@@ -93,7 +90,7 @@ public class Manager {
                 }
             } catch (final Exception e) {
                 log.log(Level.SEVERE, "An error occurred while running the tick method.", e);
-                this.stop();
+                stop();
             }
         }, 0, TICK_INTERVAL, TimeUnit.MILLISECONDS);
     }
