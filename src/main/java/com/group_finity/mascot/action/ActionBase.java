@@ -38,15 +38,15 @@ public abstract class ActionBase implements Action {
 
     private static final String DEFAULT_AFFORDANCE = "";
 
+    private final List<Animation> animations;
+
+    private final VariableMap variables;
+
+    private final ResourceBundle schema;
+
     private Mascot mascot;
 
     private int startTime;
-
-    private List<Animation> animations;
-
-    private VariableMap variables;
-
-    private ResourceBundle schema;
 
     public ActionBase(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         this.schema = schema;

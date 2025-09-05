@@ -86,9 +86,9 @@ public class Main {
 
     private final Manager manager = new Manager();
     private ArrayList<String> imageSets = new ArrayList<>();
-    private ConcurrentHashMap<String, Configuration> configurations = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
-    private static Main instance = new Main();
+    private final ConcurrentHashMap<String, Configuration> configurations = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
+    private static final Main instance = new Main();
     private Properties properties = new Properties();
     private ResourceBundle languageBundle;
 
@@ -98,7 +98,7 @@ public class Main {
         return instance;
     }
 
-    private static JFrame frame = new JFrame();
+    private static final JFrame frame = new JFrame();
 
     public static void showError(String message) {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);

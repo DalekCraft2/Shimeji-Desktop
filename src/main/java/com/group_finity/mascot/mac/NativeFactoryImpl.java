@@ -15,8 +15,8 @@ import java.awt.image.BufferedImage;
  * @author nonowarn
  */
 public class NativeFactoryImpl extends NativeFactory {
-    private NativeFactory delegate = new com.group_finity.mascot.generic.NativeFactoryImpl();
-    private Environment environment = new MacEnvironment();
+    private final NativeFactory delegate = new com.group_finity.mascot.generic.NativeFactoryImpl();
+    private final Environment environment = new MacEnvironment();
 
     @Override
     public Environment getEnvironment() {

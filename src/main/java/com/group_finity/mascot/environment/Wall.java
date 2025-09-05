@@ -8,9 +8,9 @@ import java.awt.*;
  */
 public class Wall implements Border {
 
-    private Area area;
+    private final Area area;
 
-    private boolean right;
+    private final boolean right;
 
     public Wall(final Area area, final boolean right) {
         this.area = area;

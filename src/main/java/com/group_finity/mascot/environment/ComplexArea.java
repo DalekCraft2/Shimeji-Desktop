@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class ComplexArea {
 
-    private Map<String, Area> areas = new HashMap<>();
+    private final Map<String, Area> areas = new HashMap<>();
 
     public void set(Map<String, Rectangle> rectangles) {
         retain(rectangles.keySet());

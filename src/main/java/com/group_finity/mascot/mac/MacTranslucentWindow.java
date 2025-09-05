@@ -15,7 +15,7 @@ import java.awt.*;
  * @author nonowarn
  */
 class MacTranslucentWindow implements TranslucentWindow {
-    private TranslucentWindow delegate;
+    private final TranslucentWindow delegate;
     private boolean imageChanged = false;
     private NativeImage oldImage = null;
 

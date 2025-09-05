@@ -9,13 +9,13 @@ import java.util.*;
  * @author Shimeji-ee Group
  */
 public class Entry {
-    private Element element;
+    private final Element element;
 
     private Map<String, String> attributes;
 
     private List<Entry> children;
 
-    private Map<String, List<Entry>> selected = new HashMap<>();
+    private final Map<String, List<Entry>> selected = new HashMap<>();
 
     public Entry(final Element element) {
         this.element = element;

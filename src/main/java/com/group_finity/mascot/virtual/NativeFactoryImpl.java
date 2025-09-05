@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
  * @since 1.0.20
  */
 public class NativeFactoryImpl extends NativeFactory {
-    private VirtualEnvironment environment = new VirtualEnvironment();
+    private final VirtualEnvironment environment = new VirtualEnvironment();
 
     @Override
     public Environment getEnvironment() {

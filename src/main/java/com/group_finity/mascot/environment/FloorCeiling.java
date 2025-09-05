@@ -8,9 +8,9 @@ import java.awt.*;
  */
 public class FloorCeiling implements Border {
 
-    private Area area;
+    private final Area area;
 
-    private boolean bottom;
+    private final boolean bottom;
 
     public FloorCeiling(final Area area, final boolean bottom) {
         this.area = area;

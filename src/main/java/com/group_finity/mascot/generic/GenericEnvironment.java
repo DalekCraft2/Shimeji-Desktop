@@ -13,7 +13,7 @@ import java.awt.*;
  */
 class GenericEnvironment extends Environment {
 
-    private Area activeIE = new Area();
+    private final Area activeIE = new Area();
 
     @Override
     public void tick() {

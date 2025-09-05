@@ -13,12 +13,12 @@ public class ImagePair {
     /**
      * Image facing left.
      */
-    private MascotImage leftImage;
+    private final MascotImage leftImage;
 
     /**
      * Image facing right.
      */
-    private MascotImage rightImage;
+    private final MascotImage rightImage;
 
     /**
      * Creates an image pair from two existing images.

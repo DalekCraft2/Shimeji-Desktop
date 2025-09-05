@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
  * @author Shimeji-ee Group
  */
 public class NativeFactoryImpl extends NativeFactory {
-    private Environment environment = new WindowsEnvironment();
+    private final Environment environment = new WindowsEnvironment();
 
     @Override
     public Environment getEnvironment() {

@@ -36,24 +36,24 @@ class MacEnvironment extends Environment {
      * <p>
      * Therefore, in this class, give {@code activeIE} an alias called {@link #frontmostWindow}.
      */
-    private static Area activeIE = new Area();
-    private static Area frontmostWindow = activeIE;
+    private static final Area activeIE = new Area();
+    private static final Area frontmostWindow = activeIE;
 
     private static final int screenWidth =
             (int) Math.round(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
     private static final int screenHeight =
             (int) Math.round(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
 
-    private static CarbonExtra carbonEx = CarbonExtra.INSTANCE;
+    private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
 
     // On Mac, ManagementFactory.getRuntimeMXBean().getName()
     // returns the "PID@machine name" string
-    private static long myPID =
+    private static final long myPID =
             Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 
     private static long currentPID = myPID;
 
-    private static Set<Long> touchedProcesses = new HashSet<>();
+    private static final Set<Long> touchedProcesses = new HashSet<>();
 
     static final CFStringRef
             kAXPosition = createCFString("AXPosition"),

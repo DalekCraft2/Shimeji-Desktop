@@ -27,14 +27,14 @@ class X11Environment extends Environment {
     /**
      * The {@link X} display.
      */
-    private Display display = new Display();
+    private final Display display = new Display();
 
     /**
      * Hashtable for storing the active windows.
      */
     public WindowContainer ieContainer = new WindowContainer();
 
-    private HashMap<Window, Boolean> ieCache = new LinkedHashMap<>();
+    private final HashMap<Window, Boolean> ieCache = new LinkedHashMap<>();
 
     /**
      * Randomly chosen window for jump action targeting.
@@ -76,19 +76,19 @@ class X11Environment extends Environment {
      * Storage for Window IDs. Only used for comparison when removing
      * user-terminated windows.
      */
-    private Collection<Number> curActiveWin = new ArrayList<>();
-    private List<Number> curVisibleWin = new ArrayList<>();
+    private final Collection<Number> curActiveWin = new ArrayList<>();
+    private final List<Number> curVisibleWin = new ArrayList<>();
 
     /**
      * Storage for values of certain state/type atoms on the current display.
      */
-    private Collection<Number> badStateList = new ArrayList<>();
-    private Collection<Number> badTypeList = new ArrayList<>();
-    private int maximizedVertValue;
-    private int maximizedHorzValue;
-    private int minimizedValue;
-    private int fullscreenValue;
-    private int dockValue;
+    private final Collection<Number> badStateList = new ArrayList<>();
+    private final Collection<Number> badTypeList = new ArrayList<>();
+    private final int maximizedVertValue;
+    private final int maximizedHorzValue;
+    private final int minimizedValue;
+    private final int fullscreenValue;
+    private final int dockValue;
 
     private enum IeStatus {
         /** The IE is valid. */
