@@ -72,8 +72,8 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
         }
         super.paint(g);
 
-        if (!Mascot.DRAW_DEBUG && getImage() != null) {
-            g.drawImage(getImage().getManagedImage(), 0, 0, null);
+        if (!Mascot.DRAW_DEBUG && image != null) {
+            g.drawImage(image.getManagedImage(), 0, 0, null);
         }
     }
 

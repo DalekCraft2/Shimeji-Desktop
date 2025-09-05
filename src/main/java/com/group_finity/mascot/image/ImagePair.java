@@ -39,14 +39,6 @@ public class ImagePair {
      * @return image facing the specified direction
      */
     public MascotImage getImage(final boolean lookRight) {
-        return lookRight ? getRightImage() : getLeftImage();
-    }
-
-    private MascotImage getLeftImage() {
-        return leftImage;
-    }
-
-    private MascotImage getRightImage() {
-        return rightImage;
+        return lookRight ? rightImage : leftImage;
     }
 }

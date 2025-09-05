@@ -17,10 +17,6 @@ public class Constant extends Variable {
         return value == null ? "null" : value.toString();
     }
 
-    private Object getValue() {
-        return value;
-    }
-
     @Override
     public void init() {
     }
@@ -31,6 +27,6 @@ public class Constant extends Variable {
 
     @Override
     public Object get(final VariableMap variables) {
-        return getValue();
+        return value;
     }
 }

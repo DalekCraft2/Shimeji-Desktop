@@ -47,10 +47,10 @@ public class Location {
     }
 
     public void set(final Point value) {
-        setDx((getDx() + value.x - getX()) / 2);
-        setDy((getDy() + value.y - getY()) / 2);
+        dx = (dx + value.x - x) / 2;
+        dy = (dy + value.y - y) / 2;
 
-        setX(value.x);
-        setY(value.y);
+        x = value.x;
+        y = value.y;
     }
 }

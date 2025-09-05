@@ -36,53 +36,33 @@ public class Script extends Variable {
 
     @Override
     public String toString() {
-        return isClearAtInitFrame() ? "#{" + getSource() + "}" : "${" + getSource() + "}";
+        return clearAtInitFrame ? "#{" + source + "}" : "${" + source + "}";
     }
 
     @Override
     public void init() {
-        setValue(null);
+        value = null;
     }
 
     @Override
     public void initFrame() {
-        if (isClearAtInitFrame()) {
-            setValue(null);
+        if (clearAtInitFrame) {
+            value = null;
         }
     }
 
     @Override
     public synchronized Object get(final VariableMap variables) throws VariableException {
-        if (getValue() != null) {
-            return getValue();
+        if (value != null) {
+            return value;
         }
 
         try {
-            setValue(getCompiled().eval(variables));
+            value = compiled.eval(variables);
         } catch (final ScriptException e) {
             throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptEvaluationErrorMessage") + ": " + source, e);
         }
 
-        return getValue();
-    }
-
-    private void setValue(final Object value) {
-        this.value = value;
-    }
-
-    private Object getValue() {
         return value;
-    }
-
-    private boolean isClearAtInitFrame() {
-        return clearAtInitFrame;
-    }
-
-    private CompiledScript getCompiled() {
-        return compiled;
-    }
-
-    private String getSource() {
-        return source;
     }
 }

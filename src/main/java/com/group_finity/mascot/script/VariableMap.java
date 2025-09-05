@@ -18,13 +18,13 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
     }
 
     public void init() {
-        for (final Variable o : getRawMap().values()) {
+        for (final Variable o : rawMap.values()) {
             o.init();
         }
     }
 
     public void initFrame() {
-        for (final Variable o : getRawMap().values()) {
+        for (final Variable o : rawMap.values()) {
             o.initFrame();
         }
     }
@@ -91,9 +91,9 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         Object result;
 
         if (value instanceof Variable) {
-            result = getRawMap().put(key, (Variable) value);
+            result = rawMap.put(key, (Variable) value);
         } else {
-            result = getRawMap().put(key, new Constant(value));
+            result = rawMap.put(key, new Constant(value));
         }
 
         return result;

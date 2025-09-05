@@ -123,27 +123,27 @@ public class Area {
     }
 
     public int getWidth() {
-        return getRight() - getLeft();
+        return right - left;
     }
 
     public int getHeight() {
-        return getBottom() - getTop();
+        return bottom - top;
     }
 
     public void set(final Rectangle value) {
-        setDleft(value.x - getLeft());
-        setDtop(value.y - getTop());
-        setDright(value.x + value.width - getRight());
-        setDbottom(value.y + value.height - getBottom());
+        dleft = value.x - left;
+        dtop = value.y - top;
+        dright = value.x + value.width - right;
+        dbottom = value.y + value.height - bottom;
 
-        setLeft(value.x);
-        setTop(value.y);
-        setRight(value.x + value.width);
-        setBottom(value.y + value.height);
+        left = value.x;
+        top = value.y;
+        right = value.x + value.width;
+        bottom = value.y + value.height;
     }
 
     public boolean contains(final int x, final int y) {
-        return getLeft() <= x && x <= getRight() && getTop() <= y && y <= getBottom();
+        return left <= x && x <= right && top <= y && y <= bottom;
     }
 
     public Rectangle toRectangle() {

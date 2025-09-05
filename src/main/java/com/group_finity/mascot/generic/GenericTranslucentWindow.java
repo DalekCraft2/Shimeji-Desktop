@@ -98,7 +98,7 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
          * This doesn't work on macOS, so we can skip it to avoid the performance hit.
          */
         if (!OS.isFamilyMac()) {
-            WindowUtils.setWindowMask(this, getImage().getIcon());
+            WindowUtils.setWindowMask(this, image.getIcon());
         }
 
         validate();
