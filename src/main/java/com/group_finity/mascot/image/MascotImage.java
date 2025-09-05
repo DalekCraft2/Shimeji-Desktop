@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class MascotImage {

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * Action of falling whilst holding a window.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 // TODO Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.

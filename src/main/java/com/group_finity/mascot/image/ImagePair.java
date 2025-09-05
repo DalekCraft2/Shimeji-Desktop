@@ -5,7 +5,7 @@ package com.group_finity.mascot.image;
  * <p>
  * It would be convenient if the left and right mascot images could be managed simultaneously.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class ImagePair {

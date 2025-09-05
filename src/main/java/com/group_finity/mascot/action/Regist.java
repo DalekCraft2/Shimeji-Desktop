@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 /**
  * Action for resisting being dragged.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 // TODO Try to fix the typos of "resist" and "resistance" being "regist" and "registance" without breaking compatibility.

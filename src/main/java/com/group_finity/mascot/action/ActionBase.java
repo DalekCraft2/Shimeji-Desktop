@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * Abstract class that implements common functionality of actions.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public abstract class ActionBase implements Action {

@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  * <p>
  * When {@link Action} ends or at other specific times, {@link Behavior} is called and moves to the next {@link Action}.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class Mascot {

@@ -1,7 +1,7 @@
 package com.group_finity.mascot.exception;
 
 /**
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class VariableException extends Exception {

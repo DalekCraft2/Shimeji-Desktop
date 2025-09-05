@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * Action of walking with a window.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class WalkWithIE extends Move {

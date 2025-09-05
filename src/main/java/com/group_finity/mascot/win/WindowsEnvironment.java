@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 /**
  * Uses JNI to obtain environment information that is difficult to obtain with Java.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 // FIXME This environment feels slower than it used to be whenever a lot of Shimejis are moving on-screen.

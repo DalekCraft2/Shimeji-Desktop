@@ -3,7 +3,7 @@ package com.group_finity.mascot.script;
 import com.group_finity.mascot.exception.VariableException;
 
 /**
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public abstract class Variable {

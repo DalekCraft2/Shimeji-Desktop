@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /**
  * Action for offsetting.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class Offset extends InstantAction {

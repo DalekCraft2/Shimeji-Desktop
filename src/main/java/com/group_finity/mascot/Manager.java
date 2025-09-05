@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * <p>
  * The {@link #tick()} method first retrieves the latest environment information and then moves all {@link Mascot Mascots}.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class Manager {

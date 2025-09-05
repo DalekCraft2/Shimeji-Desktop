@@ -7,7 +7,7 @@ import javax.script.Bindings;
 import java.util.*;
 
 /**
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class VariableMap extends AbstractMap<String, Object> implements Bindings {

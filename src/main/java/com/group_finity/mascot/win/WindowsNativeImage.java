@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 /**
  * An image with alpha value that can be used for {@link WindowsTranslucentWindow}.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  * @author Valkryst
  */

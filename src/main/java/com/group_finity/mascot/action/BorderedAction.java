@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Base class for actions that move while attached to a frame.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public abstract class BorderedAction extends ActionBase {

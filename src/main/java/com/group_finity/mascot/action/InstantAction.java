@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 /**
  * A base class for actions that can be completed instantly by simply changing the state of the mascot.
  *
- * @author Yuki Yamada of <a href="http://www.group-finity.com/Shimeji/">Group Finity</a>
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public abstract class InstantAction extends ActionBase {
