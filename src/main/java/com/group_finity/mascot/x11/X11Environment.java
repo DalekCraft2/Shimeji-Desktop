@@ -67,7 +67,6 @@ class X11Environment extends Environment {
     private String[] windowTitles = null;
     private String[] windowTitlesBlacklist = null;
 
-
     /**
      * Random number generator for choosing a window for jump actions.
      */
@@ -151,7 +150,6 @@ class X11Environment extends Environment {
         } catch (IOException | NumberFormatException ignored) {
         } */
     }
-
 
     /**
      * Called every 40 milliseconds. Defined in {@link Manager}.

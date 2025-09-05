@@ -31,7 +31,6 @@ class GenericEnvironment extends Environment {
 
     @Override
     public void restoreIE() {
-
     }
 
     @Override

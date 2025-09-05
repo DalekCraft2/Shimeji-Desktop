@@ -312,7 +312,6 @@ public class MenuScroller
     }
 
     private void installListeners() {
-
         // remove all menu key listeners
         for (MenuKeyListener mkl : menu.getMenuKeyListeners()) {
             menu.removeMenuKeyListener(mkl);
@@ -586,7 +585,6 @@ public class MenuScroller
     private void restoreMenuItems() {
         menu.removeAll();
         for (Component c : menuItems) {
-
             // Dead code commented out 2021-12-13
             // if (false) {    // not working
             //     JMenuItem jmi = (JMenuItem) c;

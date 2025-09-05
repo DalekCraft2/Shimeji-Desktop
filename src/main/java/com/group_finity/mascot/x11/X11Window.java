@@ -62,9 +62,7 @@ public class X11Window {
         this.right_border = right_border;
     }
 
-
     X11Window(int x, int y) {
-
         window_anchor.setLocation(x, y);
         dragged = false;
     }

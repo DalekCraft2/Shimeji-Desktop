@@ -71,5 +71,4 @@ public abstract class BorderedAction extends ActionBase {
     protected Border getBorder() {
         return border;
     }
-
 }

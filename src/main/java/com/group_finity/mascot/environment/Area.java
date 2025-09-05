@@ -131,7 +131,6 @@ public class Area {
     }
 
     public void set(final Rectangle value) {
-
         setDleft(value.x - getLeft());
         setDtop(value.y - getTop());
         setDright(value.x + value.width - getRight());
@@ -144,7 +143,6 @@ public class Area {
     }
 
     public boolean contains(final int x, final int y) {
-
         return getLeft() <= x && x <= getRight() && getTop() <= y && y <= getBottom();
     }
 
@@ -156,5 +154,4 @@ public class Area {
     public String toString() {
         return "Area [left=" + left + ", top=" + top + ", right=" + right + ", bottom=" + bottom + "]";
     }
-
 }

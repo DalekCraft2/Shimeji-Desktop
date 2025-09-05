@@ -45,7 +45,6 @@ public class ComplexArea {
     }
 
     public FloorCeiling getBottomBorder(Point location) {
-
         FloorCeiling ret = null;
 
         for (Area area : areas.values()) {
@@ -64,7 +63,6 @@ public class ComplexArea {
     }
 
     public FloorCeiling getTopBorder(Point location) {
-
         FloorCeiling ret = null;
 
         for (Area area : areas.values()) {
@@ -83,7 +81,6 @@ public class ComplexArea {
     }
 
     public Wall getLeftBorder(Point location) {
-
         Wall ret = null;
 
         for (Area area : areas.values()) {
@@ -100,7 +97,6 @@ public class ComplexArea {
     }
 
     public Wall getRightBorder(Point location) {
-
         Wall ret = null;
 
         for (Area area : areas.values()) {

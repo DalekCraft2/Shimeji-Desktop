@@ -65,7 +65,6 @@ public class ActionBuilder implements IActionBuilder {
 
     @Override
     public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
-
         try {
             // Create Variable Map
             final VariableMap variables = createVariables(params);
@@ -186,6 +185,4 @@ public class ActionBuilder implements IActionBuilder {
     private List<IActionBuilder> getActionRefs() {
         return actionRefs;
     }
-
-
 }

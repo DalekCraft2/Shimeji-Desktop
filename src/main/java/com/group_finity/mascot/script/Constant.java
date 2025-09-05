@@ -33,5 +33,4 @@ public class Constant extends Variable {
     public Object get(final VariableMap variables) {
         return getValue();
     }
-
 }

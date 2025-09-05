@@ -25,7 +25,6 @@ public class Animate extends BorderedAction {
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
@@ -39,10 +38,8 @@ public class Animate extends BorderedAction {
 
     @Override
     public boolean hasNext() throws VariableException {
-
         final boolean inTime = getTime() < getAnimation().getDuration();
 
         return super.hasNext() && inTime;
     }
-
 }

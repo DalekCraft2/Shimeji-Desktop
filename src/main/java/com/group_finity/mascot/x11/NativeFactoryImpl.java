@@ -32,5 +32,4 @@ public class NativeFactoryImpl extends NativeFactory {
     public TranslucentWindow newTransparentWindow() {
         return new X11TranslucentWindow();
     }
-
 }

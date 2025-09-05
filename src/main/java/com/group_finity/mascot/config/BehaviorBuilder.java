@@ -93,14 +93,11 @@ public class BehaviorBuilder {
 
     private void loadBehaviors(final Entry list, final List<String> conditions) {
         for (final Entry node : list.getChildren()) {
-
             if (node.getName().equals(configuration.getSchema().getString("Condition"))) {
-
                 final List<String> newConditions = new ArrayList<>(conditions);
                 newConditions.add(node.getAttribute(configuration.getSchema().getString("Condition")));
 
                 loadBehaviors(node, newConditions);
-
             } else if (node.getName().equals(configuration.getSchema().getString("BehaviourReference"))) {
                 final BehaviorBuilder behavior = new BehaviorBuilder(getConfiguration(), node, conditions);
                 getNextBehaviorBuilders().add(behavior);
@@ -125,7 +122,6 @@ public class BehaviorBuilder {
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage") + "(" + this + ")", e);
         }
     }
-
 
     public boolean isEffective(final VariableMap context) throws VariableException {
         if (frequency == 0) {

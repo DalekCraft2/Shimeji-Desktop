@@ -11,7 +11,6 @@ public class NotOnBorder implements Border {
     public static final NotOnBorder INSTANCE = new NotOnBorder();
 
     private NotOnBorder() {
-
     }
 
     @Override

@@ -38,5 +38,4 @@ public class MascotImage {
     public Dimension getSize() {
         return size;
     }
-
 }

@@ -9,7 +9,6 @@ import com.group_finity.mascot.exception.VariableException;
 public abstract class Variable {
 
     public static Variable parse(final String source) throws VariableException {
-
         Variable result = null;
 
         if (source != null) {
@@ -50,5 +49,4 @@ public abstract class Variable {
     public abstract void initFrame();
 
     public abstract Object get(VariableMap variables) throws VariableException;
-
 }

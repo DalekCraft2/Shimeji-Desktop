@@ -34,5 +34,4 @@ public interface Action {
      * @throws LostGroundException if there is no ground
      */
     void next() throws LostGroundException, VariableException;
-
 }

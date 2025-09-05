@@ -53,7 +53,6 @@ public class Script extends Variable {
 
     @Override
     public synchronized Object get(final VariableMap variables) throws VariableException {
-
         if (getValue() != null) {
             return getValue();
         }

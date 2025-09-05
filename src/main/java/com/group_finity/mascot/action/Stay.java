@@ -26,7 +26,6 @@ public class Stay extends BorderedAction {
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
@@ -38,5 +37,4 @@ public class Stay extends BorderedAction {
         // Animate
         getAnimation().next(getMascot(), getTime());
     }
-
 }

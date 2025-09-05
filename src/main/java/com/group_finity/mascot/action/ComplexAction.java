@@ -96,5 +96,4 @@ public abstract class ComplexAction extends ActionBase {
     protected Action getAction() {
         return getActions()[getCurrentAction()];
     }
-
 }

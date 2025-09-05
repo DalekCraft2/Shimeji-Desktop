@@ -50,5 +50,4 @@ abstract class Hqx {
                 Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ||
                 Math.abs((c1 >> 24) - (c2 >> 24)) > trA;
     }
-
 }
