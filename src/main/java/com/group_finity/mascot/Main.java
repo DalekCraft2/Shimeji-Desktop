@@ -105,17 +105,19 @@ public class Main {
     }
 
     public static void showError(String message, Throwable exception) {
+        StringBuilder messageBuilder = new StringBuilder(message);
         do {
             if (exception.getClass().getName().startsWith("com.group_finity.mascot.exception")) {
-                message += "\n" + exception.getMessage();
+                messageBuilder.append("\n").append(exception.getMessage());
             } else if (exception instanceof SAXParseException) {
-                message += "\n" + "Line " + ((SAXParseException) exception).getLineNumber() + ": " + exception.getMessage();
+                messageBuilder.append("\n" + "Line ").append(((SAXParseException) exception).getLineNumber()).append(": ").append(exception.getMessage());
             } else {
-                message += "\n" + exception;
+                messageBuilder.append("\n").append(exception);
             }
             exception = exception.getCause();
         }
         while (exception != null);
+        message = messageBuilder.toString();
         showError(message + "\n" + instance.languageBundle.getString("SeeLogForDetails"));
     }
 
