@@ -34,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -92,13 +93,12 @@ public class Main {
     private Properties properties = new Properties();
     private ResourceBundle languageBundle;
 
+    private static JFrame frame;
     private JDialog form;
 
     public static Main getInstance() {
         return instance;
     }
-
-    private static final JFrame frame = new JFrame();
 
     public static void showError(String message) {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -120,6 +120,15 @@ public class Main {
     }
 
     public static void main(final String[] args) {
+        // Load theme before any Swing components are created
+        try {
+            SwingUtilities.invokeAndWait(Main::updateLookAndFeel);
+        } catch (InterruptedException | InvocationTargetException e) {
+            // throw new RuntimeException(e);
+            log.log(Level.SEVERE, "Failed to load look and feel", e);
+        }
+        OsThemeDetector.getDetector().registerListener(ignored -> SwingUtilities.invokeLater(Main::updateLookAndFeel));
+
         try {
             getInstance().run();
         } catch (OutOfMemoryError err) {
@@ -136,6 +145,8 @@ public class Main {
     }
 
     public void run() {
+        frame = new JFrame();
+
         // load properties
         properties = new Properties();
         if (Files.isRegularFile(SETTINGS_FILE)) {
@@ -158,10 +169,6 @@ public class Main {
             showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
             exit();
         }
-
-        // load theme
-        updateLookAndFeel();
-        OsThemeDetector.getDetector().registerListener(ignored -> updateLookAndFeel());
 
         // Get the image sets to use
         if (!Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"))) {
@@ -1289,28 +1296,26 @@ public class Main {
     }
 
     /** Updates the {@link LookAndFeel} of the application based on the current OS and whether it's using dark/light mode. */
-    private void updateLookAndFeel() {
-        SwingUtilities.invokeLater(() -> {
-            final boolean isDark = OsThemeDetector.isSupported() && OsThemeDetector.getDetector().isDark();
+    private static void updateLookAndFeel() {
+        final boolean isDark = OsThemeDetector.isSupported() && OsThemeDetector.getDetector().isDark();
 
-            if (OS.isFamilyMac()) {
-                if (isDark) {
-                    FlatMacDarkLaf.setup();
-                } else {
-                    FlatMacLightLaf.setup();
-                }
-
-
-                FlatLaf.updateUI();
-                return;
-            }
-
+        if (OS.isFamilyMac()) {
             if (isDark) {
-                FlatDarkLaf.setup();
+                FlatMacDarkLaf.setup();
             } else {
-                FlatLightLaf.setup();
+                FlatMacLightLaf.setup();
             }
+
+
             FlatLaf.updateUI();
-        });
+            return;
+        }
+
+        if (isDark) {
+            FlatDarkLaf.setup();
+        } else {
+            FlatLightLaf.setup();
+        }
+        FlatLaf.updateUI();
     }
 }
