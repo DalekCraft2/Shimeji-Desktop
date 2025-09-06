@@ -85,12 +85,12 @@ public class Main {
         }
     }
 
+    private static final Main instance = new Main();
     private final Manager manager = new Manager();
     private ArrayList<String> imageSets = new ArrayList<>();
     private final ConcurrentHashMap<String, Configuration> configurations = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
-    private static final Main instance = new Main();
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
     private ResourceBundle languageBundle;
 
     private static JFrame frame;
@@ -150,7 +150,6 @@ public class Main {
         frame = new JFrame();
 
         // load properties
-        properties = new Properties();
         if (Files.isRegularFile(SETTINGS_FILE)) {
             try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
                 properties.load(input);
