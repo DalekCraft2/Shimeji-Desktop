@@ -471,7 +471,7 @@ class X11Environment extends Environment {
         if (checkTitles) {
             return state.contains(minimizedValue);
         } else {
-            return state.stream().anyMatch(value -> badStateList.contains(value));
+            return state.stream().anyMatch(badStateList::contains);
         }
     }
 
@@ -482,7 +482,7 @@ class X11Environment extends Environment {
         if (checkTitles) {
             return false;
         } else {
-            return type.stream().anyMatch(value -> badTypeList.contains(value));
+            return type.stream().anyMatch(badTypeList::contains);
         }
     }
 
