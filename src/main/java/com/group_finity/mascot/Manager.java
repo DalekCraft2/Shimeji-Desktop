@@ -387,7 +387,6 @@ public class Manager {
 
         synchronized (mascots) {
             for (final Mascot mascot : mascots) {
-                // TODO Have this account for the entirety of the mascots' windows instead of just a single point
                 if (mascot.getAnchor().equals(anchor)) {
                     count++;
                 }

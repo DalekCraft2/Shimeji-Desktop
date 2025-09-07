@@ -378,7 +378,6 @@ public class Mascot {
                                 try {
                                     setBehavior(config.buildBehavior(command));
                                 } catch (BehaviorInstantiationException | CantBeAliveException ex) {
-                                    // TODO Determine whether this catch block is supposed to dispose of the mascot
                                     log.log(Level.SEVERE, "Failed to set behavior to \"" + command + "\" for mascot \"" + this + "\"", ex);
                                     Main.showError(languageBundle.getString("CouldNotSetBehaviourErrorMessage"), ex);
                                 }

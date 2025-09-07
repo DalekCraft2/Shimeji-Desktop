@@ -30,7 +30,6 @@ import java.util.logging.Logger;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-// FIXME This environment feels slower than it used to be whenever a lot of Shimejis are moving on-screen.
 class WindowsEnvironment extends Environment {
     private static final HashMap<HWND, Boolean> ieCache = new LinkedHashMap<>();
 

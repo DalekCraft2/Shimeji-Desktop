@@ -67,7 +67,6 @@ public class SettingsWindow extends JDialog {
         grpFilter.add(radFilterNearest);
         grpFilter.add(radFilterBicubic);
         grpFilter.add(radFilterHqx);
-        // TODO Hashtable is described as obsolete, so consider switching to another class
         Dictionary<Integer, JLabel> labelTable = IntStream.range(0, 9).boxed().collect(Collectors.toMap(index -> index * 10, index -> new JLabel(index + "x"), (a, b) -> b, Hashtable::new));
         sldScaling.setLabelTable(labelTable);
         sldScaling.setPaintLabels(true);
