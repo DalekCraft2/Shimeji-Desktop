@@ -65,13 +65,13 @@ public class Wall implements Border {
             return location;
         }
 
-        final int d = getBottom() - getDBottom() - (getTop() - getDTop());
-        if (d == 0) {
+        final int newHeight = getBottom() - getDBottom() - (getTop() - getDTop());
+        if (newHeight == 0) {
             return location;
         }
 
         final Point newLocation = new Point(location.x + getDX(), (location.y - (getTop() - getDTop()))
-                * (getBottom() - getTop()) / d + getTop());
+                * getHeight() / newHeight + getTop());
 
         if (Math.abs(newLocation.x - location.x) >= 80 || Math.abs(newLocation.y - location.y) >= 80) {
             return location;

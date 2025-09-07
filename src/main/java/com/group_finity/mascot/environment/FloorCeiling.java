@@ -65,12 +65,12 @@ public class FloorCeiling implements Border {
             return location;
         }
 
-        final int d = getRight() - getDRight() - (getLeft() - getDLeft());
-        if (d == 0) {
+        final int newWidth = getRight() - getDRight() - (getLeft() - getDLeft());
+        if (newWidth == 0) {
             return location;
         }
 
-        final Point newLocation = new Point((location.x - (getLeft() - getDLeft())) * ((getRight() - getLeft()) / d)
+        final Point newLocation = new Point((location.x - (getLeft() - getDLeft())) * getWidth() / newWidth
                 + getLeft(), location.y + getDY());
 
         if (Math.abs(newLocation.x - location.x) >= 80 || newLocation.y - location.y > 20
