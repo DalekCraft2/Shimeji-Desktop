@@ -24,14 +24,6 @@ class X11NativeImage implements NativeImage {
         managedImage = image;
     }
 
-    public int getWidth() {
-        return managedImage.getWidth();
-    }
-
-    public int getHeight() {
-        return managedImage.getHeight();
-    }
-
     BufferedImage getManagedImage() {
         return managedImage;
     }
