@@ -151,9 +151,6 @@ class X11Environment extends Environment {
         } */
     }
 
-    /**
-     * Called every 40 milliseconds. Defined in {@link Manager}.
-     */
     @Override
     public void tick() {
         super.tick();

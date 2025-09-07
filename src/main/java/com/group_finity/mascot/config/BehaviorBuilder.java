@@ -18,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * An object that builds behaviors.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
@@ -105,6 +107,11 @@ public class BehaviorBuilder {
         }
     }
 
+    /**
+     * Validates the behavior. Should be called after {@link #buildBehavior()} has been called.
+     *
+     * @throws ConfigurationException if the behavior references a nonexistent action
+     */
     public void validate() throws ConfigurationException {
         if (!getConfiguration().getActionBuilders().containsKey(getActionName())) {
             log.log(Level.SEVERE, "There is no corresponding action for behavior: {0}", this);
@@ -112,6 +119,14 @@ public class BehaviorBuilder {
         }
     }
 
+    /**
+     * Builds the behavior, its corresponding action, and all of the corresponding action's children actions/action
+     * references.
+     *
+     * @return the built behavior
+     * @throws BehaviorInstantiationException if the behavior's corresponding action fails to be built
+     * @see IActionBuilder#buildAction(Map)
+     */
     public Behavior buildBehavior() throws BehaviorInstantiationException {
         try {
             return new UserBehavior(getName(),

@@ -1,5 +1,7 @@
 package com.group_finity.mascot.environment;
 
+import com.group_finity.mascot.Manager;
+
 import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
@@ -84,6 +86,9 @@ public abstract class Environment {
         return info != null ? info.getLocation() : new Point(0, 0);
     }
 
+    /**
+     * Called when this environment is created.
+     */
     public void init() {
         if (!thread.isAlive()) {
             thread.setDaemon(true);
@@ -94,6 +99,9 @@ public abstract class Environment {
         tick();
     }
 
+    /**
+     * Advances this environment by one frame. Called every 40 milliseconds by {@link Manager}.
+     */
     public void tick() {
         screen.set(screenRect);
         complexScreen.set(screenRects);

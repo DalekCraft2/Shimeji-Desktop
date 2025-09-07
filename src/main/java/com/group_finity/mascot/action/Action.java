@@ -1,6 +1,7 @@
 package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Mascot;
+import com.group_finity.mascot.environment.Border;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 
@@ -18,6 +19,7 @@ public interface Action {
      * Called when starting an action.
      *
      * @param mascot the {@link Mascot} with which to associate
+     * @throws VariableException if one of the parameters passed to the action is invalid or can not be parsed
      */
     void init(Mascot mascot) throws VariableException;
 
@@ -25,13 +27,15 @@ public interface Action {
      * Checks whether there is a next frame.
      *
      * @return whether there is a next frame
+     * @throws VariableException if one of the parameters passed to the action can not be parsed
      */
     boolean hasNext() throws VariableException;
 
     /**
-     * Advances the {@link Mascot} to the next frame.
+     * Advances the associated {@link Mascot} to the next frame.
      *
-     * @throws LostGroundException if there is no ground
+     * @throws LostGroundException if the {@link Mascot} is not on any {@link Border} or should otherwise begin falling
+     * @throws VariableException if one of the parameters passed to the action can not be parsed
      */
     void next() throws LostGroundException, VariableException;
 }
