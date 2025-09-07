@@ -276,6 +276,9 @@ public class Main {
 
             configuration.load(new Entry(actions.getDocumentElement()), imageSet);
 
+            // Save the schema for the actions file so we can use it later
+            ResourceBundle actionsSchema = configuration.getSchema();
+
             filePath = CONFIG_DIRECTORY;
             Path behaviorsFile = filePath.resolve("behaviors.xml");
             if (Files.exists(filePath.resolve("\u884C\u52D5.xml"))) {
@@ -355,11 +358,10 @@ public class Main {
             ArrayList<String> childMascots = new ArrayList<>();
 
             // born mascot bit goes here...
-            // TODO Make these use the proper language's schema tag names instead of hardcoding them as the English ones
-            for (final Entry list : new Entry(actions.getDocumentElement()).selectChildren("ActionList")) {
-                for (final Entry node : list.selectChildren("Action")) {
-                    if (node.getAttributes().containsKey("BornMascot")) {
-                        String set = node.getAttribute("BornMascot");
+            for (final Entry list : new Entry(actions.getDocumentElement()).selectChildren(actionsSchema.getString("ActionList"))) {
+                for (final Entry node : list.selectChildren(actionsSchema.getString("Action"))) {
+                    if (node.getAttributes().containsKey(actionsSchema.getString("BornMascot"))) {
+                        String set = node.getAttribute(actionsSchema.getString("BornMascot"));
                         if (!childMascots.contains(set)) {
                             childMascots.add(set);
                         }
@@ -367,8 +369,8 @@ public class Main {
                             loadConfiguration(set);
                         }
                     }
-                    if (node.getAttributes().containsKey("TransformMascot")) {
-                        String set = node.getAttribute("TransformMascot");
+                    if (node.getAttributes().containsKey(actionsSchema.getString("TransformMascot"))) {
+                        String set = node.getAttribute(actionsSchema.getString("TransformMascot"));
                         if (!childMascots.contains(set)) {
                             childMascots.add(set);
                         }
