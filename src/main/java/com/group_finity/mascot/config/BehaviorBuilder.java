@@ -50,11 +50,11 @@ public class BehaviorBuilder {
     public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) {
         this.configuration = configuration;
         name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
-        actionName = behaviorNode.getAttribute(configuration.getSchema().getString("Action")) == null ? getName() : behaviorNode.getAttribute(configuration.getSchema().getString("Action"));
+        actionName = behaviorNode.getAttribute(configuration.getSchema().getString("Action")) == null ? name : behaviorNode.getAttribute(configuration.getSchema().getString("Action"));
         frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
         hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
         this.conditions = new ArrayList<>(conditions);
-        getConditions().add(behaviorNode.getAttribute(configuration.getSchema().getString("Condition")));
+        this.conditions.add(behaviorNode.getAttribute(configuration.getSchema().getString("Condition")));
 
         // override of toggleable state for required fields
         if (name.equals(UserBehavior.BEHAVIOURNAME_FALL) ||
@@ -67,13 +67,13 @@ public class BehaviorBuilder {
 
         log.log(Level.FINE, "Loading behavior: {0}", this);
 
-        getParams().putAll(behaviorNode.getAttributes());
-        getParams().remove(configuration.getSchema().getString("Name"));
-        getParams().remove(configuration.getSchema().getString("Action"));
-        getParams().remove(configuration.getSchema().getString("Frequency"));
-        getParams().remove(configuration.getSchema().getString("Hidden"));
-        getParams().remove(configuration.getSchema().getString("Condition"));
-        getParams().remove(configuration.getSchema().getString("Toggleable"));
+        params.putAll(behaviorNode.getAttributes());
+        params.remove(configuration.getSchema().getString("Name"));
+        params.remove(configuration.getSchema().getString("Action"));
+        params.remove(configuration.getSchema().getString("Frequency"));
+        params.remove(configuration.getSchema().getString("Hidden"));
+        params.remove(configuration.getSchema().getString("Condition"));
+        params.remove(configuration.getSchema().getString("Toggleable"));
 
         boolean nextAdditive = true;
 
@@ -90,7 +90,7 @@ public class BehaviorBuilder {
 
     @Override
     public String toString() {
-        return "Behavior(" + getName() + "," + getFrequency() + "," + getActionName() + ")";
+        return "Behavior(" + name + "," + frequency + "," + actionName + ")";
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions) {
@@ -101,8 +101,8 @@ public class BehaviorBuilder {
 
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(configuration.getSchema().getString("BehaviourReference"))) {
-                final BehaviorBuilder behavior = new BehaviorBuilder(getConfiguration(), node, conditions);
-                getNextBehaviorBuilders().add(behavior);
+                final BehaviorBuilder behavior = new BehaviorBuilder(configuration, node, conditions);
+                nextBehaviorBuilders.add(behavior);
             }
         }
     }
@@ -113,7 +113,7 @@ public class BehaviorBuilder {
      * @throws ConfigurationException if the behavior references a nonexistent action
      */
     public void validate() throws ConfigurationException {
-        if (!getConfiguration().getActionBuilders().containsKey(getActionName())) {
+        if (!configuration.getActionBuilders().containsKey(actionName)) {
             log.log(Level.SEVERE, "There is no corresponding action for behavior: {0}", this);
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + "(" + this + ")");
         }
@@ -129,9 +129,9 @@ public class BehaviorBuilder {
      */
     public Behavior buildBehavior() throws BehaviorInstantiationException {
         try {
-            return new UserBehavior(getName(),
-                    getConfiguration().buildAction(getActionName(),
-                            getParams()), getConfiguration());
+            return new UserBehavior(name,
+                    configuration.buildAction(actionName,
+                            params), configuration);
         } catch (final ActionInstantiationException e) {
             log.log(Level.SEVERE, "Failed to initialize the corresponding action for behavior: " + this, e);
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage") + "(" + this + ")", e);
@@ -143,7 +143,7 @@ public class BehaviorBuilder {
             return false;
         }
 
-        for (final String condition : getConditions()) {
+        for (final String condition : conditions) {
             if (condition != null) {
                 if (!(Boolean) Variable.parse(condition).get(context)) {
                     return false;
@@ -168,22 +168,6 @@ public class BehaviorBuilder {
 
     public boolean isToggleable() {
         return toggleable;
-    }
-
-    private String getActionName() {
-        return actionName;
-    }
-
-    private Map<String, String> getParams() {
-        return params;
-    }
-
-    private List<String> getConditions() {
-        return conditions;
-    }
-
-    private Configuration getConfiguration() {
-        return configuration;
     }
 
     public boolean isNextAdditive() {

@@ -157,10 +157,10 @@ public class Mascot {
         log.log(Level.INFO, "Created mascot \"{0}\" with image set \"{1}\"", new Object[]{this, imageSet});
 
         // Always show on top
-        getWindow().setAlwaysOnTop(true);
+        window.setAlwaysOnTop(true);
 
         // Register the mouse handler
-        getWindow().asComponent().addMouseListener(new MouseAdapter() {
+        window.asComponent().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(final MouseEvent e) {
                 Mascot.this.mousePressed(e);
@@ -171,7 +171,7 @@ public class Mascot {
                 Mascot.this.mouseReleased(e);
             }
         });
-        getWindow().asComponent().addMouseMotionListener(new MouseMotionListener() {
+        window.asComponent().addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseMoved(final MouseEvent e) {
                 if (paused) {
@@ -240,15 +240,15 @@ public class Mascot {
             };
             debugComp.setBackground(new Color(0, 0, 0, 0));
             debugComp.setOpaque(false);
-            debugComp.setPreferredSize(getWindow().asComponent().getPreferredSize());
-            getWindow().asComponent().addComponentListener(new ComponentAdapter() {
+            debugComp.setPreferredSize(window.asComponent().getPreferredSize());
+            window.asComponent().addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     super.componentResized(e);
                     debugComp.setPreferredSize(e.getComponent().getPreferredSize());
                 }
             });
-            ((Container) getWindow().asComponent()).add(debugComp);
+            ((Container) window.asComponent()).add(debugComp);
         }
     }
 
@@ -264,9 +264,9 @@ public class Mascot {
             SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
         } else {
             // Switch to drag animation when mouse is pressed
-            if (!isPaused() && getBehavior() != null) {
+            if (!paused && behavior != null) {
                 try {
-                    getBehavior().mousePressed(event);
+                    behavior.mousePressed(event);
                 } catch (final CantBeAliveException e) {
                     log.log(Level.SEVERE, "Severe error in mouse press handler for mascot \"" + this + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
@@ -282,9 +282,9 @@ public class Mascot {
         if (event.isPopupTrigger()) {
             SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
         } else {
-            if (!isPaused() && getBehavior() != null) {
+            if (!paused && behavior != null) {
                 try {
-                    getBehavior().mouseReleased(event);
+                    behavior.mouseReleased(event);
                 } catch (final CantBeAliveException e) {
                     log.log(Level.SEVERE, "Severe error in mouse release handler for mascot \"" + this + "\"", e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
@@ -324,19 +324,19 @@ public class Mascot {
 
         // "Follow Mouse!" menu item
         final JMenuItem gatherMenu = new JMenuItem(languageBundle.getString("FollowCursor"));
-        gatherMenu.addActionListener(event -> getManager().setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER, imageSet));
+        gatherMenu.addActionListener(event -> manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER, imageSet));
 
         // "Reduce to One!" menu item
         final JMenuItem oneMenu = new JMenuItem(languageBundle.getString("DismissOthers"));
-        oneMenu.addActionListener(event -> getManager().remainOne(imageSet, this));
+        oneMenu.addActionListener(event -> manager.remainOne(imageSet, this));
 
         // "Reduce to One!" menu item
         final JMenuItem onlyOneMenu = new JMenuItem(languageBundle.getString("DismissAllOthers"));
-        onlyOneMenu.addActionListener(event -> getManager().remainOne(this));
+        onlyOneMenu.addActionListener(event -> manager.remainOne(this));
 
         // "Restore IE!" menu item
         final JMenuItem restoreMenu = new JMenuItem(languageBundle.getString("RestoreWindows"));
-        restoreMenu.addActionListener(event -> getEnvironment().restoreIE());
+        restoreMenu.addActionListener(event -> environment.restoreIE());
 
         // Debug menu item
         final JMenuItem debugMenu = new JMenuItem(languageBundle.getString("RevealStatistics"));
@@ -353,7 +353,7 @@ public class Mascot {
 
         // "Paused" Menu item
         final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? languageBundle.getString("PauseAnimations") : languageBundle.getString("ResumeAnimations"));
-        pauseMenu.addActionListener(event -> setPaused(!isPaused()));
+        pauseMenu.addActionListener(event -> paused = !paused);
 
         // Add the Behaviors submenu. It is currently slightly buggy; sometimes the menu ghosts.
         // JLongMenu submenu = new JLongMenu(languageBundle.getString("SetBehaviour"), 30);
@@ -362,7 +362,7 @@ public class Mascot {
         submenu.setAutoscrolls(true);
         JMenuItem item;
         JCheckBoxMenuItem toggleItem;
-        final Configuration config = Main.getInstance().getConfiguration(getImageSet());
+        final Configuration config = Main.getInstance().getConfiguration(imageSet);
         for (String behaviorName : config.getBehaviorNames()) {
             final String command = behaviorName;
             try {
@@ -423,12 +423,12 @@ public class Mascot {
         popup.add(closeMenu);
 
         // TODO Get the popup to close when clicking outside of it
-        getWindow().asComponent().requestFocus();
+        window.asComponent().requestFocus();
 
         // Lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window's boundary.
         // As the shimeji window can't support this, we need to set them to heavyweight.
         popup.setLightWeightPopupEnabled(false);
-        popup.show(getWindow().asComponent(), x, y);
+        popup.show(window.asComponent(), x, y);
     }
 
     void tick() {
@@ -505,16 +505,16 @@ public class Mascot {
             }
 
             animating = false;
-            getWindow().dispose();
-            getAffordances().clear();
-            if (getManager() != null) {
-                getManager().remove(this);
+            window.dispose();
+            affordances.clear();
+            if (manager != null) {
+                manager.remove(this);
             }
         }
     }
 
     private void refreshCursor(Point position) {
-        synchronized (getHotspots()) {
+        synchronized (hotspots) {
             boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position) &&
                     Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
 
@@ -523,7 +523,7 @@ public class Mascot {
     }
 
     private void refreshCursor(Boolean useHand) {
-        getWindow().asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+        window.asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
     }
 
     public Manager getManager() {
@@ -577,15 +577,15 @@ public class Mascot {
     }
 
     public Rectangle getBounds() {
-        if (getImage() != null) {
+        if (image != null) {
             // Find the window area from the ground coordinates and image center coordinates. The center has already been adjusted for scaling.
-            final int top = getAnchor().y - getImage().getCenter().y;
-            final int left = getAnchor().x - getImage().getCenter().x;
+            final int top = anchor.y - image.getCenter().y;
+            final int left = anchor.x - image.getCenter().x;
 
-            return new Rectangle(left, top, getImage().getSize().width, getImage().getSize().height);
+            return new Rectangle(left, top, image.getSize().width, image.getSize().height);
         } else {
             // as we have no image let's return what we were last frame
-            return getWindow().asComponent().getBounds();
+            return window.asComponent().getBounds();
         }
     }
 
@@ -603,11 +603,11 @@ public class Mascot {
     }
 
     public int getCount() {
-        return manager != null ? getManager().getCount(imageSet) : 0;
+        return manager != null ? manager.getCount(imageSet) : 0;
     }
 
     public int getTotalCount() {
-        return manager != null ? getManager().getCount() : 0;
+        return manager != null ? manager.getCount() : 0;
     }
 
     private boolean isAnimating() {
@@ -616,10 +616,6 @@ public class Mascot {
 
     private void setAnimating(final boolean animating) {
         this.animating = animating;
-    }
-
-    private TranslucentWindow getWindow() {
-        return window;
     }
 
     public MascotEnvironment getEnvironment() {

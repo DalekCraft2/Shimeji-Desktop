@@ -28,31 +28,19 @@ public class ActionRef implements IActionBuilder {
         this.configuration = configuration;
 
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
-        getParams().putAll(refNode.getAttributes());
+        params.putAll(refNode.getAttributes());
 
         log.log(Level.FINE, "Finished loading action reference: {0}", this);
     }
 
     @Override
     public String toString() {
-        return "Action(" + getName() + ")";
-    }
-
-    private String getName() {
-        return name;
-    }
-
-    private Map<String, String> getParams() {
-        return params;
-    }
-
-    private Configuration getConfiguration() {
-        return configuration;
+        return "Action(" + name + ")";
     }
 
     @Override
     public void validate() throws ConfigurationException {
-        if (!getConfiguration().getActionBuilders().containsKey(getName())) {
+        if (!configuration.getActionBuilders().containsKey(name)) {
             log.log(Level.SEVERE, "There is no corresponding action for action reference: {0}", this);
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + "(" + this + ")");
         }
@@ -61,7 +49,7 @@ public class ActionRef implements IActionBuilder {
     @Override
     public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
         final Map<String, String> newParams = new LinkedHashMap<>(params);
-        newParams.putAll(getParams());
-        return getConfiguration().buildAction(getName(), newParams);
+        newParams.putAll(this.params);
+        return configuration.buildAction(name, newParams);
     }
 }

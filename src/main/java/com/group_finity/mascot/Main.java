@@ -132,7 +132,7 @@ public class Main {
         OsThemeDetector.getDetector().registerListener(ignored -> SwingUtilities.invokeLater(Main::updateLookAndFeel));
 
         try {
-            getInstance().run();
+            instance.run();
         } catch (OutOfMemoryError err) {
             log.log(Level.SEVERE, "Out of memory. There are probably too many "
                     + "Shimeji mascots in the image folder for your computer to handle. "
@@ -216,7 +216,7 @@ public class Main {
             createMascot(imageSet);
         }
 
-        getManager().start();
+        manager.start();
     }
 
     /**
@@ -448,14 +448,14 @@ public class Main {
                         // When the icon is double-middle-clicked, dispose of all mascots, but do not close the program
                         /* BUG: On Windows 11, Java seems to think the middle mouse button is the left mouse button, so this code never gets executed.
                         This is a JDK bug: https://bugs.openjdk.org/browse/JDK-8341173 */
-                        if (getManager().isExitOnLastRemoved()) {
-                            getManager().setExitOnLastRemoved(false);
-                            getManager().disposeAll();
+                        if (manager.isExitOnLastRemoved()) {
+                            manager.setExitOnLastRemoved(false);
+                            manager.disposeAll();
                         } else {
                             // If the mascots are already gone, recreate one mascot for each active image set
                             for (String imageSet : imageSets) {
                                 createMascot(imageSet);
-                                getManager().setExitOnLastRemoved(true);
+                                manager.setExitOnLastRemoved(true);
                             }
                         }
                     }
@@ -500,13 +500,13 @@ public class Main {
 
                     JButton btnFollowCursor = new JButton(languageBundle.getString("FollowCursor"));
                     btnFollowCursor.addActionListener(event16 -> {
-                        getManager().setBehaviorAll(BEHAVIOR_GATHER);
+                        manager.setBehaviorAll(BEHAVIOR_GATHER);
                         form.dispose();
                     });
 
                     JButton btnReduceToOne = new JButton(languageBundle.getString("ReduceToOne"));
                     btnReduceToOne.addActionListener(event15 -> {
-                        getManager().remainOne();
+                        manager.remainOne();
                         form.dispose();
                     });
 
@@ -625,24 +625,24 @@ public class Main {
                     final JButton btnChooseShimeji = new JButton(languageBundle.getString("ChooseShimeji"));
                     btnChooseShimeji.addActionListener(event12 -> {
                         form.dispose();
-                        if (!getManager().isPaused()) {
-                            getManager().togglePauseAll(); // needed to stop the guys from potentially throwing away settings
+                        if (!manager.isPaused()) {
+                            manager.togglePauseAll(); // needed to stop the guys from potentially throwing away settings
                         }
 
                         ImageSetChooser chooser = new ImageSetChooser(frame, true);
                         chooser.setIconImage(icon.getImage());
                         setActiveImageSets(chooser.display());
 
-                        if (getManager().isPaused()) {
-                            getManager().togglePauseAll();
+                        if (manager.isPaused()) {
+                            manager.togglePauseAll();
                         }
                     });
 
                     final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
                     btnSettings.addActionListener(event1 -> {
                         form.dispose();
-                        if (!getManager().isPaused()) {
-                            getManager().togglePauseAll(); // needed to stop the guys from potentially throwing away settings
+                        if (!manager.isPaused()) {
+                            manager.togglePauseAll(); // needed to stop the guys from potentially throwing away settings
                         }
 
                         SettingsWindow dialog = new SettingsWindow(frame, true);
@@ -656,9 +656,9 @@ public class Main {
                         }
                         if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
                             // need to reload the shimeji as the images have rescaled
-                            boolean isExit = getManager().isExitOnLastRemoved();
-                            getManager().setExitOnLastRemoved(false);
-                            getManager().disposeAll();
+                            boolean isExit = manager.isExitOnLastRemoved();
+                            manager.setExitOnLastRemoved(false);
+                            manager.disposeAll();
 
                             // Wipe all loaded data
                             ImagePairs.clear();
@@ -674,10 +674,10 @@ public class Main {
                                 createMascot(imageSet);
                             }
 
-                            getManager().setExitOnLastRemoved(isExit);
+                            manager.setExitOnLastRemoved(isExit);
                         } else {
-                            if (getManager().isPaused()) {
-                                getManager().togglePauseAll();
+                            if (manager.isPaused()) {
+                                manager.togglePauseAll();
                             }
                         }
                         if (dialog.getInteractiveWindowReloadRequired()) {
@@ -925,10 +925,10 @@ public class Main {
                         btnLanguage.requestFocusInWindow();
                     });
 
-                    JButton btnPauseAll = new JButton(getManager().isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
+                    JButton btnPauseAll = new JButton(manager.isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
                     btnPauseAll.addActionListener(e -> {
                         form.dispose();
-                        getManager().togglePauseAll();
+                        manager.togglePauseAll();
                     });
 
                     JButton btnDismissAll = new JButton(languageBundle.getString("DismissAll"));
@@ -1055,7 +1055,7 @@ public class Main {
 
         try {
             mascot.setBehavior(getConfiguration(imageSet).buildNextBehavior(null, mascot));
-            getManager().add(mascot);
+            manager.add(mascot);
         } catch (final BehaviorInstantiationException e) {
             // Not sure why this says "first action" instead of "first behavior", but changing it would require changing all of the translations, so...
             log.log(Level.SEVERE, "Failed to initialize the first action for mascot \"" + mascot + "\"", e);
@@ -1084,9 +1084,9 @@ public class Main {
             exit();
         }
 
-        boolean isExit = getManager().isExitOnLastRemoved();
-        getManager().setExitOnLastRemoved(false);
-        getManager().disposeAll();
+        boolean isExit = manager.isExitOnLastRemoved();
+        manager.setExitOnLastRemoved(false);
+        manager.disposeAll();
 
         // Load mascot configurations
         for (String imageSet : imageSets) {
@@ -1098,7 +1098,7 @@ public class Main {
             createMascot(imageSet);
         }
 
-        getManager().setExitOnLastRemoved(isExit);
+        manager.setExitOnLastRemoved(isExit);
     }
 
     private void updateLanguage(Locale locale) {
@@ -1200,8 +1200,8 @@ public class Main {
             populateArrayListWithChildSets(set, toRetain);
         }
 
-        boolean isExit = getManager().isExitOnLastRemoved();
-        getManager().setExitOnLastRemoved(false);
+        boolean isExit = manager.isExitOnLastRemoved();
+        manager.setExitOnLastRemoved(false);
 
         for (String r : toRemove)
             removeLoadedImageSet(r, toRetain);
@@ -1209,7 +1209,7 @@ public class Main {
         for (String a : toAdd)
             addImageSet(a);
 
-        getManager().setExitOnLastRemoved(isExit);
+        manager.setExitOnLastRemoved(isExit);
     }
 
     private void populateArrayListWithChildSets(String imageSet, ArrayList<String> childList) {
@@ -1235,7 +1235,7 @@ public class Main {
                 if (!setsToIgnore.contains(set)) {
                     setsToIgnore.add(set);
                     imageSets.remove(imageSet);
-                    getManager().remainNone(imageSet);
+                    manager.remainNone(imageSet);
                     configurations.remove(imageSet);
                     ImagePairs.removeAll(imageSet);
                     removeLoadedImageSet(set, setsToIgnore);
@@ -1245,7 +1245,7 @@ public class Main {
 
         if (!setsToIgnore.contains(imageSet)) {
             imageSets.remove(imageSet);
-            getManager().remainNone(imageSet);
+            manager.remainNone(imageSet);
             configurations.remove(imageSet);
             ImagePairs.removeAll(imageSet);
         }
@@ -1280,10 +1280,6 @@ public class Main {
         return configurations.get(imageSet);
     }
 
-    private Manager getManager() {
-        return manager;
-    }
-
     public Properties getProperties() {
         return properties;
     }
@@ -1293,8 +1289,8 @@ public class Main {
     }
 
     public void exit() {
-        getManager().disposeAll();
-        getManager().stop();
+        manager.disposeAll();
+        manager.stop();
         System.exit(0);
     }
 

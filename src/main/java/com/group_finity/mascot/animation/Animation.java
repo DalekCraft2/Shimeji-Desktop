@@ -30,15 +30,15 @@ public class Animation {
     }
 
     public boolean isEffective(final VariableMap variables) throws VariableException {
-        return (Boolean) getCondition().get(variables);
+        return (Boolean) condition.get(variables);
     }
 
     public void init() {
-        getCondition().init();
+        condition.init();
     }
 
     public void initFrame() {
-        getCondition().initFrame();
+        condition.initFrame();
     }
 
     public void next(final Mascot mascot, final int time) {
@@ -48,7 +48,7 @@ public class Animation {
     public Pose getPoseAt(int time) {
         time %= getDuration();
 
-        for (final Pose pose : getPoses()) {
+        for (final Pose pose : poses) {
             time -= pose.getDuration();
             if (time < 0) {
                 return pose;
@@ -59,15 +59,7 @@ public class Animation {
     }
 
     public int getDuration() {
-        return Arrays.stream(getPoses()).mapToInt(Pose::getDuration).sum();
-    }
-
-    private Variable getCondition() {
-        return condition;
-    }
-
-    private Pose[] getPoses() {
-        return poses;
+        return Arrays.stream(poses).mapToInt(Pose::getDuration).sum();
     }
 
     public Hotspot[] getHotspots() {

@@ -53,7 +53,7 @@ public class Configuration {
         }
 
         for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
-            getConstants().put(constant.getAttribute(schema.getString("Name")),
+            constants.put(constant.getAttribute(schema.getString("Name")),
                     constant.getAttribute(schema.getString("Value")));
         }
 
@@ -64,11 +64,11 @@ public class Configuration {
             for (final Entry node : list.selectChildren(schema.getString("Action"))) {
                 final ActionBuilder action = new ActionBuilder(this, node, imageSet);
 
-                if (getActionBuilders().containsKey(action.getName())) {
+                if (actionBuilders.containsKey(action.getName())) {
                     throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage") + ": " + action.getName());
                 }
 
-                getActionBuilders().put(action.getName(), action);
+                actionBuilders.put(action.getName(), action);
             }
 
             log.log(Level.FINE, "Finished reading an action list");
@@ -107,7 +107,7 @@ public class Configuration {
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(schema.getString("Behaviour"))) {
                 final BehaviorBuilder behavior = new BehaviorBuilder(this, node, conditions);
-                getBehaviorBuilders().put(behavior.getName(), behavior);
+                behaviorBuilders.put(behavior.getName(), behavior);
             }
         }
     }
@@ -145,17 +145,17 @@ public class Configuration {
     }
 
     public void validate() throws ConfigurationException {
-        for (final ActionBuilder builder : getActionBuilders().values()) {
+        for (final ActionBuilder builder : actionBuilders.values()) {
             builder.validate();
         }
-        for (final BehaviorBuilder builder : getBehaviorBuilders().values()) {
+        for (final BehaviorBuilder builder : behaviorBuilders.values()) {
             builder.validate();
         }
     }
 
     public Behavior buildNextBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
         final VariableMap context = new VariableMap();
-        context.putAll(getConstants()); // put first so they can't override mascot
+        context.putAll(constants); // put first so they can't override mascot
         context.put("mascot", mascot);
 
         final Collection<BehaviorBuilder> candidates = new ArrayList<>();
@@ -163,13 +163,13 @@ public class Configuration {
 
         final BehaviorBuilder previousBehaviorFactory;
         if (previousName != null) {
-            previousBehaviorFactory = getBehaviorBuilders().get(previousName);
+            previousBehaviorFactory = behaviorBuilders.get(previousName);
         } else {
             previousBehaviorFactory = null;
         }
 
         if (previousName == null || previousBehaviorFactory.isNextAdditive()) {
-            for (final BehaviorBuilder behaviorFactory : getBehaviorBuilders().values()) {
+            for (final BehaviorBuilder behaviorFactory : behaviorBuilders.values()) {
                 try {
                     if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
                         candidates.add(behaviorFactory);
@@ -220,7 +220,7 @@ public class Configuration {
     public Behavior buildBehavior(final String name, final Mascot mascot) throws BehaviorInstantiationException {
         if (behaviorBuilders.containsKey(name)) {
             if (isBehaviorEnabled(name, mascot)) {
-                return getBehaviorBuilders().get(name).buildBehavior();
+                return behaviorBuilders.get(name).buildBehavior();
             } else {
                 if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
                     mascot.setAnchor(new Point((int) (Math.random() * (mascot.getEnvironment().getScreen().getRight() - mascot.getEnvironment().getScreen().getLeft())) + mascot.getEnvironment().getScreen().getLeft(),
@@ -238,7 +238,7 @@ public class Configuration {
 
     public Behavior buildBehavior(final String name) throws BehaviorInstantiationException {
         if (behaviorBuilders.containsKey(name)) {
-            return getBehaviorBuilders().get(name).buildBehavior();
+            return behaviorBuilders.get(name).buildBehavior();
         } else {
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + name + ")");
         }
@@ -253,7 +253,7 @@ public class Configuration {
 
     public boolean isBehaviorEnabled(final String name, final Mascot mascot) {
         if (behaviorBuilders.containsKey(name)) {
-            return isBehaviorEnabled(getBehaviorBuilders().get(name), mascot);
+            return isBehaviorEnabled(behaviorBuilders.get(name), mascot);
         } else {
             return false;
         }
@@ -261,7 +261,7 @@ public class Configuration {
 
     public boolean isBehaviorHidden(final String name) {
         if (behaviorBuilders.containsKey(name)) {
-            return getBehaviorBuilders().get(name).isHidden();
+            return behaviorBuilders.get(name).isHidden();
         } else {
             return false;
         }
@@ -269,22 +269,14 @@ public class Configuration {
 
     public boolean isBehaviorToggleable(final String name) {
         if (behaviorBuilders.containsKey(name)) {
-            return getBehaviorBuilders().get(name).isToggleable();
+            return behaviorBuilders.get(name).isToggleable();
         } else {
             return false;
         }
     }
 
-    private Map<String, String> getConstants() {
-        return constants;
-    }
-
     Map<String, ActionBuilder> getActionBuilders() {
         return actionBuilders;
-    }
-
-    private Map<String, BehaviorBuilder> getBehaviorBuilders() {
-        return behaviorBuilders;
     }
 
     public Set<String> getBehaviorNames() {

@@ -39,16 +39,16 @@ public class ActionBuilder implements IActionBuilder {
         log.log(Level.FINE, "Loading action: {0}", this);
 
         try {
-            getParams().putAll(actionNode.getAttributes());
+            params.putAll(actionNode.getAttributes());
             for (final Entry node : actionNode.selectChildren(schema.getString("Animation"))) {
-                getAnimationBuilders().add(new AnimationBuilder(schema, node, imageSet));
+                animationBuilders.add(new AnimationBuilder(schema, node, imageSet));
             }
 
             for (final Entry node : actionNode.getChildren()) {
                 if (node.getName().equals(schema.getString("ActionReference"))) {
-                    getActionRefs().add(new ActionRef(configuration, node));
+                    actionRefs.add(new ActionRef(configuration, node));
                 } else if (node.getName().equals(schema.getString("Action"))) {
-                    getActionRefs().add(new ActionBuilder(configuration, node, imageSet));
+                    actionRefs.add(new ActionBuilder(configuration, node, imageSet));
                 }
             }
         } catch (ConfigurationException e) {
@@ -60,7 +60,7 @@ public class ActionBuilder implements IActionBuilder {
 
     @Override
     public String toString() {
-        return "Action(" + getName() + "," + getType() + "," + getClassName() + ")";
+        return "Action(" + name + "," + type + "," + className + ")";
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ActionBuilder implements IActionBuilder {
 
             if (type.equals(schema.getString("Embedded"))) {
                 try {
-                    @SuppressWarnings("unchecked") final Class<? extends Action> cls = (Class<? extends Action>) Class.forName(getClassName());
+                    @SuppressWarnings("unchecked") final Class<? extends Action> cls = (Class<? extends Action>) Class.forName(className);
                     try {
                         try {
                             return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
@@ -130,14 +130,14 @@ public class ActionBuilder implements IActionBuilder {
 
     @Override
     public void validate() throws ConfigurationException {
-        for (final IActionBuilder ref : getActionRefs()) {
+        for (final IActionBuilder ref : actionRefs) {
             ref.validate();
         }
     }
 
     private List<Action> createActions() throws ActionInstantiationException {
         final List<Action> actions = new ArrayList<>();
-        for (final IActionBuilder ref : getActionRefs()) {
+        for (final IActionBuilder ref : actionRefs) {
             actions.add(ref.buildAction(new HashMap<>()));
         }
         return actions;
@@ -145,7 +145,7 @@ public class ActionBuilder implements IActionBuilder {
 
     private List<Animation> createAnimations() throws AnimationInstantiationException {
         final List<Animation> animations = new ArrayList<>();
-        for (final AnimationBuilder animationFactory : getAnimationBuilders()) {
+        for (final AnimationBuilder animationFactory : animationBuilders) {
             animations.add(animationFactory.buildAnimation());
         }
         return animations;
@@ -153,7 +153,7 @@ public class ActionBuilder implements IActionBuilder {
 
     private VariableMap createVariables(final Map<String, String> params) throws VariableException {
         final VariableMap variables = new VariableMap();
-        for (final Map.Entry<String, String> param : getParams().entrySet()) {
+        for (final Map.Entry<String, String> param : this.params.entrySet()) {
             variables.put(param.getKey(), Variable.parse(param.getValue()));
         }
         for (final Map.Entry<String, String> param : params.entrySet()) {
@@ -168,21 +168,5 @@ public class ActionBuilder implements IActionBuilder {
 
     public String getType() {
         return type;
-    }
-
-    private String getClassName() {
-        return className;
-    }
-
-    private Map<String, String> getParams() {
-        return params;
-    }
-
-    private List<AnimationBuilder> getAnimationBuilders() {
-        return animationBuilders;
-    }
-
-    private List<IActionBuilder> getActionRefs() {
-        return actionRefs;
     }
 }

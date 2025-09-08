@@ -170,7 +170,7 @@ public class ComplexMove extends BorderedAction {
             }
         }
 
-        if (breedEnabled && delegate.isIntervalFrame() && !isTurning() && delegate.isEnabled()) {
+        if (breedEnabled && delegate.isIntervalFrame() && !turning && delegate.isEnabled()) {
             // Multiply
             delegate.breed();
         }

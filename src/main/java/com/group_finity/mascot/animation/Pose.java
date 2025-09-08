@@ -54,18 +54,14 @@ public class Pose {
 
     @Override
     public String toString() {
-        return "Pose(" + (getImage() == null ? "" : getImage()) + "," + getDx() + "," + getDy() + "," + getDuration() + ", " + sound + ")";
+        return "Pose(" + (getImage() == null ? "" : getImage()) + "," + dx + "," + dy + "," + duration + ", " + sound + ")";
     }
 
     public void next(final Mascot mascot) {
-        mascot.setAnchor(new Point(mascot.getAnchor().x + (mascot.isLookRight() ? -getDx() : getDx()),
-                mascot.getAnchor().y + getDy()));
+        mascot.setAnchor(new Point(mascot.getAnchor().x + (mascot.isLookRight() ? -dx : dx),
+                mascot.getAnchor().y + dy));
         mascot.setImage(ImagePairs.getImage(getImageName(), mascot.isLookRight()));
-        mascot.setSound(getSoundName());
-    }
-
-    public int getDuration() {
-        return duration;
+        mascot.setSound(sound);
     }
 
     public String getImageName() {
@@ -82,6 +78,10 @@ public class Pose {
 
     public int getDy() {
         return dy;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public String getSoundName() {

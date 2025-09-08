@@ -41,34 +41,34 @@ public class UserBehavior implements Behavior {
 
     private final String name;
 
-    private final Configuration configuration;
-
     private final Action action;
+
+    private final Configuration configuration;
 
     private Mascot mascot;
 
     public UserBehavior(final String name, final Action action, final Configuration configuration) {
         this.name = name;
-        this.configuration = configuration;
         this.action = action;
+        this.configuration = configuration;
     }
 
     @Override
     public String toString() {
-        return "Behavior(" + getName() + ")";
+        return "Behavior(" + name + ")";
     }
 
     @Override
     public synchronized void init(final Mascot mascot) throws CantBeAliveException {
-        setMascot(mascot);
+        this.mascot = mascot;
 
-        log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), mascot});
+        log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{name, mascot});
 
         try {
-            getAction().init(mascot);
-            if (!getAction().hasNext()) {
+            action.init(mascot);
+            if (!action.hasNext()) {
                 try {
-                    mascot.setBehavior(getConfiguration().buildNextBehavior(getName(), mascot));
+                    mascot.setBehavior(configuration.buildNextBehavior(name, mascot));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e);
                 }
@@ -76,18 +76,6 @@ public class UserBehavior implements Behavior {
         } catch (final VariableException e) {
             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
         }
-    }
-
-    private Configuration getConfiguration() {
-        return configuration;
-    }
-
-    private Action getAction() {
-        return action;
-    }
-
-    private String getName() {
-        return name;
     }
 
     /**
@@ -219,16 +207,16 @@ public class UserBehavior implements Behavior {
                         }
 
                         try {
-                            mascot.setBehavior(getConfiguration().buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
+                            mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
                         } catch (final BehaviorInstantiationException e) {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
                         }
                     }
                 } else {
-                    log.log(Level.INFO, "Completed behavior \"{0}\" for mascot \"{1}\"", new Object[]{getName(), mascot});
+                    log.log(Level.INFO, "Completed behavior \"{0}\" for mascot \"{1}\"", new Object[]{name, mascot});
 
                     try {
-                        mascot.setBehavior(getConfiguration().buildNextBehavior(getName(), mascot));
+                        mascot.setBehavior(configuration.buildNextBehavior(name, mascot));
                     } catch (final BehaviorInstantiationException e) {
                         throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingActionsErrorMessage"), e);
                     }
@@ -247,10 +235,6 @@ public class UserBehavior implements Behavior {
         } catch (final VariableException e) {
             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
         }
-    }
-
-    private void setMascot(final Mascot mascot) {
-        this.mascot = mascot;
     }
 
     protected MascotEnvironment getEnvironment() {

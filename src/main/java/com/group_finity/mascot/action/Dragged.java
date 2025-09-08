@@ -55,7 +55,7 @@ public class Dragged extends ActionBase {
 
         scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
-        setFootX(getEnvironment().getCursor().getX() + (int) Math.round(getOffsetX() * scaling));
+        footX = getEnvironment().getCursor().getX() + (int) Math.round(getOffsetX() * scaling);
         setTimeToRegist(250);
     }
 
@@ -85,12 +85,12 @@ public class Dragged extends ActionBase {
 
         final int newX = cursor.getX();
 
-        setFootDx((getFootDx() + (newX - getFootX()) * 0.1) * 0.8);
-        setFootX(getFootX() + getFootDx());
+        footDx = (footDx + (newX - footX) * 0.1) * 0.8;
+        footX = footX + footDx;
 
         // Since the foot position and foot delta position may be included in the animation conditions, put them in variables
-        putVariable(getSchema().getString(VARIABLE_FOOTDX), getFootDx());
-        putVariable(getSchema().getString(VARIABLE_FOOTX), getFootX());
+        putVariable(getSchema().getString(VARIABLE_FOOTDX), footDx);
+        putVariable(getSchema().getString(VARIABLE_FOOTX), footX);
 
         // Animate
         getAnimation().next(getMascot(), getTime());
@@ -118,22 +118,6 @@ public class Dragged extends ActionBase {
 
     private int getTimeToRegist() {
         return timeToRegist;
-    }
-
-    private void setFootX(final double footX) {
-        this.footX = footX;
-    }
-
-    private double getFootX() {
-        return footX;
-    }
-
-    private void setFootDx(final double footDx) {
-        this.footDx = footDx;
-    }
-
-    private double getFootDx() {
-        return footDx;
     }
 
     private int getOffsetX() throws VariableException {

@@ -141,7 +141,7 @@ class MacEnvironment extends Environment {
 
     private static void restoreWindowsNotIn(final Rectangle rect) {
         Rectangle visibleArea = getWindowVisibleArea();
-        for (long pid : getTouchedProcesses()) {
+        for (long pid : touchedProcesses) {
             AXUIElementRef application =
                     carbonEx.AXUIElementCreateApplication(pid);
 
@@ -198,14 +198,6 @@ class MacEnvironment extends Environment {
         return CFStringRef.createCFString(s);
     }
 
-    private static int getScreenWidth() {
-        return screenWidth;
-    }
-
-    private static int getScreenHeight() {
-        return screenHeight;
-    }
-
     /**
      * If {@code min < max}, return {@code a} if {@code min <= a <= max}.
      * If {@code a < min}, return {@code min}.
@@ -223,8 +215,8 @@ class MacEnvironment extends Environment {
     private static Rectangle getWindowVisibleArea() {
         final int menuBarHeight = 22;
         int x = 1, y = menuBarHeight,
-                width = getScreenWidth() - 2, // Because it's 0-origin
-                height = getScreenHeight() - menuBarHeight;
+                width = screenWidth - 2, // Because it's 0-origin
+                height = screenHeight - menuBarHeight;
 
         refreshDockState();
         final String orientation = getDockOrientation();
@@ -298,12 +290,8 @@ class MacEnvironment extends Environment {
     private static void setCurrentPID(long newPID) {
         if (newPID != myPID) {
             currentPID = newPID;
-            getTouchedProcesses().add(newPID);
+            touchedProcesses.add(newPID);
         }
-    }
-
-    private static Set<Long> getTouchedProcesses() {
-        return touchedProcesses;
     }
 
     private void updateFrontmostWindow() {
@@ -367,7 +355,7 @@ class MacEnvironment extends Environment {
     public void restoreIE() {
         final Rectangle visibleRect = getWindowVisibleArea();
         restoreWindowsNotIn(visibleRect);
-        getTouchedProcesses().clear();
+        touchedProcesses.clear();
     }
 
     @Override
