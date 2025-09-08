@@ -59,8 +59,6 @@ public class ComplexMove extends BorderedAction {
 
     private boolean scanEnabled = false;
 
-    private double scaling;
-
     public ComplexMove(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
     }
@@ -68,8 +66,6 @@ public class ComplexMove extends BorderedAction {
     @Override
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
-
-        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
 
         for (String characteristic : getCharacteristics().split(",")) {
             if (characteristic.equals(getSchema().getString("Breed"))) {
