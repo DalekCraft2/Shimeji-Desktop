@@ -631,11 +631,13 @@ public class Main {
 
                         ImageSetChooser chooser = new ImageSetChooser(frame, true);
                         chooser.setIconImage(icon.getImage());
-                        setActiveImageSets(chooser.display());
+                        Collection<String> result = chooser.display();
 
                         if (manager.isPaused()) {
+                            // Unpause them before setting the active image sets to be sure they actually get unpaused
                             manager.togglePauseAll();
                         }
+                        setActiveImageSets(result);
                     });
 
                     final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
