@@ -626,7 +626,8 @@ public class Main {
                     btnChooseShimeji.addActionListener(event12 -> {
                         form.dispose();
                         if (!manager.isPaused()) {
-                            manager.togglePauseAll(); // needed to stop the guys from potentially throwing away settings
+                            // Needed to stop the guys from potentially throwing away the image set chooser window
+                            manager.togglePauseAll();
                         }
 
                         ImageSetChooser chooser = new ImageSetChooser(frame, true);
@@ -644,7 +645,8 @@ public class Main {
                     btnSettings.addActionListener(event1 -> {
                         form.dispose();
                         if (!manager.isPaused()) {
-                            manager.togglePauseAll(); // needed to stop the guys from potentially throwing away settings
+                            // Needed to stop the guys from potentially throwing away the settings window
+                            manager.togglePauseAll();
                         }
 
                         SettingsWindow dialog = new SettingsWindow(frame, true);
