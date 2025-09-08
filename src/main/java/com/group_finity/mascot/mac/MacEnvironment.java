@@ -140,7 +140,6 @@ class MacEnvironment extends Environment {
     }
 
     private static void restoreWindowsNotIn(final Rectangle rect) {
-        Rectangle visibleArea = getWindowVisibleArea();
         for (long pid : touchedProcesses) {
             AXUIElementRef application =
                     carbonEx.AXUIElementCreateApplication(pid);
@@ -148,7 +147,7 @@ class MacEnvironment extends Environment {
             for (AXUIElementRef window : getWindowsOf(application)) {
                 window.retain();
                 Rectangle windowRect = getRectOfWindow(window);
-                if (!visibleArea.intersects(windowRect)) {
+                if (!rect.intersects(windowRect)) {
                     moveWindow(window, 0, 0);
                 }
                 window.release();
