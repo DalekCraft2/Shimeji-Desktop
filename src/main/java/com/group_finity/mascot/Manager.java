@@ -330,13 +330,9 @@ public class Manager {
     }
 
     public boolean isPaused() {
-        boolean isPaused;
-
         synchronized (mascots) {
-            isPaused = mascots.stream().allMatch(Mascot::isPaused);
+            return mascots.stream().allMatch(Mascot::isPaused);
         }
-
-        return isPaused;
     }
 
     /**
