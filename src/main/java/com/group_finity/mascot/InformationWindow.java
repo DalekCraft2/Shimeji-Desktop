@@ -27,7 +27,6 @@ import java.util.logging.Logger;
  */
 public class InformationWindow extends JFrame {
     private static final Logger log = Logger.getLogger(InformationWindow.class.getName());
-    private String imageSet;
 
     /**
      * Creates new form InformationWindow
@@ -39,7 +38,6 @@ public class InformationWindow extends JFrame {
     public void init(final String imageSet, final Configuration config) {
         // initialise controls
         setLocationRelativeTo(null);
-        this.imageSet = imageSet;
 
         // load image
         if (config.containsInformationKey("SplashImage")) {
@@ -186,7 +184,6 @@ public class InformationWindow extends JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        GridBagConstraints gridBagConstraints;
 
         pnlImage = new JPanel();
         lblSplashImage = new JLabel();
