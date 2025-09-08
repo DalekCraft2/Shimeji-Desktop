@@ -15,13 +15,6 @@ import java.util.Map;
 public interface IActionBuilder {
 
     /**
-     * Validates the action. Should be called after {@link #buildAction(Map)} has been called.
-     *
-     * @throws ConfigurationException if the action or one of its children references a nonexistent action
-     */
-    void validate() throws ConfigurationException;
-
-    /**
      * Builds the action and all of its children actions/action references using the given parameters.
      *
      * @param params a {@link Map} of attributes. This will contain the attributes from all actions in this action's
@@ -32,4 +25,11 @@ public interface IActionBuilder {
      * action, an action's class can not be instantiated, or a script inside the action fails to be compiled
      */
     Action buildAction(final Map<String, String> params) throws ActionInstantiationException;
+
+    /**
+     * Validates the action. Should be called after {@link #buildAction(Map)} has been called.
+     *
+     * @throws ConfigurationException if the action or one of its children references a nonexistent action
+     */
+    void validate() throws ConfigurationException;
 }
