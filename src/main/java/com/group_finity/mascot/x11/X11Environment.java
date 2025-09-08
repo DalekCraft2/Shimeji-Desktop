@@ -5,7 +5,6 @@
 package com.group_finity.mascot.x11;
 
 import com.group_finity.mascot.Main;
-import com.group_finity.mascot.Manager;
 import com.group_finity.mascot.environment.*;
 import com.group_finity.mascot.x11.X.Display;
 import com.group_finity.mascot.x11.X.Window;
