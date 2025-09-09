@@ -1,4 +1,4 @@
-package com.group_finity.mascot.win;
+package com.group_finity.mascot.virtual;
 
 import com.group_finity.mascot.NativeFactory;
 import com.group_finity.mascot.environment.Environment;
@@ -8,11 +8,13 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import java.awt.image.BufferedImage;
 
 /**
- * @author Yuki Yamada
- * @author Shimeji-ee Group
+ * Virtual desktop factory.
+ *
+ * @author Kilkakon
+ * @since 1.0.20
  */
-public class NativeFactoryImpl extends NativeFactory {
-    private final Environment environment = new WindowsEnvironment();
+public class VirtualNativeFactory extends NativeFactory {
+    private final VirtualEnvironment environment = new VirtualEnvironment();
 
     @Override
     public Environment getEnvironment() {
@@ -21,11 +23,13 @@ public class NativeFactoryImpl extends NativeFactory {
 
     @Override
     public NativeImage newNativeImage(final BufferedImage src) {
-        return new WindowsNativeImage(src);
+        return new VirtualNativeImage(src);
     }
 
     @Override
     public TranslucentWindow newTransparentWindow() {
-        return new WindowsTranslucentWindow();
+        VirtualTranslucentPanel panel = new VirtualTranslucentPanel();
+        environment.addShimeji(panel);
+        return panel;
     }
 }

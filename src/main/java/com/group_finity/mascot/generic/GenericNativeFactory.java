@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-public class NativeFactoryImpl extends NativeFactory {
+public class GenericNativeFactory extends NativeFactory {
     private final Environment environment = new GenericEnvironment();
 
     @Override

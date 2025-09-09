@@ -3,6 +3,10 @@ package com.group_finity.mascot;
 import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
+import com.group_finity.mascot.mac.MacNativeFactory;
+import com.group_finity.mascot.virtual.VirtualNativeFactory;
+import com.group_finity.mascot.win.WindowsNativeFactory;
+import com.group_finity.mascot.x11.X11NativeFactory;
 import com.sun.jna.Platform;
 
 import java.awt.image.BufferedImage;
@@ -37,15 +41,15 @@ public abstract class NativeFactory {
 
         if (environment.equals("generic")) {
             if (Platform.isWindows()) {
-                instance = new com.group_finity.mascot.win.NativeFactoryImpl();
+                instance = new WindowsNativeFactory();
             } else if (Platform.isMac()) {
-                instance = new com.group_finity.mascot.mac.NativeFactoryImpl();
+                instance = new MacNativeFactory();
             } else if (/* Platform.isLinux() */ Platform.isX11()) {
                 // Because Linux uses X11, this functions as the Linux support.
-                instance = new com.group_finity.mascot.x11.NativeFactoryImpl();
+                instance = new X11NativeFactory();
             }
         } else if (environment.equals("virtual")) {
-            instance = new com.group_finity.mascot.virtual.NativeFactoryImpl();
+            instance = new VirtualNativeFactory();
         }
     }
 

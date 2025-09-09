@@ -1,8 +1,4 @@
-/*
- * Created by nonowarn
- * https://github.com/nonowarn/shimeji4mac
- */
-package com.group_finity.mascot.mac;
+package com.group_finity.mascot.win;
 
 import com.group_finity.mascot.NativeFactory;
 import com.group_finity.mascot.environment.Environment;
@@ -12,11 +8,11 @@ import com.group_finity.mascot.image.TranslucentWindow;
 import java.awt.image.BufferedImage;
 
 /**
- * @author nonowarn
+ * @author Yuki Yamada
+ * @author Shimeji-ee Group
  */
-public class NativeFactoryImpl extends NativeFactory {
-    private final NativeFactory delegate = new com.group_finity.mascot.generic.NativeFactoryImpl();
-    private final Environment environment = new MacEnvironment();
+public class WindowsNativeFactory extends NativeFactory {
+    private final Environment environment = new WindowsEnvironment();
 
     @Override
     public Environment getEnvironment() {
@@ -25,11 +21,11 @@ public class NativeFactoryImpl extends NativeFactory {
 
     @Override
     public NativeImage newNativeImage(final BufferedImage src) {
-        return delegate.newNativeImage(src);
+        return new WindowsNativeImage(src);
     }
 
     @Override
     public TranslucentWindow newTransparentWindow() {
-        return new MacTranslucentWindow(delegate);
+        return new WindowsTranslucentWindow();
     }
 }
