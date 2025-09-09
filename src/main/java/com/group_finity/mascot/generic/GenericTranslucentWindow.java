@@ -90,17 +90,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public void updateImage() {
-        /*
-         * We set the Window mask to ensure that the Shimeji can only be interacted with when the mouse is over a
-         * non-transparent pixel of the image. A drawback to this is that the call can sometimes take a long time to
-         * complete.
-         *
-         * This doesn't work on macOS, so we can skip it to avoid the performance hit.
-         */
-        if (!OS.isFamilyMac()) {
-            WindowUtils.setWindowMask(this, image.getIcon());
-        }
-
         validate();
         repaint();
     }

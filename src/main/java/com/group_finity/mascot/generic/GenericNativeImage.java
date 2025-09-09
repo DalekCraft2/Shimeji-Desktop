@@ -2,7 +2,6 @@ package com.group_finity.mascot.generic;
 
 import com.group_finity.mascot.image.NativeImage;
 
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -18,18 +17,11 @@ class GenericNativeImage implements NativeImage {
      */
     private final BufferedImage managedImage;
 
-    private final Icon icon;
-
     public GenericNativeImage(final BufferedImage image) {
         managedImage = image;
-        icon = new ImageIcon(image);
     }
 
     BufferedImage getManagedImage() {
         return managedImage;
-    }
-
-    public Icon getIcon() {
-        return icon;
     }
 }
