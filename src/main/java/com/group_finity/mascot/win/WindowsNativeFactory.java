@@ -2,10 +2,7 @@ package com.group_finity.mascot.win;
 
 import com.group_finity.mascot.NativeFactory;
 import com.group_finity.mascot.environment.Environment;
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
-
-import java.awt.image.BufferedImage;
 
 /**
  * @author Yuki Yamada
@@ -17,11 +14,6 @@ public class WindowsNativeFactory extends NativeFactory {
     @Override
     public Environment getEnvironment() {
         return environment;
-    }
-
-    @Override
-    public NativeImage newNativeImage(final BufferedImage src) {
-        return new WindowsNativeImage(src);
     }
 
     @Override

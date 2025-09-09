@@ -1,15 +1,15 @@
 package com.group_finity.mascot.win;
 
 import com.group_finity.mascot.Mascot;
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Image window with alpha value.
- * {@link WindowsNativeImage} set with {@link #setImage(NativeImage)} can be displayed on the desktop.
+ * {@link BufferedImage} set with {@link #setImage(BufferedImage)} can be displayed on the desktop.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
@@ -19,7 +19,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     /**
      * Image to display.
      */
-    private WindowsNativeImage image;
+    private BufferedImage image;
 
     public WindowsTranslucentWindow() {
         super();
@@ -31,8 +31,8 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
                 @Override
                 protected void paintComponent(final Graphics g) {
                     super.paintComponent(g);
-                    if (getImage() != null) {
-                        g.drawImage(getImage().getManagedImage(), 0, 0, null);
+                    if (image != null) {
+                        g.drawImage(image, 0, 0, null);
                     }
                 }
             };
@@ -73,17 +73,13 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
         super.paint(g);
 
         if (!Mascot.DRAW_DEBUG && image != null) {
-            g.drawImage(image.getManagedImage(), 0, 0, null);
+            g.drawImage(image, 0, 0, null);
         }
     }
 
-    private WindowsNativeImage getImage() {
-        return image;
-    }
-
     @Override
-    public void setImage(final NativeImage image) {
-        this.image = (WindowsNativeImage) image;
+    public void setImage(final BufferedImage image) {
+        this.image = image;
     }
 
     @Override

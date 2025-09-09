@@ -1,11 +1,11 @@
 package com.group_finity.mascot.virtual;
 
 import com.group_finity.mascot.Mascot;
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Virtual desktop translucent panel.
@@ -17,7 +17,7 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     /**
      * Image to display.
      */
-    private VirtualNativeImage image;
+    private BufferedImage image;
 
     public VirtualTranslucentPanel() {
         super();
@@ -38,7 +38,7 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (image != null) {
-            g.drawImage(image.getManagedImage(), 0, 0, null);
+            g.drawImage(image, 0, 0, null);
         }
     }
 
@@ -72,8 +72,8 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     }
 
     @Override
-    public void setImage(NativeImage image) {
-        this.image = (VirtualNativeImage) image;
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 
     @Override
@@ -97,7 +97,7 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     public boolean contains(int x, int y) {
         if (super.contains(x, y)) {
             try {
-                return (image.getManagedImage().getRGB(x, y) & 0xff000000) >>> 24 > 0;
+                return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
             } catch (RuntimeException ex) {
                 return false;
             }

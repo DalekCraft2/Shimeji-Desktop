@@ -1,10 +1,11 @@
 package com.group_finity.mascot.image;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Image window with alpha value.
- * {@link NativeImage} set with {@link #setImage(NativeImage)} can be displayed on the desktop.
+ * {@link BufferedImage} set with {@link #setImage(BufferedImage)} can be displayed on the desktop.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
@@ -24,11 +25,11 @@ public interface TranslucentWindow {
      *
      * @param image the image that should be drawn, or {@code null} if nothing should be drawn
      */
-    void setImage(NativeImage image);
+    void setImage(BufferedImage image);
 
     /**
      * Redraws the image for this window.
-     * An image should be set with {@link #setImage(NativeImage)} before calling this method.
+     * An image should be set with {@link #setImage(BufferedImage)} before calling this method.
      */
     void updateImage();
 

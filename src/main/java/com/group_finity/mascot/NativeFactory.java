@@ -1,15 +1,12 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.environment.Environment;
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.group_finity.mascot.mac.MacNativeFactory;
 import com.group_finity.mascot.virtual.VirtualNativeFactory;
 import com.group_finity.mascot.win.WindowsNativeFactory;
 import com.group_finity.mascot.x11.X11NativeFactory;
 import com.sun.jna.Platform;
-
-import java.awt.image.BufferedImage;
 
 /**
  * Provides access to the native environment.
@@ -59,15 +56,6 @@ public abstract class NativeFactory {
      * @return the {@link Environment} object
      */
     public abstract Environment getEnvironment();
-
-    /**
-     * Creates a {@link NativeImage} with the specified {@link BufferedImage}.
-     * This image can be used for masking {@link TranslucentWindow}.
-     *
-     * @param src the image to use to create the {@link NativeImage}
-     * @return the new native image
-     */
-    public abstract NativeImage newNativeImage(BufferedImage src);
 
     /**
      * Creates a window that can be displayed semi-transparently.

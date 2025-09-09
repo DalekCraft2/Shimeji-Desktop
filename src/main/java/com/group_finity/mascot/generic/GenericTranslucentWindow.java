@@ -1,13 +1,13 @@
 package com.group_finity.mascot.generic;
 
 import com.group_finity.mascot.Mascot;
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.platform.WindowUtils;
 import org.apache.commons.exec.OS;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Yuki Yamada
@@ -17,7 +17,7 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
     /**
      * Image to display.
      */
-    private GenericNativeImage image;
+    private BufferedImage image;
 
     public GenericTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
@@ -26,8 +26,8 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
-                if (getImage() != null) {
-                    g.drawImage(getImage().getManagedImage(), 0, 0, null);
+                if (image != null) {
+                    g.drawImage(image, 0, 0, null);
                 }
             }
         };
@@ -79,13 +79,9 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
         return "GenericTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
     }
 
-    public GenericNativeImage getImage() {
-        return image;
-    }
-
     @Override
-    public void setImage(final NativeImage image) {
-        this.image = (GenericNativeImage) image;
+    public void setImage(final BufferedImage image) {
+        this.image = image;
     }
 
     @Override

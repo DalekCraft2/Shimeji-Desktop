@@ -4,17 +4,17 @@
  */
 package com.group_finity.mascot.x11;
 
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 import com.sun.jna.platform.WindowUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Image window with alpha value.
- * {@link X11NativeImage} set with {@link #setImage(NativeImage)} can be displayed on the desktop.
+ * {@link BufferedImage} set with {@link #setImage(BufferedImage)} can be displayed on the desktop.
  *
  * @author asdfman
  */
@@ -22,7 +22,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     /**
      * Image to display.
      */
-    private X11NativeImage image;
+    private BufferedImage image;
 
     public X11TranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
@@ -34,8 +34,8 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
             protected void paintComponent(final Graphics g) {
                 g.clearRect(0, 0, getWidth(), getHeight());
                 super.paintComponent(g);
-                if (getImage() != null) {
-                    g.drawImage(getImage().getManagedImage(), 0, 0, null);
+                if (image != null) {
+                    g.drawImage(image, 0, 0, null);
                 }
             }
         };
@@ -111,13 +111,9 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         super.paint(g);
     }
 
-    public X11NativeImage getImage() {
-        return image;
-    }
-
     @Override
-    public void setImage(final NativeImage image) {
-        this.image = (X11NativeImage) image;
+    public void setImage(final BufferedImage image) {
+        this.image = image;
     }
 
     @Override

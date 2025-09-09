@@ -5,11 +5,11 @@
 package com.group_finity.mascot.mac;
 
 import com.group_finity.mascot.NativeFactory;
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author nonowarn
@@ -17,7 +17,7 @@ import java.awt.*;
 class MacTranslucentWindow implements TranslucentWindow {
     private final TranslucentWindow delegate;
     private boolean imageChanged = false;
-    private NativeImage oldImage = null;
+    private BufferedImage oldImage = null;
 
     MacTranslucentWindow(NativeFactory factory) {
         delegate = factory.newTransparentWindow();
@@ -41,7 +41,7 @@ class MacTranslucentWindow implements TranslucentWindow {
     }
 
     @Override
-    public void setImage(NativeImage image) {
+    public void setImage(BufferedImage image) {
         imageChanged = oldImage != null && image != oldImage;
         oldImage = image;
         delegate.setImage(image);

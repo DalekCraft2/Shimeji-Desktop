@@ -6,10 +6,7 @@ package com.group_finity.mascot.x11;
 
 import com.group_finity.mascot.NativeFactory;
 import com.group_finity.mascot.environment.Environment;
-import com.group_finity.mascot.image.NativeImage;
 import com.group_finity.mascot.image.TranslucentWindow;
-
-import java.awt.image.BufferedImage;
 
 /**
  * @author asdfman
@@ -20,11 +17,6 @@ public class X11NativeFactory extends NativeFactory {
     @Override
     public Environment getEnvironment() {
         return environment;
-    }
-
-    @Override
-    public NativeImage newNativeImage(final BufferedImage src) {
-        return new X11NativeImage(src);
     }
 
     @Override
