@@ -7,8 +7,8 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
