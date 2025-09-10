@@ -1,13 +1,13 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.animation.Animation;
+import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
-import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.platform.TranslucentWindow;
 import com.group_finity.mascot.menu.MenuScroller;

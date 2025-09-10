@@ -4,13 +4,13 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.action.ActionBase;
+import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
-import com.group_finity.mascot.hotspot.Hotspot;
 
 import javax.swing.*;
 import java.awt.*;

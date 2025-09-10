@@ -1,4 +1,4 @@
-package com.group_finity.mascot.hotspot;
+package com.group_finity.mascot.animation;
 
 import com.group_finity.mascot.Mascot;
 

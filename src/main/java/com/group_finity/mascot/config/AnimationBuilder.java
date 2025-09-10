@@ -2,11 +2,11 @@ package com.group_finity.mascot.config;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.animation.Animation;
+import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.animation.Pose;
 import com.group_finity.mascot.exception.AnimationInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
-import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.ImagePairLoader;
 import com.group_finity.mascot.image.ImagePairLoader.Filter;
 import com.group_finity.mascot.script.Variable;

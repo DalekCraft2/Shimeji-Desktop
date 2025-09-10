@@ -2,10 +2,10 @@ package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
+import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
-import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 

@@ -18,7 +18,6 @@ module com.group_finity.mascot {
     exports com.group_finity.mascot.config;
     exports com.group_finity.mascot.environment;
     exports com.group_finity.mascot.exception;
-    exports com.group_finity.mascot.hotspot;
     exports com.group_finity.mascot.image;
     exports com.group_finity.mascot.imagesetchooser;
     exports com.group_finity.mascot.menu;
