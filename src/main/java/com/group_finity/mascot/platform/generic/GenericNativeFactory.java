@@ -1,7 +1,7 @@
 package com.group_finity.mascot.platform.generic;
 
-import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.environment.Environment;
+import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.platform.TranslucentWindow;
 
 /**

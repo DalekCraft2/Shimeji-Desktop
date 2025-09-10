@@ -4,10 +4,10 @@
  */
 package com.group_finity.mascot.platform.mac;
 
-import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.environment.Environment;
-import com.group_finity.mascot.platform.generic.GenericNativeFactory;
+import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.platform.TranslucentWindow;
+import com.group_finity.mascot.platform.generic.GenericNativeFactory;
 
 /**
  * @author nonowarn

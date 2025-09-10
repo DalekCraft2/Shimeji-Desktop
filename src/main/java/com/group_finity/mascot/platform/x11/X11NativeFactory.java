@@ -4,8 +4,8 @@
  */
 package com.group_finity.mascot.platform.x11;
 
-import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.environment.Environment;
+import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.platform.TranslucentWindow;
 
 /**
