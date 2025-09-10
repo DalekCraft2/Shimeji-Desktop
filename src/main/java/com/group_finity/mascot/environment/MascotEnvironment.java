@@ -2,7 +2,7 @@ package com.group_finity.mascot.environment;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.Mascot;
-import com.group_finity.mascot.NativeFactory;
+import com.group_finity.mascot.platform.NativeFactory;
 
 import java.awt.*;
 

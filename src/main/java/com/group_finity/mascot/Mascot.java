@@ -9,8 +9,9 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.hotspot.Hotspot;
 import com.group_finity.mascot.image.MascotImage;
-import com.group_finity.mascot.image.TranslucentWindow;
+import com.group_finity.mascot.platform.TranslucentWindow;
 import com.group_finity.mascot.menu.MenuScroller;
+import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
 

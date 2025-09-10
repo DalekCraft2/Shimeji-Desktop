@@ -4,6 +4,7 @@ import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
+import com.group_finity.mascot.platform.NativeFactory;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
