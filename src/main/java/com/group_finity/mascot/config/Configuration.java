@@ -13,8 +13,6 @@ import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,6 +24,10 @@ import java.util.logging.Logger;
  */
 public class Configuration {
     private static final Logger log = Logger.getLogger(Configuration.class.getName());
+
+    private static final ResourceBundle SCHEMA_EN = ResourceBundle.getBundle("schema", Locale.US);
+    private static final ResourceBundle SCHEMA_JA = ResourceBundle.getBundle("schema", Locale.JAPAN);
+
     private final Map<String, String> constants = new LinkedHashMap<>(2);
     private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
     private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
@@ -35,22 +37,14 @@ public class Configuration {
     public void load(final Entry configurationNode, final String imageSet) throws IOException, ConfigurationException {
         log.log(Level.FINE, "Reading configuration file...");
 
-        // prepare schema
-        Locale locale;
-
         // check for Japanese XML tag and adapt locale accordingly
         if (configurationNode.hasChild("\u52D5\u4F5C\u30EA\u30B9\u30C8") ||
                 configurationNode.hasChild("\u884C\u52D5\u30EA\u30B9\u30C8")) {
-            locale = Locale.JAPAN;
+            schema = SCHEMA_JA;
         } else {
-            locale = Locale.US;
+            schema = SCHEMA_EN;
         }
-        log.log(Level.FINE, "Using " + locale.toLanguageTag() + " schema");
-
-        URL[] urls = {Main.CONFIG_DIRECTORY.toUri().toURL()};
-        try (URLClassLoader loader = new URLClassLoader(urls)) {
-            schema = ResourceBundle.getBundle("schema", locale, loader);
-        }
+        log.log(Level.FINE, "Using " + schema.getLocale().toLanguageTag() + " schema");
 
         for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
             constants.put(constant.getAttribute(schema.getString("Name")),
