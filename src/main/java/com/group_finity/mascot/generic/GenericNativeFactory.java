@@ -17,7 +17,7 @@ public class GenericNativeFactory extends NativeFactory {
     }
 
     @Override
-    public TranslucentWindow newTransparentWindow() {
+    public TranslucentWindow newTranslucentWindow() {
         return new GenericTranslucentWindow();
     }
 }

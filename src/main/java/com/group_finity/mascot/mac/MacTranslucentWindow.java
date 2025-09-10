@@ -20,7 +20,7 @@ class MacTranslucentWindow implements TranslucentWindow {
     private BufferedImage oldImage = null;
 
     MacTranslucentWindow(NativeFactory factory) {
-        delegate = factory.newTransparentWindow();
+        delegate = factory.newTranslucentWindow();
         JRootPane rootPane = ((JWindow) delegate.asComponent()).getRootPane();
 
         // The shadow of the window will shift, so avoid drawing the shadow.

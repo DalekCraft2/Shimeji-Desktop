@@ -71,7 +71,7 @@ public class Mascot {
     /**
      * The window that displays the {@code Mascot}.
      */
-    private final TranslucentWindow window = NativeFactory.getInstance().newTransparentWindow();
+    private final TranslucentWindow window = NativeFactory.getInstance().newTranslucentWindow();
 
     /**
      * The {@link Manager} that manages this {@code Mascot}.

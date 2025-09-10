@@ -20,7 +20,7 @@ public class X11NativeFactory extends NativeFactory {
     }
 
     @Override
-    public TranslucentWindow newTransparentWindow() {
+    public TranslucentWindow newTranslucentWindow() {
         return new X11TranslucentWindow();
     }
 }

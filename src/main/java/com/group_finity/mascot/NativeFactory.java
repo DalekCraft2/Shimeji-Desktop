@@ -58,9 +58,9 @@ public abstract class NativeFactory {
     public abstract Environment getEnvironment();
 
     /**
-     * Creates a window that can be displayed semi-transparently.
+     * Creates a window that can be displayed translucently.
      *
      * @return the new window
      */
-    public abstract TranslucentWindow newTransparentWindow();
+    public abstract TranslucentWindow newTranslucentWindow();
 }

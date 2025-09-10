@@ -19,7 +19,7 @@ public class VirtualNativeFactory extends NativeFactory {
     }
 
     @Override
-    public TranslucentWindow newTransparentWindow() {
+    public TranslucentWindow newTranslucentWindow() {
         VirtualTranslucentPanel panel = new VirtualTranslucentPanel();
         environment.addShimeji(panel);
         return panel;

@@ -17,7 +17,7 @@ public class WindowsNativeFactory extends NativeFactory {
     }
 
     @Override
-    public TranslucentWindow newTransparentWindow() {
+    public TranslucentWindow newTranslucentWindow() {
         return new WindowsTranslucentWindow();
     }
 }
