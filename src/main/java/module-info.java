@@ -28,7 +28,6 @@ module com.group_finity.mascot {
     exports com.group_finity.mascot.platform.win;
     exports com.group_finity.mascot.platform.win.jna;
     exports com.group_finity.mascot.platform.x11;
-    exports com.group_finity.mascot.platform.x11.jna;
     exports com.group_finity.mascot.script;
     exports com.group_finity.mascot.sound;
     exports hqx;
