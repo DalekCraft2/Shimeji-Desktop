@@ -9,7 +9,7 @@ import com.group_finity.mascot.environment.*;
 import com.group_finity.mascot.platform.x11.X.Display;
 import com.group_finity.mascot.platform.x11.X.Window;
 import com.group_finity.mascot.platform.x11.X.X11Exception;
-import com.group_finity.mascot.platform.x11.jna.X11Extra;
+import com.sun.jna.platform.unix.X11;
 
 import java.awt.*;
 import java.util.*;
@@ -529,7 +529,7 @@ class X11Environment extends Environment {
     public void moveActiveIE(Point point) {
         if (activeIeObject != null) {
             // FIXME Mascots will often let go of a window very shortly after they pick it up, without throwing it
-            X11Extra.INSTANCE.XMoveWindow(display.getX11Display(), activeIeObject.getX11Window(), point.x, point.y);
+            X11.INSTANCE.XMoveWindow(display.getX11Display(), activeIeObject.getX11Window(), point.x, point.y);
         }
     }
 
@@ -562,7 +562,7 @@ class X11Environment extends Environment {
 
                 // Move the window to be on-screen
                 rect.setLocation(workArea.x + offset, workArea.y + offset);
-                X11Extra.INSTANCE.XMoveWindow(display.getX11Display(), window.getX11Window(), rect.x, rect.y);
+                X11.INSTANCE.XMoveWindow(display.getX11Display(), window.getX11Window(), rect.x, rect.y);
                 // TODO Bring windows to front
                 // User32.INSTANCE.BringWindowToTop(window);
 
