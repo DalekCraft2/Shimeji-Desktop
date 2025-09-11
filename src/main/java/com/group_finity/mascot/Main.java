@@ -410,8 +410,7 @@ public class Main {
         try {
             image = ImageIO.read(Files.newInputStream(ICON_FILE));
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to create tray icon", e);
-            showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage"), e);
+            log.log(Level.WARNING, "Failed to load icon file", e);
         } finally {
             if (image == null) {
                 image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
