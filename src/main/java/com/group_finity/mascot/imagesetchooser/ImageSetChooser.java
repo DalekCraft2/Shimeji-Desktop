@@ -14,15 +14,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Chooser used to select the Shimeji image sets in use.
@@ -31,6 +33,7 @@ import java.util.List;
  * @since 1.0.2
  */
 public class ImageSetChooser extends JDialog {
+    private static final Logger log = Logger.getLogger(ImageSetChooser.class.getName());
     private final ArrayList<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
@@ -48,19 +51,20 @@ public class ImageSetChooser extends JDialog {
         Collection<Integer> si2 = new ArrayList<>();
 
         // Get list of image sets (directories under img)
-        FilenameFilter fileFilter = (dir, name) -> {
-            if (name.equalsIgnoreCase("unused") || name.startsWith(".")) {
+        DirectoryStream.Filter<Path> filter = entry -> {
+            String fileName = entry.getFileName().toString();
+            if (fileName.equalsIgnoreCase("unused") || fileName.startsWith(".")) {
                 return false;
             }
-            return Files.isDirectory(dir.toPath().resolve(name));
+            return Files.isDirectory(entry);
         };
-        String[] children = Main.IMAGE_DIRECTORY.toFile().list(fileFilter);
+        try (DirectoryStream<Path> imageSetDirs = Files.newDirectoryStream(Main.IMAGE_DIRECTORY, filter)) {
+            // Create ImageSetChooserPanels for ShimejiList
+            boolean onList1 = true;    // Toggle adding between the two lists
+            int row = 0;    // Current row
+            for (Path imageSetDir : imageSetDirs) {
+                String imageSet = imageSetDir.getFileName().toString();
 
-        // Create ImageSetChooserPanels for ShimejiList
-        boolean onList1 = true;    // Toggle adding between the two lists
-        int row = 0;    // Current row
-        if (children != null) {
-            for (String imageSet : children) {
                 // Determine actions file
                 Path filePath = Main.CONFIG_DIRECTORY;
                 Path actionsFile = filePath.resolve("actions.xml");
@@ -85,7 +89,7 @@ public class ImageSetChooser extends JDialog {
                     actionsFile = filePath.resolve("1.xml");
                 }
 
-                filePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.CONFIG_DIRECTORY);
+                filePath = imageSetDir.resolve(Main.CONFIG_DIRECTORY);
                 if (Files.exists(filePath.resolve("actions.xml"))) {
                     actionsFile = filePath.resolve("actions.xml");
                 } else if (Files.exists(filePath.resolve("\u52D5\u4F5C.xml"))) {
@@ -128,7 +132,7 @@ public class ImageSetChooser extends JDialog {
                     behaviorsFile = filePath.resolve("2.xml");
                 }
 
-                filePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.CONFIG_DIRECTORY);
+                filePath = imageSetDir.resolve(Main.CONFIG_DIRECTORY);
                 if (Files.exists(filePath.resolve("behaviors.xml"))) {
                     behaviorsFile = filePath.resolve("behaviors.xml");
                 } else if (Files.exists(filePath.resolve("behavior.xml"))) {
@@ -156,12 +160,12 @@ public class ImageSetChooser extends JDialog {
                     infoFile = filePath.resolve("info.xml");
                 }
 
-                filePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.CONFIG_DIRECTORY);
+                filePath = imageSetDir.resolve(Main.CONFIG_DIRECTORY);
                 if (Files.exists(filePath.resolve("info.xml"))) {
                     infoFile = filePath.resolve("info.xml");
                 }
 
-                Path imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve("shime1.png");
+                Path imageFile = imageSetDir.resolve("shime1.png");
                 String caption = imageSet;
                 try {
                     if (Files.exists(infoFile)) {
@@ -175,12 +179,12 @@ public class ImageSetChooser extends JDialog {
                             caption = configuration.getInformation(configuration.getSchema().getString("Name"));
                         }
                         if (configuration.containsInformationKey(configuration.getSchema().getString("PreviewImage"))) {
-                            imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(configuration.getInformation(configuration.getSchema().getString("PreviewImage")));
+                            imageFile = imageSetDir.resolve(configuration.getInformation(configuration.getSchema().getString("PreviewImage")));
                         }
                     }
 
                 } catch (ConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
-                    imageFile = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve("shime1.png");
+                    imageFile = imageSetDir.resolve("shime1.png");
                     caption = imageSet;
                 }
 
@@ -204,6 +208,8 @@ public class ImageSetChooser extends JDialog {
                 }
                 imageSets.add(imageSet);
             }
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Failed to read image sets", e);
         }
 
         setUpList(jList1);

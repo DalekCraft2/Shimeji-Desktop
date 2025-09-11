@@ -408,7 +408,7 @@ public class Main {
         // get the tray icon image
         BufferedImage image = null;
         try {
-            image = ImageIO.read(ICON_FILE.toFile());
+            image = ImageIO.read(Files.newInputStream(ICON_FILE));
         } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
             showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage"), e);

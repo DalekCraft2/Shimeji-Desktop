@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -39,12 +40,12 @@ public class ImagePairLoader {
             return;
         }
 
-        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(path).toFile()), opacity), scaling, filter);
+        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))), opacity), scaling, filter);
         final BufferedImage rightImage;
         if (rightPath == null) {
             rightImage = flip(leftImage);
         } else {
-            rightImage = scale(premultiply(ImageIO.read(Main.IMAGE_DIRECTORY.resolve(rightPath).toFile()), opacity), scaling, filter);
+            rightImage = scale(premultiply(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))), opacity), scaling, filter);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -34,7 +35,7 @@ public class ImageSetChooserPanel extends JPanel {
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
         try {
-            BufferedImage img = ImageIO.read(imageLocation.toFile());
+            BufferedImage img = ImageIO.read(Files.newInputStream(imageLocation));
             image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
         } catch (IOException e) {
             // Doesn't matter, the image just won't show
