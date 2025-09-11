@@ -222,7 +222,7 @@
                             <downloadUrl>https://www.oracle.com/java/technologies/downloads/</downloadUrl>
                             <!-- <supportUrl>${project.ciManagement.url}</supportUrl> -->
                             <chdir>.</chdir>
-                            <icon>${project.basedir}/img/icon.ico</icon>
+                            <icon>${project.basedir}/src/main/resources/icon.ico</icon>
                             <classPath>
                                 <mainClass>${mainClass}</mainClass>
                             </classPath>

@@ -94,6 +94,12 @@ public class Main {
     private final Properties properties = new Properties();
     private ResourceBundle languageBundle;
 
+    /**
+     * The icon for the program.
+     * Should be accessed through {@link #getIcon}, which initializes this field if it is {@code null}.
+     */
+    private static BufferedImage icon;
+
     private static JFrame frame;
     private JDialog form;
 
@@ -406,16 +412,7 @@ public class Main {
         log.log(Level.INFO, "Creating tray icon");
 
         // get the tray icon image
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(Files.newInputStream(ICON_FILE));
-        } catch (IOException e) {
-            log.log(Level.WARNING, "Failed to load icon file", e);
-        } finally {
-            if (image == null) {
-                image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
-            }
-        }
+        BufferedImage image = getIcon();
 
         try {
             // Create the tray icon
@@ -1320,5 +1317,37 @@ public class Main {
             FlatLightLaf.setup();
         }
         FlatLaf.updateUI();
+    }
+
+    /**
+     * Loads the icon file and returns it as a {@link BufferedImage}.
+     * If a custom icon has been placed at the path {@code img/icon.png}, then it will be loaded. Otherwise, the default
+     * icon will be loaded.
+     *
+     * @return The loaded {@link BufferedImage} icon, or a blank image if loading fails.
+     */
+    public static BufferedImage getIcon() {
+        if (icon != null) {
+            return icon;
+        }
+
+        if (Files.exists(ICON_FILE)) {
+            try {
+                icon = ImageIO.read(Files.newInputStream(ICON_FILE));
+                return icon;
+            } catch (final IOException e) {
+                log.log(Level.WARNING, "Failed to load custom icon file", e);
+            }
+        }
+
+        try {
+            icon = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/icon.png")));
+            return icon;
+        } catch (final IOException e) {
+            log.log(Level.WARNING, "Failed to load default icon file", e);
+        }
+
+        icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+        return icon;
     }
 }

@@ -12,7 +12,6 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 /**
  * Virtual desktop environment.
@@ -114,17 +113,7 @@ class VirtualEnvironment extends Environment {
                     Main.getInstance().getProperties().getProperty("BackgroundMode", "centre")));
             display.setBackground(display.getContentPane().getBackground());
 
-            BufferedImage icon = null;
-            try {
-                icon = ImageIO.read(Files.newInputStream(Main.ICON_FILE));
-            } catch (IOException ignored) {
-                // not bothering reporting errors with loading the tray icon as it would have already been reported to the user by now
-            } finally {
-                if (icon == null) {
-                    icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
-                }
-            }
-            display.setIconImage(icon);
+            display.setIconImage(Main.getIcon());
 
             SwingUtilities.invokeLater(() -> {
                 display.pack();
