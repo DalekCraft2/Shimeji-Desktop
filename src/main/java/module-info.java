@@ -10,12 +10,16 @@ module com.group_finity.mascot {
     requires org.apache.commons.exec;
     requires com.jthemedetector;
     requires com.formdev.flatlaf;
+    requires com.valkryst.VMVC;
 
     exports com.group_finity.mascot;
     exports com.group_finity.mascot.action;
     exports com.group_finity.mascot.animation;
     exports com.group_finity.mascot.behavior;
     exports com.group_finity.mascot.config;
+    exports com.group_finity.mascot.display.controller;
+    exports com.group_finity.mascot.display.model;
+    exports com.group_finity.mascot.display.view;
     exports com.group_finity.mascot.environment;
     exports com.group_finity.mascot.exception;
     exports com.group_finity.mascot.image;

@@ -101,6 +101,13 @@
             <version>1.7.36</version>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <!-- UI MVC Framework -->
+            <groupId>com.github.Valkryst</groupId>
+            <artifactId>VMVC</artifactId>
+            <version>2025.5.15</version>
+        </dependency>
     </dependencies>
 
     <build>

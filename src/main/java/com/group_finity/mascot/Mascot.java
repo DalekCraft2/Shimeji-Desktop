@@ -4,7 +4,6 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.config.Configuration;
-import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
@@ -42,6 +41,7 @@ import java.util.logging.Logger;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @author Valkryst
  */
 public class Mascot {
     /**
@@ -343,9 +343,15 @@ public class Mascot {
         final JMenuItem debugMenu = new JMenuItem(languageBundle.getString("RevealStatistics"));
         debugMenu.addActionListener(event -> {
             if (debugWindow == null) {
-                debugWindow = new DebugWindow();
+                debugWindow = new DebugWindow(id);
+
+                debugWindow.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(final WindowEvent e) {
+                        debugWindow = null;
+                    }
+                });
             }
-            debugWindow.setVisible(true);
         });
 
         // "Bye Everyone!" menu item
@@ -448,26 +454,13 @@ public class Mascot {
                 }
 
                 if (debugWindow != null) {
-                    // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
-                    // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
-                    // debugWindow.setTitle(toString());
-
-                    debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
-                    debugWindow.setShimejiX(anchor.x);
-                    debugWindow.setShimejiY(anchor.y);
-
-                    Area activeWindow = environment.getActiveIE();
-                    debugWindow.setWindowTitle(environment.getActiveIETitle());
-                    debugWindow.setWindowX(activeWindow.getLeft());
-                    debugWindow.setWindowY(activeWindow.getTop());
-                    debugWindow.setWindowWidth(activeWindow.getWidth());
-                    debugWindow.setWindowHeight(activeWindow.getHeight());
-
-                    Area workArea = environment.getWorkArea();
-                    debugWindow.setEnvironmentX(workArea.getLeft());
-                    debugWindow.setEnvironmentY(workArea.getTop());
-                    debugWindow.setEnvironmentWidth(workArea.getWidth());
-                    debugWindow.setEnvironmentHeight(workArea.getHeight());
+                    debugWindow.update(
+                        behavior,
+                        anchor,
+                        environment.getWorkArea(),
+                        environment.getActiveIETitle(),
+                        environment.getActiveIE()
+                    );
                 }
             }
         }
@@ -501,7 +494,7 @@ public class Mascot {
             log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
 
             if (debugWindow != null) {
-                debugWindow.setVisible(false);
+                debugWindow.dispose();
                 debugWindow = null;
             }
 
