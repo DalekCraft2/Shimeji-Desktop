@@ -63,7 +63,7 @@
             <!-- Java Native Access Platform -->
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
-            <version>5.17.0</version>
+            <version>5.18.1</version>
         </dependency>
 
         <dependency>
