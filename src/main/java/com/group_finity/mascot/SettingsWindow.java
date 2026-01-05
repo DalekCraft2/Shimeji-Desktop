@@ -36,6 +36,7 @@ public class SettingsWindow extends JDialog {
     private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
     private final ArrayList<String> listData = new ArrayList<>();
     private final ArrayList<String> blacklistData = new ArrayList<>();
+    private Boolean showTrayIcon = true;
     private Boolean alwaysShowShimejiChooser = false;
     private Boolean alwaysShowInformationScreen = false;
     private String filter = "nearest";
@@ -74,6 +75,7 @@ public class SettingsWindow extends JDialog {
 
         // load existing settings
         Properties properties = Main.getInstance().getProperties();
+        showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
         alwaysShowShimejiChooser = Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"));
         alwaysShowInformationScreen = Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false"));
         String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
@@ -91,6 +93,7 @@ public class SettingsWindow extends JDialog {
         backgroundColour = Color.decode(properties.getProperty("Background", "#00FF00"));
         backgroundImage = properties.getProperty("BackgroundImage", "");
         backgroundMode = properties.getProperty("BackgroundMode", "centre");
+        chkShowTrayIcon.setSelected(showTrayIcon);
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
         if (filter.equals("bicubic")) {
@@ -147,6 +150,7 @@ public class SettingsWindow extends JDialog {
         pnlTabs.setTitleAt(3, language.getString("About"));
         lblShimejiEE.setText(language.getString("ShimejiEE"));
         lblDevelopedBy.setText(language.getString("DevelopedBy"));
+        chkShowTrayIcon.setText(language.getString("ShowTrayIcon"));
         chkAlwaysShowShimejiChooser.setText(language.getString("AlwaysShowShimejiChooser"));
         chkAlwaysShowInformationScreen.setText(language.getString("AlwaysShowInformationScreen"));
         lblOpacity.setText(language.getString("Opacity"));
@@ -252,6 +256,7 @@ public class SettingsWindow extends JDialog {
         jTextArea1 = new JTextArea();
         pnlTabs = new JTabbedPane();
         pnlGeneral = new JPanel();
+        chkShowTrayIcon = new JCheckBox();
         chkAlwaysShowShimejiChooser = new JCheckBox();
         lblScaling = new JLabel();
         sldScaling = new JSlider();
@@ -373,6 +378,9 @@ public class SettingsWindow extends JDialog {
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        chkShowTrayIcon.setText("Show Tray Icon (Requires restart)");
+        chkShowTrayIcon.addItemListener(this::chkShowTrayIconItemStateChanged);
+
         chkAlwaysShowShimejiChooser.setText("Always Show Shimeji Chooser");
         chkAlwaysShowShimejiChooser.addItemListener(this::chkAlwaysShowShimejiChooserItemStateChanged);
 
@@ -420,6 +428,7 @@ public class SettingsWindow extends JDialog {
                         .addGroup(pnlGeneralLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(chkShowTrayIcon)
                                         .addComponent(chkAlwaysShowShimejiChooser)
                                         .addComponent(lblFilter)
                                         .addComponent(lblScaling)
@@ -440,6 +449,8 @@ public class SettingsWindow extends JDialog {
                 pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(pnlGeneralLayout.createSequentialGroup()
                                 .addContainerGap()
+                                .addComponent(chkShowTrayIcon)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(chkAlwaysShowShimejiChooser)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(chkAlwaysShowInformationScreen)
@@ -924,6 +935,11 @@ public class SettingsWindow extends JDialog {
         }
     }// GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed
 
+    private void chkShowTrayIconItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkShowTrayIconItemStateChanged
+    {// GEN-HEADEREND:event_chkShowTrayIconItemStateChanged
+        showTrayIcon = evt.getStateChange() == ItemEvent.SELECTED;
+    }// GEN-LAST:event_chkShowTrayIconItemStateChanged
+
     private void chkAlwaysShowShimejiChooserItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkAlwaysShowShimejiChooserItemStateChanged
     {// GEN-HEADEREND:event_chkAlwaysShowShimejiChooserItemStateChanged
         alwaysShowShimejiChooser = evt.getStateChange() == ItemEvent.SELECTED;
@@ -1134,6 +1150,7 @@ public class SettingsWindow extends JDialog {
     private JButton btnWhiteColourChange;
     private JCheckBox chkAlwaysShowInformationScreen;
     private JCheckBox chkAlwaysShowShimejiChooser;
+    private JCheckBox chkShowTrayIcon;
     private JCheckBox chkWindowModeEnabled;
     private JComboBox<String> cmbBackgroundImageMode;
     private Box.Filler glue1;
