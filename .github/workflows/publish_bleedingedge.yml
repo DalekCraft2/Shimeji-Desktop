@@ -44,7 +44,6 @@ jobs:
             ./target/Shimeji-ee_1.0.22_Calm.zip
             ./target/Shimeji-ee_1.0.22_Professional.zip
             ./target/Shimeji-ee_1.0.22_Mischievous.zip
-            ./target/src.zip
 
   upload:
 

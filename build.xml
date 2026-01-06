@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="Shimeji-ee" basedir="." default="zip">
     <target name="zip">
-        <zip destfile="target/src.zip">
-            <fileset dir=".">
-                <include name="**/*"/>
-                <exclude name="target/**/*"/>
-                <exclude name="target"/>
-                <exclude name="bin/**/*"/>
-                <exclude name="bin"/>
-                <exclude name=".settings/**"/>
-                <exclude name=".settings"/>
-                <exclude name=".classpath"/>
-                <exclude name=".project"/>
-                <exclude name=".idea/**/*"/>
-                <exclude name=".idea"/>
-                <exclude name="*.iml"/>
-                <exclude name="*.log"/>
-            </fileset>
-        </zip>
-
         <ant target="zip_package">
             <property name="edition" value="Calm"/>
         </ant>
@@ -35,7 +17,6 @@
             <fileset dir="target">
                 <include name="Shimeji-ee.jar"/>
                 <include name="Shimeji-ee.exe"/>
-                <include name="src.zip"/>
                 <include name="lib/*"/>
             </fileset>
             <mappedresources>
