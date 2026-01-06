@@ -586,28 +586,28 @@ public class Main {
 
         // buttons and action handling
         JButton btnCallShimeji = new JButton(languageBundle.getString("CallShimeji"));
-        btnCallShimeji.addActionListener(_ -> {
+        btnCallShimeji.addActionListener(e -> {
             createMascot();
             if (useSystemTray)
                 form.dispose();
         });
 
         JButton btnFollowCursor = new JButton(languageBundle.getString("FollowCursor"));
-        btnFollowCursor.addActionListener(_ -> {
+        btnFollowCursor.addActionListener(e -> {
             manager.setBehaviorAll(BEHAVIOR_GATHER);
             if (useSystemTray)
                 form.dispose();
         });
 
         JButton btnReduceToOne = new JButton(languageBundle.getString("ReduceToOne"));
-        btnReduceToOne.addActionListener(_ -> {
+        btnReduceToOne.addActionListener(e -> {
             manager.remainOne();
             if (useSystemTray)
                 form.dispose();
         });
 
         JButton btnRestoreWindows = new JButton(languageBundle.getString("RestoreWindows"));
-        btnRestoreWindows.addActionListener(_ -> {
+        btnRestoreWindows.addActionListener(e -> {
             NativeFactory.getInstance().getEnvironment().restoreIE();
             if (useSystemTray)
                 form.dispose();
@@ -636,10 +636,10 @@ public class Main {
             public void mouseExited(MouseEvent e) {
             }
         });
-        btnAllowedBehaviours.addActionListener(_ -> {
+        btnAllowedBehaviours.addActionListener(e -> {
             // "Disable Breeding" menu item
             final JCheckBoxMenuItem breedingMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingCloning"), Boolean.parseBoolean(properties.getProperty("Breeding", "true")));
-            breedingMenu.addItemListener(_ -> {
+            breedingMenu.addItemListener(e1 -> {
                 breedingMenu.setState(toggleBooleanSetting("Breeding", true));
                 updateConfigFile();
                 btnAllowedBehaviours.setEnabled(true);
@@ -647,7 +647,7 @@ public class Main {
 
             // "Disable Breeding Transient" menu item
             final JCheckBoxMenuItem transientMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingTransient"), Boolean.parseBoolean(properties.getProperty("Transients", "true")));
-            transientMenu.addItemListener(_ -> {
+            transientMenu.addItemListener(e1 -> {
                 transientMenu.setState(toggleBooleanSetting("Transients", true));
                 updateConfigFile();
                 btnAllowedBehaviours.setEnabled(true);
@@ -655,7 +655,7 @@ public class Main {
 
             // "Disable Transformations" menu item
             final JCheckBoxMenuItem transformationMenu = new JCheckBoxMenuItem(languageBundle.getString("Transformation"), Boolean.parseBoolean(properties.getProperty("Transformation", "true")));
-            transformationMenu.addItemListener(_ -> {
+            transformationMenu.addItemListener(e1 -> {
                 transformationMenu.setState(toggleBooleanSetting("Transformation", true));
                 updateConfigFile();
                 btnAllowedBehaviours.setEnabled(true);
@@ -663,7 +663,7 @@ public class Main {
 
             // "Throwing Windows" menu item
             final JCheckBoxMenuItem throwingMenu = new JCheckBoxMenuItem(languageBundle.getString("ThrowingWindows"), Boolean.parseBoolean(properties.getProperty("Throwing", "true")));
-            throwingMenu.addItemListener(_ -> {
+            throwingMenu.addItemListener(e1 -> {
                 throwingMenu.setState(toggleBooleanSetting("Throwing", true));
                 updateConfigFile();
                 btnAllowedBehaviours.setEnabled(true);
@@ -671,7 +671,7 @@ public class Main {
 
             // "Mute Sounds" menu item
             final JCheckBoxMenuItem soundsMenu = new JCheckBoxMenuItem(languageBundle.getString("SoundEffects"), Boolean.parseBoolean(properties.getProperty("Sounds", "true")));
-            soundsMenu.addItemListener(_ -> {
+            soundsMenu.addItemListener(e1 -> {
                 boolean result = toggleBooleanSetting("Sounds", true);
                 soundsMenu.setState(result);
                 Sounds.setMuted(!result);
@@ -681,7 +681,7 @@ public class Main {
 
             // "Multiscreen" menu item
             final JCheckBoxMenuItem multiscreenMenu = new JCheckBoxMenuItem(languageBundle.getString("Multiscreen"), Boolean.parseBoolean(properties.getProperty("Multiscreen", "true")));
-            multiscreenMenu.addItemListener(_ -> {
+            multiscreenMenu.addItemListener(e1 -> {
                 multiscreenMenu.setState(toggleBooleanSetting("Multiscreen", true));
                 updateConfigFile();
                 btnAllowedBehaviours.setEnabled(true);
@@ -720,7 +720,7 @@ public class Main {
         });
 
         final JButton btnChooseShimeji = new JButton(languageBundle.getString("ChooseShimeji"));
-        btnChooseShimeji.addActionListener(_ -> {
+        btnChooseShimeji.addActionListener(e -> {
             if (useSystemTray)
                 form.dispose();
             if (!manager.isPaused()) {
@@ -740,7 +740,7 @@ public class Main {
         });
 
         final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
-        btnSettings.addActionListener(_ -> {
+        btnSettings.addActionListener(e -> {
             if (useSystemTray)
                 form.dispose();
             if (!manager.isPaused()) {
@@ -824,90 +824,90 @@ public class Main {
             updateLanguage(languageTag);
             updateConfigFile();
         };
-        btnLanguage.addActionListener(_ -> {
+        btnLanguage.addActionListener(e -> {
             // English menu item
             final JMenuItem englishMenu = new JMenuItem("English");
-            englishMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.UK));
+            englishMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.UK));
 
             // Arabic menu item
             final JMenuItem arabicMenu = new JMenuItem("\u0639\u0631\u0628\u064A");
-            arabicMenu.addActionListener(_ -> langTagUpdateFunc.accept("ar-SA"));
+            arabicMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ar-SA"));
 
             // Catalan menu item
             final JMenuItem catalanMenu = new JMenuItem("Catal\u00E0");
-            catalanMenu.addActionListener(_ -> langTagUpdateFunc.accept("ca-ES"));
+            catalanMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ca-ES"));
 
             // German menu item
             final JMenuItem germanMenu = new JMenuItem("Deutsch");
-            germanMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.GERMANY));
+            germanMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.GERMANY));
 
             // Spanish menu item
             final JMenuItem spanishMenu = new JMenuItem("Espa\u00F1ol");
-            spanishMenu.addActionListener(_ -> langTagUpdateFunc.accept("es-ES"));
+            spanishMenu.addActionListener(e1 -> langTagUpdateFunc.accept("es-ES"));
 
             // French menu item
             final JMenuItem frenchMenu = new JMenuItem("Fran\u00E7ais");
-            frenchMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.FRANCE));
+            frenchMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.FRANCE));
 
             // Croatian menu item
             final JMenuItem croatianMenu = new JMenuItem("Hrvatski");
-            croatianMenu.addActionListener(_ -> langTagUpdateFunc.accept("hr-HR"));
+            croatianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("hr-HR"));
 
             // Italian menu item
             final JMenuItem italianMenu = new JMenuItem("Italiano");
-            italianMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.ITALY));
+            italianMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.ITALY));
 
             // Dutch menu item
             final JMenuItem dutchMenu = new JMenuItem("Nederlands");
-            dutchMenu.addActionListener(_ -> langTagUpdateFunc.accept("nl-NL"));
+            dutchMenu.addActionListener(e1 -> langTagUpdateFunc.accept("nl-NL"));
 
             // Polish menu item
             final JMenuItem polishMenu = new JMenuItem("Polski");
-            polishMenu.addActionListener(_ -> langTagUpdateFunc.accept("pl-PL"));
+            polishMenu.addActionListener(e1 -> langTagUpdateFunc.accept("pl-PL"));
 
             // Brazilian Portuguese menu item
             final JMenuItem brazilianPortugueseMenu = new JMenuItem("Portugu\u00eas Brasileiro");
-            brazilianPortugueseMenu.addActionListener(_ -> langTagUpdateFunc.accept("pt-BR"));
+            brazilianPortugueseMenu.addActionListener(e1 -> langTagUpdateFunc.accept("pt-BR"));
 
             // Portuguese menu item
             final JMenuItem portugueseMenu = new JMenuItem("Portugu\u00eas");
-            portugueseMenu.addActionListener(_ -> langTagUpdateFunc.accept("pt-PT"));
+            portugueseMenu.addActionListener(e1 -> langTagUpdateFunc.accept("pt-PT"));
 
             // Russian menu item
             final JMenuItem russianMenu = new JMenuItem("\u0440\u0443\u0301\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u0301\u043a");
-            russianMenu.addActionListener(_ -> langTagUpdateFunc.accept("ru-RU"));
+            russianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ru-RU"));
 
             // Romanian menu item
             final JMenuItem romanianMenu = new JMenuItem("Rom\u00e2n\u0103");
-            romanianMenu.addActionListener(_ -> langTagUpdateFunc.accept("ro-RO"));
+            romanianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ro-RO"));
 
             // Serbian menu item
             final JMenuItem serbianMenu = new JMenuItem("Srpski");
-            serbianMenu.addActionListener(_ -> langTagUpdateFunc.accept("sr-RS"));
+            serbianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("sr-RS"));
 
             // Finnish menu item
             final JMenuItem finnishMenu = new JMenuItem("Suomi");
-            finnishMenu.addActionListener(_ -> langTagUpdateFunc.accept("fi-FI"));
+            finnishMenu.addActionListener(e1 -> langTagUpdateFunc.accept("fi-FI"));
 
             // Vietnamese menu item
             final JMenuItem vietnameseMenu = new JMenuItem("ti\u1ebfng Vi\u1ec7t");
-            vietnameseMenu.addActionListener(_ -> langTagUpdateFunc.accept("vi-VN"));
+            vietnameseMenu.addActionListener(e1 -> langTagUpdateFunc.accept("vi-VN"));
 
             // Chinese menu item
             final JMenuItem chineseMenu = new JMenuItem("\u7b80\u4f53\u4e2d\u6587");
-            chineseMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.SIMPLIFIED_CHINESE));
+            chineseMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.SIMPLIFIED_CHINESE));
 
             // Chinese (Traditional) menu item
             final JMenuItem chineseTraditionalMenu = new JMenuItem("\u7E41\u9AD4\u4E2D\u6587");
-            chineseTraditionalMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.TRADITIONAL_CHINESE));
+            chineseTraditionalMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.TRADITIONAL_CHINESE));
 
             // Korean menu item
             final JMenuItem koreanMenu = new JMenuItem("\ud55c\uad6d\uc5b4");
-            koreanMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.KOREA));
+            koreanMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.KOREA));
 
             // Japanese menu item
             final JMenuItem japaneseMenu = new JMenuItem("\u65E5\u672C\u8A9E");
-            japaneseMenu.addActionListener(_ -> langUpdateFunc.accept(Locale.JAPAN));
+            japaneseMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.JAPAN));
 
             JPopupMenu languagePopup = new JPopupMenu();
             languagePopup.add(englishMenu);
@@ -958,14 +958,14 @@ public class Main {
         });
 
         JButton btnPauseAll = new JButton(manager.isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
-        btnPauseAll.addActionListener(_ -> {
+        btnPauseAll.addActionListener(e1 -> {
             if (useSystemTray)
                 form.dispose();
             manager.togglePauseAll();
         });
 
         JButton btnDismissAll = new JButton(languageBundle.getString("DismissAll"));
-        btnDismissAll.addActionListener(_ -> exit());
+        btnDismissAll.addActionListener(e1 -> exit());
 
         // layout
         panel.setLayout(new GridBagLayout());
