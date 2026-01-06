@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,20 +33,6 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: my-artifact
-          path: target/Shimeji-ee_1.0.22.zip
-
-  upload:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v7
-
       - run: |
           gh release delete bleedingedge --cleanup-tag --yes
         env:
@@ -62,6 +48,6 @@ jobs:
           prerelease: true
           fail_on_unmatched_files: true
           files: |
-            **/*
+            target/Shimeji-ee_*.zip
           body: |
             This is the latest snapshot of Shimeji-Desktop.
