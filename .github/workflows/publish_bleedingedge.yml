@@ -11,17 +11,17 @@ concurrency:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 11
+
+      # https://github.com/marketplace/actions/setup-java-jdk
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
           distribution: 'adopt'
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
+          java-version: 11
 
       - name: Cache Maven Packages
         uses: actions/cache@v4
@@ -43,18 +43,20 @@ jobs:
             ./target/Shimeji-ee_1.0.22_Mischievous.zip
 
   upload:
-
     needs: [ build ]
     runs-on: ubuntu-latest
+
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v7
+
       - run: |
           gh release delete bleedingedge --cleanup-tag --yes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         continue-on-error: true # In case the release doesn't exist and the execution fails
+
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
@@ -64,4 +66,5 @@ jobs:
           fail_on_unmatched_files: true
           files: |
             **/*
-#          body: |
+          body: |
+            This is the latest snapshot of Shimeji-Desktop.
