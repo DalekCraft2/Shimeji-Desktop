@@ -51,6 +51,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+        continue-on-error: true # In case the release doesn't exist and the execution fails
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
