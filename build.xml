@@ -1,30 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="Shimeji-ee" basedir="." default="zip">
     <target name="zip">
-        <ant target="zip_package">
-            <property name="edition" value="Calm"/>
-        </ant>
-        <ant target="zip_package">
-            <property name="edition" value="Professional"/>
-        </ant>
-        <ant target="zip_package">
-            <property name="edition" value="Mischievous"/>
-        </ant>
-    </target>
-
-    <target name="zip_package">
-        <zip destfile="target/Shimeji-ee_${project.version}_${edition}.zip">
+        <zip destfile="target/Shimeji-ee_${project.version}.zip">
             <fileset dir="target">
                 <include name="Shimeji-ee.jar"/>
                 <include name="Shimeji-ee.exe"/>
                 <include name="lib/*"/>
             </fileset>
-            <mappedresources>
-                <fileset dir="conf">
-                    <include name="${edition}Behavior.xml"/>
-                </fileset>
-                <globmapper from="*.xml" to="conf/behaviors.xml"/>
-            </mappedresources>
             <fileset dir=".">
                 <include name="LICENSE.txt"/>
                 <include name="originalreadme.txt"/>
@@ -33,8 +15,6 @@
                 <include name="kilkakon.txt"/>
                 <include name="img/**/*"/>
                 <include name="conf/**/*"/>
-                <exclude name="conf/behaviors.xml"/>
-                <exclude name="conf/*Behavior.xml"/>
             </fileset>
         </zip>
     </target>

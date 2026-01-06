@@ -156,8 +156,7 @@ Delete the unzipped folder.
 4. Open the source code directory in the IDE.
 5. Open the Maven tool window on the right side of the UI. The icon to open the window should look like an "m".
 6. Right-click the "Shimeji-ee" item and select "Run Maven build". This will build the project and output the files to
-   the `target/` directory. The distributable files should be 3 ZIP files named
-   `Shimeji-ee_[version]_[Calm/Professional/Mischievous].zip`.
+   the `target/` directory. The distributable file should be a ZIP file named `Shimeji-ee_[version].zip`.
 
 ## Licensing
 
