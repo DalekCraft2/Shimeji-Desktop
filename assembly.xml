@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+    <id>distributable</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>${project.build.finalName}.exe</include>
+                <include>${project.build.finalName}.jar</include>
+                <include>lib/**</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>.</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>LICENSE.txt</include>
+                <include>originalreadme.txt</include>
+                <include>readme.txt</include>
+                <include>changelog.txt</include>
+                <include>kilkakon.txt</include>
+                <include>img/**</include>
+                <include>conf/**</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

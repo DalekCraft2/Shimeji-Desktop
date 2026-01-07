@@ -111,7 +111,7 @@
                 <directory>${project.basedir}/src/main/resources</directory>
                 <filtering>false</filtering>
                 <includes>
-                    <include>**/*</include>
+                    <include>**</include>
                 </includes>
             </resource>
             <resource>
@@ -203,7 +203,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- Create an .exe file to run the application -->
+                <!-- Create an EXE file to run the application -->
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
                 <version>2.6.0</version>
@@ -245,25 +245,23 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- Generate the ZIP file from the old Ant build.xml script -->
+                <!-- Generate distributable ZIP file -->
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.2.0</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.8.0</version>
                 <executions>
                     <execution>
-                        <!-- Create distributable ZIP file -->
-                        <id>create-zip</id>
+                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
-                            <target>
-                                <!-- Execute the "zip" target in build.xml -->
-                                <ant antfile="${project.basedir}/build.xml">
-                                    <target name="zip"/>
-                                </ant>
-                            </target>
+                            <finalName>${project.build.finalName}_${project.version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>assembly.xml</descriptor>
+                            </descriptors>
                         </configuration>
                     </execution>
                 </executions>
