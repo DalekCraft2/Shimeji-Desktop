@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="Shimeji-ee" basedir="." default="zip">
     <target name="zip">
         <zip destfile="target/Shimeji-ee_${project.version}.zip">

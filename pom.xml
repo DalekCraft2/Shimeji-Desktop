@@ -56,7 +56,7 @@
             <!-- AbsoluteLayout -->
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
-            <version>RELEASE270</version>
+            <version>RELEASE280</version>
         </dependency>
 
         <dependency>
@@ -77,7 +77,7 @@
             <!-- OS Detection -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
-            <version>1.5.0</version>
+            <version>1.6.0</version>
         </dependency>
 
         <dependency>
@@ -136,7 +136,7 @@
                 &lt;!&ndash; Attach sources &ndash;&gt;
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -150,7 +150,7 @@
                 &lt;!&ndash; Attach Javadocs &ndash;&gt;
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.3</version>
+                <version>3.12.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -164,7 +164,7 @@
                 <!-- Set main class -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -245,14 +245,14 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- Generate the ZIP files from the old Ant build.xml script -->
+                <!-- Generate the ZIP file from the old Ant build.xml script -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
-                        <!-- Create ZIP files for the source and the three release variants -->
-                        <id>create-zips</id>
+                        <!-- Create distributable ZIP file -->
+                        <id>create-zip</id>
                         <phase>package</phase>
                         <goals>
                             <goal>run</goal>
