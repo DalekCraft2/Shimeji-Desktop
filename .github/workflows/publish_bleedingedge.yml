@@ -33,14 +33,14 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: my-artifact
-          path: target/Shimeji-ee_*.zip
+          path: target/Shimeji-ee_1.0.22.zip
 
   release:
     needs: [ build ]
     runs-on: ubuntu-latest
 
     concurrency:
-      group: ${{ github.workflow }}
+      group: ${{ github.workflow }}-${{ github.job }}
       cancel-in-progress: true
 
     steps:
