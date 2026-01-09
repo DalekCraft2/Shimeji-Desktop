@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: my-artifact
-          path: target/Shimeji-ee_1.0.22.zip
+          path: target/Shimeji-ee_*.zip
 
   release:
     needs: [ build ]
@@ -62,6 +62,6 @@ jobs:
           prerelease: true
           fail_on_unmatched_files: true
           files: |
-            target/Shimeji-ee_*.zip
+            **
           body: |
             This is the latest snapshot of Shimeji-Desktop. It has been automatically generated from the latest commit.
