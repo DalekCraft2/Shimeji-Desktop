@@ -1,16 +1,12 @@
-name: Bleeding edge release
+name: Publish continuous release of Shimeji-Desktop
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +29,24 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: my-artifact
+          path: target/Shimeji-ee_*.zip
+
+  release:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.job }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v7
+
       - run: |
           gh release delete bleedingedge --cleanup-tag --yes
         env:
@@ -40,7 +54,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         continue-on-error: true # In case the release doesn't exist and the execution fails
 
-      - name: Release
+      - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: bleedingedge
