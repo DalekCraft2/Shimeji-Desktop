@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
 
     concurrency:
-      group: ${{ github.workflow }}-${{ github.job }}
+      group: ${{ github.workflow }}
       cancel-in-progress: true
 
     steps:
