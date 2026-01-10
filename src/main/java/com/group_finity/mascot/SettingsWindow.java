@@ -878,6 +878,7 @@ public class SettingsWindow extends JDialog {
                 !properties.getProperty("InteractiveWindowsBlacklist", "").equals(interactiveWindowsBlacklist);
 
         try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
+            properties.setProperty("ShowTrayIcon", showTrayIcon.toString());
             properties.setProperty("AlwaysShowShimejiChooser", alwaysShowShimejiChooser.toString());
             properties.setProperty("AlwaysShowInformationScreen", alwaysShowInformationScreen.toString());
             properties.setProperty("Opacity", Double.toString(opacity));
