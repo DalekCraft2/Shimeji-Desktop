@@ -1097,22 +1097,6 @@ public class Main {
             showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
             exit();
         }
-
-        boolean isExit = manager.isExitOnLastRemoved();
-        manager.setExitOnLastRemoved(false);
-        manager.disposeAll();
-
-        // Load mascot configurations
-        for (String imageSet : imageSets) {
-            loadConfiguration(imageSet);
-        }
-
-        // Create mascots
-        for (String imageSet : imageSets) {
-            createMascot(imageSet);
-        }
-
-        manager.setExitOnLastRemoved(isExit);
     }
 
     private void updateLanguage(Locale locale) {
