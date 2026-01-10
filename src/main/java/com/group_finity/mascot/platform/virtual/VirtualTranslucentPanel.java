@@ -1,6 +1,5 @@
 package com.group_finity.mascot.platform.virtual;
 
-import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.platform.TranslucentWindow;
 
 import javax.swing.*;
@@ -22,11 +21,9 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     public VirtualTranslucentPanel() {
         super();
 
-        if (Mascot.DRAW_DEBUG) {
-            setBackground(new Color(0, 0, 0, 0));
-            setOpaque(false);
-            setLayout(new BorderLayout());
-        }
+        setBackground(new Color(0, 0, 0, 0));
+        setOpaque(false);
+        setLayout(new BorderLayout());
     }
 
     @Override
@@ -61,7 +58,7 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
-        if (Mascot.DRAW_DEBUG && comp instanceof JComponent) {
+        if (comp instanceof JComponent) {
             final JComponent jcomp = (JComponent) comp;
             jcomp.setOpaque(false);
         }
@@ -87,9 +84,7 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
 
     @Override
     public void updateImage() {
-        if (Mascot.DRAW_DEBUG) {
-            validate();
-        }
+        validate();
         repaint();
     }
 

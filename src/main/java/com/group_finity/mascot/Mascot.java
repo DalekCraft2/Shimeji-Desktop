@@ -44,11 +44,6 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Mascot {
-    /**
-     * Whether to draw the mascots' bounds and hotspots, for debugging purposes.
-     */
-    public static final boolean DRAW_DEBUG = false;
-
     private static final Logger log = Logger.getLogger(Mascot.class.getName());
 
     /**
@@ -200,11 +195,13 @@ public class Mascot {
             }
         });
 
-        if (DRAW_DEBUG) {
-            // For drawing the outlines of hotspots and the mascot's bounds, for debugging purposes
-            JComponent debugComp = new JComponent() {
-                @Override
-                public void paintComponent(Graphics g) {
+        // For drawing the outlines of hotspots and the mascot's bounds, for debugging purposes
+        JComponent debugComp = new JComponent() {
+            @Override
+            public void paintComponent(Graphics g) {
+                // TODO: Consider a more efficient way of doing this than setting the enabled state on every repaint.
+                setEnabled(Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("DrawShimejiBounds", "false")));
+                if (isEnabled()) {
                     super.paintComponent(g);
 
                     // Draw hotspots
@@ -238,19 +235,19 @@ public class Mascot {
                     g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
                     g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
                 }
-            };
-            debugComp.setBackground(new Color(0, 0, 0, 0));
-            debugComp.setOpaque(false);
-            debugComp.setPreferredSize(window.asComponent().getPreferredSize());
-            window.asComponent().addComponentListener(new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    super.componentResized(e);
-                    debugComp.setPreferredSize(e.getComponent().getPreferredSize());
-                }
-            });
-            ((Container) window.asComponent()).add(debugComp);
-        }
+            }
+        };
+        debugComp.setBackground(new Color(0, 0, 0, 0));
+        debugComp.setOpaque(false);
+        debugComp.setPreferredSize(window.asComponent().getPreferredSize());
+        window.asComponent().addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                debugComp.setPreferredSize(e.getComponent().getPreferredSize());
+            }
+        });
+        ((Container) window.asComponent()).add(debugComp);
     }
 
     @Override
@@ -356,8 +353,7 @@ public class Mascot {
         final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? languageBundle.getString("PauseAnimations") : languageBundle.getString("ResumeAnimations"));
         pauseMenu.addActionListener(event -> paused = !paused);
 
-        // Add the Behaviors submenu. It is currently slightly buggy; sometimes the menu ghosts.
-        // JLongMenu submenu = new JLongMenu(languageBundle.getString("SetBehaviour"), 30);
+        // Add the Behaviors submenu.
         JMenu submenu = new JMenu(languageBundle.getString("SetBehaviour"));
         JMenu allowedSubmenu = new JMenu(languageBundle.getString("AllowedBehaviours"));
         submenu.setAutoscrolls(true);
@@ -370,9 +366,7 @@ public class Mascot {
                 if (!config.isBehaviorHidden(command)) {
                     String caption = behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
                     if (config.isBehaviorEnabled(command, this) && !command.contains("/")) {
-                        item = new JMenuItem(languageBundle.containsKey(behaviorName) ?
-                                languageBundle.getString(behaviorName) :
-                                caption);
+                        item = new JMenuItem(languageBundle.containsKey(behaviorName) ? languageBundle.getString(behaviorName) : caption);
                         item.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(final ActionEvent e) {
@@ -516,8 +510,7 @@ public class Mascot {
 
     private void refreshCursor(Point position) {
         synchronized (hotspots) {
-            boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position) &&
-                    Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
+            boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position) && Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
 
             refreshCursor(useHand);
         }

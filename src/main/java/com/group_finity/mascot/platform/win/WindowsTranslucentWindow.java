@@ -1,6 +1,5 @@
 package com.group_finity.mascot.platform.win;
 
-import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.platform.TranslucentWindow;
 
 import javax.swing.*;
@@ -26,27 +25,25 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
         setBackground(new Color(0, 0, 0, 0));
 
-        if (Mascot.DRAW_DEBUG) {
-            JPanel panel = new JPanel() {
-                @Override
-                protected void paintComponent(final Graphics g) {
-                    super.paintComponent(g);
-                    if (image != null) {
-                        g.drawImage(image, 0, 0, null);
-                    }
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                if (image != null) {
+                    g.drawImage(image, 0, 0, null);
                 }
-            };
-            panel.setOpaque(false);
-            setContentPane(panel);
+            }
+        };
+        panel.setOpaque(false);
+        setContentPane(panel);
 
-            setLayout(new BorderLayout());
-        }
+        setLayout(new BorderLayout());
     }
 
     @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
-        if (Mascot.DRAW_DEBUG && comp instanceof JComponent) {
+        if (comp instanceof JComponent) {
             final JComponent jcomp = (JComponent) comp;
             jcomp.setOpaque(false);
         }
@@ -71,10 +68,6 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
             g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         }
         super.paint(g);
-
-        if (!Mascot.DRAW_DEBUG && image != null) {
-            g.drawImage(image, 0, 0, null);
-        }
     }
 
     @Override
@@ -84,9 +77,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public void updateImage() {
-        if (Mascot.DRAW_DEBUG) {
-            validate();
-        }
+        validate();
         repaint();
     }
 }

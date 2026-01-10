@@ -39,6 +39,7 @@ public class SettingsWindow extends JDialog {
     private Boolean showTrayIcon = true;
     private Boolean alwaysShowShimejiChooser = false;
     private Boolean alwaysShowInformationScreen = false;
+    private Boolean drawShimejiBounds = false;
     private String filter = "nearest";
     private double scaling = 1.0;
     private double opacity = 1.0;
@@ -78,6 +79,7 @@ public class SettingsWindow extends JDialog {
         showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
         alwaysShowShimejiChooser = Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"));
         alwaysShowInformationScreen = Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false"));
+        drawShimejiBounds = Boolean.parseBoolean(properties.getProperty("DrawShimejiBounds", "false"));
         String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
         filter = "nearest";
         if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
@@ -96,6 +98,7 @@ public class SettingsWindow extends JDialog {
         chkShowTrayIcon.setSelected(showTrayIcon);
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
+        chkDrawShimejiBounds.setSelected(drawShimejiBounds);
         if (filter.equals("bicubic")) {
             radFilterBicubic.setSelected(true);
         } else if (filter.equals("hqx")) {
@@ -153,6 +156,7 @@ public class SettingsWindow extends JDialog {
         chkShowTrayIcon.setText(language.getString("ShowTrayIcon"));
         chkAlwaysShowShimejiChooser.setText(language.getString("AlwaysShowShimejiChooser"));
         chkAlwaysShowInformationScreen.setText(language.getString("AlwaysShowInformationScreen"));
+        chkDrawShimejiBounds.setText(language.getString("DrawShimejiBounds"));
         lblOpacity.setText(language.getString("Opacity"));
         lblScaling.setText(language.getString("Scaling"));
         lblFilter.setText(language.getString("FilterOptions"));
@@ -194,7 +198,7 @@ public class SettingsWindow extends JDialog {
     }
 
     public boolean display() {
-        getContentPane().setPreferredSize(new Dimension(600, 497));
+        getContentPane().setPreferredSize(new Dimension(500, 515));
         pnlInteractiveButtons.setPreferredSize(new Dimension(pnlInteractiveButtons.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height + 6));
         cmbBackgroundImageMode.setPreferredSize(btnBackgroundImageRemove.getPreferredSize());
         pnlBackgroundImage.setMaximumSize(pnlBackgroundImage.getPreferredSize());
@@ -258,6 +262,8 @@ public class SettingsWindow extends JDialog {
         pnlGeneral = new JPanel();
         chkShowTrayIcon = new JCheckBox();
         chkAlwaysShowShimejiChooser = new JCheckBox();
+        chkAlwaysShowInformationScreen = new JCheckBox();
+        chkDrawShimejiBounds = new JCheckBox();
         lblScaling = new JLabel();
         sldScaling = new JSlider();
         lblFilter = new JLabel();
@@ -266,7 +272,6 @@ public class SettingsWindow extends JDialog {
         radFilterHqx = new JRadioButton();
         sldOpacity = new JSlider();
         lblOpacity = new JLabel();
-        chkAlwaysShowInformationScreen = new JCheckBox();
         pnlInteractiveWindows = new JPanel();
         pnlInteractiveTabs = new JTabbedPane();
         pnlWhitelistTab = new JPanel();
@@ -384,6 +389,12 @@ public class SettingsWindow extends JDialog {
         chkAlwaysShowShimejiChooser.setText("Always Show Shimeji Chooser");
         chkAlwaysShowShimejiChooser.addItemListener(this::chkAlwaysShowShimejiChooserItemStateChanged);
 
+        chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
+        chkAlwaysShowInformationScreen.addItemListener(this::chkAlwaysShowInformationScreenItemStateChanged);
+
+        chkDrawShimejiBounds.setText("Draw Shimeji Bounds");
+        chkDrawShimejiBounds.addItemListener(this::chkDrawShimejiBoundsItemStateChanged);
+
         lblScaling.setText("Scaling");
 
         sldScaling.setMajorTickSpacing(10);
@@ -418,9 +429,6 @@ public class SettingsWindow extends JDialog {
 
         lblOpacity.setText("Opacity");
 
-        chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
-        chkAlwaysShowInformationScreen.addItemListener(this::chkAlwaysShowInformationScreenItemStateChanged);
-
         GroupLayout pnlGeneralLayout = new GroupLayout(pnlGeneral);
         pnlGeneral.setLayout(pnlGeneralLayout);
         pnlGeneralLayout.setHorizontalGroup(
@@ -430,6 +438,8 @@ public class SettingsWindow extends JDialog {
                                 .addGroup(pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(chkShowTrayIcon)
                                         .addComponent(chkAlwaysShowShimejiChooser)
+                                        .addComponent(chkAlwaysShowInformationScreen)
+                                        .addComponent(chkDrawShimejiBounds)
                                         .addComponent(lblFilter)
                                         .addComponent(lblScaling)
                                         .addGroup(pnlGeneralLayout.createSequentialGroup()
@@ -441,8 +451,7 @@ public class SettingsWindow extends JDialog {
                                                                 .addComponent(sldScaling, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                 .addComponent(radFilterBicubic)
                                                                 .addComponent(radFilterHqx))))
-                                        .addComponent(lblOpacity)
-                                        .addComponent(chkAlwaysShowInformationScreen))
+                                        .addComponent(lblOpacity))
                                 .addContainerGap(26, Short.MAX_VALUE))
         );
         pnlGeneralLayout.setVerticalGroup(
@@ -454,6 +463,8 @@ public class SettingsWindow extends JDialog {
                                 .addComponent(chkAlwaysShowShimejiChooser)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(chkAlwaysShowInformationScreen)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(chkDrawShimejiBounds)
                                 .addGap(18, 18, 18)
                                 .addComponent(lblOpacity)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -884,6 +895,7 @@ public class SettingsWindow extends JDialog {
             properties.setProperty("Opacity", Double.toString(opacity));
             properties.setProperty("Scaling", Double.toString(scaling));
             properties.setProperty("Filter", filter);
+            properties.setProperty("DrawShimejiBounds", drawShimejiBounds.toString());
             properties.setProperty("InteractiveWindows", interactiveWindows);
             properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
             if (windowedMode) {
@@ -945,6 +957,11 @@ public class SettingsWindow extends JDialog {
     {// GEN-HEADEREND:event_chkAlwaysShowShimejiChooserItemStateChanged
         alwaysShowShimejiChooser = evt.getStateChange() == ItemEvent.SELECTED;
     }// GEN-LAST:event_chkAlwaysShowShimejiChooserItemStateChanged
+
+    private void chkDrawShimejiBoundsItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkDrawShimejiBoundsItemStateChanged
+    {// GEN-HEADEREND:event_chkDrawShimejiBoundsItemStateChanged
+        drawShimejiBounds = evt.getStateChange() == ItemEvent.SELECTED;
+    }// GEN-LAST:event_chkDrawShimejiBoundsItemStateChanged
 
     private void radFilterItemStateChanged(ItemEvent evt)// GEN-FIRST:event_radFilterItemStateChanged
     {// GEN-HEADEREND:event_radFilterItemStateChanged
@@ -1151,6 +1168,7 @@ public class SettingsWindow extends JDialog {
     private JButton btnWhiteColourChange;
     private JCheckBox chkAlwaysShowInformationScreen;
     private JCheckBox chkAlwaysShowShimejiChooser;
+    private JCheckBox chkDrawShimejiBounds;
     private JCheckBox chkShowTrayIcon;
     private JCheckBox chkWindowModeEnabled;
     private JComboBox<String> cmbBackgroundImageMode;
