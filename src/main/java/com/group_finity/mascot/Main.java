@@ -414,9 +414,11 @@ public class Main {
         if (!useSystemTray) {
             // If the settings say to show the tray icon but the system tray isn't supported,
             // tell the user (via log) that the persistent menu window is being used as an alternative
-            if (showTrayIcon && !SystemTray.isSupported())
+            if (showTrayIcon && !SystemTray.isSupported()) {
                 log.log(Level.WARNING, "System tray not supported; creating persistent menu window instead");
-            else
+                // Change the setting to false so the warning doesn't happen on every startup after this
+                properties.setProperty("ShowTrayIcon", "false");
+            } else
                 log.log(Level.INFO, "Creating persistent menu window");
             createTrayMenu(false, null);
             return;
