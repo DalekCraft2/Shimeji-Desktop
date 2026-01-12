@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 /**
  * A class that provides scrolling capabilities to a long menu dropdown or popup
@@ -24,11 +26,11 @@ import java.awt.event.MouseWheelListener;
  */
 // NOTE: Provided by Darryl Burke from <https://tips4java.wordpress.com/2009/02/01/menu-scroller/>
 // (Thank you DarrylB! ;-)
-public class MenuScroller
+public final class MenuScroller
         implements MouseWheelListener {
 
-    // private JMenu menu;
-    private JPopupMenu menu;
+    //private JMenu menu;
+    private final JPopupMenu menu;
     private Component[] menuItems;
     private MenuScrollerItem upItem;
     private MenuScrollerItem downItem;
@@ -40,8 +42,6 @@ public class MenuScroller
     private int bottomFixedCount;
     private int firstIndex = 0;
     private int keepVisibleIndex = -1;
-
-//     private Component lastFocused = null;
 
     /**
      * Register a menu to be scrolled with the default number of items to
@@ -139,7 +139,7 @@ public class MenuScroller
      * @return the MenuScroller
      */
     public static MenuScroller setScrollerFor(JMenu menu, int scrollCount, int interval,
-                                              int topFixedCount, int bottomFixedCount) {
+            int topFixedCount, int bottomFixedCount) {
         return new MenuScroller(menu, scrollCount, interval,
                 topFixedCount, bottomFixedCount);
     }
@@ -163,7 +163,7 @@ public class MenuScroller
      * @return the MenuScroller
      */
     public static MenuScroller setScrollerFor(JPopupMenu menu, int scrollCount, int interval,
-                                              int topFixedCount, int bottomFixedCount) {
+            int topFixedCount, int bottomFixedCount) {
         return new MenuScroller(menu, scrollCount, interval,
                 topFixedCount, bottomFixedCount);
     }
@@ -264,7 +264,7 @@ public class MenuScroller
      *                                  bottomFixedCount is negative
      */
     public MenuScroller(JMenu menu, int scrollCount, int interval,
-                        int topFixedCount, int bottomFixedCount) {
+            int topFixedCount, int bottomFixedCount) {
         this(menu.getPopupMenu(), scrollCount, interval, topFixedCount, bottomFixedCount);
     }
 
@@ -286,7 +286,7 @@ public class MenuScroller
      *                                  bottomFixedCount is negative
      */
     public MenuScroller(JPopupMenu menu, int scrollCount, int interval,
-                        int topFixedCount, int bottomFixedCount) {
+            int topFixedCount, int bottomFixedCount) {
         if (scrollCount <= 0 || interval <= 0) {
             throw new IllegalArgumentException(Main.getInstance().getLanguageBundle().getString("ScrollCountIntervalBelowZeroErrorMessage"));
         }
@@ -304,11 +304,6 @@ public class MenuScroller
         this.menu = menu;
 
         installListeners();
-
-        // Ensure that the menu's preferred size has been recalculated before the menu is first shown;
-        // otherwise, it will initially be in the wrong position.
-        setMenuItems();
-        restoreMenuItems();
     }
 
     private void installListeners() {
@@ -320,44 +315,12 @@ public class MenuScroller
         // add our menu key listener
         menu.addMenuKeyListener(menuScrollerMenuKeyListener);
 
-// Dead code commented out 2021-12-13
-//        if (false) {    // not working
-//        KeyListenerInstaller.installKeyListenerOnAllComponents(new KeyAdapter() {
-//            @Override
-//            public void keyTyped(KeyEvent e) {
-//                int keyCode = e.getKeyCode();
-//                log.debug("keyTyped(" + keyCode + ")");
-//            }
-//        }, menu);
-//
-//             menu.addKeyListener(new KeyAdapter() {
-//                 @Override
-//                 public void keyTyped(KeyEvent e) {
-//                     int keyCode = e.getKeyCode();
-//                     log.debug("keyTyped({})", keyCode);
-//                 }
-//             });
-//
-//         }
-
         // add a Popup Menu listener
         menu.addPopupMenuListener(menuScrollerPopupMenuListener);
 
         // add my mouse wheel listener
         // (so mouseWheelMoved (below) will be called)
         menu.addMouseWheelListener(this);
-
-//         lastFocused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-//         if (menu.isFocusable()) {
-//             menu.requestFocus();
-//         }
-    }
-
-    private void removeListeners() {
-//         lastFocused.requestFocus();
-//         menu.removeMenuKeyListener(menuScrollerMenuKeyListener);
-        menu.removePopupMenuListener(menuScrollerPopupMenuListener);
-        menu.removeMouseWheelListener(this);
     }
 
     @Override
@@ -488,30 +451,6 @@ public class MenuScroller
         keepVisibleIndex = index;
     }
 
-    /**
-     * Remove this MenuScroller from the associated menu and restores the
-     * default behavior of the menu.
-     */
-    public void dispose() {
-        if (menu != null) {
-            removeListeners();
-            menu = null;
-        }
-    }
-
-    /**
-     * Ensure that the {@link #dispose()} method of this MenuScroller is
-     * called when there are no more references to it.
-     *
-     * @throws Throwable if an error occurs.
-     * @see #dispose()
-     */
-    @Override
-    @SuppressWarnings("deprecation") // Object.finalize
-    protected void finalize() throws Throwable {
-        dispose();
-    }
-
     private void refreshMenu() {
         if (menuItems != null && menuItems.length > 0) {
             firstIndex = Math.max(topFixedCount, firstIndex);
@@ -555,46 +494,6 @@ public class MenuScroller
         }
     }
 
-    private void setMenuItems() {
-        menuItems = menu.getComponents();
-
-        // Dead code commented out 2021-12-13
-        // if (false) {    // not working
-        //     for (Component c : menuItems) {
-        //         JMenuItem jmi = (JMenuItem) c;
-        //         // remove all menu key listeners
-        //         for (MenuKeyListener mkl : jmi.getMenuKeyListeners()) {
-        //             jmi.removeMenuKeyListener(mkl);
-        //         }
-        //         jmi.addMenuKeyListener(menuScrollerMenuKeyListener);
-        //     }
-        // }
-
-        if (keepVisibleIndex >= topFixedCount
-                && keepVisibleIndex <= menuItems.length - bottomFixedCount
-                && (keepVisibleIndex > firstIndex + scrollCount
-                || keepVisibleIndex < firstIndex)) {
-            firstIndex = Math.min(firstIndex, keepVisibleIndex);
-            firstIndex = Math.max(firstIndex, keepVisibleIndex - scrollCount + 1);
-        }
-        if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
-            refreshMenu();
-        }
-    }
-
-    private void restoreMenuItems() {
-        menu.removeAll();
-        for (Component c : menuItems) {
-            // Dead code commented out 2021-12-13
-            // if (false) {    // not working
-            //     JMenuItem jmi = (JMenuItem) c;
-            //    jmi.removeMenuKeyListener(menuScrollerMenuKeyListener);
-            // }
-
-            menu.add(c);
-        }
-    }
-
     private class MenuScrollerPopupMenuListener implements PopupMenuListener {
 
         @Override
@@ -610,6 +509,28 @@ public class MenuScroller
         @Override
         public void popupMenuCanceled(PopupMenuEvent e) {
             restoreMenuItems();
+        }
+
+        private void setMenuItems() {
+            menuItems = menu.getComponents();
+
+            if (keepVisibleIndex >= topFixedCount
+                    && keepVisibleIndex <= menuItems.length - bottomFixedCount
+                    && (keepVisibleIndex > firstIndex + scrollCount
+                    || keepVisibleIndex < firstIndex)) {
+                firstIndex = Math.min(firstIndex, keepVisibleIndex);
+                firstIndex = Math.max(firstIndex, keepVisibleIndex - scrollCount + 1);
+            }
+            if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
+                refreshMenu();
+            }
+        }
+
+        private void restoreMenuItems() {
+            menu.removeAll();
+            for (Component c : menuItems) {
+                menu.add(c);
+            }
         }
     }
 
@@ -628,7 +549,7 @@ public class MenuScroller
     private class MenuScrollerItem extends JMenuItem
             implements ChangeListener {
 
-        private MenuScrollerTimer timer;
+        private final MenuScrollerTimer timer;
 
         public MenuScrollerItem(MenuScrollerIcon icon, int increment) {
             setIcon(icon);
@@ -695,7 +616,7 @@ public class MenuScroller
                     // log.debug("MenuScroller.keyReleased({})", keyCode);
                     break;
                 }
-            }   // switch
+            }   //switch
         }
     }
 
