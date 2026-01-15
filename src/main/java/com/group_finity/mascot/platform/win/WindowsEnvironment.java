@@ -283,7 +283,7 @@ class WindowsEnvironment extends Environment {
             ieRect.width = (int) Math.round(ieRect.width * dpiScaleInverse);
             ieRect.height = (int) Math.round(ieRect.height * dpiScaleInverse);
         }
-        activeIe.setVisible(ieRect.intersects(getScreen().toRectangle()));
+        activeIe.setVisible(ieRect.intersects(getScreenRect()));
         activeIe.set(ieRect);
         activeIeDpiUnaware.set(ieRectDpiUnaware);
     }

@@ -72,11 +72,8 @@ class X11Environment extends Environment {
 
     /**
      * Initializes a new {@code X11Environment}.
-     * Sets work area and reads configuration files.
      */
     X11Environment() {
-        workArea.set(getWorkAreaRect());
-
         maximizedVertValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_VERT").intValue();
         maximizedHorzValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_HORZ").intValue();
         minimizedValue = display.getAtom("_NET_WM_STATE_HIDDEN").intValue();
@@ -99,7 +96,7 @@ class X11Environment extends Environment {
 
         workArea.set(getWorkAreaRect());
         final Rectangle ieRect = getWindowBounds(findActiveIE());
-        activeIe.setVisible(ieRect.intersects(getScreen().toRectangle()));
+        activeIe.setVisible(ieRect.intersects(getScreenRect()));
         activeIe.set(ieRect);
     }
 
@@ -295,7 +292,7 @@ class X11Environment extends Environment {
     }
 
     private Rectangle getWorkAreaRect() {
-        return getScreen().toRectangle();
+        return getScreenRect();
     }
 
     @Override
