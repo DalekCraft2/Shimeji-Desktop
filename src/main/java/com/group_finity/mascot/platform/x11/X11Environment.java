@@ -168,6 +168,12 @@ class X11Environment extends Environment {
             state = Arrays.asList(window.getState());
             type = Arrays.asList(window.getType());
         } catch (X11Exception e) {
+            /*
+            BUG: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
+            not focused, this method returns IeStatus.IGNORED for most windows other than the currently focused one.
+
+            I don't think I can do anything about that. Sorry!
+             */
             return IeStatus.IGNORED;
         }
         boolean badDesktop = desktop != curDesktop && desktop != -1;
@@ -196,6 +202,11 @@ class X11Environment extends Environment {
             if (isIE(window) && /* (flags & User32.WS_MINIMIZE) == 0 */ !state.contains(minimizedValue)) {
                 // IE found
                 Rectangle ieRect = getWindowBounds(window);
+                /*
+                TODO: Some Linux window managers don't seem to allow windows to be moved off screen,
+                so this check never equals true on those systems. We should instead figure out how close to the edge of
+                the screen the windows are allowed to be, and then check for windows that are that close to the edge.
+                 */
                 if (ieRect.intersects(getScreenRect())) {
                     return IeStatus.VALID;
                 } else {
@@ -279,20 +290,26 @@ class X11Environment extends Environment {
         if (state == null || state.isEmpty()) {
             return true;
         }
-        return state.contains(minimizedValue);
-        // return state.stream().anyMatch(badStateList::contains);
+        return state.stream().anyMatch(badStateList::contains);
     }
 
     private boolean checkType(Collection<Integer> type) {
         if (type == null || type.isEmpty()) {
             return true;
         }
-        return false;
-        // return type.stream().anyMatch(badTypeList::contains);
+        return type.stream().anyMatch(badTypeList::contains);
     }
 
     private Rectangle getWorkAreaRect() {
-        return getScreenRect();
+        GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDefaultConfiguration();
+        Rectangle rect = config.getBounds();
+        Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
+        rect.x += insets.left;
+        rect.y += insets.top;
+        rect.width -= insets.right;
+        rect.height -= insets.bottom;
+        return rect;
     }
 
     @Override
@@ -321,9 +338,7 @@ class X11Environment extends Environment {
 
     @Override
     public void restoreIE() {
-        // FIXME The implementation below crashes the program.
-
-        /* // Retrieve all windows from the X Display
+        // Retrieve all windows from the X Display
         Window[] allWindows;
         try {
             // allWindows = display.getWindows();
@@ -349,12 +364,11 @@ class X11Environment extends Environment {
                 // Move the window to be on-screen
                 rect.setLocation(workArea.x + offset, workArea.y + offset);
                 X11.INSTANCE.XMoveWindow(display.getX11Display(), window.getX11Window(), rect.x, rect.y);
-                // TODO Bring windows to front
-                // User32.INSTANCE.BringWindowToTop(window);
+                X11.INSTANCE.XRaiseWindow(display.getX11Display(), window.getX11Window());
 
                 offset += 25;
             }
-        } */
+        }
     }
 
     @Override
