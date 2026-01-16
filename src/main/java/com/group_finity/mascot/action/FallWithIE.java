@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-// TODO Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.
+// TODO: Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.
 public class FallWithIE extends Fall {
     private static final Logger log = Logger.getLogger(FallWithIE.class.getName());
 

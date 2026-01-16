@@ -343,7 +343,7 @@ class WindowsEnvironment extends Environment {
             final HMONITOR monitor = User32.INSTANCE.MonitorFromPoint(new POINT.ByValue(0, 0), User32.MONITOR_DEFAULTTOPRIMARY);
 
             final MONITORINFO monitorInfo = new MONITORINFO();
-            User32.INSTANCE.GetMonitorInfo(monitor, monitorInfo); // TODO Look into this method for future patches
+            User32.INSTANCE.GetMonitorInfo(monitor, monitorInfo); // TODO: Look into this method for future patches
 
             return monitorInfo.rcWork.toRectangle();
         }

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-// TODO Try to fix the typos of "resist" and "resistance" being "regist" and "registance" without breaking compatibility.
+// TODO: Try to fix the typos of "resist" and "resistance" being "regist" and "registance" without breaking compatibility.
 public class Regist extends ActionBase {
     private static final Logger log = Logger.getLogger(Regist.class.getName());
 

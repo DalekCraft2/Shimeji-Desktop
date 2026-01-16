@@ -100,10 +100,10 @@ public class ActionBuilder implements IActionBuilder {
                 } catch (final ClassNotFoundException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage") + "(" + this + ")", e);
                 } catch (NoSuchMethodException e) {
-                    // TODO Get translations for the following error message
+                    // TODO: Get translations for the following error message
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("ClassConstructorNotFoundErrorMessage") + "(" + this + ")", e);
                 } catch (InvocationTargetException e) {
-                    // TODO Think of a unique error message for this without wording it confusingly
+                    // TODO: Think of a unique error message for this without wording it confusingly
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage") + "(" + this + ")", e);
                 }
 

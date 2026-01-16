@@ -163,6 +163,10 @@ public class UserBehavior implements Behavior {
             }
 
             HotspotState hotspotState = HotspotState.INACTIVE;
+            /*
+             * FIXME: There was an NPE on the line below whilst the program was running in my Ubuntu VM, and I can only
+             *  assume it was due to some kind of multithreading issue that caused next() to be called before init().
+             */
             if (mascot.isHotspotClicked()) {
                 // activate any hotspots that emerge while mouse is held down
                 if (!mascot.getHotspots().isEmpty()) {

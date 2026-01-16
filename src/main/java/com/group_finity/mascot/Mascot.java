@@ -417,7 +417,7 @@ public class Mascot {
         popup.add(onlyOneMenu);
         popup.add(closeMenu);
 
-        // TODO Get the popup to close when clicking outside of it
+        // TODO: Get the popup to close when clicking outside of it
         window.asComponent().requestFocus();
 
         // Lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window's boundary.

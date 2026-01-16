@@ -196,16 +196,17 @@ class X11Environment extends Environment {
             }
 
             /*
-             * TODO Find some X11 atom that is dedicated to a window being minimized,
-             * because _NET_WM_STATE_HIDDEN is used for both invisible windows and minimized windows
+             * TODO: Find some X11 atom that is dedicated to a window being minimized,
+             *  because _NET_WM_STATE_HIDDEN is used for both invisible windows and minimized windows
              */
             if (isIE(window) && /* (flags & User32.WS_MINIMIZE) == 0 */ !state.contains(minimizedValue)) {
                 // IE found
                 Rectangle ieRect = getWindowBounds(window);
                 /*
-                TODO: Some Linux window managers don't seem to allow windows to be moved off screen,
-                so this check never equals true on those systems. We should instead figure out how close to the edge of
-                the screen the windows are allowed to be, and then check for windows that are that close to the edge.
+                 * TODO: Some Linux window managers don't seem to allow windows to be moved off screen, so this check
+                 *  always passes on those systems, making it impossible for a window to have the OUT_OF_BOUNDS status.
+                 *  We should instead figure out how close to the edge of the screen the windows are allowed to be,
+                 *  and then check for windows that are that close to the edge.
                  */
                 if (ieRect.intersects(getScreenRect())) {
                     return IeStatus.VALID;
@@ -327,11 +328,10 @@ class X11Environment extends Environment {
         return activeIeObject == null ? 0 : activeIeObject.getID();
     }
 
-    // TODO Implement the three below methods
     @Override
     public void moveActiveIE(Point point) {
         if (activeIeObject != null) {
-            // FIXME Mascots will often let go of a window very shortly after they pick it up, without throwing it
+            // FIXME: Mascots will often let go of a window very shortly after they pick it up, without throwing it
             X11.INSTANCE.XMoveWindow(display.getX11Display(), activeIeObject.getX11Window(), point.x, point.y);
         }
     }
