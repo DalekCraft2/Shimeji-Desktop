@@ -21,6 +21,7 @@ module com.group_finity.mascot {
     exports com.group_finity.mascot.image;
     exports com.group_finity.mascot.imagesetchooser;
     exports com.group_finity.mascot.menu;
+    exports com.group_finity.mascot.platform;
     exports com.group_finity.mascot.platform.generic;
     exports com.group_finity.mascot.platform.mac;
     exports com.group_finity.mascot.platform.mac.jna;
@@ -31,5 +32,4 @@ module com.group_finity.mascot {
     exports com.group_finity.mascot.script;
     exports com.group_finity.mascot.sound;
     exports hqx;
-    exports com.group_finity.mascot.platform;
 }
