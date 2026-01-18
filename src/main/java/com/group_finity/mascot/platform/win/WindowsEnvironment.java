@@ -294,7 +294,7 @@ class WindowsEnvironment extends Environment {
 
     @Override
     public void moveActiveIE(final Point point) {
-        moveIE(findActiveIE(), point, activeIeDpiUnaware);
+        moveIE(activeIeObject, point, activeIeDpiUnaware);
     }
 
     @Override
@@ -314,7 +314,7 @@ class WindowsEnvironment extends Environment {
 
     @Override
     public String getActiveIETitle() {
-        return WindowUtils.getWindowTitle(findActiveIE());
+        return WindowUtils.getWindowTitle(activeIeObject);
     }
 
     @Override
