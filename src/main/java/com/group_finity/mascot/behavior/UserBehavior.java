@@ -60,6 +60,10 @@ public class UserBehavior implements Behavior {
 
     @Override
     public synchronized void init(final Mascot mascot) throws CantBeAliveException {
+        if (mascot == null) {
+            return;
+        }
+
         this.mascot = mascot;
 
         log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{name, mascot});
@@ -86,6 +90,10 @@ public class UserBehavior implements Behavior {
      */
     @Override
     public synchronized void mousePressed(final MouseEvent event) throws CantBeAliveException {
+        if (mascot == null) {
+            return;
+        }
+
         if (SwingUtilities.isLeftMouseButton(event)) {
             boolean handled = false;
 
@@ -137,6 +145,10 @@ public class UserBehavior implements Behavior {
      */
     @Override
     public synchronized void mouseReleased(final MouseEvent event) throws CantBeAliveException {
+        if (mascot == null) {
+            return;
+        }
+
         if (SwingUtilities.isLeftMouseButton(event)) {
             if (mascot.isHotspotClicked()) {
                 mascot.setCursorPosition(null);
@@ -157,16 +169,16 @@ public class UserBehavior implements Behavior {
 
     @Override
     public synchronized void next() throws CantBeAliveException {
+        if (mascot == null) {
+            return;
+        }
+
         try {
             if (action.hasNext()) {
                 action.next();
             }
 
             HotspotState hotspotState = HotspotState.INACTIVE;
-            /*
-             * FIXME: There was an NPE on the line below whilst the program was running in my Ubuntu VM, and I can only
-             *  assume it was due to some kind of multithreading issue that caused next() to be called before init().
-             */
             if (mascot.isHotspotClicked()) {
                 // activate any hotspots that emerge while mouse is held down
                 if (!mascot.getHotspots().isEmpty()) {
