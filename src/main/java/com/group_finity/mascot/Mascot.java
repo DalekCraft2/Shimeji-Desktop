@@ -426,43 +426,41 @@ public class Mascot {
         popup.show(window.asComponent(), x, y);
     }
 
-    void tick() {
-        synchronized (this) {
-            if (isAnimating()) {
-                if (behavior != null) {
-                    try {
-                        behavior.next();
-                    } catch (final CantBeAliveException e) {
-                        log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
-                        Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), e);
-                        dispose();
-                    }
-
-                    time++;
+    synchronized void tick() {
+        if (isAnimating()) {
+            if (behavior != null) {
+                try {
+                    behavior.next();
+                } catch (final CantBeAliveException e) {
+                    log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
+                    Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), e);
+                    dispose();
                 }
 
-                if (debugWindow != null) {
-                    // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
-                    // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
-                    // debugWindow.setTitle(toString());
+                time++;
+            }
 
-                    debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
-                    debugWindow.setShimejiX(anchor.x);
-                    debugWindow.setShimejiY(anchor.y);
+            if (debugWindow != null) {
+                // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
+                // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
+                // debugWindow.setTitle(toString());
 
-                    Area activeWindow = environment.getActiveIE();
-                    debugWindow.setWindowTitle(environment.getActiveIETitle());
-                    debugWindow.setWindowX(activeWindow.getLeft());
-                    debugWindow.setWindowY(activeWindow.getTop());
-                    debugWindow.setWindowWidth(activeWindow.getWidth());
-                    debugWindow.setWindowHeight(activeWindow.getHeight());
+                debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
+                debugWindow.setShimejiX(anchor.x);
+                debugWindow.setShimejiY(anchor.y);
 
-                    Area workArea = environment.getWorkArea();
-                    debugWindow.setEnvironmentX(workArea.getLeft());
-                    debugWindow.setEnvironmentY(workArea.getTop());
-                    debugWindow.setEnvironmentWidth(workArea.getWidth());
-                    debugWindow.setEnvironmentHeight(workArea.getHeight());
-                }
+                Area activeWindow = environment.getActiveIE();
+                debugWindow.setWindowTitle(environment.getActiveIETitle());
+                debugWindow.setWindowX(activeWindow.getLeft());
+                debugWindow.setWindowY(activeWindow.getTop());
+                debugWindow.setWindowWidth(activeWindow.getWidth());
+                debugWindow.setWindowHeight(activeWindow.getHeight());
+
+                Area workArea = environment.getWorkArea();
+                debugWindow.setEnvironmentX(workArea.getLeft());
+                debugWindow.setEnvironmentY(workArea.getTop());
+                debugWindow.setEnvironmentWidth(workArea.getWidth());
+                debugWindow.setEnvironmentHeight(workArea.getHeight());
             }
         }
     }
@@ -490,21 +488,19 @@ public class Mascot {
         }
     }
 
-    public void dispose() {
-        synchronized (this) {
-            log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
+    public synchronized void dispose() {
+        log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
 
-            if (debugWindow != null) {
-                debugWindow.setVisible(false);
-                debugWindow = null;
-            }
+        if (debugWindow != null) {
+            debugWindow.setVisible(false);
+            debugWindow = null;
+        }
 
-            animating = false;
-            window.dispose();
-            affordances.clear();
-            if (manager != null) {
-                manager.remove(this);
-            }
+        animating = false;
+        window.dispose();
+        affordances.clear();
+        if (manager != null) {
+            manager.remove(this);
         }
     }
 
