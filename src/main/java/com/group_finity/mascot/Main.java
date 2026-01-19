@@ -509,8 +509,7 @@ public class Main {
             SystemTray.getSystemTray().add(icon);
         } catch (final AWTException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
-            // TODO: Figure out whether it is better to use the showError(String, Throwable) method for this
-            showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n" + languageBundle.getString("SeeLogForDetails"));
+            showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage"), e);
             exit();
         }
     }
