@@ -394,7 +394,8 @@ public class Main {
             childImageSets.put(imageSet, childMascots);
 
             return true;
-        } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException e) {
+        } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException |
+                 RuntimeException e) {
             log.log(Level.SEVERE, "Failed to load configuration files", e);
             showError(languageBundle.getString("FailedLoadConfigErrorMessage"), e);
         }
