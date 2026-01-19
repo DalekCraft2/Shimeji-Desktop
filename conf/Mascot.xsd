@@ -781,11 +781,12 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Behavior" type="string" use="required">
+        <attribute name="Behavior" type="string">
             <annotation>
                 <documentation>
                     The name of the behavior to perform when this hotspot is triggered. The behavior must exist in the
-                    behaviors XML.
+                    behaviors XML. If this attribute is not present, no behavior will be performed when this hotspot is
+                    triggered, but the hotspot will still prevent the mascot from being dragged by the cursor.
                 </documentation>
             </annotation>
         </attribute>
