@@ -370,7 +370,7 @@ public class Main {
             // born mascot bit goes here...
             for (final Entry list : new Entry(actions.getDocumentElement()).selectChildren(actionsSchema.getString("ActionList"))) {
                 for (final Entry node : list.selectChildren(actionsSchema.getString("Action"))) {
-                    if (node.getAttributes().containsKey(actionsSchema.getString("BornMascot"))) {
+                    if (node.hasAttribute(actionsSchema.getString("BornMascot"))) {
                         String set = node.getAttribute(actionsSchema.getString("BornMascot"));
                         if (!childMascots.contains(set)) {
                             childMascots.add(set);
@@ -379,7 +379,7 @@ public class Main {
                             loadConfiguration(set);
                         }
                     }
-                    if (node.getAttributes().containsKey(actionsSchema.getString("TransformMascot"))) {
+                    if (node.hasAttribute(actionsSchema.getString("TransformMascot"))) {
                         String set = node.getAttribute(actionsSchema.getString("TransformMascot"));
                         if (!childMascots.contains(set)) {
                             childMascots.add(set);
