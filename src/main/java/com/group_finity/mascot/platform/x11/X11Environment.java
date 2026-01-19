@@ -188,9 +188,7 @@ class X11Environment extends Environment {
             //     return IeStatus.IGNORED;
             // }
 
-            // int flags = WindowsUtil.GetWindowLong(window, User32.GWL_STYLE).intValue();
-
-            if (/* (flags & User32.WS_MAXIMIZE) != 0 */ state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
+            if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
                 // Aborted because a maximized window was found
                 return IeStatus.INVALID;
             }
@@ -199,7 +197,7 @@ class X11Environment extends Environment {
              * TODO: Find some X11 atom that is dedicated to a window being minimized,
              *  because _NET_WM_STATE_HIDDEN is used for both invisible windows and minimized windows
              */
-            if (isIE(window) && /* (flags & User32.WS_MINIMIZE) == 0 */ !state.contains(minimizedValue)) {
+            if (isIE(window) && !state.contains(minimizedValue)) {
                 // IE found
                 Rectangle ieRect = getWindowBounds(window);
                 /*
