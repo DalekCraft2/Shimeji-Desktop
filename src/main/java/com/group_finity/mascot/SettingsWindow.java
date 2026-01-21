@@ -66,6 +66,10 @@ public class SettingsWindow extends JDialog {
         Dictionary<Integer, JLabel> labelTable = IntStream.range(0, 9).boxed().collect(Collectors.toMap(index -> index * 10, index -> new JLabel(index + "x"), (a, b) -> b, Hashtable::new));
         sldScaling.setLabelTable(labelTable);
 
+        if (!getIconImages().isEmpty()) {
+            lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_DEFAULT)));
+        }
+
         // load existing settings
         Properties properties = Main.getInstance().getProperties();
         showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
@@ -183,9 +187,6 @@ public class SettingsWindow extends JDialog {
         getContentPane().setPreferredSize(new Dimension(500, 515));
         pnlInteractiveButtons.setPreferredSize(new Dimension(pnlInteractiveButtons.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height + 6));
         cmbBackgroundImageMode.setPreferredSize(btnBackgroundImageRemove.getPreferredSize());
-        if (!getIconImages().isEmpty()) {
-            lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_DEFAULT)));
-        }
         pnlAboutButtons.setPreferredSize(new Dimension(pnlAboutButtons.getPreferredSize().width, btnWebsite.getPreferredSize().height + 6));
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnDone.getPreferredSize().height + 6));
         pack();
