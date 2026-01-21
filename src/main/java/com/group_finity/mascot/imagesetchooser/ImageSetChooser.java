@@ -387,8 +387,8 @@ public class ImageSetChooser extends JDialog {
     }//GEN-LAST:event_clearAllLabelMouseClicked
 
     private void selectAllLabelMouseClicked(MouseEvent evt) {//GEN-FIRST:event_selectAllLabelMouseClicked
-        jList1.setSelectionInterval(0, jList1.getModel().getSize() - 1);
-        jList2.setSelectionInterval(0, jList2.getModel().getSize() - 1);
+        jList1.addSelectionInterval(0, jList1.getModel().getSize() - 1);
+        jList2.addSelectionInterval(0, jList2.getModel().getSize() - 1);
     }//GEN-LAST:event_selectAllLabelMouseClicked
 
     private void useSelectedButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useSelectedButtonActionPerformed
