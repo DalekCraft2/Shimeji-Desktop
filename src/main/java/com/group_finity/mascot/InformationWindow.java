@@ -36,9 +36,6 @@ public class InformationWindow extends JFrame {
     }
 
     public void init(final String imageSet, final Configuration config) {
-        // initialise controls
-        setLocationRelativeTo(null);
-
         // load image
         if (config.containsInformationKey("SplashImage")) {
             Path splashImagePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(config.getInformation("SplashImage"));

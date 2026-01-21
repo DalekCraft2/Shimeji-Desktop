@@ -63,7 +63,6 @@ public class SettingsWindow extends JDialog {
 
     public void init() {
         // initialise controls
-        setLocationRelativeTo(null);
         Dictionary<Integer, JLabel> labelTable = IntStream.range(0, 9).boxed().collect(Collectors.toMap(index -> index * 10, index -> new JLabel(index + "x"), (a, b) -> b, Hashtable::new));
         sldScaling.setLabelTable(labelTable);
 
@@ -190,6 +189,7 @@ public class SettingsWindow extends JDialog {
         pnlAboutButtons.setPreferredSize(new Dimension(pnlAboutButtons.getPreferredSize().width, btnWebsite.getPreferredSize().height + 6));
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnDone.getPreferredSize().height + 6));
         pack();
+        setLocationRelativeTo(null);
         suppressTextChanged = false;
         setVisible(true);
         suppressTextChanged = true;

@@ -40,7 +40,6 @@ public class ImageSetChooser extends JDialog {
     public ImageSetChooser(Frame owner, boolean modal) {
         super(owner, modal);
         initComponents();
-        setLocationRelativeTo(null);
 
         List<String> activeImageSets = readConfigFile();
 
@@ -228,6 +227,7 @@ public class ImageSetChooser extends JDialog {
         cancelButton.setText(Main.getInstance().getLanguageBundle().getString("Cancel"));
         clearAllLabel.setText(Main.getInstance().getLanguageBundle().getString("ClearAll"));
         selectAllLabel.setText(Main.getInstance().getLanguageBundle().getString("SelectAll"));
+        setLocationRelativeTo(null);
         setVisible(true);
         if (closeProgram) {
             return null;
