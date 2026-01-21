@@ -161,8 +161,6 @@ public class InformationWindow extends JFrame {
     }
 
     public boolean display() {
-        pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnClose.getPreferredSize().height + 6));
-        pack();
         setLocationRelativeTo(null);
         setVisible(true);
 

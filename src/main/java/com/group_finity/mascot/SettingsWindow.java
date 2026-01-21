@@ -186,10 +186,6 @@ public class SettingsWindow extends JDialog {
 
     public boolean display() {
         getContentPane().setPreferredSize(new Dimension(500, 515));
-        pnlInteractiveButtons.setPreferredSize(new Dimension(pnlInteractiveButtons.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height + 6));
-        cmbBackgroundImageMode.setPreferredSize(btnBackgroundImageRemove.getPreferredSize());
-        pnlAboutButtons.setPreferredSize(new Dimension(pnlAboutButtons.getPreferredSize().width, btnWebsite.getPreferredSize().height + 6));
-        pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnDone.getPreferredSize().height + 6));
         pack();
         setLocationRelativeTo(null);
         suppressTextChanged = false;
