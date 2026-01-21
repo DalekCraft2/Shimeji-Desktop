@@ -307,7 +307,7 @@ public class SettingsWindow extends JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Settings");
 
-        chkAlwaysShowShimejiChooser.setText("Always Show Shimeji Chooser");
+        chkAlwaysShowShimejiChooser.setText("Always Show Choose Shimeji");
         chkAlwaysShowShimejiChooser.addItemListener(this::chkAlwaysShowShimejiChooserItemStateChanged);
 
         lblScaling.setText("Scaling");
@@ -325,15 +325,15 @@ public class SettingsWindow extends JDialog {
         lblFilter.setText("Filter");
 
         grpFilter.add(radFilterNearest);
-        radFilterNearest.setText("Nearest");
+        radFilterNearest.setText("Nearest Neighbour (No filter)");
         radFilterNearest.addItemListener(this::radFilterItemStateChanged);
 
         grpFilter.add(radFilterBicubic);
-        radFilterBicubic.setText("Bicubic");
+        radFilterBicubic.setText("Bicubic Filter");
         radFilterBicubic.addItemListener(this::radFilterItemStateChanged);
 
         grpFilter.add(radFilterHqx);
-        radFilterHqx.setText("hqx");
+        radFilterHqx.setText("hqx Filter");
         radFilterHqx.addItemListener(this::radFilterItemStateChanged);
 
         sldOpacity.setMajorTickSpacing(10);
@@ -408,7 +408,7 @@ public class SettingsWindow extends JDialog {
                 .addComponent(radFilterBicubic)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radFilterHqx)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pnlTabs.addTab("General", pnlGeneral);
@@ -433,7 +433,7 @@ public class SettingsWindow extends JDialog {
             pnlWhitelistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -459,7 +459,7 @@ public class SettingsWindow extends JDialog {
             pnlBlacklistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -504,7 +504,7 @@ public class SettingsWindow extends JDialog {
                 .addContainerGap())
         );
 
-        pnlTabs.addTab("InteractiveWindows", pnlInteractiveWindows);
+        pnlTabs.addTab("Interactive Windows", pnlInteractiveWindows);
 
         chkWindowModeEnabled.setText("Enable Windowed Mode");
         chkWindowModeEnabled.addItemListener(this::chkWindowModeEnabledItemStateChanged);
@@ -674,10 +674,10 @@ public class SettingsWindow extends JDialog {
                         .addGap(4, 4, 4)
                         .addComponent(lblBackgroundImageCaption))
                     .addComponent(pnlBackgroundImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
         );
 
-        pnlTabs.addTab("WindowMode", pnlWindowMode);
+        pnlTabs.addTab("Window Mode", pnlWindowMode);
 
         pnlAbout.setLayout(new javax.swing.BoxLayout(pnlAbout, javax.swing.BoxLayout.Y_AXIS));
         pnlAbout.add(glue1);
@@ -690,7 +690,7 @@ public class SettingsWindow extends JDialog {
         pnlAbout.add(rigid1);
 
         lblShimejiEE.setFont(lblShimejiEE.getFont().deriveFont(lblShimejiEE.getFont().getStyle() | java.awt.Font.BOLD, lblShimejiEE.getFont().getSize()+10));
-        lblShimejiEE.setText("Shimeji");
+        lblShimejiEE.setText("Shimeji-ee");
         lblShimejiEE.setAlignmentX(0.5F);
         pnlAbout.add(lblShimejiEE);
         pnlAbout.add(rigid2);

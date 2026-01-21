@@ -121,7 +121,7 @@
                       <Component id="radFilterBicubic" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="radFilterHqx" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="70" max="32767" attributes="0"/>
+                      <EmptySpace pref="40" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -129,7 +129,7 @@
           <SubComponents>
             <Component class="javax.swing.JCheckBox" name="chkAlwaysShowShimejiChooser">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Always Show Shimeji Chooser"/>
+                <Property name="text" type="java.lang.String" value="Always Show Choose Shimeji"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkAlwaysShowShimejiChooserItemStateChanged"/>
@@ -167,7 +167,7 @@
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="grpFilter"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Nearest"/>
+                <Property name="text" type="java.lang.String" value="Nearest Neighbour (No filter)"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="radFilterItemStateChanged"/>
@@ -178,7 +178,7 @@
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="grpFilter"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Bicubic"/>
+                <Property name="text" type="java.lang.String" value="Bicubic Filter"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="radFilterItemStateChanged"/>
@@ -189,7 +189,7 @@
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="grpFilter"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="hqx"/>
+                <Property name="text" type="java.lang.String" value="hqx Filter"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="radFilterItemStateChanged"/>
@@ -245,8 +245,8 @@
         <Container class="javax.swing.JPanel" name="pnlInteractiveWindows">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="InteractiveWindows">
-                <Property name="tabTitle" type="java.lang.String" value="InteractiveWindows"/>
+              <JTabbedPaneConstraints tabName="Interactive Windows">
+                <Property name="tabTitle" type="java.lang.String" value="Interactive Windows"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -304,7 +304,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jScrollPane2" pref="364" max="32767" attributes="0"/>
+                              <Component id="jScrollPane2" pref="334" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -361,7 +361,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jScrollPane3" pref="364" max="32767" attributes="0"/>
+                              <Component id="jScrollPane3" pref="334" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -450,8 +450,8 @@
         <Container class="javax.swing.JPanel" name="pnlWindowMode">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="WindowMode">
-                <Property name="tabTitle" type="java.lang.String" value="WindowMode"/>
+              <JTabbedPaneConstraints tabName="Window Mode">
+                <Property name="tabTitle" type="java.lang.String" value="Window Mode"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -545,7 +545,7 @@
                           </Group>
                           <Component id="pnlBackgroundImage" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="231" max="32767" attributes="0"/>
+                      <EmptySpace pref="201" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -798,7 +798,7 @@
                     <Font bold="true" component="lblShimejiEE" property="font" relativeSize="true" size="10"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Shimeji"/>
+                <Property name="text" type="java.lang.String" value="Shimeji-ee"/>
                 <Property name="alignmentX" type="float" value="0.5"/>
               </Properties>
             </Component>
