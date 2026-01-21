@@ -95,9 +95,10 @@ public class SettingsWindow extends JDialog {
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
         chkDrawShimejiBounds.setSelected(drawShimejiBounds);
+        radFilterHqx.setEnabled(scaling == 2 || scaling == 3 || scaling == 4 || scaling == 6 || scaling == 8);
         if (filter.equals("bicubic")) {
             radFilterBicubic.setSelected(true);
-        } else if (filter.equals("hqx")) {
+        } else if (filter.equals("hqx") && radFilterHqx.isEnabled()) {
             radFilterHqx.setSelected(true);
         } else {
             radFilterNearest.setSelected(true);
