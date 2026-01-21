@@ -164,11 +164,6 @@ public class InformationWindow extends JFrame {
     }
 
     public boolean display() {
-        pnlEditorPane.setBackground(getBackground());
-        pnlEditorPane.setBorder(null);
-        pnlScrollPane.setBorder(null);
-        pnlScrollPane.setViewportBorder(null);
-
         pnlFooter.setPreferredSize(new Dimension(pnlFooter.getPreferredSize().width, btnClose.getPreferredSize().height + 6));
         pack();
         setLocationRelativeTo(null);
@@ -185,75 +180,78 @@ public class InformationWindow extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlImage = new JPanel();
-        lblSplashImage = new JLabel();
-        pnlScrollPane = new JScrollPane();
-        pnlEditorPane = new JEditorPane();
-        pnlFooter = new JPanel();
-        btnClose = new JButton();
+        pnlImage = new javax.swing.JPanel();
+        lblSplashImage = new javax.swing.JLabel();
+        pnlScrollPane = new javax.swing.JScrollPane();
+        pnlEditorPane = new javax.swing.JEditorPane();
+        pnlFooter = new javax.swing.JPanel();
+        btnClose = new javax.swing.JButton();
 
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Information");
 
-        pnlImage.setLayout(new BoxLayout(pnlImage, BoxLayout.Y_AXIS));
+        pnlImage.setLayout(new javax.swing.BoxLayout(pnlImage, javax.swing.BoxLayout.Y_AXIS));
 
         lblSplashImage.setAlignmentX(0.5F);
         pnlImage.add(lblSplashImage);
 
+        pnlScrollPane.setBorder(null);
+
         pnlEditorPane.setEditable(false);
+        pnlEditorPane.setBackground(getBackground());
         pnlEditorPane.setBorder(null);
         pnlEditorPane.setContentType("text/html"); // NOI18N
         pnlEditorPane.setText("");
         pnlScrollPane.setViewportView(pnlEditorPane);
 
-        pnlFooter.setPreferredSize(new Dimension(380, 36));
-        pnlFooter.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        pnlFooter.setPreferredSize(new java.awt.Dimension(380, 36));
+        pnlFooter.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
 
         btnClose.setText("Close");
-        btnClose.setMaximumSize(new Dimension(130, 26));
-        btnClose.setMinimumSize(new Dimension(95, 23));
+        btnClose.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnClose.setMinimumSize(new java.awt.Dimension(95, 23));
         btnClose.setName(""); // NOI18N
-        btnClose.setPreferredSize(new Dimension(130, 26));
+        btnClose.setPreferredSize(new java.awt.Dimension(130, 26));
         btnClose.addActionListener(this::btnCloseActionPerformed);
         pnlFooter.add(btnClose);
 
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(pnlImage, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
-                                        .addComponent(pnlFooter, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(pnlScrollPane, GroupLayout.Alignment.LEADING))
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlImage, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                    .addComponent(pnlFooter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlScrollPane, javax.swing.GroupLayout.Alignment.LEADING))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(pnlImage, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlScrollPane, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlFooter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlFooter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCloseActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnCloseActionPerformed
-    {// GEN-HEADEREND:event_btnCloseActionPerformed
+    private void btnCloseActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         dispose();
-    }// GEN-LAST:event_btnCloseActionPerformed
+    }//GEN-LAST:event_btnCloseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton btnClose;
-    private JLabel lblSplashImage;
-    private JEditorPane pnlEditorPane;
-    private JPanel pnlFooter;
-    private JPanel pnlImage;
-    private JScrollPane pnlScrollPane;
+    private javax.swing.JButton btnClose;
+    private javax.swing.JLabel lblSplashImage;
+    private javax.swing.JEditorPane pnlEditorPane;
+    private javax.swing.JPanel pnlFooter;
+    private javax.swing.JPanel pnlImage;
+    private javax.swing.JScrollPane pnlScrollPane;
     // End of variables declaration//GEN-END:variables
 }

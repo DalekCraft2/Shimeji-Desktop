@@ -1,8 +1,5 @@
 package com.group_finity.mascot.imagesetchooser;
 
-import org.netbeans.lib.awtextra.AbsoluteConstraints;
-import org.netbeans.lib.awtextra.AbsoluteLayout;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +28,6 @@ public class ImageSetChooserPanel extends JPanel {
 
         this.imageSet = imageSet;
         this.caption.setText(caption);
-        this.caption.setFont(this.caption.getFont().deriveFont(Font.BOLD));
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
         try {
@@ -59,40 +55,39 @@ public class ImageSetChooserPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        checkbox = new JCheckBox();
-        caption = new JLabel();
-        actionsFile = new JLabel();
-        behaviorsFile = new JLabel();
-        image = new JLabel();
+        checkbox = new javax.swing.JCheckBox();
+        caption = new javax.swing.JLabel();
+        actionsFile = new javax.swing.JLabel();
+        behaviorsFile = new javax.swing.JLabel();
+        image = new javax.swing.JLabel();
 
+        setMinimumSize(new java.awt.Dimension(248, 80));
         setOpaque(false);
-        setMinimumSize(new Dimension(248, 80));
-        setPreferredSize(new Dimension(248, 80));
-        setLayout(new AbsoluteLayout());
+        setPreferredSize(new java.awt.Dimension(248, 80));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        add(checkbox, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
 
-        checkbox.setOpaque(false);
-        add(checkbox, new AbsoluteConstraints(10, 30, -1, -1));
-
+        caption.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         caption.setText("Builder");
-        add(caption, new AbsoluteConstraints(110, 10, -1, -1));
+        add(caption, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, -1, -1));
 
         actionsFile.setText("img/Builder/conf/actions.xml");
-        add(actionsFile, new AbsoluteConstraints(110, 30, -1, -1));
+        add(actionsFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, -1, -1));
 
         behaviorsFile.setText("img/Builder/conf/behaviors.xml");
-        add(behaviorsFile, new AbsoluteConstraints(110, 50, -1, -1));
+        add(behaviorsFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, -1, -1));
 
-        image.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-        add(image, new AbsoluteConstraints(40, 10, 60, 60));
+        image.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 60, 60));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JLabel actionsFile;
-    private JLabel behaviorsFile;
-    private JLabel caption;
-    private JCheckBox checkbox;
-    private JLabel image;
+    private javax.swing.JLabel actionsFile;
+    private javax.swing.JLabel behaviorsFile;
+    private javax.swing.JLabel caption;
+    private javax.swing.JCheckBox checkbox;
+    private javax.swing.JLabel image;
     // End of variables declaration//GEN-END:variables
 
 }

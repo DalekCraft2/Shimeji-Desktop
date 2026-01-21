@@ -6,8 +6,6 @@
 package com.group_finity.mascot;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -66,13 +64,8 @@ public class SettingsWindow extends JDialog {
     public void init() {
         // initialise controls
         setLocationRelativeTo(null);
-        grpFilter.add(radFilterNearest);
-        grpFilter.add(radFilterBicubic);
-        grpFilter.add(radFilterHqx);
         Dictionary<Integer, JLabel> labelTable = IntStream.range(0, 9).boxed().collect(Collectors.toMap(index -> index * 10, index -> new JLabel(index + "x"), (a, b) -> b, Hashtable::new));
         sldScaling.setLabelTable(labelTable);
-        sldScaling.setPaintLabels(true);
-        sldScaling.setSnapToTicks(true);
 
         // load existing settings
         Properties properties = Main.getInstance().getProperties();
@@ -167,16 +160,6 @@ public class SettingsWindow extends JDialog {
         pnlInteractiveTabs.setTitleAt(1, language.getString("Blacklist"));
         btnAddInteractiveWindow.setText(language.getString("Add"));
         btnRemoveInteractiveWindow.setText(language.getString("Remove"));
-        lblPrimaryColour1.setText(language.getString("PrimaryColour1"));
-        lblPrimaryColour2.setText(language.getString("PrimaryColour2"));
-        lblSecondaryColour1.setText(language.getString("SecondaryColour1"));
-        lblSecondaryColour2.setText(language.getString("SecondaryColour2"));
-        lblSecondaryColour3.setText(language.getString("SecondaryColour3"));
-        lblBlackColour.setText(language.getString("BlackColour"));
-        lblWhiteColour.setText(language.getString("WhiteColour"));
-        lblMenuOpacity.setText(language.getString("MenuOpacity"));
-        btnChangeFont.setText(language.getString("ChangeFont"));
-        btnReset.setText(language.getString("Reset"));
         chkWindowModeEnabled.setText(language.getString("WindowedModeEnabled"));
         lblDimensions.setText(language.getString("Dimensions"));
         lblBackground.setText(language.getString("Background"));
@@ -201,8 +184,6 @@ public class SettingsWindow extends JDialog {
         getContentPane().setPreferredSize(new Dimension(500, 515));
         pnlInteractiveButtons.setPreferredSize(new Dimension(pnlInteractiveButtons.getPreferredSize().width, btnAddInteractiveWindow.getPreferredSize().height + 6));
         cmbBackgroundImageMode.setPreferredSize(btnBackgroundImageRemove.getPreferredSize());
-        pnlBackgroundImage.setMaximumSize(pnlBackgroundImage.getPreferredSize());
-        lblIcon.setMaximumSize(lblIcon.getPreferredSize());
         if (!getIconImages().isEmpty()) {
             lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_DEFAULT)));
         }
@@ -255,145 +236,77 @@ public class SettingsWindow extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        grpFilter = new ButtonGroup();
-        jScrollPane1 = new JScrollPane();
-        jTextArea1 = new JTextArea();
-        pnlTabs = new JTabbedPane();
-        pnlGeneral = new JPanel();
-        chkShowTrayIcon = new JCheckBox();
-        chkAlwaysShowShimejiChooser = new JCheckBox();
-        chkAlwaysShowInformationScreen = new JCheckBox();
-        chkDrawShimejiBounds = new JCheckBox();
-        lblScaling = new JLabel();
-        sldScaling = new JSlider();
-        lblFilter = new JLabel();
-        radFilterNearest = new JRadioButton();
-        radFilterBicubic = new JRadioButton();
-        radFilterHqx = new JRadioButton();
-        sldOpacity = new JSlider();
-        lblOpacity = new JLabel();
-        pnlInteractiveWindows = new JPanel();
-        pnlInteractiveTabs = new JTabbedPane();
-        pnlWhitelistTab = new JPanel();
-        jScrollPane2 = new JScrollPane();
-        lstInteractiveWindows = new JList<>();
-        pnlBlacklistTab = new JPanel();
-        jScrollPane3 = new JScrollPane();
-        lstInteractiveWindowsBlacklist = new JList<>();
-        pnlInteractiveButtons = new JPanel();
-        btnAddInteractiveWindow = new JButton();
-        btnRemoveInteractiveWindow = new JButton();
-        btnChangeFont = new JButton();
-        btnReset = new JButton();
-        lblPrimaryColour1 = new JLabel();
-        txtPrimaryColour1 = new JTextField();
-        pnlPrimaryColour1PreviewContainer = new JPanel();
-        gluePrimaryColour1a = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlPrimaryColour1Preview = new JPanel();
-        gluePrimaryColour1b = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnPrimaryColour1Change = new JButton();
-        lblPrimaryColour2 = new JLabel();
-        txtPrimaryColour2 = new JTextField();
-        pnlPrimaryColour2PreviewContainer = new JPanel();
-        gluePrimaryColour2a = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlPrimaryColour2Preview = new JPanel();
-        gluePrimaryColour2b = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnPrimaryColour2Change = new JButton();
-        lblSecondaryColour1 = new JLabel();
-        txtSecondaryColour1 = new JTextField();
-        pnlSecondaryColour1PreviewContainer = new JPanel();
-        glueSecondaryColour1a = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlSecondaryColour1Preview = new JPanel();
-        glueSecondaryColour1b = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnSecondaryColour1Change = new JButton();
-        lblSecondaryColour2 = new JLabel();
-        txtSecondaryColour2 = new JTextField();
-        pnlSecondaryColour2PreviewContainer = new JPanel();
-        glueSecondaryColour2a = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlSecondaryColour2Preview = new JPanel();
-        glueSecondaryColour2b = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnSecondaryColour2Change = new JButton();
-        lblSecondaryColour3 = new JLabel();
-        txtSecondaryColour3 = new JTextField();
-        pnlSecondaryColour3PreviewContainer = new JPanel();
-        glueSecondaryColour3a = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlSecondaryColour3Preview = new JPanel();
-        glueSecondaryColour3b = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnSecondaryColour3Change = new JButton();
-        lblMenuOpacity = new JLabel();
-        sldMenuOpacity = new JSlider();
-        lblBlackColour = new JLabel();
-        txtBlackColour = new JTextField();
-        pnlBlackColourPreviewContainer = new JPanel();
-        glueBlackColoura = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlBlackColourPreview = new JPanel();
-        glueBlackColourb = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnBlackColourChange = new JButton();
-        lblWhiteColour = new JLabel();
-        txtWhiteColour = new JTextField();
-        pnlWhiteColourPreviewContainer = new JPanel();
-        glueWhiteColoura = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlWhiteColourPreview = new JPanel();
-        glueWhiteColourb = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        btnWhiteColourChange = new JButton();
-        pnlScrollPane = new JScrollPane();
-        pnlWindowMode = new JPanel();
-        chkWindowModeEnabled = new JCheckBox();
-        lblDimensions = new JLabel();
-        lblDimensionsX = new JLabel();
-        lblBackground = new JLabel();
-        txtBackgroundColour = new JTextField();
-        btnBackgroundColourChange = new JButton();
-        spnWindowWidth = new JSpinner();
-        spnWindowHeight = new JSpinner();
-        lblBackgroundColour = new JLabel();
-        pnlBackgroundPreviewContainer = new JPanel();
-        glueBackground = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlBackgroundPreview = new JPanel();
-        glueBackground2 = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 0));
-        lblBackgroundImageCaption = new JLabel();
-        pnlBackgroundImage = new JPanel();
-        lblBackgroundImage = new JLabel();
-        btnBackgroundImageChange = new JButton();
-        btnBackgroundImageRemove = new JButton();
-        cmbBackgroundImageMode = new JComboBox<>();
-        pnlAbout = new JPanel();
-        glue1 = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        lblIcon = new JLabel();
-        rigid1 = new Box.Filler(new Dimension(0, 15), new Dimension(0, 15), new Dimension(0, 15));
-        lblShimejiEE = new JLabel();
-        rigid2 = new Box.Filler(new Dimension(0, 10), new Dimension(0, 5), new Dimension(0, 10));
-        lblVersion = new JLabel();
-        rigid3 = new Box.Filler(new Dimension(0, 15), new Dimension(0, 15), new Dimension(0, 15));
-        lblDevelopedBy = new JLabel();
-        lblKilkakon = new JLabel();
-        rigid4 = new Box.Filler(new Dimension(0, 30), new Dimension(0, 30), new Dimension(0, 30));
-        pnlAboutButtons = new JPanel();
-        btnWebsite = new JButton();
-        btnDiscord = new JButton();
-        btnPatreon = new JButton();
-        glue2 = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
-        pnlFooter = new JPanel();
-        btnDone = new JButton();
-        btnCancel = new JButton();
+        grpFilter = new javax.swing.ButtonGroup();
+        pnlTabs = new javax.swing.JTabbedPane();
+        pnlGeneral = new javax.swing.JPanel();
+        chkAlwaysShowShimejiChooser = new javax.swing.JCheckBox();
+        lblScaling = new javax.swing.JLabel();
+        sldScaling = new javax.swing.JSlider();
+        lblFilter = new javax.swing.JLabel();
+        radFilterNearest = new javax.swing.JRadioButton();
+        radFilterBicubic = new javax.swing.JRadioButton();
+        radFilterHqx = new javax.swing.JRadioButton();
+        sldOpacity = new javax.swing.JSlider();
+        lblOpacity = new javax.swing.JLabel();
+        chkAlwaysShowInformationScreen = new javax.swing.JCheckBox();
+        chkShowTrayIcon = new javax.swing.JCheckBox();
+        chkDrawShimejiBounds = new javax.swing.JCheckBox();
+        pnlInteractiveWindows = new javax.swing.JPanel();
+        pnlInteractiveTabs = new javax.swing.JTabbedPane();
+        pnlWhitelistTab = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lstInteractiveWindows = new javax.swing.JList<>();
+        pnlBlacklistTab = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lstInteractiveWindowsBlacklist = new javax.swing.JList<>();
+        pnlInteractiveButtons = new javax.swing.JPanel();
+        btnAddInteractiveWindow = new javax.swing.JButton();
+        btnRemoveInteractiveWindow = new javax.swing.JButton();
+        pnlWindowMode = new javax.swing.JPanel();
+        chkWindowModeEnabled = new javax.swing.JCheckBox();
+        lblDimensions = new javax.swing.JLabel();
+        lblDimensionsX = new javax.swing.JLabel();
+        lblBackground = new javax.swing.JLabel();
+        txtBackgroundColour = new javax.swing.JTextField();
+        btnBackgroundColourChange = new javax.swing.JButton();
+        spnWindowWidth = new javax.swing.JSpinner();
+        spnWindowHeight = new javax.swing.JSpinner();
+        lblBackgroundColour = new javax.swing.JLabel();
+        pnlBackgroundPreviewContainer = new javax.swing.JPanel();
+        glueBackground = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        pnlBackgroundPreview = new javax.swing.JPanel();
+        glueBackground2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
+        lblBackgroundImageCaption = new javax.swing.JLabel();
+        pnlBackgroundImage = new javax.swing.JPanel();
+        lblBackgroundImage = new javax.swing.JLabel();
+        btnBackgroundImageChange = new javax.swing.JButton();
+        btnBackgroundImageRemove = new javax.swing.JButton();
+        cmbBackgroundImageMode = new javax.swing.JComboBox<String>();
+        pnlAbout = new javax.swing.JPanel();
+        glue1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        lblIcon = new javax.swing.JLabel();
+        rigid1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15));
+        lblShimejiEE = new javax.swing.JLabel();
+        rigid2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 10), new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 10));
+        lblVersion = new javax.swing.JLabel();
+        rigid3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15));
+        lblDevelopedBy = new javax.swing.JLabel();
+        lblKilkakon = new javax.swing.JLabel();
+        rigid4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 30), new java.awt.Dimension(0, 30), new java.awt.Dimension(0, 30));
+        pnlAboutButtons = new javax.swing.JPanel();
+        btnWebsite = new javax.swing.JButton();
+        btnDiscord = new javax.swing.JButton();
+        btnPatreon = new javax.swing.JButton();
+        glue2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        pnlFooter = new javax.swing.JPanel();
+        btnDone = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-        chkShowTrayIcon.setText("Show Tray Icon (Requires restart)");
-        chkShowTrayIcon.addItemListener(this::chkShowTrayIconItemStateChanged);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Settings");
 
         chkAlwaysShowShimejiChooser.setText("Always Show Shimeji Chooser");
         chkAlwaysShowShimejiChooser.addItemListener(this::chkAlwaysShowShimejiChooserItemStateChanged);
-
-        chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
-        chkAlwaysShowInformationScreen.addItemListener(this::chkAlwaysShowInformationScreenItemStateChanged);
-
-        chkDrawShimejiBounds.setText("Draw Shimeji Bounds");
-        chkDrawShimejiBounds.addItemListener(this::chkDrawShimejiBoundsItemStateChanged);
 
         lblScaling.setText("Scaling");
 
@@ -404,17 +317,20 @@ public class SettingsWindow extends JDialog {
         sldScaling.setPaintTicks(true);
         sldScaling.setSnapToTicks(true);
         sldScaling.setValue(10);
-        sldScaling.setPreferredSize(new Dimension(300, 45));
+        sldScaling.setPreferredSize(new java.awt.Dimension(300, 45));
         sldScaling.addChangeListener(this::sldScalingStateChanged);
 
         lblFilter.setText("Filter");
 
+        grpFilter.add(radFilterNearest);
         radFilterNearest.setText("Nearest");
         radFilterNearest.addItemListener(this::radFilterItemStateChanged);
 
+        grpFilter.add(radFilterBicubic);
         radFilterBicubic.setText("Bicubic");
         radFilterBicubic.addItemListener(this::radFilterItemStateChanged);
 
+        grpFilter.add(radFilterHqx);
         radFilterHqx.setText("hqx");
         radFilterHqx.addItemListener(this::radFilterItemStateChanged);
 
@@ -424,173 +340,166 @@ public class SettingsWindow extends JDialog {
         sldOpacity.setPaintTicks(true);
         sldOpacity.setSnapToTicks(true);
         sldOpacity.setValue(10);
-        sldOpacity.setPreferredSize(new Dimension(300, 45));
+        sldOpacity.setPreferredSize(new java.awt.Dimension(300, 45));
         sldOpacity.addChangeListener(this::sldOpacityStateChanged);
 
         lblOpacity.setText("Opacity");
 
-        GroupLayout pnlGeneralLayout = new GroupLayout(pnlGeneral);
+        chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
+        chkAlwaysShowInformationScreen.addItemListener(this::chkAlwaysShowInformationScreenItemStateChanged);
+
+        chkShowTrayIcon.setText("Show Tray Icon (Requires restart)");
+        chkShowTrayIcon.addItemListener(this::chkShowTrayIconItemStateChanged);
+
+        chkDrawShimejiBounds.setText("Draw Shimeji Bounds");
+        chkDrawShimejiBounds.addItemListener(this::chkDrawShimejiBoundsItemStateChanged);
+
+        javax.swing.GroupLayout pnlGeneralLayout = new javax.swing.GroupLayout(pnlGeneral);
         pnlGeneral.setLayout(pnlGeneralLayout);
         pnlGeneralLayout.setHorizontalGroup(
-                pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlGeneralLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(chkShowTrayIcon)
-                                        .addComponent(chkAlwaysShowShimejiChooser)
-                                        .addComponent(chkAlwaysShowInformationScreen)
-                                        .addComponent(chkDrawShimejiBounds)
-                                        .addComponent(lblFilter)
-                                        .addComponent(lblScaling)
-                                        .addGroup(pnlGeneralLayout.createSequentialGroup()
-                                                .addGap(10, 10, 10)
-                                                .addGroup(pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(sldOpacity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                .addComponent(radFilterNearest)
-                                                                .addComponent(sldScaling, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addComponent(radFilterBicubic)
-                                                                .addComponent(radFilterHqx))))
-                                        .addComponent(lblOpacity))
-                                .addContainerGap(26, Short.MAX_VALUE))
+            pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGeneralLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkAlwaysShowShimejiChooser)
+                    .addComponent(lblFilter)
+                    .addComponent(lblScaling)
+                    .addGroup(pnlGeneralLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(sldOpacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(radFilterNearest)
+                                .addComponent(sldScaling, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(radFilterBicubic)
+                                .addComponent(radFilterHqx))))
+                    .addComponent(lblOpacity)
+                    .addComponent(chkAlwaysShowInformationScreen)
+                    .addComponent(chkShowTrayIcon)
+                    .addComponent(chkDrawShimejiBounds))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         pnlGeneralLayout.setVerticalGroup(
-                pnlGeneralLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlGeneralLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(chkShowTrayIcon)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(chkAlwaysShowShimejiChooser)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(chkAlwaysShowInformationScreen)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(chkDrawShimejiBounds)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblOpacity)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sldOpacity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblScaling)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sldScaling, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblFilter)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radFilterNearest)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radFilterBicubic)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radFilterHqx)
-                                .addContainerGap(40, Short.MAX_VALUE))
+            pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGeneralLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(chkShowTrayIcon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chkAlwaysShowShimejiChooser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chkAlwaysShowInformationScreen)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chkDrawShimejiBounds)
+                .addGap(18, 18, 18)
+                .addComponent(lblOpacity)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sldOpacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblScaling)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sldScaling, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblFilter)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radFilterNearest)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radFilterBicubic)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radFilterHqx)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         pnlTabs.addTab("General", pnlGeneral);
 
-        lstInteractiveWindows.setModel(new AbstractListModel<>() {
-            final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-
-            @Override
-            public int getSize() {
-                return strings.length;
-            }
-
-            @Override
-            public String getElementAt(int index) {
-                return strings[index];
-            }
+        lstInteractiveWindows.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane2.setViewportView(lstInteractiveWindows);
 
-        GroupLayout pnlWhitelistTabLayout = new GroupLayout(pnlWhitelistTab);
+        javax.swing.GroupLayout pnlWhitelistTabLayout = new javax.swing.GroupLayout(pnlWhitelistTab);
         pnlWhitelistTab.setLayout(pnlWhitelistTabLayout);
         pnlWhitelistTabLayout.setHorizontalGroup(
-                pnlWhitelistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                                .addContainerGap())
+            pnlWhitelistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlWhitelistTabLayout.setVerticalGroup(
-                pnlWhitelistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                                .addContainerGap())
+            pnlWhitelistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlWhitelistTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pnlInteractiveTabs.addTab("Whitelist", pnlWhitelistTab);
 
-        lstInteractiveWindowsBlacklist.setModel(new AbstractListModel<>() {
-            final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-
-            @Override
-            public int getSize() {
-                return strings.length;
-            }
-
-            @Override
-            public String getElementAt(int index) {
-                return strings[index];
-            }
+        lstInteractiveWindowsBlacklist.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane3.setViewportView(lstInteractiveWindowsBlacklist);
 
-        GroupLayout pnlBlacklistTabLayout = new GroupLayout(pnlBlacklistTab);
+        javax.swing.GroupLayout pnlBlacklistTabLayout = new javax.swing.GroupLayout(pnlBlacklistTab);
         pnlBlacklistTab.setLayout(pnlBlacklistTabLayout);
         pnlBlacklistTabLayout.setHorizontalGroup(
-                pnlBlacklistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                                .addContainerGap())
+            pnlBlacklistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlBlacklistTabLayout.setVerticalGroup(
-                pnlBlacklistTabLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                                .addContainerGap())
+            pnlBlacklistTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBlacklistTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pnlInteractiveTabs.addTab("Blacklist", pnlBlacklistTab);
 
-        pnlInteractiveButtons.setPreferredSize(new Dimension(380, 36));
-        pnlInteractiveButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        pnlInteractiveButtons.setPreferredSize(new java.awt.Dimension(380, 36));
+        pnlInteractiveButtons.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
 
         btnAddInteractiveWindow.setText("Add");
-        btnAddInteractiveWindow.setMaximumSize(new Dimension(130, 26));
-        btnAddInteractiveWindow.setMinimumSize(new Dimension(95, 23));
+        btnAddInteractiveWindow.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnAddInteractiveWindow.setMinimumSize(new java.awt.Dimension(95, 23));
         btnAddInteractiveWindow.setName(""); // NOI18N
-        btnAddInteractiveWindow.setPreferredSize(new Dimension(130, 26));
+        btnAddInteractiveWindow.setPreferredSize(new java.awt.Dimension(130, 26));
         btnAddInteractiveWindow.addActionListener(this::btnAddInteractiveWindowActionPerformed);
         pnlInteractiveButtons.add(btnAddInteractiveWindow);
 
         btnRemoveInteractiveWindow.setText("Remove");
-        btnRemoveInteractiveWindow.setMaximumSize(new Dimension(130, 26));
-        btnRemoveInteractiveWindow.setMinimumSize(new Dimension(95, 23));
-        btnRemoveInteractiveWindow.setPreferredSize(new Dimension(130, 26));
+        btnRemoveInteractiveWindow.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnRemoveInteractiveWindow.setMinimumSize(new java.awt.Dimension(95, 23));
+        btnRemoveInteractiveWindow.setPreferredSize(new java.awt.Dimension(130, 26));
         btnRemoveInteractiveWindow.addActionListener(this::btnRemoveInteractiveWindowActionPerformed);
         pnlInteractiveButtons.add(btnRemoveInteractiveWindow);
 
-        GroupLayout pnlInteractiveWindowsLayout = new GroupLayout(pnlInteractiveWindows);
+        javax.swing.GroupLayout pnlInteractiveWindowsLayout = new javax.swing.GroupLayout(pnlInteractiveWindows);
         pnlInteractiveWindows.setLayout(pnlInteractiveWindowsLayout);
         pnlInteractiveWindowsLayout.setHorizontalGroup(
-                pnlInteractiveWindowsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlInteractiveWindowsLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(pnlInteractiveWindowsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(pnlInteractiveButtons, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                        .addComponent(pnlInteractiveTabs))
-                                .addContainerGap())
+            pnlInteractiveWindowsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlInteractiveWindowsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlInteractiveWindowsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlInteractiveButtons, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(pnlInteractiveTabs))
+                .addContainerGap())
         );
         pnlInteractiveWindowsLayout.setVerticalGroup(
-                pnlInteractiveWindowsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, pnlInteractiveWindowsLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(pnlInteractiveTabs)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlInteractiveButtons, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+            pnlInteractiveWindowsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlInteractiveWindowsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlInteractiveTabs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlInteractiveButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pnlTabs.addTab("InteractiveWindows", pnlInteractiveWindows);
@@ -605,7 +514,7 @@ public class SettingsWindow extends JDialog {
         lblBackground.setText("Background");
 
         txtBackgroundColour.setText("#00FF00");
-        txtBackgroundColour.setPreferredSize(new Dimension(70, 24));
+        txtBackgroundColour.setPreferredSize(new java.awt.Dimension(70, 24));
         txtBackgroundColour.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -641,32 +550,32 @@ public class SettingsWindow extends JDialog {
         btnBackgroundColourChange.setText("Change");
         btnBackgroundColourChange.addActionListener(this::btnBackgroundColourChangeActionPerformed);
 
-        spnWindowWidth.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
-        spnWindowWidth.setPreferredSize(new Dimension(60, 24));
+        spnWindowWidth.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 1));
+        spnWindowWidth.setPreferredSize(new java.awt.Dimension(60, 24));
         spnWindowWidth.addChangeListener(this::spnWindowWidthStateChanged);
 
-        spnWindowHeight.setModel(new SpinnerNumberModel(0, 0, 10000, 1));
-        spnWindowHeight.setMinimumSize(new Dimension(30, 20));
-        spnWindowHeight.setPreferredSize(new Dimension(60, 24));
+        spnWindowHeight.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 1));
+        spnWindowHeight.setMinimumSize(new java.awt.Dimension(30, 20));
+        spnWindowHeight.setPreferredSize(new java.awt.Dimension(60, 24));
         spnWindowHeight.addChangeListener(this::spnWindowHeightStateChanged);
 
         lblBackgroundColour.setText("Colour");
 
-        pnlBackgroundPreviewContainer.setLayout(new BoxLayout(pnlBackgroundPreviewContainer, BoxLayout.Y_AXIS));
+        pnlBackgroundPreviewContainer.setLayout(new javax.swing.BoxLayout(pnlBackgroundPreviewContainer, javax.swing.BoxLayout.Y_AXIS));
         pnlBackgroundPreviewContainer.add(glueBackground);
 
-        pnlBackgroundPreview.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
-        pnlBackgroundPreview.setPreferredSize(new Dimension(20, 20));
+        pnlBackgroundPreview.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        pnlBackgroundPreview.setPreferredSize(new java.awt.Dimension(20, 20));
 
-        GroupLayout pnlBackgroundPreviewLayout = new GroupLayout(pnlBackgroundPreview);
+        javax.swing.GroupLayout pnlBackgroundPreviewLayout = new javax.swing.GroupLayout(pnlBackgroundPreview);
         pnlBackgroundPreview.setLayout(pnlBackgroundPreviewLayout);
         pnlBackgroundPreviewLayout.setHorizontalGroup(
-                pnlBackgroundPreviewLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
+            pnlBackgroundPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         pnlBackgroundPreviewLayout.setVerticalGroup(
-                pnlBackgroundPreviewLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
+            pnlBackgroundPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         pnlBackgroundPreviewContainer.add(pnlBackgroundPreview);
@@ -674,12 +583,13 @@ public class SettingsWindow extends JDialog {
 
         lblBackgroundImageCaption.setText("Image");
 
-        pnlBackgroundImage.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
-        pnlBackgroundImage.setPreferredSize(new Dimension(96, 96));
-        pnlBackgroundImage.setLayout(new BorderLayout());
+        pnlBackgroundImage.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        pnlBackgroundImage.setMaximumSize(new java.awt.Dimension(96, 96));
+        pnlBackgroundImage.setPreferredSize(new java.awt.Dimension(96, 96));
+        pnlBackgroundImage.setLayout(new java.awt.BorderLayout());
 
-        lblBackgroundImage.setHorizontalAlignment(SwingConstants.CENTER);
-        pnlBackgroundImage.add(lblBackgroundImage, BorderLayout.CENTER);
+        lblBackgroundImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pnlBackgroundImage.add(lblBackgroundImage, java.awt.BorderLayout.CENTER);
 
         btnBackgroundImageChange.setText("Change");
         btnBackgroundImageChange.addActionListener(this::btnBackgroundImageChangeActionPerformed);
@@ -687,102 +597,103 @@ public class SettingsWindow extends JDialog {
         btnBackgroundImageRemove.setText("Remove");
         btnBackgroundImageRemove.addActionListener(this::btnBackgroundImageRemoveActionPerformed);
 
-        cmbBackgroundImageMode.setModel(new DefaultComboBoxModel<>());
+        cmbBackgroundImageMode.setModel(new javax.swing.DefaultComboBoxModel<String>());
         cmbBackgroundImageMode.addActionListener(this::cmbBackgroundImageModeActionPerformed);
 
-        GroupLayout pnlWindowModeLayout = new GroupLayout(pnlWindowMode);
+        javax.swing.GroupLayout pnlWindowModeLayout = new javax.swing.GroupLayout(pnlWindowMode);
         pnlWindowMode.setLayout(pnlWindowModeLayout);
         pnlWindowModeLayout.setHorizontalGroup(
-                pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(chkWindowModeEnabled)
-                                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addComponent(lblDimensions)
-                                                        .addComponent(lblBackground)
-                                                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                                                .addGap(10, 10, 10)
-                                                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(lblBackgroundImageCaption)
-                                                                        .addComponent(lblBackgroundColour))))
-                                                .addGap(18, 18, 18)
-                                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                                                .addComponent(spnWindowWidth, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(lblDimensionsX)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(spnWindowHeight, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                                                .addComponent(txtBackgroundColour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(pnlBackgroundPreviewContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(btnBackgroundColourChange, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                                                .addComponent(pnlBackgroundImage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                                        .addComponent(btnBackgroundImageRemove, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                        .addComponent(btnBackgroundImageChange, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                        .addComponent(cmbBackgroundImageMode, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                                .addContainerGap(85, Short.MAX_VALUE))
+            pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkWindowModeEnabled)
+                    .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                        .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDimensions)
+                            .addComponent(lblBackground)
+                            .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblBackgroundImageCaption)
+                                    .addComponent(lblBackgroundColour))))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                                .addComponent(spnWindowWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblDimensionsX)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spnWindowHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                                .addComponent(txtBackgroundColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pnlBackgroundPreviewContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnBackgroundColourChange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                                .addComponent(pnlBackgroundImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnBackgroundImageRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnBackgroundImageChange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbBackgroundImageMode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         pnlWindowModeLayout.setVerticalGroup(
-                pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(chkWindowModeEnabled)
-                                .addGap(18, 18, 18)
-                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblDimensions)
-                                        .addComponent(lblDimensionsX)
-                                        .addComponent(spnWindowWidth, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(spnWindowHeight, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(lblBackground)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                .addComponent(lblBackgroundColour)
-                                                .addComponent(txtBackgroundColour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(btnBackgroundColourChange))
-                                        .addComponent(pnlBackgroundPreviewContainer, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnlWindowModeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                                .addComponent(btnBackgroundImageChange)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(cmbBackgroundImageMode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnBackgroundImageRemove))
-                                        .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                                .addGap(4, 4, 4)
-                                                .addComponent(lblBackgroundImageCaption))
-                                        .addComponent(pnlBackgroundImage, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(115, Short.MAX_VALUE))
+            pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(chkWindowModeEnabled)
+                .addGap(18, 18, 18)
+                .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDimensions)
+                    .addComponent(lblDimensionsX)
+                    .addComponent(spnWindowWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnWindowHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(lblBackground)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblBackgroundColour)
+                        .addComponent(txtBackgroundColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBackgroundColourChange))
+                    .addComponent(pnlBackgroundPreviewContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                        .addComponent(btnBackgroundImageChange)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbBackgroundImageMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBackgroundImageRemove))
+                    .addGroup(pnlWindowModeLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(lblBackgroundImageCaption))
+                    .addComponent(pnlBackgroundImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(231, Short.MAX_VALUE))
         );
 
         pnlTabs.addTab("WindowMode", pnlWindowMode);
 
-        pnlAbout.setLayout(new BoxLayout(pnlAbout, BoxLayout.Y_AXIS));
+        pnlAbout.setLayout(new javax.swing.BoxLayout(pnlAbout, javax.swing.BoxLayout.Y_AXIS));
         pnlAbout.add(glue1);
 
         lblIcon.setAlignmentX(0.5F);
-        lblIcon.setMinimumSize(new Dimension(64, 64));
-        lblIcon.setPreferredSize(new Dimension(64, 64));
+        lblIcon.setMaximumSize(new java.awt.Dimension(64, 64));
+        lblIcon.setMinimumSize(new java.awt.Dimension(64, 64));
+        lblIcon.setPreferredSize(new java.awt.Dimension(64, 64));
         pnlAbout.add(lblIcon);
         pnlAbout.add(rigid1);
 
-        lblShimejiEE.setFont(lblShimejiEE.getFont().deriveFont(lblShimejiEE.getFont().getStyle() | Font.BOLD, lblShimejiEE.getFont().getSize() + 10));
+        lblShimejiEE.setFont(lblShimejiEE.getFont().deriveFont(lblShimejiEE.getFont().getStyle() | java.awt.Font.BOLD, lblShimejiEE.getFont().getSize()+10));
         lblShimejiEE.setText("Shimeji");
         lblShimejiEE.setAlignmentX(0.5F);
         pnlAbout.add(lblShimejiEE);
         pnlAbout.add(rigid2);
 
-        lblVersion.setFont(lblVersion.getFont().deriveFont(lblVersion.getFont().getSize() + 4f));
+        lblVersion.setFont(lblVersion.getFont().deriveFont(lblVersion.getFont().getSize()+4f));
         lblVersion.setText("1.0.22");
         lblVersion.setAlignmentX(0.5F);
         pnlAbout.add(lblVersion);
@@ -797,27 +708,27 @@ public class SettingsWindow extends JDialog {
         pnlAbout.add(lblKilkakon);
         pnlAbout.add(rigid4);
 
-        pnlAboutButtons.setMaximumSize(new Dimension(32767, 36));
-        pnlAboutButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        pnlAboutButtons.setMaximumSize(new java.awt.Dimension(32767, 36));
+        pnlAboutButtons.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
 
         btnWebsite.setText("Website");
         btnWebsite.setAlignmentX(0.5F);
-        btnWebsite.setMaximumSize(new Dimension(130, 26));
-        btnWebsite.setPreferredSize(new Dimension(100, 26));
+        btnWebsite.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnWebsite.setPreferredSize(new java.awt.Dimension(100, 26));
         btnWebsite.addActionListener(this::btnWebsiteActionPerformed);
         pnlAboutButtons.add(btnWebsite);
 
         btnDiscord.setText("Discord");
         btnDiscord.setAlignmentX(0.5F);
-        btnDiscord.setMaximumSize(new Dimension(130, 26));
-        btnDiscord.setPreferredSize(new Dimension(100, 26));
+        btnDiscord.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnDiscord.setPreferredSize(new java.awt.Dimension(100, 26));
         btnDiscord.addActionListener(this::btnDiscordActionPerformed);
         pnlAboutButtons.add(btnDiscord);
 
         btnPatreon.setText("Patreon");
         btnPatreon.setAlignmentX(0.5F);
-        btnPatreon.setMaximumSize(new Dimension(130, 26));
-        btnPatreon.setPreferredSize(new Dimension(100, 26));
+        btnPatreon.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnPatreon.setPreferredSize(new java.awt.Dimension(100, 26));
         btnPatreon.addActionListener(this::btnPatreonActionPerformed);
         pnlAboutButtons.add(btnPatreon);
 
@@ -826,50 +737,49 @@ public class SettingsWindow extends JDialog {
 
         pnlTabs.addTab("About", pnlAbout);
 
-        pnlFooter.setPreferredSize(new Dimension(380, 36));
-        pnlFooter.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        pnlFooter.setPreferredSize(new java.awt.Dimension(380, 36));
+        pnlFooter.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
 
         btnDone.setText("Done");
-        btnDone.setMaximumSize(new Dimension(130, 26));
-        btnDone.setMinimumSize(new Dimension(95, 23));
+        btnDone.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnDone.setMinimumSize(new java.awt.Dimension(95, 23));
         btnDone.setName(""); // NOI18N
-        btnDone.setPreferredSize(new Dimension(130, 26));
+        btnDone.setPreferredSize(new java.awt.Dimension(130, 26));
         btnDone.addActionListener(this::btnDoneActionPerformed);
         pnlFooter.add(btnDone);
 
         btnCancel.setText("Cancel");
-        btnCancel.setMaximumSize(new Dimension(130, 26));
-        btnCancel.setMinimumSize(new Dimension(95, 23));
-        btnCancel.setPreferredSize(new Dimension(130, 26));
+        btnCancel.setMaximumSize(new java.awt.Dimension(130, 26));
+        btnCancel.setMinimumSize(new java.awt.Dimension(95, 23));
+        btnCancel.setPreferredSize(new java.awt.Dimension(130, 26));
         btnCancel.addActionListener(this::btnCancelActionPerformed);
         pnlFooter.add(btnCancel);
 
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(pnlFooter, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                        .addComponent(pnlTabs))
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlFooter, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(pnlTabs))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(pnlTabs)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pnlFooter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlTabs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlFooter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnDoneActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnDoneActionPerformed
-    {// GEN-HEADEREND:event_btnDoneActionPerformed
+    private void btnDoneActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnDoneActionPerformed
         // done button
         Properties properties = Main.getInstance().getProperties();
         String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ", "/");
@@ -911,15 +821,13 @@ public class SettingsWindow extends JDialog {
         }
 
         dispose();
-    }// GEN-LAST:event_btnDoneActionPerformed
+    }//GEN-LAST:event_btnDoneActionPerformed
 
-    private void btnCancelActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnCancelActionPerformed
-    {// GEN-HEADEREND:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         dispose();
-    }// GEN-LAST:event_btnCancelActionPerformed
+    }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnAddInteractiveWindowActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnAddInteractiveWindowActionPerformed
-    {// GEN-HEADEREND:event_btnAddInteractiveWindowActionPerformed
+    private void btnAddInteractiveWindowActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnAddInteractiveWindowActionPerformed
         String inputValue = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString(pnlInteractiveTabs.getSelectedIndex() == 0 ? "AddInteractiveWindow" : "BlacklistInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
         if (inputValue != null && !inputValue.trim().isEmpty() && !inputValue.contains("/")) {
             if (pnlInteractiveTabs.getSelectedIndex() == 0) {
@@ -930,10 +838,9 @@ public class SettingsWindow extends JDialog {
                 lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
             }
         }
-    }// GEN-LAST:event_btnAddInteractiveWindowActionPerformed
+    }//GEN-LAST:event_btnAddInteractiveWindowActionPerformed
 
-    private void btnRemoveInteractiveWindowActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnRemoveInteractiveWindowActionPerformed
-    {// GEN-HEADEREND:event_btnRemoveInteractiveWindowActionPerformed
+    private void btnRemoveInteractiveWindowActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnRemoveInteractiveWindowActionPerformed
         // delete button
         if (pnlInteractiveTabs.getSelectedIndex() == 0) {
             if (lstInteractiveWindows.getSelectedIndex() != -1) {
@@ -946,25 +853,21 @@ public class SettingsWindow extends JDialog {
                 lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
             }
         }
-    }// GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed
+    }//GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed
 
-    private void chkShowTrayIconItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkShowTrayIconItemStateChanged
-    {// GEN-HEADEREND:event_chkShowTrayIconItemStateChanged
+    private void chkShowTrayIconItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkShowTrayIconItemStateChanged
         showTrayIcon = evt.getStateChange() == ItemEvent.SELECTED;
-    }// GEN-LAST:event_chkShowTrayIconItemStateChanged
+    }//GEN-LAST:event_chkShowTrayIconItemStateChanged
 
-    private void chkAlwaysShowShimejiChooserItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkAlwaysShowShimejiChooserItemStateChanged
-    {// GEN-HEADEREND:event_chkAlwaysShowShimejiChooserItemStateChanged
+    private void chkAlwaysShowShimejiChooserItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkAlwaysShowShimejiChooserItemStateChanged
         alwaysShowShimejiChooser = evt.getStateChange() == ItemEvent.SELECTED;
-    }// GEN-LAST:event_chkAlwaysShowShimejiChooserItemStateChanged
+    }//GEN-LAST:event_chkAlwaysShowShimejiChooserItemStateChanged
 
-    private void chkDrawShimejiBoundsItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkDrawShimejiBoundsItemStateChanged
-    {// GEN-HEADEREND:event_chkDrawShimejiBoundsItemStateChanged
+    private void chkDrawShimejiBoundsItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkDrawShimejiBoundsItemStateChanged
         drawShimejiBounds = evt.getStateChange() == ItemEvent.SELECTED;
-    }// GEN-LAST:event_chkDrawShimejiBoundsItemStateChanged
+    }//GEN-LAST:event_chkDrawShimejiBoundsItemStateChanged
 
-    private void radFilterItemStateChanged(ItemEvent evt)// GEN-FIRST:event_radFilterItemStateChanged
-    {// GEN-HEADEREND:event_radFilterItemStateChanged
+    private void radFilterItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_radFilterItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             Object source = evt.getItemSelectable();
 
@@ -976,10 +879,9 @@ public class SettingsWindow extends JDialog {
                 filter = "bicubic";
             }
         }
-    }// GEN-LAST:event_radFilterItemStateChanged
+    }//GEN-LAST:event_radFilterItemStateChanged
 
-    private void sldScalingStateChanged(ChangeEvent evt)// GEN-FIRST:event_sldScalingStateChanged
-    {// GEN-HEADEREND:event_sldScalingStateChanged
+    private void sldScalingStateChanged(ChangeEvent evt) {//GEN-FIRST:event_sldScalingStateChanged
         if (!sldScaling.getValueIsAdjusting()) {
             if (sldScaling.getValue() == 0) {
                 sldScaling.setValue(5);
@@ -995,25 +897,21 @@ public class SettingsWindow extends JDialog {
                 }
             }
         }
-    }// GEN-LAST:event_sldScalingStateChanged
+    }//GEN-LAST:event_sldScalingStateChanged
 
-    private void btnWebsiteActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnWebsiteActionPerformed
-    {// GEN-HEADEREND:event_btnWebsiteActionPerformed
+    private void btnWebsiteActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnWebsiteActionPerformed
         browseToUrl("https://kilkakon.com/");
-    }// GEN-LAST:event_btnWebsiteActionPerformed
+    }//GEN-LAST:event_btnWebsiteActionPerformed
 
-    private void btnDiscordActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnDiscordActionPerformed
-    {// GEN-HEADEREND:event_btnDiscordActionPerformed
+    private void btnDiscordActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnDiscordActionPerformed
         browseToUrl("https://discord.gg/NBq3zqfA2B");
-    }// GEN-LAST:event_btnDiscordActionPerformed
+    }//GEN-LAST:event_btnDiscordActionPerformed
 
-    private void btnPatreonActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnPatreonActionPerformed
-    {// GEN-HEADEREND:event_btnPatreonActionPerformed
+    private void btnPatreonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnPatreonActionPerformed
         browseToUrl("https://patreon.com/kilkakon");
-    }// GEN-LAST:event_btnPatreonActionPerformed
+    }//GEN-LAST:event_btnPatreonActionPerformed
 
-    private void sldOpacityStateChanged(ChangeEvent evt)// GEN-FIRST:event_sldOpacityStateChanged
-    {// GEN-HEADEREND:event_sldOpacityStateChanged
+    private void sldOpacityStateChanged(ChangeEvent evt) {//GEN-FIRST:event_sldOpacityStateChanged
         if (!sldOpacity.getValueIsAdjusting()) {
             if (sldOpacity.getValue() == 0) {
                 sldOpacity.setValue(5);
@@ -1021,25 +919,21 @@ public class SettingsWindow extends JDialog {
                 opacity = sldOpacity.getValue() / 100.0;
             }
         }
-    }// GEN-LAST:event_sldOpacityStateChanged
+    }//GEN-LAST:event_sldOpacityStateChanged
 
-    private void spnWindowHeightStateChanged(ChangeEvent evt)// GEN-FIRST:event_spnWindowHeightStateChanged
-    {// GEN-HEADEREND:event_spnWindowHeightStateChanged
+    private void spnWindowHeightStateChanged(ChangeEvent evt) {//GEN-FIRST:event_spnWindowHeightStateChanged
         windowSize.height = ((SpinnerNumberModel) spnWindowHeight.getModel()).getNumber().intValue();
-    }// GEN-LAST:event_spnWindowHeightStateChanged
+    }//GEN-LAST:event_spnWindowHeightStateChanged
 
-    private void spnWindowWidthStateChanged(ChangeEvent evt)// GEN-FIRST:event_spnWindowWidthStateChanged
-    {// GEN-HEADEREND:event_spnWindowWidthStateChanged
+    private void spnWindowWidthStateChanged(ChangeEvent evt) {//GEN-FIRST:event_spnWindowWidthStateChanged
         windowSize.width = ((SpinnerNumberModel) spnWindowWidth.getModel()).getNumber().intValue();
-    }// GEN-LAST:event_spnWindowWidthStateChanged
+    }//GEN-LAST:event_spnWindowWidthStateChanged
 
-    private void btnBackgroundColourChangeActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnBackgroundColourChangeActionPerformed
-    {// GEN-HEADEREND:event_btnBackgroundColourChangeActionPerformed
+    private void btnBackgroundColourChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundColourChangeActionPerformed
         backgroundColour = chooseColour(backgroundColour, txtBackgroundColour, pnlBackgroundPreview, "ChooseBackgroundColour");
-    }// GEN-LAST:event_btnBackgroundColourChangeActionPerformed
+    }//GEN-LAST:event_btnBackgroundColourChangeActionPerformed
 
-    private void chkWindowModeEnabledItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkWindowModeEnabledItemStateChanged
-    {// GEN-HEADEREND:event_chkWindowModeEnabledItemStateChanged
+    private void chkWindowModeEnabledItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkWindowModeEnabledItemStateChanged
         windowedMode = evt.getStateChange() == ItemEvent.SELECTED;
         spnWindowWidth.setEnabled(windowedMode);
         spnWindowHeight.setEnabled(windowedMode);
@@ -1047,10 +941,9 @@ public class SettingsWindow extends JDialog {
         btnBackgroundImageChange.setEnabled(windowedMode);
         cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
         btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
-    }// GEN-LAST:event_chkWindowModeEnabledItemStateChanged
+    }//GEN-LAST:event_chkWindowModeEnabledItemStateChanged
 
-    private void btnBackgroundImageChangeActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnBackgroundImageChangeActionPerformed
-    {// GEN-HEADEREND:event_btnBackgroundImageChangeActionPerformed
+    private void btnBackgroundImageChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundImageChangeActionPerformed
         final JFileChooser dialog = new JFileChooser();
         dialog.setDialogTitle(Main.getInstance().getLanguageBundle().getString("ChooseBackgroundImage"));
         // dialog.setFileFilter(  );
@@ -1066,28 +959,25 @@ public class SettingsWindow extends JDialog {
             cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
             btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
         }
-    }// GEN-LAST:event_btnBackgroundImageChangeActionPerformed
+    }//GEN-LAST:event_btnBackgroundImageChangeActionPerformed
 
-    private void btnBackgroundImageRemoveActionPerformed(ActionEvent evt)// GEN-FIRST:event_btnBackgroundImageRemoveActionPerformed
-    {// GEN-HEADEREND:event_btnBackgroundImageRemoveActionPerformed
+    private void btnBackgroundImageRemoveActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundImageRemoveActionPerformed
         backgroundImage = null;
         lblBackgroundImage.setIcon(null);
         cmbBackgroundImageMode.setEnabled(false);
         btnBackgroundImageRemove.setEnabled(false);
-    }// GEN-LAST:event_btnBackgroundImageRemoveActionPerformed
+    }//GEN-LAST:event_btnBackgroundImageRemoveActionPerformed
 
-    private void cmbBackgroundImageModeActionPerformed(ActionEvent evt)// GEN-FIRST:event_cmbBackgroundImageModeActionPerformed
-    {// GEN-HEADEREND:event_cmbBackgroundImageModeActionPerformed
+    private void cmbBackgroundImageModeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmbBackgroundImageModeActionPerformed
         if (cmbBackgroundImageMode.getSelectedIndex() > -1) {
             backgroundMode = backgroundModes[cmbBackgroundImageMode.getSelectedIndex()];
         }
         refreshBackgroundImage();
-    }// GEN-LAST:event_cmbBackgroundImageModeActionPerformed
+    }//GEN-LAST:event_cmbBackgroundImageModeActionPerformed
 
-    private void chkAlwaysShowInformationScreenItemStateChanged(ItemEvent evt)// GEN-FIRST:event_chkAlwaysShowInformationScreenItemStateChanged
-    {// GEN-HEADEREND:event_chkAlwaysShowInformationScreenItemStateChanged
+    private void chkAlwaysShowInformationScreenItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkAlwaysShowInformationScreenItemStateChanged
         alwaysShowInformationScreen = evt.getStateChange() == ItemEvent.SELECTED;
-    }// GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
+    }//GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
 
     private void colourTextChanged(JTextField field) {
         if (suppressTextChanged || !isVisible()) {
@@ -1147,126 +1037,70 @@ public class SettingsWindow extends JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton btnAddInteractiveWindow;
-    private JButton btnBackgroundColourChange;
-    private JButton btnBackgroundImageChange;
-    private JButton btnBackgroundImageRemove;
-    private JButton btnBlackColourChange;
-    private JButton btnCancel;
-    private JButton btnChangeFont;
-    private JButton btnDiscord;
-    private JButton btnDone;
-    private JButton btnPatreon;
-    private JButton btnPrimaryColour1Change;
-    private JButton btnPrimaryColour2Change;
-    private JButton btnRemoveInteractiveWindow;
-    private JButton btnReset;
-    private JButton btnSecondaryColour1Change;
-    private JButton btnSecondaryColour2Change;
-    private JButton btnSecondaryColour3Change;
-    private JButton btnWebsite;
-    private JButton btnWhiteColourChange;
-    private JCheckBox chkAlwaysShowInformationScreen;
-    private JCheckBox chkAlwaysShowShimejiChooser;
-    private JCheckBox chkDrawShimejiBounds;
-    private JCheckBox chkShowTrayIcon;
-    private JCheckBox chkWindowModeEnabled;
-    private JComboBox<String> cmbBackgroundImageMode;
-    private Box.Filler glue1;
-    private Box.Filler glue2;
-    private Box.Filler glueBackground;
-    private Box.Filler glueBackground2;
-    private Box.Filler glueBlackColoura;
-    private Box.Filler glueBlackColourb;
-    private Box.Filler gluePrimaryColour1a;
-    private Box.Filler gluePrimaryColour1b;
-    private Box.Filler gluePrimaryColour2a;
-    private Box.Filler gluePrimaryColour2b;
-    private Box.Filler glueSecondaryColour1a;
-    private Box.Filler glueSecondaryColour1b;
-    private Box.Filler glueSecondaryColour2a;
-    private Box.Filler glueSecondaryColour2b;
-    private Box.Filler glueSecondaryColour3a;
-    private Box.Filler glueSecondaryColour3b;
-    private Box.Filler glueWhiteColoura;
-    private Box.Filler glueWhiteColourb;
-    private ButtonGroup grpFilter;
-    private JScrollPane jScrollPane1;
-    private JScrollPane jScrollPane2;
-    private JScrollPane jScrollPane3;
-    private JTextArea jTextArea1;
-    private JLabel lblBackground;
-    private JLabel lblBackgroundColour;
-    private JLabel lblBackgroundImage;
-    private JLabel lblBackgroundImageCaption;
-    private JLabel lblBlackColour;
-    private JLabel lblDevelopedBy;
-    private JLabel lblDimensions;
-    private JLabel lblDimensionsX;
-    private JLabel lblFilter;
-    private JLabel lblIcon;
-    private JLabel lblKilkakon;
-    private JLabel lblMenuOpacity;
-    private JLabel lblOpacity;
-    private JLabel lblPrimaryColour1;
-    private JLabel lblPrimaryColour2;
-    private JLabel lblScaling;
-    private JLabel lblSecondaryColour1;
-    private JLabel lblSecondaryColour2;
-    private JLabel lblSecondaryColour3;
-    private JLabel lblShimejiEE;
-    private JLabel lblVersion;
-    private JLabel lblWhiteColour;
-    private JList<String> lstInteractiveWindows;
-    private JList<String> lstInteractiveWindowsBlacklist;
-    private JPanel pnlAbout;
-    private JPanel pnlAboutButtons;
-    private JPanel pnlBackgroundImage;
-    private JPanel pnlBackgroundPreview;
-    private JPanel pnlBackgroundPreviewContainer;
-    private JPanel pnlBlackColourPreview;
-    private JPanel pnlBlackColourPreviewContainer;
-    private JPanel pnlBlacklistTab;
-    private JPanel pnlFooter;
-    private JPanel pnlGeneral;
-    private JPanel pnlInteractiveButtons;
-    private JTabbedPane pnlInteractiveTabs;
-    private JPanel pnlInteractiveWindows;
-    private JPanel pnlPrimaryColour1Preview;
-    private JPanel pnlPrimaryColour1PreviewContainer;
-    private JPanel pnlPrimaryColour2Preview;
-    private JPanel pnlPrimaryColour2PreviewContainer;
-    private JScrollPane pnlScrollPane;
-    private JPanel pnlSecondaryColour1Preview;
-    private JPanel pnlSecondaryColour1PreviewContainer;
-    private JPanel pnlSecondaryColour2Preview;
-    private JPanel pnlSecondaryColour2PreviewContainer;
-    private JPanel pnlSecondaryColour3Preview;
-    private JPanel pnlSecondaryColour3PreviewContainer;
-    private JTabbedPane pnlTabs;
-    private JPanel pnlWhiteColourPreview;
-    private JPanel pnlWhiteColourPreviewContainer;
-    private JPanel pnlWhitelistTab;
-    private JPanel pnlWindowMode;
-    private JRadioButton radFilterBicubic;
-    private JRadioButton radFilterHqx;
-    private JRadioButton radFilterNearest;
-    private Box.Filler rigid1;
-    private Box.Filler rigid2;
-    private Box.Filler rigid3;
-    private Box.Filler rigid4;
-    private JSlider sldMenuOpacity;
-    private JSlider sldOpacity;
-    private JSlider sldScaling;
-    private JSpinner spnWindowHeight;
-    private JSpinner spnWindowWidth;
-    private JTextField txtBackgroundColour;
-    private JTextField txtBlackColour;
-    private JTextField txtPrimaryColour1;
-    private JTextField txtPrimaryColour2;
-    private JTextField txtSecondaryColour1;
-    private JTextField txtSecondaryColour2;
-    private JTextField txtSecondaryColour3;
-    private JTextField txtWhiteColour;
+    private javax.swing.JButton btnAddInteractiveWindow;
+    private javax.swing.JButton btnBackgroundColourChange;
+    private javax.swing.JButton btnBackgroundImageChange;
+    private javax.swing.JButton btnBackgroundImageRemove;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnDiscord;
+    private javax.swing.JButton btnDone;
+    private javax.swing.JButton btnPatreon;
+    private javax.swing.JButton btnRemoveInteractiveWindow;
+    private javax.swing.JButton btnWebsite;
+    private javax.swing.JCheckBox chkAlwaysShowInformationScreen;
+    private javax.swing.JCheckBox chkAlwaysShowShimejiChooser;
+    private javax.swing.JCheckBox chkDrawShimejiBounds;
+    private javax.swing.JCheckBox chkShowTrayIcon;
+    private javax.swing.JCheckBox chkWindowModeEnabled;
+    private javax.swing.JComboBox<String> cmbBackgroundImageMode;
+    private javax.swing.Box.Filler glue1;
+    private javax.swing.Box.Filler glue2;
+    private javax.swing.Box.Filler glueBackground;
+    private javax.swing.Box.Filler glueBackground2;
+    private javax.swing.ButtonGroup grpFilter;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblBackground;
+    private javax.swing.JLabel lblBackgroundColour;
+    private javax.swing.JLabel lblBackgroundImage;
+    private javax.swing.JLabel lblBackgroundImageCaption;
+    private javax.swing.JLabel lblDevelopedBy;
+    private javax.swing.JLabel lblDimensions;
+    private javax.swing.JLabel lblDimensionsX;
+    private javax.swing.JLabel lblFilter;
+    private javax.swing.JLabel lblIcon;
+    private javax.swing.JLabel lblKilkakon;
+    private javax.swing.JLabel lblOpacity;
+    private javax.swing.JLabel lblScaling;
+    private javax.swing.JLabel lblShimejiEE;
+    private javax.swing.JLabel lblVersion;
+    private javax.swing.JList<String> lstInteractiveWindows;
+    private javax.swing.JList<String> lstInteractiveWindowsBlacklist;
+    private javax.swing.JPanel pnlAbout;
+    private javax.swing.JPanel pnlAboutButtons;
+    private javax.swing.JPanel pnlBackgroundImage;
+    private javax.swing.JPanel pnlBackgroundPreview;
+    private javax.swing.JPanel pnlBackgroundPreviewContainer;
+    private javax.swing.JPanel pnlBlacklistTab;
+    private javax.swing.JPanel pnlFooter;
+    private javax.swing.JPanel pnlGeneral;
+    private javax.swing.JPanel pnlInteractiveButtons;
+    private javax.swing.JTabbedPane pnlInteractiveTabs;
+    private javax.swing.JPanel pnlInteractiveWindows;
+    private javax.swing.JTabbedPane pnlTabs;
+    private javax.swing.JPanel pnlWhitelistTab;
+    private javax.swing.JPanel pnlWindowMode;
+    private javax.swing.JRadioButton radFilterBicubic;
+    private javax.swing.JRadioButton radFilterHqx;
+    private javax.swing.JRadioButton radFilterNearest;
+    private javax.swing.Box.Filler rigid1;
+    private javax.swing.Box.Filler rigid2;
+    private javax.swing.Box.Filler rigid3;
+    private javax.swing.Box.Filler rigid4;
+    private javax.swing.JSlider sldOpacity;
+    private javax.swing.JSlider sldScaling;
+    private javax.swing.JSpinner spnWindowHeight;
+    private javax.swing.JSpinner spnWindowWidth;
+    private javax.swing.JTextField txtBackgroundColour;
     // End of variables declaration//GEN-END:variables
 }

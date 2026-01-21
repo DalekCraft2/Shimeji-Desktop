@@ -19,39 +19,39 @@ public class DebugWindow extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblShimejiX = new JLabel();
-        lblShimejiXValue = new JLabel();
-        lblShimejiYValue = new JLabel();
-        lblShimejiY = new JLabel();
-        lblWindowX = new JLabel();
-        lblWindowY = new JLabel();
-        lblWindowWidth = new JLabel();
-        lblWindowHeight = new JLabel();
-        lblWindowXValue = new JLabel();
-        lblWindowYValue = new JLabel();
-        lblWindowWidthValue = new JLabel();
-        lblWindowHeightValue = new JLabel();
-        lblBehaviour = new JLabel();
-        lblBehaviourValue = new JLabel();
-        lblEnvironmentY = new JLabel();
-        lblEnvironmentX = new JLabel();
-        lblEnvironmentXValue = new JLabel();
-        lblEnvironmentYValue = new JLabel();
-        lblEnvironmentWidth = new JLabel();
-        lblEnvironmentHeight = new JLabel();
-        lblEnvironmentHeightValue = new JLabel();
-        lblEnvironmentWidthValue = new JLabel();
-        lblActiveIE = new JLabel();
-        lblActiveIEValue = new JLabel();
+        lblShimejiX = new javax.swing.JLabel();
+        lblShimejiXValue = new javax.swing.JLabel();
+        lblShimejiYValue = new javax.swing.JLabel();
+        lblShimejiY = new javax.swing.JLabel();
+        lblWindowX = new javax.swing.JLabel();
+        lblWindowY = new javax.swing.JLabel();
+        lblWindowWidth = new javax.swing.JLabel();
+        lblWindowHeight = new javax.swing.JLabel();
+        lblWindowXValue = new javax.swing.JLabel();
+        lblWindowYValue = new javax.swing.JLabel();
+        lblWindowWidthValue = new javax.swing.JLabel();
+        lblWindowHeightValue = new javax.swing.JLabel();
+        lblBehaviour = new javax.swing.JLabel();
+        lblBehaviourValue = new javax.swing.JLabel();
+        lblEnvironmentY = new javax.swing.JLabel();
+        lblEnvironmentX = new javax.swing.JLabel();
+        lblEnvironmentXValue = new javax.swing.JLabel();
+        lblEnvironmentYValue = new javax.swing.JLabel();
+        lblEnvironmentWidth = new javax.swing.JLabel();
+        lblEnvironmentHeight = new javax.swing.JLabel();
+        lblEnvironmentHeightValue = new javax.swing.JLabel();
+        lblEnvironmentWidthValue = new javax.swing.JLabel();
+        lblActiveIE = new javax.swing.JLabel();
+        lblActiveIEValue = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblShimejiX.setText("Shimeji X");
 
-        lblShimejiXValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblShimejiXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblShimejiXValue.setText("N/A");
 
-        lblShimejiYValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblShimejiYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblShimejiYValue.setText("N/A");
 
         lblShimejiY.setText("Shimeji Y");
@@ -64,138 +64,138 @@ public class DebugWindow extends JFrame {
 
         lblWindowHeight.setText("Window H");
 
-        lblWindowXValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblWindowXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblWindowXValue.setText("N/A");
 
-        lblWindowYValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblWindowYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblWindowYValue.setText("N/A");
 
-        lblWindowWidthValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblWindowWidthValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblWindowWidthValue.setText("N/A");
 
-        lblWindowHeightValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblWindowHeightValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblWindowHeightValue.setText("N/A");
 
         lblBehaviour.setText("Behaviour");
 
-        lblBehaviourValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblBehaviourValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblBehaviourValue.setText("N/A");
 
         lblEnvironmentY.setText("Environment Y");
 
         lblEnvironmentX.setText("Environment X");
 
-        lblEnvironmentXValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblEnvironmentXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblEnvironmentXValue.setText("N/A");
 
-        lblEnvironmentYValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblEnvironmentYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblEnvironmentYValue.setText("N/A");
 
         lblEnvironmentWidth.setText("Environment W");
 
         lblEnvironmentHeight.setText("Environment H");
 
-        lblEnvironmentHeightValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblEnvironmentHeightValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblEnvironmentHeightValue.setText("N/A");
 
-        lblEnvironmentWidthValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblEnvironmentWidthValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblEnvironmentWidthValue.setText("N/A");
 
         lblActiveIE.setText("Active IE");
 
-        lblActiveIEValue.setHorizontalAlignment(SwingConstants.LEFT);
+        lblActiveIEValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblActiveIEValue.setText("N/A");
 
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblShimejiX)
-                                        .addComponent(lblShimejiY)
-                                        .addComponent(lblBehaviour)
-                                        .addComponent(lblWindowX)
-                                        .addComponent(lblWindowY)
-                                        .addComponent(lblWindowWidth)
-                                        .addComponent(lblWindowHeight)
-                                        .addComponent(lblEnvironmentX)
-                                        .addComponent(lblEnvironmentY)
-                                        .addComponent(lblEnvironmentWidth)
-                                        .addComponent(lblEnvironmentHeight)
-                                        .addComponent(lblActiveIE))
-                                .addGap(42, 42, 42)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblBehaviourValue, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addComponent(lblShimejiYValue)
-                                                        .addComponent(lblShimejiXValue)
-                                                        .addComponent(lblWindowXValue)
-                                                        .addComponent(lblWindowYValue)
-                                                        .addComponent(lblWindowHeightValue)
-                                                        .addComponent(lblEnvironmentHeightValue)
-                                                        .addComponent(lblEnvironmentWidthValue)
-                                                        .addComponent(lblWindowWidthValue)
-                                                        .addComponent(lblEnvironmentXValue)
-                                                        .addComponent(lblEnvironmentYValue)
-                                                        .addComponent(lblActiveIEValue))
-                                                .addGap(0, 0, Short.MAX_VALUE)))
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblShimejiX)
+                    .addComponent(lblShimejiY)
+                    .addComponent(lblBehaviour)
+                    .addComponent(lblWindowX)
+                    .addComponent(lblWindowY)
+                    .addComponent(lblWindowWidth)
+                    .addComponent(lblWindowHeight)
+                    .addComponent(lblEnvironmentX)
+                    .addComponent(lblEnvironmentY)
+                    .addComponent(lblEnvironmentWidth)
+                    .addComponent(lblEnvironmentHeight)
+                    .addComponent(lblActiveIE))
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblBehaviourValue, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblShimejiYValue)
+                            .addComponent(lblShimejiXValue)
+                            .addComponent(lblWindowXValue)
+                            .addComponent(lblWindowYValue)
+                            .addComponent(lblWindowHeightValue)
+                            .addComponent(lblEnvironmentHeightValue)
+                            .addComponent(lblEnvironmentWidthValue)
+                            .addComponent(lblWindowWidthValue)
+                            .addComponent(lblEnvironmentXValue)
+                            .addComponent(lblEnvironmentYValue)
+                            .addComponent(lblActiveIEValue))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblBehaviour)
-                                        .addComponent(lblBehaviourValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblShimejiX)
-                                        .addComponent(lblShimejiXValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblShimejiYValue)
-                                        .addComponent(lblShimejiY))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblActiveIE)
-                                        .addComponent(lblActiveIEValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblWindowX)
-                                        .addComponent(lblWindowXValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblWindowY)
-                                        .addComponent(lblWindowYValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblWindowWidth)
-                                        .addComponent(lblWindowWidthValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblWindowHeight)
-                                        .addComponent(lblWindowHeightValue, GroupLayout.Alignment.TRAILING))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblEnvironmentXValue)
-                                        .addComponent(lblEnvironmentX))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblEnvironmentY)
-                                        .addComponent(lblEnvironmentYValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblEnvironmentWidth)
-                                        .addComponent(lblEnvironmentWidthValue))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblEnvironmentHeight)
-                                        .addComponent(lblEnvironmentHeightValue))
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblBehaviour)
+                    .addComponent(lblBehaviourValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblShimejiX)
+                    .addComponent(lblShimejiXValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblShimejiYValue)
+                    .addComponent(lblShimejiY))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblActiveIE)
+                    .addComponent(lblActiveIEValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWindowX)
+                    .addComponent(lblWindowXValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWindowY)
+                    .addComponent(lblWindowYValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWindowWidth)
+                    .addComponent(lblWindowWidthValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblWindowHeight)
+                    .addComponent(lblWindowHeightValue, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblEnvironmentXValue)
+                    .addComponent(lblEnvironmentX))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEnvironmentY)
+                    .addComponent(lblEnvironmentYValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEnvironmentWidth)
+                    .addComponent(lblEnvironmentWidthValue))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEnvironmentHeight)
+                    .addComponent(lblEnvironmentHeightValue))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -269,29 +269,29 @@ public class DebugWindow extends JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JLabel lblActiveIE;
-    private JLabel lblActiveIEValue;
-    private JLabel lblBehaviour;
-    private JLabel lblBehaviourValue;
-    private JLabel lblEnvironmentHeight;
-    private JLabel lblEnvironmentHeightValue;
-    private JLabel lblEnvironmentWidth;
-    private JLabel lblEnvironmentWidthValue;
-    private JLabel lblEnvironmentX;
-    private JLabel lblEnvironmentXValue;
-    private JLabel lblEnvironmentY;
-    private JLabel lblEnvironmentYValue;
-    private JLabel lblShimejiX;
-    private JLabel lblShimejiXValue;
-    private JLabel lblShimejiY;
-    private JLabel lblShimejiYValue;
-    private JLabel lblWindowHeight;
-    private JLabel lblWindowHeightValue;
-    private JLabel lblWindowWidth;
-    private JLabel lblWindowWidthValue;
-    private JLabel lblWindowX;
-    private JLabel lblWindowXValue;
-    private JLabel lblWindowY;
-    private JLabel lblWindowYValue;
+    private javax.swing.JLabel lblActiveIE;
+    private javax.swing.JLabel lblActiveIEValue;
+    private javax.swing.JLabel lblBehaviour;
+    private javax.swing.JLabel lblBehaviourValue;
+    private javax.swing.JLabel lblEnvironmentHeight;
+    private javax.swing.JLabel lblEnvironmentHeightValue;
+    private javax.swing.JLabel lblEnvironmentWidth;
+    private javax.swing.JLabel lblEnvironmentWidthValue;
+    private javax.swing.JLabel lblEnvironmentX;
+    private javax.swing.JLabel lblEnvironmentXValue;
+    private javax.swing.JLabel lblEnvironmentY;
+    private javax.swing.JLabel lblEnvironmentYValue;
+    private javax.swing.JLabel lblShimejiX;
+    private javax.swing.JLabel lblShimejiXValue;
+    private javax.swing.JLabel lblShimejiY;
+    private javax.swing.JLabel lblShimejiYValue;
+    private javax.swing.JLabel lblWindowHeight;
+    private javax.swing.JLabel lblWindowHeightValue;
+    private javax.swing.JLabel lblWindowWidth;
+    private javax.swing.JLabel lblWindowWidthValue;
+    private javax.swing.JLabel lblWindowX;
+    private javax.swing.JLabel lblWindowXValue;
+    private javax.swing.JLabel lblWindowY;
+    private javax.swing.JLabel lblWindowYValue;
     // End of variables declaration//GEN-END:variables
 }
