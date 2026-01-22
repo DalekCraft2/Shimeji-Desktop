@@ -5,7 +5,6 @@ module com.group_finity.mascot {
     requires java.scripting;
     requires com.sun.jna;
     requires com.sun.jna.platform;
-    requires AbsoluteLayout.RELEASE280;
     requires org.openjdk.nashorn;
     requires org.apache.commons.exec;
     requires com.jthemedetector;

@@ -55,30 +55,61 @@ public class ImageSetChooserPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         checkbox = new javax.swing.JCheckBox();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
+        image = new javax.swing.JLabel();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
+        pnlLabels = new javax.swing.JPanel();
         caption = new javax.swing.JLabel();
         actionsFile = new javax.swing.JLabel();
         behaviorsFile = new javax.swing.JLabel();
-        image = new javax.swing.JLabel();
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
 
-        setMinimumSize(new java.awt.Dimension(248, 80));
         setOpaque(false);
-        setPreferredSize(new java.awt.Dimension(248, 80));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        add(checkbox, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
+
+        jPanel1.setOpaque(false);
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel1.add(checkbox);
+        jPanel1.add(filler1);
+
+        image.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        image.setMaximumSize(new java.awt.Dimension(60, 60));
+        image.setMinimumSize(new java.awt.Dimension(60, 60));
+        image.setPreferredSize(new java.awt.Dimension(60, 60));
+        jPanel1.add(image);
+        jPanel1.add(filler2);
+
+        pnlLabels.setMaximumSize(new java.awt.Dimension(32767, 48));
+        pnlLabels.setOpaque(false);
+        pnlLabels.setLayout(new javax.swing.BoxLayout(pnlLabels, javax.swing.BoxLayout.Y_AXIS));
 
         caption.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         caption.setText("Builder");
-        add(caption, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, -1, -1));
+        pnlLabels.add(caption);
 
         actionsFile.setText("img/Builder/conf/actions.xml");
-        add(actionsFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, -1, -1));
+        pnlLabels.add(actionsFile);
 
         behaviorsFile.setText("img/Builder/conf/behaviors.xml");
-        add(behaviorsFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, -1, -1));
+        pnlLabels.add(behaviorsFile);
 
-        image.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 60, 60));
+        jPanel1.add(pnlLabels);
+        jPanel1.add(filler3);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -87,7 +118,12 @@ public class ImageSetChooserPanel extends JPanel {
     private javax.swing.JLabel behaviorsFile;
     private javax.swing.JLabel caption;
     private javax.swing.JCheckBox checkbox;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler3;
     private javax.swing.JLabel image;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel pnlLabels;
     // End of variables declaration//GEN-END:variables
 
 }

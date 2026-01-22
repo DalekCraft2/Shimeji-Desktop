@@ -43,10 +43,8 @@ public class ImageSetChooser extends JDialog {
 
         List<String> activeImageSets = readConfigFile();
 
-        List<ImageSetChooserPanel> data1 = new ArrayList<>();
-        List<ImageSetChooserPanel> data2 = new ArrayList<>();
-        Collection<Integer> si1 = new ArrayList<>();
-        Collection<Integer> si2 = new ArrayList<>();
+        List<ImageSetChooserPanel> listData = new ArrayList<>();
+        Collection<Integer> selectedIndices = new ArrayList<>();
 
         // Get list of image sets (directories under img)
         DirectoryStream.Filter<Path> filter = entry -> {
@@ -58,8 +56,7 @@ public class ImageSetChooser extends JDialog {
         };
         try (DirectoryStream<Path> imageSetDirs = Files.newDirectoryStream(Main.IMAGE_DIRECTORY, filter)) {
             // Create ImageSetChooserPanels for ShimejiList
-            boolean onList1 = true;    // Toggle adding between the two lists
-            int row = 0;    // Current row
+            int index = 0;
             for (Path imageSetDir : imageSetDirs) {
                 String imageSet = imageSetDir.getFileName().toString();
 
@@ -186,37 +183,22 @@ public class ImageSetChooser extends JDialog {
                     caption = imageSet;
                 }
 
-                if (onList1) {
-                    onList1 = false;
-                    data1.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
-                            behaviorsFile.toString(), imageFile, caption));
-                    // Is this set initially selected?
-                    if (activeImageSets.contains(imageSet) || selectAllSets) {
-                        si1.add(row);
-                    }
-                } else {
-                    onList1 = true;
-                    data2.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
-                            behaviorsFile.toString(), imageFile, caption));
-                    // Is this set initially selected?
-                    if (activeImageSets.contains(imageSet) || selectAllSets) {
-                        si2.add(row);
-                    }
-                    row++; // Only increment the row number after the second column
+                listData.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
+                        behaviorsFile.toString(), imageFile, caption));
+                // Is this set initially selected?
+                if (activeImageSets.contains(imageSet) || selectAllSets) {
+                    selectedIndices.add(index);
                 }
                 imageSets.add(imageSet);
+                index++;
             }
         } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to read image sets", e);
         }
 
-        setUpList(jList1);
-        jList1.setListData(data1.toArray(new ImageSetChooserPanel[0]));
-        jList1.setSelectedIndices(convertIntegers(si1));
-
-        setUpList(jList2);
-        jList2.setListData(data2.toArray(new ImageSetChooserPanel[0]));
-        jList2.setSelectedIndices(convertIntegers(si2));
+        setUpList(lstImageSets);
+        lstImageSets.setListData(listData.toArray(new ImageSetChooserPanel[0]));
+        lstImageSets.setSelectedIndices(convertIntegers(selectedIndices));
     }
 
     public ArrayList<String> display() {
@@ -261,9 +243,8 @@ public class ImageSetChooser extends JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        pnlLists = new javax.swing.JPanel();
-        jList1 = new ShimejiList();
-        jList2 = new ShimejiList();
+        pnlList = new javax.swing.JPanel();
+        lstImageSets = new ShimejiList();
         jLabel1 = new javax.swing.JLabel();
         pnlFooter = new javax.swing.JPanel();
         useSelectedButton = new javax.swing.JButton();
@@ -276,27 +257,24 @@ public class ImageSetChooser extends JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Shimeji-ee Image Set Chooser");
-        setMinimumSize(new java.awt.Dimension(670, 495));
+        setMinimumSize(getPreferredSize());
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(518, 100));
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(9);
 
-        javax.swing.GroupLayout pnlListsLayout = new javax.swing.GroupLayout(pnlLists);
-        pnlLists.setLayout(pnlListsLayout);
-        pnlListsLayout.setHorizontalGroup(
-            pnlListsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlListsLayout.createSequentialGroup()
-                .addComponent(jList1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(jList2, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+        lstImageSets.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+
+        javax.swing.GroupLayout pnlListLayout = new javax.swing.GroupLayout(pnlList);
+        pnlList.setLayout(pnlListLayout);
+        pnlListLayout.setHorizontalGroup(
+            pnlListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lstImageSets, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        pnlListsLayout.setVerticalGroup(
-            pnlListsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jList2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-            .addComponent(jList1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+        pnlListLayout.setVerticalGroup(
+            pnlListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lstImageSets, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(pnlLists);
+        jScrollPane1.setViewportView(pnlList);
 
         jLabel1.setText("Select Image Sets to Use:");
 
@@ -356,11 +334,11 @@ public class ImageSetChooser extends JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
-                    .addComponent(pnlFooter, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                    .addComponent(pnlFooter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 382, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pnlLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -372,35 +350,28 @@ public class ImageSetChooser extends JDialog {
                     .addComponent(jLabel1)
                     .addComponent(pnlLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlFooter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearAllLabelMouseClicked(MouseEvent evt) {//GEN-FIRST:event_clearAllLabelMouseClicked
-        jList1.clearSelection();
-        jList2.clearSelection();
+        lstImageSets.clearSelection();
+        // jList2.clearSelection();
     }//GEN-LAST:event_clearAllLabelMouseClicked
 
     private void selectAllLabelMouseClicked(MouseEvent evt) {//GEN-FIRST:event_selectAllLabelMouseClicked
-        jList1.addSelectionInterval(0, jList1.getModel().getSize() - 1);
-        jList2.addSelectionInterval(0, jList2.getModel().getSize() - 1);
+        lstImageSets.addSelectionInterval(0, lstImageSets.getModel().getSize() - 1);
     }//GEN-LAST:event_selectAllLabelMouseClicked
 
     private void useSelectedButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useSelectedButtonActionPerformed
         imageSets.clear();
 
-        for (ImageSetChooserPanel obj : jList1.getSelectedValuesList()) {
-            if (obj != null) {
-                imageSets.add(obj.getImageSetName());
-            }
-        }
-
-        for (ImageSetChooserPanel obj : jList2.getSelectedValuesList()) {
+        for (ImageSetChooserPanel obj : lstImageSets.getSelectedValuesList()) {
             if (obj != null) {
                 imageSets.add(obj.getImageSetName());
             }
@@ -471,12 +442,11 @@ public class ImageSetChooser extends JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel clearAllLabel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList<ImageSetChooserPanel> jList1;
-    private javax.swing.JList<ImageSetChooserPanel> jList2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<ImageSetChooserPanel> lstImageSets;
     private javax.swing.JPanel pnlFooter;
     private javax.swing.JPanel pnlLabels;
-    private javax.swing.JPanel pnlLists;
+    private javax.swing.JPanel pnlList;
     private javax.swing.JLabel selectAllLabel;
     private javax.swing.JLabel slashLabel;
     private javax.swing.JButton useAllButton;

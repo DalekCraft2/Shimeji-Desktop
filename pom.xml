@@ -53,13 +53,6 @@
 
     <dependencies>
         <dependency>
-            <!-- AbsoluteLayout -->
-            <groupId>org.netbeans.external</groupId>
-            <artifactId>AbsoluteLayout</artifactId>
-            <version>RELEASE280</version>
-        </dependency>
-
-        <dependency>
             <!-- Java Native Access Platform -->
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
