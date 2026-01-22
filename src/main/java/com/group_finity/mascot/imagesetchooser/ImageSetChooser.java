@@ -361,7 +361,6 @@ public class ImageSetChooser extends JDialog {
 
     private void clearAllLabelMouseClicked(MouseEvent evt) {//GEN-FIRST:event_clearAllLabelMouseClicked
         lstImageSets.clearSelection();
-        // jList2.clearSelection();
     }//GEN-LAST:event_clearAllLabelMouseClicked
 
     private void selectAllLabelMouseClicked(MouseEvent evt) {//GEN-FIRST:event_selectAllLabelMouseClicked
