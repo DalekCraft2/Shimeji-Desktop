@@ -725,30 +725,24 @@ public class Main {
         btnChooseShimeji.addActionListener(e -> {
             if (useSystemTray)
                 form.dispose();
-            if (!manager.isPaused()) {
-                // Needed to stop the guys from potentially throwing away the image set chooser window
-                manager.togglePauseAll();
-            }
+            // Needed to stop the guys from potentially throwing away the image set chooser window
+            manager.setEnabled(false);
 
             ImageSetChooser chooser = new ImageSetChooser(frame, true);
             chooser.setIconImage(getIcon());
             Collection<String> result = chooser.display();
 
-            if (manager.isPaused()) {
-                // Unpause them before setting the active image sets to be sure they actually get unpaused
-                manager.togglePauseAll();
-            }
             setActiveImageSets(result);
+
+            manager.setEnabled(true);
         });
 
         final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
         btnSettings.addActionListener(e -> {
             if (useSystemTray)
                 form.dispose();
-            if (!manager.isPaused()) {
-                // Needed to stop the guys from potentially throwing away the settings window
-                manager.togglePauseAll();
-            }
+            // Needed to stop the guys from potentially throwing away the settings window
+            manager.setEnabled(false);
 
             SettingsWindow dialog = new SettingsWindow(frame, true);
             dialog.setIconImage(getIcon());
@@ -780,14 +774,12 @@ public class Main {
                 }
 
                 manager.setExitOnLastRemoved(isExit);
-            } else {
-                if (manager.isPaused()) {
-                    manager.togglePauseAll();
-                }
             }
             if (dialog.getInteractiveWindowReloadRequired()) {
                 NativeFactory.getInstance().getEnvironment().refreshCache();
             }
+
+            manager.setEnabled(true);
         });
 
         final JButton btnLanguage = new JButton(languageBundle.getString("Language"));

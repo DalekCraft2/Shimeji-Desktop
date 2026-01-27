@@ -56,6 +56,11 @@ public class Manager {
     private boolean exitOnLastRemoved = true;
 
     /**
+     * Whether this {@code Manager} is enabled. If set to {@code false}, {@link #tick()} will not be called.
+     */
+    private boolean enabled = true;
+
+    /**
      * Thread that loops {@link #tick()}.
      */
     private Thread thread;
@@ -115,13 +120,19 @@ public class Manager {
                         } else {
                             prev += TICK_INTERVAL;
                         }
-                        // Move the mascots.
-                        tick();
+                        if (enabled) {
+                            try {
+                                // Move the mascots.
+                                tick();
+                            } catch (RuntimeException e) {
+                                log.log(Level.SEVERE, "Exception in Ticker thread", e);
+                            }
+                        }
                         continue;
                     }
                     Thread.sleep(1, 0);
                 }
-            } catch (final InterruptedException ignored) {
+            } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }, "Ticker");
@@ -360,6 +371,14 @@ public class Manager {
         synchronized (mascots) {
             return mascots.stream().allMatch(Mascot::isPaused);
         }
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**
