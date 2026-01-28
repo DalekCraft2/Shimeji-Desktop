@@ -31,18 +31,18 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 class WindowsEnvironment extends Environment {
-    private static final HashMap<HWND, Boolean> ieCache = new LinkedHashMap<>();
+    private final HashMap<HWND, Boolean> ieCache = new LinkedHashMap<>();
 
-    public static Area workArea = new Area();
+    private final Area workArea = new Area();
 
-    public static Area activeIeDpiUnaware = new Area();
-    public static Area activeIe = new Area();
+    private final Area activeIeDpiUnaware = new Area();
+    private final Area activeIe = new Area();
 
-    private static HWND activeIeObject = null;
+    private HWND activeIeObject = null;
 
-    private static String[] windowTitles = null;
+    private String[] windowTitles = null;
 
-    private static String[] windowTitlesBlacklist = null;
+    private String[] windowTitlesBlacklist = null;
 
     private enum IeStatus {
         /** The IE is valid. */
@@ -55,9 +55,26 @@ class WindowsEnvironment extends Environment {
         OUT_OF_BOUNDS
     }
 
-    private static final Logger log = Logger.getLogger(WindowsEnvironment.class.getName());
+    @Override
+    public void tick() {
+        super.tick();
+        workArea.set(getWorkAreaRect(true));
+        final Rectangle ieRectDpiUnaware = getIERect(findActiveIE(), false);
+        // Calculate the DPI-aware rectangle here to avoid calling getIERect() a second time
+        final Rectangle ieRect = new Rectangle(ieRectDpiUnaware);
+        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+        if (dpiScaleInverse != 1) {
+            ieRect.x = (int) Math.round(ieRect.x * dpiScaleInverse);
+            ieRect.y = (int) Math.round(ieRect.y * dpiScaleInverse);
+            ieRect.width = (int) Math.round(ieRect.width * dpiScaleInverse);
+            ieRect.height = (int) Math.round(ieRect.height * dpiScaleInverse);
+        }
+        activeIe.setVisible(ieRect.intersects(getScreenRect()));
+        activeIe.set(ieRect);
+        activeIeDpiUnaware.set(ieRectDpiUnaware);
+    }
 
-    private static boolean isIE(final HWND hWnd) {
+    private boolean isIE(final HWND hWnd) {
         final Boolean cachedValue = ieCache.get(hWnd);
         if (cachedValue != null) {
             return cachedValue;
@@ -115,7 +132,7 @@ class WindowsEnvironment extends Environment {
         }
     }
 
-    private static IeStatus getIeStatus(HWND hWnd) {
+    private IeStatus getIeStatus(HWND hWnd) {
         if (User32.INSTANCE.IsWindowVisible(hWnd)) {
             // DWMWA_CLOAKED is not supported on Windows 7 and earlier, so check that we are on at least Windows 8
             if (VersionHelpers.IsWindows8OrGreater()) {
@@ -148,7 +165,7 @@ class WindowsEnvironment extends Environment {
         return IeStatus.IGNORED;
     }
 
-    private static HWND findActiveIE() {
+    private HWND findActiveIE() {
         activeIeObject = null;
 
         User32.INSTANCE.EnumWindows((hWnd, data) -> {
@@ -203,9 +220,37 @@ class WindowsEnvironment extends Environment {
         return rect;
     }
 
-    private static boolean moveIE(final HWND ie, final Point point, final Area area) {
-        if (ie == null) {
-            return false;
+    /**
+     * Gets the work area. This area is the display area excluding the taskbar.
+     *
+     * @return work area
+     */
+    private static Rectangle getWorkAreaRect(boolean dpiAware) {
+        if (dpiAware) {
+            GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                    .getDefaultScreenDevice().getDefaultConfiguration();
+            Rectangle rect = config.getBounds();
+            Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
+            rect.x += insets.left;
+            rect.y += insets.top;
+            rect.width -= insets.right;
+            rect.height -= insets.bottom;
+            return rect;
+        } else {
+            // Get the primary display monitor handle
+            final HMONITOR monitor = User32.INSTANCE.MonitorFromPoint(new POINT.ByValue(0, 0), User32.MONITOR_DEFAULTTOPRIMARY);
+
+            final MONITORINFO monitorInfo = new MONITORINFO();
+            User32.INSTANCE.GetMonitorInfo(monitor, monitorInfo); // TODO: Look into this method for future patches
+
+            return monitorInfo.rcWork.toRectangle();
+        }
+    }
+
+    @Override
+    public void moveActiveIE(final Point point) {
+        if (activeIeObject == null) {
+            return;
         }
 
         double dpiScale = Toolkit.getDefaultToolkit().getScreenResolution() / 96.0;
@@ -214,13 +259,12 @@ class WindowsEnvironment extends Environment {
             point.y = (int) Math.round(point.y * dpiScale);
         }
 
-        User32.INSTANCE.MoveWindow(ie, point.x, point.y, area.getWidth(),
-                area.getHeight(), true);
-
-        return true;
+        User32.INSTANCE.MoveWindow(activeIeObject, point.x, point.y, activeIeDpiUnaware.getWidth(),
+                activeIeDpiUnaware.getHeight(), true);
     }
 
-    private static void restoreAllIEs() {
+    @Override
+    public void restoreIE() {
         User32.INSTANCE.EnumWindows(new WNDENUMPROC() {
             int offset = 25;
             boolean firstCallback = true;
@@ -270,39 +314,6 @@ class WindowsEnvironment extends Environment {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        workArea.set(getWorkAreaRect(true));
-        final Rectangle ieRectDpiUnaware = getIERect(findActiveIE(), false);
-        // Calculate the DPI-aware rectangle here to avoid calling getIERect() a second time
-        final Rectangle ieRect = new Rectangle(ieRectDpiUnaware);
-        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-        if (dpiScaleInverse != 1) {
-            ieRect.x = (int) Math.round(ieRect.x * dpiScaleInverse);
-            ieRect.y = (int) Math.round(ieRect.y * dpiScaleInverse);
-            ieRect.width = (int) Math.round(ieRect.width * dpiScaleInverse);
-            ieRect.height = (int) Math.round(ieRect.height * dpiScaleInverse);
-        }
-        activeIe.setVisible(ieRect.intersects(getScreenRect()));
-        activeIe.set(ieRect);
-        activeIeDpiUnaware.set(ieRectDpiUnaware);
-    }
-
-    @Override
-    public void dispose() {
-    }
-
-    @Override
-    public void moveActiveIE(final Point point) {
-        moveIE(activeIeObject, point, activeIeDpiUnaware);
-    }
-
-    @Override
-    public void restoreIE() {
-        restoreAllIEs();
-    }
-
-    @Override
     public Area getWorkArea() {
         return workArea;
     }
@@ -322,37 +333,14 @@ class WindowsEnvironment extends Environment {
         return activeIeObject == null ? 0 : activeIeObject.hashCode();
     }
 
-    /**
-     * Gets the work area. This area is the display area excluding the taskbar.
-     *
-     * @return work area
-     */
-    private static Rectangle getWorkAreaRect(boolean dpiAware) {
-        if (dpiAware) {
-            GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                    .getDefaultScreenDevice().getDefaultConfiguration();
-            Rectangle rect = config.getBounds();
-            Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
-            rect.x += insets.left;
-            rect.y += insets.top;
-            rect.width -= insets.right;
-            rect.height -= insets.bottom;
-            return rect;
-        } else {
-            // Get the primary display monitor handle
-            final HMONITOR monitor = User32.INSTANCE.MonitorFromPoint(new POINT.ByValue(0, 0), User32.MONITOR_DEFAULTTOPRIMARY);
-
-            final MONITORINFO monitorInfo = new MONITORINFO();
-            User32.INSTANCE.GetMonitorInfo(monitor, monitorInfo); // TODO: Look into this method for future patches
-
-            return monitorInfo.rcWork.toRectangle();
-        }
-    }
-
     @Override
     public void refreshCache() {
         ieCache.clear(); // will be repopulated next isIE call
         windowTitles = null;
         windowTitlesBlacklist = null;
+    }
+
+    @Override
+    public void dispose() {
     }
 }
