@@ -18,7 +18,7 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private BufferedImage image;
 
-    public GenericTranslucentWindow() {
+    GenericTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 
         JPanel panel = new JPanel() {

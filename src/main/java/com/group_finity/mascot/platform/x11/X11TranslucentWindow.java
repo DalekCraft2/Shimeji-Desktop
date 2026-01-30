@@ -24,7 +24,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private BufferedImage image;
 
-    public X11TranslucentWindow() {
+    X11TranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 
         setBackground(new Color(0, 0, 0, 0));

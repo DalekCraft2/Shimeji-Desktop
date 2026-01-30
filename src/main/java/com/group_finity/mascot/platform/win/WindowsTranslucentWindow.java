@@ -20,7 +20,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private BufferedImage image;
 
-    public WindowsTranslucentWindow() {
+    WindowsTranslucentWindow() {
         super();
 
         setBackground(new Color(0, 0, 0, 0));

@@ -42,11 +42,11 @@ public abstract class Environment {
         }
     }, "ScreenRectUpdater");
 
-    public ComplexArea complexScreen = new ComplexArea();
+    private final Area screen = new Area();
 
-    public Area screen = new Area();
+    private final ComplexArea complexScreen = new ComplexArea();
 
-    public Location cursor = new Location();
+    private final Location cursor = new Location();
 
     private static void updateScreenRect() {
         Rectangle virtualBounds = new Rectangle();

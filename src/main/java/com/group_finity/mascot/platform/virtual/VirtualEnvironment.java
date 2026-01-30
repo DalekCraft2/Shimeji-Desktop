@@ -149,7 +149,7 @@ class VirtualEnvironment extends Environment {
         display.dispose();
     }
 
-    public void addShimeji(final VirtualTranslucentPanel shimeji) {
+    void addShimeji(final VirtualTranslucentPanel shimeji) {
         SwingUtilities.invokeLater(() -> {
             if (display.getContentPane().getSize().width > 0 && display.getContentPane().getSize().height > 0) {
                 display.setPreferredSize(display.getSize());

@@ -11,7 +11,7 @@ import java.awt.event.ComponentListener;
  * @author Kilkakon
  * @since 1.0.21
  */
-public class VirtualContentPanel extends JPanel {
+class VirtualContentPanel extends JPanel {
     private Image resizedImage;
     private String mode;
 
@@ -20,7 +20,7 @@ public class VirtualContentPanel extends JPanel {
     private static final String STRETCH = "stretch";
     private static final String FILL = "fill";
 
-    public VirtualContentPanel(Dimension preferredSize, Color background, final Image image, final String mode) {
+    VirtualContentPanel(Dimension preferredSize, Color background, final Image image, final String mode) {
         setLayout(null);
         setPreferredSize(preferredSize);
         setBackground(background);

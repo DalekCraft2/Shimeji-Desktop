@@ -34,7 +34,7 @@ class X11Environment extends Environment {
     /**
      * Window for jump action targeting.
      */
-    public Area activeIe = new Area();
+    private final Area activeIe = new Area();
 
     private Window activeIeObject = null;
 
@@ -43,7 +43,7 @@ class X11Environment extends Environment {
      * {@link Environment} and {@link ComplexArea} handle detection
      * and dual monitor behavior.
      */
-    public static final Area workArea = new Area();
+    private final Area workArea = new Area();
 
     private String[] windowTitles = null;
     private String[] windowTitlesBlacklist = null;
