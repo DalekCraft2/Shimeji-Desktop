@@ -125,7 +125,7 @@ public class Manager {
                                 // Move the mascots.
                                 tick();
                             } catch (RuntimeException e) {
-                                log.log(Level.SEVERE, "Exception in Ticker thread", e);
+                                log.log(Level.SEVERE, "An error occurred while running the tick method.", e);
                             }
                         }
                         continue;
