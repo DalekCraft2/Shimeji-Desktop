@@ -96,7 +96,7 @@ class X11Environment extends Environment {
 
         workArea.set(getWorkAreaRect());
         final Rectangle ieRect = getWindowBounds(findActiveIE());
-        activeIe.setVisible(ieRect.intersects(getScreenRect()));
+        activeIe.setVisible(ieRect.intersects(getScreen().toRectangle()));
         activeIe.set(ieRect);
     }
 
@@ -206,7 +206,7 @@ class X11Environment extends Environment {
                  *  We should instead figure out how close to the edge of the screen the windows are allowed to be,
                  *  and then check for windows that are that close to the edge.
                  */
-                if (ieRect.intersects(getScreenRect())) {
+                if (ieRect.intersects(getScreen().toRectangle())) {
                     return IeStatus.VALID;
                 } else {
                     return IeStatus.OUT_OF_BOUNDS;

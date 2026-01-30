@@ -69,7 +69,7 @@ class WindowsEnvironment extends Environment {
             ieRect.width = (int) Math.round(ieRect.width * dpiScaleInverse);
             ieRect.height = (int) Math.round(ieRect.height * dpiScaleInverse);
         }
-        activeIe.setVisible(ieRect.intersects(getScreenRect()));
+        activeIe.setVisible(ieRect.intersects(getScreen().toRectangle()));
         activeIe.set(ieRect);
         activeIeDpiUnaware.set(ieRectDpiUnaware);
     }
@@ -153,7 +153,7 @@ class WindowsEnvironment extends Environment {
             if (isIE(hWnd) && !User32Extra.INSTANCE.IsIconic(hWnd)) {
                 // IE found
                 Rectangle ieRect = getIERect(hWnd, true);
-                if (ieRect.intersects(getScreenRect())) {
+                if (ieRect.intersects(getScreen().toRectangle())) {
                     return IeStatus.VALID;
                 } else {
                     return IeStatus.OUT_OF_BOUNDS;

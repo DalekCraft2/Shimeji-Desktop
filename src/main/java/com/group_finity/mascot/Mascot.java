@@ -67,7 +67,7 @@ public class Mascot {
     /**
      * The window that displays the {@code Mascot}.
      */
-    private final TranslucentWindow window = NativeFactory.getInstance().newTranslucentWindow();
+    private TranslucentWindow window;
 
     /**
      * The {@link Manager} that manages this {@code Mascot}.
@@ -144,6 +144,13 @@ public class Mascot {
      */
     private Point cursor = null;
 
+    /**
+     * Represents the last valid bounds this {@code Mascot} had.
+     * Set by {@link Mascot#getBounds()} whenever the current image is not {@code null}.
+     * When the current image is {@code null}, this value is returned by {@link Mascot#getBounds()} instead.
+     */
+    private Rectangle prevBounds = new Rectangle();
+
     private VariableMap variables = null;
 
     public Mascot(final String imageSet) {
@@ -152,102 +159,119 @@ public class Mascot {
 
         log.log(Level.INFO, "Created mascot \"{0}\" with image set \"{1}\"", new Object[]{this, imageSet});
 
-        // Always show on top
-        window.setAlwaysOnTop(true);
+        Runnable runnable = () -> {
+            window = NativeFactory.getInstance().newTranslucentWindow();
 
-        // Register the mouse handler
-        window.asComponent().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(final MouseEvent e) {
-                Mascot.this.mousePressed(e);
-            }
+            // Always show on top
+            window.setAlwaysOnTop(true);
 
-            @Override
-            public void mouseReleased(final MouseEvent e) {
-                Mascot.this.mouseReleased(e);
-            }
-        });
-        window.asComponent().addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseMoved(final MouseEvent e) {
-                if (paused) {
-                    refreshCursor(false);
-                } else {
-                    if (isHotspotClicked()) {
-                        setCursorPosition(e.getPoint());
-                    } else {
-                        refreshCursor(e.getPoint());
-                    }
+            // Register the mouse handler
+            window.asComponent().addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(final MouseEvent e) {
+                    Mascot.this.mousePressed(e);
                 }
-            }
 
-            @Override
-            public void mouseDragged(final MouseEvent e) {
-                if (paused) {
-                    refreshCursor(false);
-                } else {
-                    if (isHotspotClicked()) {
-                        setCursorPosition(e.getPoint());
-                    } else {
-                        refreshCursor(e.getPoint());
-                    }
+                @Override
+                public void mouseReleased(final MouseEvent e) {
+                    Mascot.this.mouseReleased(e);
                 }
-            }
-        });
-
-        // For drawing the outlines of hotspots and the mascot's bounds, for debugging purposes
-        JComponent debugComp = new JComponent() {
-            @Override
-            public void paintComponent(Graphics g) {
-                // TODO: Consider a more efficient way of doing this than setting the enabled state on every repaint.
-                setEnabled(Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("DrawShimejiBounds", "false")));
-                if (isEnabled()) {
-                    super.paintComponent(g);
-
-                    // Draw hotspots
-                    g.setColor(Color.BLUE);
-                    Dimension imageSize = getImage().getSize();
-                    for (Hotspot hotspot : getHotspots()) {
-                        Shape shape = hotspot.getShape();
-                        if (shape instanceof Rectangle) {
-                            Rectangle rectangle = (Rectangle) shape;
-                            int x = lookRight ? imageSize.width - rectangle.x - rectangle.width : rectangle.x;
-                            g.drawRect(x, rectangle.y, rectangle.width, rectangle.height);
-                        } else if (shape instanceof Ellipse2D) {
-                            Ellipse2D ellipse = (Ellipse2D) shape;
-                            double x = lookRight ? imageSize.width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
-                            g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
+            });
+            window.asComponent().addMouseMotionListener(new MouseMotionListener() {
+                @Override
+                public void mouseMoved(final MouseEvent e) {
+                    if (paused) {
+                        refreshCursor(false);
+                    } else {
+                        if (isHotspotClicked()) {
+                            setCursorPosition(e.getPoint());
+                        } else {
+                            refreshCursor(e.getPoint());
                         }
                     }
-
-                    // Draw bounds
-                    g.setColor(Color.RED);
-                    Rectangle bounds = getBounds();
-                    g.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
-
-                    // Draw image anchor
-                    g.setColor(Color.GREEN);
-                    Point imageAnchor = getImage().getCenter();
-                    // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
-                    g.drawOval(imageAnchor.x - 5, imageAnchor.y - 5, 10, 10);
-                    g.drawLine(imageAnchor.x - 10, imageAnchor.y, imageAnchor.x + 10, imageAnchor.y);
-                    g.drawLine(imageAnchor.x, imageAnchor.y - 10, imageAnchor.x, imageAnchor.y + 10);
-                    g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
-                    g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
                 }
-            }
+
+                @Override
+                public void mouseDragged(final MouseEvent e) {
+                    if (paused) {
+                        refreshCursor(false);
+                    } else {
+                        if (isHotspotClicked()) {
+                            setCursorPosition(e.getPoint());
+                        } else {
+                            refreshCursor(e.getPoint());
+                        }
+                    }
+                }
+            });
+
+            // For drawing the outlines of hotspots and the mascot's bounds, for debugging purposes
+            JComponent debugComp = new JComponent() {
+                @Override
+                public void paintComponent(Graphics g) {
+                    // TODO: Consider a more efficient way of doing this than setting the enabled state on every repaint.
+                    setEnabled(Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("DrawShimejiBounds", "false")));
+                    if (isEnabled()) {
+                        super.paintComponent(g);
+
+                        MascotImage image = getImage();
+                        if (image != null) {
+                            // Draw hotspots
+                            g.setColor(Color.BLUE);
+                            Dimension imageSize = image.getSize();
+                            synchronized (getHotspots()) {
+                                for (Hotspot hotspot : getHotspots()) {
+                                    Shape shape = hotspot.getShape();
+                                    if (shape instanceof Rectangle) {
+                                        Rectangle rectangle = (Rectangle) shape;
+                                        int x = lookRight ? imageSize.width - rectangle.x - rectangle.width : rectangle.x;
+                                        g.drawRect(x, rectangle.y, rectangle.width, rectangle.height);
+                                    } else if (shape instanceof Ellipse2D) {
+                                        Ellipse2D ellipse = (Ellipse2D) shape;
+                                        double x = lookRight ? imageSize.width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
+                                        g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
+                                    }
+                                }
+                            }
+                        }
+
+                        // Draw bounds
+                        g.setColor(Color.RED);
+                        Rectangle bounds = getBounds();
+                        g.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
+
+                        if (image != null) {
+                            // Draw image anchor
+                            g.setColor(Color.GREEN);
+                            Point imageAnchor = image.getCenter();
+                            // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
+                            g.drawOval(imageAnchor.x - 5, imageAnchor.y - 5, 10, 10);
+                            g.drawLine(imageAnchor.x - 10, imageAnchor.y, imageAnchor.x + 10, imageAnchor.y);
+                            g.drawLine(imageAnchor.x, imageAnchor.y - 10, imageAnchor.x, imageAnchor.y + 10);
+                            g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
+                            g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
+                        }
+                    }
+                }
+            };
+            debugComp.setBackground(new Color(0, 0, 0, 0));
+            debugComp.setOpaque(false);
+            debugComp.setPreferredSize(window.asComponent().getPreferredSize());
+            window.asComponent().addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    super.componentResized(e);
+                    debugComp.setPreferredSize(e.getComponent().getPreferredSize());
+                }
+            });
+            ((Container) window.asComponent()).add(debugComp);
         };
-        debugComp.setBackground(new Color(0, 0, 0, 0));
-        debugComp.setOpaque(false);
-        debugComp.setPreferredSize(window.asComponent().getPreferredSize());
-        window.asComponent().addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                super.componentResized(e);
-                debugComp.setPreferredSize(e.getComponent().getPreferredSize());
-            }
-        });
-        ((Container) window.asComponent()).add(debugComp);
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            SwingUtilities.invokeLater(runnable);
+        }
     }
 
     @Override
@@ -259,7 +283,7 @@ public class Mascot {
         // Check for popup triggers in both mousePressed and mouseReleased
         // because it works differently on different systems
         if (event.isPopupTrigger()) {
-            SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
+            showPopup(event.getX(), event.getY());
         } else {
             // Switch to drag animation when mouse is pressed
             if (!paused && behavior != null) {
@@ -278,7 +302,7 @@ public class Mascot {
         // Check for popup triggers in both mousePressed and mouseReleased
         // because it works differently on different systems
         if (event.isPopupTrigger()) {
-            SwingUtilities.invokeLater(() -> showPopup(event.getX(), event.getY()));
+            showPopup(event.getX(), event.getY());
         } else {
             if (!paused && behavior != null) {
                 try {
@@ -440,28 +464,30 @@ public class Mascot {
                 time++;
             }
 
-            if (debugWindow != null) {
-                // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
-                // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
-                // debugWindow.setTitle(toString());
+            SwingUtilities.invokeLater(() -> {
+                if (debugWindow != null) {
+                    // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
+                    // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
+                    // debugWindow.setTitle(toString());
 
-                debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
-                debugWindow.setShimejiX(anchor.x);
-                debugWindow.setShimejiY(anchor.y);
+                    debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
+                    debugWindow.setShimejiX(anchor.x);
+                    debugWindow.setShimejiY(anchor.y);
 
-                Area activeWindow = environment.getActiveIE();
-                debugWindow.setWindowTitle(environment.getActiveIETitle());
-                debugWindow.setWindowX(activeWindow.getLeft());
-                debugWindow.setWindowY(activeWindow.getTop());
-                debugWindow.setWindowWidth(activeWindow.getWidth());
-                debugWindow.setWindowHeight(activeWindow.getHeight());
+                    Area activeWindow = environment.getActiveIE();
+                    debugWindow.setWindowTitle(environment.getActiveIETitle());
+                    debugWindow.setWindowX(activeWindow.getLeft());
+                    debugWindow.setWindowY(activeWindow.getTop());
+                    debugWindow.setWindowWidth(activeWindow.getWidth());
+                    debugWindow.setWindowHeight(activeWindow.getHeight());
 
-                Area workArea = environment.getWorkArea();
-                debugWindow.setEnvironmentX(workArea.getLeft());
-                debugWindow.setEnvironmentY(workArea.getTop());
-                debugWindow.setEnvironmentWidth(workArea.getWidth());
-                debugWindow.setEnvironmentHeight(workArea.getHeight());
-            }
+                    Area workArea = environment.getWorkArea();
+                    debugWindow.setEnvironmentX(workArea.getLeft());
+                    debugWindow.setEnvironmentY(workArea.getTop());
+                    debugWindow.setEnvironmentWidth(workArea.getWidth());
+                    debugWindow.setEnvironmentHeight(workArea.getHeight());
+                }
+            });
         }
     }
 
@@ -477,13 +503,11 @@ public class Mascot {
 
         // play sound if requested
         if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
-            synchronized (log) {
-                Clip clip = Sounds.getSound(sound);
-                if (!clip.isRunning()) {
-                    clip.stop();
-                    clip.setMicrosecondPosition(0);
-                    clip.start();
-                }
+            Clip clip = Sounds.getSound(sound);
+            if (!clip.isRunning()) {
+                clip.stop();
+                clip.setMicrosecondPosition(0);
+                clip.start();
             }
         }
     }
@@ -491,13 +515,15 @@ public class Mascot {
     public synchronized void dispose() {
         log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
 
-        if (debugWindow != null) {
-            debugWindow.setVisible(false);
-            debugWindow = null;
-        }
+        SwingUtilities.invokeLater(() -> {
+            if (debugWindow != null) {
+                debugWindow.dispose();
+                debugWindow = null;
+            }
+            window.dispose();
+        });
 
         animating = false;
-        window.dispose();
         affordances.clear();
         if (manager != null) {
             manager.remove(this);
@@ -513,7 +539,7 @@ public class Mascot {
     }
 
     private void refreshCursor(Boolean useHand) {
-        window.asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+        SwingUtilities.invokeLater(() -> window.asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR)));
     }
 
     public Manager getManager() {
@@ -547,15 +573,15 @@ public class Mascot {
 
         this.image = image;
 
-        final Component windowComponent = window.asComponent();
-        if (image == null) {
-            windowComponent.setVisible(false);
-            return;
-        }
+        SwingUtilities.invokeLater(() -> {
+            if (image != null) {
+                window.setImage(image.getImage());
+            }
 
-        window.setImage(image.getImage());
-        windowComponent.setVisible(true);
-        window.updateImage();
+            final Component windowComponent = window.asComponent();
+            windowComponent.setVisible(image != null);
+            window.updateImage();
+        });
     }
 
     public boolean isLookRight() {
@@ -572,10 +598,11 @@ public class Mascot {
             final int top = anchor.y - image.getCenter().y;
             final int left = anchor.x - image.getCenter().x;
 
-            return new Rectangle(left, top, image.getSize().width, image.getSize().height);
+            prevBounds = new Rectangle(left, top, image.getSize().width, image.getSize().height);
+            return prevBounds;
         } else {
-            // as we have no image let's return what we were last frame
-            return window.asComponent().getBounds();
+            // As we have no image, let's return what we were last frame
+            return prevBounds;
         }
     }
 

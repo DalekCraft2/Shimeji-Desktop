@@ -32,6 +32,8 @@ public abstract class Environment {
 
     protected static Map<String, Rectangle> screenRects = new HashMap<>();
 
+    protected static final Object screenRectLock = new Object();
+
     private static final Thread thread = new Thread(() -> {
         try {
             while (true) {
@@ -62,18 +64,10 @@ public abstract class Environment {
             virtualBounds = virtualBounds.union(bounds);
         }
 
-        Environment.screenRects = screenRects;
-
-        screenRect = virtualBounds;
-    }
-
-    /**
-     * Gets the area of the screen. This area includes everything from the top left to the bottom right of the display.
-     *
-     * @return screen area
-     */
-    protected static Rectangle getScreenRect() {
-        return screenRect;
+        synchronized (screenRectLock) {
+            Environment.screenRects = screenRects;
+            screenRect = virtualBounds;
+        }
     }
 
     /**
@@ -95,19 +89,24 @@ public abstract class Environment {
             thread.setPriority(Thread.MIN_PRIORITY);
             thread.start();
         }
-
-        tick();
     }
 
     /**
      * Advances this environment by one frame. Called every 40 milliseconds by {@link Manager}.
      */
     public void tick() {
-        screen.set(screenRect);
-        complexScreen.set(screenRects);
+        synchronized (screenRectLock) {
+            screen.set(screenRect);
+            complexScreen.set(screenRects);
+        }
         cursor.set(getCursorPos());
     }
 
+    /**
+     * Gets the area of the screen. This area includes everything from the top left to the bottom right of the display.
+     *
+     * @return screen area
+     */
     public Area getScreen() {
         return screen;
     }

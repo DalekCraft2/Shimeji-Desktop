@@ -44,6 +44,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -106,6 +108,8 @@ public class Main {
     private static JFrame frame;
     private Window form;
 
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     public static Main getInstance() {
         return instance;
     }
@@ -133,12 +137,7 @@ public class Main {
 
     public static void main(final String[] args) {
         // Load theme before any Swing components are created
-        try {
-            SwingUtilities.invokeAndWait(Main::updateLookAndFeel);
-        } catch (InterruptedException | InvocationTargetException e) {
-            // throw new RuntimeException(e);
-            log.log(Level.SEVERE, "Failed to load look and feel", e);
-        }
+        SwingUtilities.invokeLater(Main::updateLookAndFeel);
         OsThemeDetector.getDetector().registerListener(ignored -> SwingUtilities.invokeLater(Main::updateLookAndFeel));
 
         try {
@@ -153,11 +152,13 @@ public class Main {
                     + "Select fewer image sets or move some to the\n"
                     + "img/unused folder and try again.");
             System.exit(0);
+        } catch (InterruptedException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void run() {
-        frame = new JFrame();
+    public void run() throws InterruptedException, InvocationTargetException {
+        SwingUtilities.invokeLater(() -> frame = new JFrame());
 
         // load properties
         if (Files.isRegularFile(SETTINGS_FILE)) {
@@ -190,10 +191,12 @@ public class Main {
         }
         do {
             if (imageSets.isEmpty()) {
-                imageSets = new ImageSetChooser(frame, true).display();
-                if (imageSets == null) {
-                    exit();
-                }
+                SwingUtilities.invokeAndWait(() -> {
+                    imageSets = new ImageSetChooser(frame, true).display();
+                    if (imageSets == null) {
+                        exit();
+                    }
+                });
             }
 
             // Load mascot configurations
@@ -209,7 +212,7 @@ public class Main {
         while (imageSets.isEmpty());
 
         // Create the tray icon
-        createTrayIcon();
+        SwingUtilities.invokeLater(this::createTrayIcon);
 
         // Create mascots
         for (String imageSet : imageSets) {
@@ -217,9 +220,11 @@ public class Main {
             if (configurations.get(imageSet).containsInformationKey("SplashImage") &&
                     (Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false")) ||
                             !informationAlreadySeen.contains(imageSet))) {
-                InformationWindow info = new InformationWindow();
-                info.init(imageSet, configurations.get(imageSet));
-                info.display();
+                SwingUtilities.invokeLater(() -> {
+                    InformationWindow info = new InformationWindow();
+                    info.init(imageSet, configurations.get(imageSet));
+                    info.display();
+                });
                 setMascotInformationDismissed(imageSet);
                 updateConfigFile();
             }
@@ -732,7 +737,11 @@ public class Main {
             chooser.setIconImage(getIcon());
             Collection<String> result = chooser.display();
 
-            setActiveImageSets(result);
+            /*
+             * We're on the Event Dispatch Thread here,
+             * so do this on a separate thread to avoid making the UI unresponsive.
+             */
+            executorService.submit(() -> setActiveImageSets(result));
 
             manager.setEnabled(true);
         });
@@ -749,35 +758,41 @@ public class Main {
             dialog.init();
             dialog.display();
 
-            if (dialog.getEnvironmentReloadRequired()) {
-                NativeFactory.getInstance().getEnvironment().dispose();
-                NativeFactory.resetInstance();
-            }
-            if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
-                // need to reload the shimeji as the images have rescaled
-                boolean isExit = manager.isExitOnLastRemoved();
-                manager.setExitOnLastRemoved(false);
-                manager.disposeAll();
-
-                // Wipe all loaded data
-                ImagePairs.clear();
-                configurations.clear();
-
-                // Load settings
-                for (String imageSet : imageSets) {
-                    loadConfiguration(imageSet);
+            /*
+             * We're on the Event Dispatch Thread here,
+             * so do this on a separate thread to avoid making the UI unresponsive.
+             */
+            executorService.submit(() -> {
+                if (dialog.getEnvironmentReloadRequired()) {
+                    NativeFactory.getInstance().getEnvironment().dispose();
+                    NativeFactory.resetInstance();
                 }
+                if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
+                    // need to reload the shimeji as the images have rescaled
+                    boolean isExit = manager.isExitOnLastRemoved();
+                    manager.setExitOnLastRemoved(false);
+                    manager.disposeAll();
 
-                // Create the first mascot
-                for (String imageSet : imageSets) {
-                    createMascot(imageSet);
+                    // Wipe all loaded data
+                    ImagePairs.clear();
+                    configurations.clear();
+
+                    // Load settings
+                    for (String imageSet : imageSets) {
+                        loadConfiguration(imageSet);
+                    }
+
+                    // Create the first mascot
+                    for (String imageSet : imageSets) {
+                        createMascot(imageSet);
+                    }
+
+                    manager.setExitOnLastRemoved(isExit);
                 }
-
-                manager.setExitOnLastRemoved(isExit);
-            }
-            if (dialog.getInteractiveWindowReloadRequired()) {
-                NativeFactory.getInstance().getEnvironment().refreshCache();
-            }
+                if (dialog.getInteractiveWindowReloadRequired()) {
+                    NativeFactory.getInstance().getEnvironment().refreshCache();
+                }
+            });
 
             manager.setEnabled(true);
         });

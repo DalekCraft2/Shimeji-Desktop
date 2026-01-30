@@ -20,9 +20,13 @@ import java.io.IOException;
  * @since 1.0.20
  */
 class VirtualEnvironment extends Environment {
-    private final JFrame display = new JFrame();
+    private JFrame display;
 
     private final Area activeIE = new Area();
+
+    private boolean isInitializing = false;
+
+    private boolean initialized = false;
 
     @Override
     public Area getWorkArea() {
@@ -61,7 +65,15 @@ class VirtualEnvironment extends Environment {
 
     @Override
     public void init() {
-        if (!display.isVisible()) {
+        if (isInitializing || initialized) {
+            return;
+        }
+
+        isInitializing = true;
+
+        Runnable runnable = () -> {
+            display = new JFrame();
+
             display.addWindowListener(new WindowListener() {
                 @Override
                 public void windowOpened(WindowEvent e) {
@@ -115,49 +127,67 @@ class VirtualEnvironment extends Environment {
 
             display.setIconImage(Main.getIcon());
 
-            SwingUtilities.invokeLater(() -> {
-                display.pack();
-                display.setVisible(true);
-                display.toFront();
-            });
+            display.pack();
+            display.setLocationRelativeTo(null);
+            display.setVisible(true);
+            display.toFront();
 
-            activeIE.set(new Rectangle(-500, -500, 0, 0));
-            screenRect.setSize(display.getContentPane().getSize());
+            initialized = true;
+            isInitializing = false;
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            SwingUtilities.invokeLater(runnable);
         }
 
-        tick();
+        activeIE.set(new Rectangle(-500, -500, 0, 0));
     }
 
     @Override
     public void tick() {
-        if (display.isVisible()) {
-            getScreenRect().setSize(display.getContentPane().getSize());
-            getScreen().set(getScreenRect());
+        if (!initialized) {
+            return;
         }
+
+        /*
+         * TODO: Figure out a thread-safe way to access data that's on the Event Dispatch Thread, without risking
+         *  changing it whilst a Mascot is using it.
+         */
+        // SwingUtilities.invokeLater(() -> {
+        Rectangle screenRect = new Rectangle();
+        screenRect.setSize(display.getContentPane().getSize());
+        getScreen().set(screenRect);
 
         PointerInfo info = MouseInfo.getPointerInfo();
         Point point = new Point(0, 0);
-        if (info != null && display.isVisible()) {
+        if (info != null) {
             point = info.getLocation();
             SwingUtilities.convertPointFromScreen(point, display.getContentPane());
         }
         getCursor().set(point);
+        // });
     }
 
     @Override
     public void dispose() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(this::dispose);
+            return;
+        }
         display.dispose();
     }
 
     void addShimeji(final VirtualTranslucentPanel shimeji) {
-        SwingUtilities.invokeLater(() -> {
-            if (display.getContentPane().getSize().width > 0 && display.getContentPane().getSize().height > 0) {
-                display.setPreferredSize(display.getSize());
-                display.getRootPane().setPreferredSize(display.getRootPane().getSize());
-                display.getContentPane().setPreferredSize(display.getContentPane().getSize());
-            }
-            shimeji.setOpaque(false);
-            display.getContentPane().add(shimeji);
-        });
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> addShimeji(shimeji));
+            return;
+        }
+        if (display.getContentPane().getSize().width > 0 && display.getContentPane().getSize().height > 0) {
+            display.setPreferredSize(display.getSize());
+            display.getRootPane().setPreferredSize(display.getRootPane().getSize());
+            display.getContentPane().setPreferredSize(display.getContentPane().getSize());
+        }
+        display.add(shimeji);
     }
 }
