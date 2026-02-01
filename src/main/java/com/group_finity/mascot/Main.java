@@ -46,7 +46,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -446,16 +445,16 @@ public class Main {
 
             // attach menu
             icon.addMouseListener(new MouseListener() {
-                final AtomicBoolean debouncing = new AtomicBoolean(false);
-                final Timer debounceTimer = new Timer(1000, event -> debouncing.set(false));
+                boolean debouncing = false;
+                final Timer debounceTimer = new Timer(1000, event -> debouncing = false);
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (debouncing.get()) {
+                    if (debouncing) {
                         return;
                     }
 
-                    debouncing.set(true);
+                    debouncing = true;
                     debounceTimer.setRepeats(false);
                     debounceTimer.restart();
 
