@@ -496,10 +496,12 @@ public class Mascot {
             return;
         }
 
-        if (image != null) {
-            window.asComponent().setBounds(getBounds()); // Set the bounds of the window to the mascot's bounds
-            window.updateImage(); // Redraw
-        }
+        SwingUtilities.invokeLater(() -> {
+            if (image != null) {
+                window.asComponent().setBounds(getBounds()); // Set the bounds of the window to the mascot's bounds
+                window.updateImage(); // Redraw
+            }
+        });
 
         // play sound if requested
         if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
