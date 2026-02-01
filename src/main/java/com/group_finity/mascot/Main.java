@@ -46,6 +46,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -1295,6 +1296,15 @@ public class Main {
     }
 
     public void exit() {
+        try {
+            executorService.shutdownNow();
+
+            if (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                log.log(Level.WARNING, "The executor service did not terminate in the allotted time.");
+            }
+        } catch (final InterruptedException | SecurityException e) {
+            log.log(Level.SEVERE, "Failed to shutdown the executor service.", e);
+        }
         manager.disposeAll();
         manager.stop();
         System.exit(0);
