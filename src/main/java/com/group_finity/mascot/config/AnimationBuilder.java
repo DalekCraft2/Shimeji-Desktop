@@ -63,8 +63,6 @@ public class AnimationBuilder {
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Hotspot"))) {
             try {
                 hotspots.add(loadHotspot(frameNode));
-            } catch (IOException e) {
-                throw new ConfigurationException(e);
             } catch (RuntimeException e) {
                 log.log(Level.SEVERE, "Failed to load hotspot: {0}", e);
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage") + " " + frameNode.getAttributes().toString(), e);
@@ -146,7 +144,7 @@ public class AnimationBuilder {
         return pose;
     }
 
-    private Hotspot loadHotspot(final Entry frameNode) throws IOException {
+    private Hotspot loadHotspot(final Entry frameNode) {
         final String shapeText = frameNode.getAttribute(schema.getString("Shape"));
         final String originText = frameNode.getAttribute(schema.getString("Origin"));
         final String sizeText = frameNode.getAttribute(schema.getString("Size"));
@@ -167,8 +165,8 @@ public class AnimationBuilder {
         } else if (shapeText.equalsIgnoreCase("Ellipse")) {
             shape = new Ellipse2D.Float(origin.x, origin.y, size.width, size.height);
         } else {
-            log.log(Level.SEVERE, "Failed to load hotspot shape: {0}", shapeText);
-            throw new IOException(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage") + " " + shapeText);
+            log.log(Level.SEVERE, "Invalid hotspot shape: {0}", shapeText);
+            throw new IllegalArgumentException(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage") + " " + shapeText);
         }
 
         final Hotspot hotspot = new Hotspot(behaviourText, shape);
