@@ -37,6 +37,14 @@ public class ImageSetChooser extends JDialog {
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
 
+    /**
+     * Creates new form ImageSetChooser
+     *
+     * @param owner the {@code Frame} from which the dialog is displayed
+     * @param modal specifies whether dialog blocks user input to other top-level
+     * windows when shown. If {@code true}, the modality type property is set to
+     * {@code DEFAULT_MODALITY_TYPE} otherwise the dialog is modeless
+     */
     public ImageSetChooser(Frame owner, boolean modal) {
         super(owner, modal);
         initComponents();

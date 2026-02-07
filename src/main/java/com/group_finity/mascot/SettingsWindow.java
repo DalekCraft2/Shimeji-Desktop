@@ -55,6 +55,11 @@ public class SettingsWindow extends JDialog {
 
     /**
      * Creates new form SettingsWindow
+     *
+     * @param owner the {@code Frame} from which the dialog is displayed
+     * @param modal specifies whether dialog blocks user input to other top-level
+     * windows when shown. If {@code true}, the modality type property is set to
+     * {@code DEFAULT_MODALITY_TYPE} otherwise the dialog is modeless
      */
     public SettingsWindow(Frame owner, boolean modal) {
         super(owner, modal);

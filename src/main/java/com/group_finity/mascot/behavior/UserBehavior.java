@@ -86,7 +86,8 @@ public class UserBehavior implements Behavior {
      * Called when a mouse button is pressed.
      * If the left button is pressed, start dragging.
      *
-     * @throws CantBeAliveException
+     * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
+     * disposed
      */
     @Override
     public synchronized void mousePressed(final MouseEvent event) throws CantBeAliveException {
@@ -141,7 +142,8 @@ public class UserBehavior implements Behavior {
      * Called when a mouse button is released.
      * If the left button is released, the dragging ends.
      *
-     * @throws CantBeAliveException
+     * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
+     * disposed
      */
     @Override
     public synchronized void mouseReleased(final MouseEvent event) throws CantBeAliveException {

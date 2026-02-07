@@ -42,16 +42,16 @@ public interface Dwmapi extends StdCallLibrary {
      * @param hwnd The handle to the window from which the attribute value is to be retrieved.
      * @param dwAttribute A flag describing which value to retrieve, specified as a value of the
      * <a href="https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute">DWMWINDOWATTRIBUTE</a> enumeration.
-     * This parameter specifies which attribute to retrieve, and the {@param pvAttribute} parameter points to
+     * This parameter specifies which attribute to retrieve, and the {@code pvAttribute} parameter points to
      * an object into which the attribute value is retrieved.
      * @param pvAttribute A pointer to a value which, when this function returns successfully, receives the current value of the attribute.
-     * The type of the retrieved value depends on the value of the {@param dwAttribute} parameter. The
+     * The type of the retrieved value depends on the value of the {@code dwAttribute} parameter. The
      * <a href="https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute">DWMWINDOWATTRIBUTE</a>
      * enumeration topic indicates, in the row for each flag, what type of value you should pass a pointer to in
-     * the {@param pvAttribute} parameter.
-     * @param cbAttribute The size, in bytes, of the attribute value being received via the {@param pvAttribute} parameter.
+     * the {@code pvAttribute} parameter.
+     * @param cbAttribute The size, in bytes, of the attribute value being received via the {@code pvAttribute} parameter.
      * The type of the retrieved value, and therefore its size in bytes, depends on the value of the
-     * {@param dwAttribute} parameter.
+     * {@code dwAttribute} parameter.
      * @return If the function succeeds, it returns {@link WinError#S_OK S_OK}. Otherwise, it returns an {@link HRESULT HRESULT}
      * <a href="https://learn.microsoft.com/en-us/windows/win32/com/com-error-codes-10">error code</a>.
      */
