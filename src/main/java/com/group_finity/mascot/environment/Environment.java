@@ -89,6 +89,8 @@ public abstract class Environment {
             thread.setPriority(Thread.MIN_PRIORITY);
             thread.start();
         }
+
+        tick();
     }
 
     /**
