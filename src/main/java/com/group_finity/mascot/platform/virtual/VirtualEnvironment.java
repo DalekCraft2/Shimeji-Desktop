@@ -136,6 +136,8 @@ class VirtualEnvironment extends Environment {
 
             initialized = true;
             isInitializing = false;
+
+            tick();
         };
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
