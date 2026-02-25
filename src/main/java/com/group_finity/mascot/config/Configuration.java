@@ -5,6 +5,7 @@ import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.behavior.UserBehavior;
+import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.ActionInstantiationException;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
@@ -189,13 +190,10 @@ public class Configuration {
         }
 
         if (totalFrequency == 0) {
-            if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
-                mascot.setAnchor(new Point((int) (Math.random() * (mascot.getEnvironment().getScreen().getRight() - mascot.getEnvironment().getScreen().getLeft())) + mascot.getEnvironment().getScreen().getLeft(),
-                        mascot.getEnvironment().getScreen().getTop() - 256));
-            } else {
-                mascot.setAnchor(new Point((int) (Math.random() * (mascot.getEnvironment().getWorkArea().getRight() - mascot.getEnvironment().getWorkArea().getLeft())) + mascot.getEnvironment().getWorkArea().getLeft(),
-                        mascot.getEnvironment().getWorkArea().getTop() - 256));
-            }
+            Area area = Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))
+                    ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
+            // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
+            mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
             return buildBehavior(schema.getString(UserBehavior.BEHAVIOURNAME_FALL));
         }
 
@@ -216,13 +214,10 @@ public class Configuration {
             if (isBehaviorEnabled(name, mascot)) {
                 return behaviorBuilders.get(name).buildBehavior();
             } else {
-                if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
-                    mascot.setAnchor(new Point((int) (Math.random() * (mascot.getEnvironment().getScreen().getRight() - mascot.getEnvironment().getScreen().getLeft())) + mascot.getEnvironment().getScreen().getLeft(),
-                            mascot.getEnvironment().getScreen().getTop() - 256));
-                } else {
-                    mascot.setAnchor(new Point((int) (Math.random() * (mascot.getEnvironment().getWorkArea().getRight() - mascot.getEnvironment().getWorkArea().getLeft())) + mascot.getEnvironment().getWorkArea().getLeft(),
-                            mascot.getEnvironment().getWorkArea().getTop() - 256));
-                }
+                Area area = Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))
+                        ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
+                // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
+                mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
                 return buildBehavior(schema.getString(UserBehavior.BEHAVIOURNAME_FALL));
             }
         } else {

@@ -6,6 +6,7 @@ import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.action.ActionBase;
 import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.config.Configuration;
+import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
@@ -216,13 +217,10 @@ public class UserBehavior implements Behavior {
                             || getEnvironment().getScreen().getBottom() <= mascot.getBounds().getY()) {
                         log.log(Level.INFO, "Out of the screen bounds ({0}, {1})", new Object[]{mascot, this});
 
-                        if (Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))) {
-                            mascot.setAnchor(new Point((int) (Math.random() * (getEnvironment().getScreen().getRight() - getEnvironment().getScreen().getLeft())) + getEnvironment().getScreen().getLeft(),
-                                    getEnvironment().getScreen().getTop() - 256));
-                        } else {
-                            mascot.setAnchor(new Point((int) (Math.random() * (getEnvironment().getWorkArea().getRight() - getEnvironment().getWorkArea().getLeft())) + getEnvironment().getWorkArea().getLeft(),
-                                    getEnvironment().getWorkArea().getTop() - 256));
-                        }
+                        Area area = Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))
+                                ? getEnvironment().getScreen() : getEnvironment().getWorkArea();
+                        // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
+                        mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
 
                         try {
                             mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
