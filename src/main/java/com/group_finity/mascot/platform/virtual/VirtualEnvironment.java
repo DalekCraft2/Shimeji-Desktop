@@ -71,6 +71,8 @@ class VirtualEnvironment extends Environment {
 
         isInitializing = true;
 
+        autoUpdateScreenRect = false;
+
         Runnable runnable = () -> {
             display = new JFrame();
 

@@ -34,10 +34,13 @@ public abstract class Environment {
 
     protected static final Object screenRectLock = new Object();
 
+    protected static boolean autoUpdateScreenRect = true;
+
     private static final Thread thread = new Thread(() -> {
         try {
             while (true) {
-                updateScreenRect();
+                if (autoUpdateScreenRect)
+                    updateScreenRect();
                 Thread.sleep(5000);
             }
         } catch (final InterruptedException ignored) {
@@ -84,6 +87,8 @@ public abstract class Environment {
      * Called when this environment is created.
      */
     public void init() {
+        autoUpdateScreenRect = true;
+
         if (!thread.isAlive()) {
             thread.setDaemon(true);
             thread.setPriority(Thread.MIN_PRIORITY);
