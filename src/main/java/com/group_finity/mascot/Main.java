@@ -1182,7 +1182,7 @@ public class Main {
      * valid image sets that are already active. Does nothing if {@code newImageSets == null}.
      *
      * @param newImageSets all the image sets that should now be active
-     * @author snek
+     * @author LavenderSnek
      * @author Kilkakon (did some tweaks)
      */
     private void setActiveImageSets(Collection<String> newImageSets) {

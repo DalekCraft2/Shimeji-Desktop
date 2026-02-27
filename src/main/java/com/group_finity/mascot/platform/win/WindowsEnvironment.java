@@ -44,6 +44,9 @@ class WindowsEnvironment extends Environment {
 
     private String[] windowTitlesBlacklist = null;
 
+    /**
+     * @author LavenderSnek
+     */
     private enum IeStatus {
         /** The IE is valid. */
         VALID,
