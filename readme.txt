@@ -20,6 +20,7 @@ by Kilkakon and other members of the community.
 
 ==== Links ====
 
+* DalekCraft's Shimeji repository: https://github.com/DalekCraft2/Shimeji-Desktop
 * Kilkakon's Shimeji homepage: https://kilkakon.com/shimeji/
 * Shimeji-ee homepage: https://code.google.com/archive/p/shimeji-ee/
 * Shimeji homepage (archive): https://web.archive.org/web/20160901003054/http://www.group-finity.com/Shimeji/
