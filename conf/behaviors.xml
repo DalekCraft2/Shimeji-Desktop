@@ -50,8 +50,7 @@
                 <NextBehaviorList Add="false">
                     <BehaviorReference Name="SitDown" Frequency="100"/>
                     <BehaviorReference Name="CrawlAlongIECeiling" Frequency="100"
-                                       Condition="${mascot.environment.activeIE.topBorder.isOn(mascot.anchor)}"
-                                       Hidden="true"/>
+                                       Condition="${mascot.environment.activeIE.topBorder.isOn(mascot.anchor)}"/>
                     <BehaviorReference Name="CrawlAlongWorkAreaFloor" Frequency="100"
                                        Condition="${mascot.environment.workArea.bottomBorder.isOn(mascot.anchor)}"/>
                 </NextBehaviorList>
