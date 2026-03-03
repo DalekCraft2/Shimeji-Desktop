@@ -101,12 +101,12 @@ public class AnimationBuilder {
             try {
                 ImagePairLoader.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
             } catch (IOException | NumberFormatException e) {
-                String error = imagePath.toString();
+                String imagePairString = imagePath.toString();
                 if (imageRightPath != null) {
-                    error += ", " + imageRightPath;
+                    imagePairString += ", " + imageRightPath;
                 }
-                log.log(Level.SEVERE, "Failed to load image" + (imageRightPath != null ? "s" : "") + ": " + error, e);
-                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + error, e);
+                log.log(Level.SEVERE, "Failed to load image" + (imageRightPath != null ? "s" : "") + ": " + imagePairString, e);
+                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + imagePairString, e);
             }
         }
 
