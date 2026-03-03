@@ -38,7 +38,7 @@ public class AnimationBuilder {
     private final List<Pose> poses = new ArrayList<>();
     private final List<Hotspot> hotspots = new ArrayList<>();
     private final ResourceBundle schema;
-    private final String turn;
+    private final Boolean turn;
 
     public AnimationBuilder(final ResourceBundle schema, final Entry animationNode, final String imageSet) throws ConfigurationException {
         if (!imageSet.isEmpty()) {
@@ -47,7 +47,7 @@ public class AnimationBuilder {
 
         this.schema = schema;
         condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
-        turn = animationNode.getAttribute(schema.getString("IsTurn")) == null ? "false" : animationNode.getAttribute(schema.getString("IsTurn"));
+        turn = animationNode.getAttribute(schema.getString("IsTurn")) != null && Boolean.parseBoolean(animationNode.getAttribute(schema.getString("IsTurn")));
 
         log.log(Level.FINE, "Loading animations");
 
@@ -180,7 +180,7 @@ public class AnimationBuilder {
 
     public Animation buildAnimation() throws AnimationInstantiationException {
         try {
-            return new Animation(Variable.parse(condition), poses.toArray(new Pose[0]), hotspots.toArray(new Hotspot[0]), Boolean.parseBoolean(turn));
+            return new Animation(Variable.parse(condition), poses.toArray(new Pose[0]), hotspots.toArray(new Hotspot[0]), turn);
         } catch (final VariableException e) {
             throw new AnimationInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
         }
