@@ -22,7 +22,6 @@ import com.sun.jna.ptr.LongByReference;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.logging.Logger;
 
 /**
  * Uses JNI to obtain environment information that is difficult to obtain with Java.
