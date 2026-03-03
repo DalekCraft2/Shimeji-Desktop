@@ -20,6 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * An object that represents all data contained within a mascot's configuration files
+ * ({@code actions.xml}, {@code behaviors.xml}, and {@code info.xml}).
+ * Automatically detects whether a configuration file uses the English or Japanese schema.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */

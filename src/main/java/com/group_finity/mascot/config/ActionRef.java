@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * An object that builds action references.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */

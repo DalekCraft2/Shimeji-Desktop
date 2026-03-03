@@ -1,6 +1,8 @@
 package com.group_finity.mascot.exception;
 
 /**
+ * Thrown when a mascot's configuration contains some kind of error.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */

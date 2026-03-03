@@ -1,14 +1,16 @@
 package com.group_finity.mascot.exception;
 
 /**
+ * Thrown when a {@link com.group_finity.mascot.behavior.Behavior Behavior} encounters an error during its
+ * initialization or execution.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 /*
- * TODO: Study this how this exception is used to determine things like whether a mascot must be disposed when this
- *  exception is caught, because that is not the case for every instance of it.
- *  Alternatively, replace every usage of this exception with a different exception, because it's not really good
- *  practice to have a exception named after how it should be handled rather than where it was thrown or what caused it.
+ * TODO: Rename this exception, because 1) not every catch block that catches this exception disposes of the associated
+ *  mascot, and 2) because it's not really good practice to have a exception named after how it should be handled
+ *  rather than where it was thrown or what caused it.
  */
 public class CantBeAliveException extends Exception {
     public CantBeAliveException(final String message) {

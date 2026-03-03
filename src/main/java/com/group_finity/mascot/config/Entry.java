@@ -5,6 +5,9 @@ import org.w3c.dom.*;
 import java.util.*;
 
 /**
+ * Represents an XML tag along with its attributes and children.
+ * Supports getting a list of all instances of a tag with a given name.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
