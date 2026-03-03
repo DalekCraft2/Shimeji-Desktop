@@ -129,9 +129,7 @@ public class BehaviorBuilder {
      */
     public Behavior buildBehavior() throws BehaviorInstantiationException {
         try {
-            return new UserBehavior(name,
-                    configuration.buildAction(actionName,
-                            params), configuration);
+            return new UserBehavior(name, configuration.buildAction(actionName, params), configuration);
         } catch (final ActionInstantiationException e) {
             log.log(Level.SEVERE, "Failed to initialize the corresponding action for behavior: " + this, e);
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage") + " (" + this + ")", e);
