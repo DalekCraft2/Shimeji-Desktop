@@ -115,6 +115,7 @@ public class Main {
     }
 
     public static void showError(String message) {
+        // TODO: Call this on the EDT safely without letting other windows appear in front of it before it's closed
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
@@ -135,9 +136,13 @@ public class Main {
         showError(message + "\n" + instance.languageBundle.getString("SeeLogForDetails"));
     }
 
-    public static void main(final String[] args) {
-        // Load theme before any Swing components are created
-        SwingUtilities.invokeLater(Main::updateLookAndFeel);
+    public static void main(final String[] args) throws InterruptedException, InvocationTargetException {
+        SwingUtilities.invokeAndWait(() -> {
+            // Load theme before any Swing components are created
+            updateLookAndFeel();
+            // Create frame before anything else happens, in case showError() gets called
+            frame = new JFrame();
+        });
         OsThemeDetector.getDetector().registerListener(ignored -> SwingUtilities.invokeLater(Main::updateLookAndFeel));
 
         try {
@@ -158,8 +163,6 @@ public class Main {
     }
 
     public void run() throws InterruptedException, InvocationTargetException {
-        SwingUtilities.invokeLater(() -> frame = new JFrame());
-
         // load properties
         if (Files.isRegularFile(SETTINGS_FILE)) {
             try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
