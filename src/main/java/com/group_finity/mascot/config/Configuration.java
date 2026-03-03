@@ -13,7 +13,6 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,7 +38,7 @@ public class Configuration {
     private final Map<String, String> information = new LinkedHashMap<>(8);
     private ResourceBundle schema;
 
-    public void load(final Entry configurationNode, final String imageSet) throws IOException, ConfigurationException {
+    public void load(final Entry configurationNode, final String imageSet) throws ConfigurationException {
         log.log(Level.FINE, "Reading configuration file...");
 
         // check for Japanese XML tag and adapt locale accordingly
