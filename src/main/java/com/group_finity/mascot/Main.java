@@ -78,16 +78,6 @@ public class Main {
             LogManager.getLogManager().readConfiguration(input);
         } catch (final SecurityException | IOException e) {
             log.log(Level.SEVERE, "Failed to load log properties", e);
-        } catch (OutOfMemoryError err) {
-            log.log(Level.SEVERE, "Out of memory. There are probably too many "
-                    + "Shimeji mascots in the image folder for your computer to handle. "
-                    + "Select fewer image sets or move some to the "
-                    + "img/unused folder and try again.", err);
-            showError("Out of memory. There are probably too many\n"
-                    + "Shimeji mascots for your computer to handle.\n"
-                    + "Select fewer image sets or move some to the\n"
-                    + "img/unused folder and try again.");
-            System.exit(0);
         }
     }
 
