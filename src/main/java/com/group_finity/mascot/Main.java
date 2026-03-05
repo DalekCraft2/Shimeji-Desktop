@@ -394,8 +394,8 @@ public class Main {
             return true;
         } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException |
                  RuntimeException e) {
-            log.log(Level.SEVERE, "Failed to load configuration files", e);
-            showError(languageBundle.getString("FailedLoadConfigErrorMessage"), e);
+            log.log(Level.SEVERE, "Failed to load configuration for image set \"" + imageSet + "\"", e);
+            showError(languageBundle.getString("FailedLoadConfigErrorMessage") + " (" + imageSet + ")", e);
         }
 
         return false;
