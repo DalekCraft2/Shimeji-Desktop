@@ -253,6 +253,10 @@ public class UserBehavior implements Behavior {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
     protected MascotEnvironment getEnvironment() {
         return mascot.getEnvironment();
     }

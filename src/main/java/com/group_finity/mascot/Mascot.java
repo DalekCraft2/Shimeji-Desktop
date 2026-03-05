@@ -3,6 +3,7 @@ package com.group_finity.mascot;
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.behavior.Behavior;
+import com.group_finity.mascot.behavior.UserBehavior;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.MascotEnvironment;
@@ -470,7 +471,7 @@ public class Mascot {
                     // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
                     // debugWindow.setTitle(toString());
 
-                    debugWindow.setBehaviour(behavior.toString().substring(9, behavior.toString().length() - 1).replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
+                    debugWindow.setBehaviour(((UserBehavior) behavior).getName().replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
                     debugWindow.setShimejiX(anchor.x);
                     debugWindow.setShimejiY(anchor.y);
 
