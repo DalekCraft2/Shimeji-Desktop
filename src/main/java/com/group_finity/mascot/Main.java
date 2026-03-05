@@ -153,7 +153,7 @@ public class Main {
     }
 
     public void run() throws InterruptedException, InvocationTargetException {
-        // load properties
+        // load settings
         if (Files.isRegularFile(SETTINGS_FILE)) {
             try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
                 properties.load(input);
