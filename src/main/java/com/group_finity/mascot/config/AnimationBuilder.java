@@ -57,7 +57,6 @@ public class AnimationBuilder {
             } catch (IOException e) {
                 throw new ConfigurationException(e);
             } catch (RuntimeException e) {
-                log.log(Level.SEVERE, "Failed to load pose: {0}", e);
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage") + " " + frameNode.getAttributes().toString(), e);
             }
         }
@@ -66,7 +65,6 @@ public class AnimationBuilder {
             try {
                 hotspots.add(loadHotspot(frameNode));
             } catch (RuntimeException e) {
-                log.log(Level.SEVERE, "Failed to load hotspot: {0}", e);
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage") + " " + frameNode.getAttributes().toString(), e);
             }
         }
@@ -105,7 +103,6 @@ public class AnimationBuilder {
                 if (imageRightPath != null) {
                     imagePairString += ", " + imageRightPath;
                 }
-                log.log(Level.SEVERE, "Failed to load image" + (imageRightPath != null ? "s" : "") + ": " + imagePairString, e);
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + imagePairString, e);
             }
         }
@@ -134,7 +131,6 @@ public class AnimationBuilder {
                 SoundLoader.load(soundText, volume);
                 soundText += volume;
             } catch (IOException | NumberFormatException | LineUnavailableException | UnsupportedAudioFileException e) {
-                log.log(Level.SEVERE, "Failed to load sound: " + soundText, e);
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText, e);
             }
         }
@@ -167,7 +163,6 @@ public class AnimationBuilder {
         } else if (shapeText.equalsIgnoreCase("Ellipse")) {
             shape = new Ellipse2D.Float(origin.x, origin.y, size.width, size.height);
         } else {
-            log.log(Level.SEVERE, "Invalid hotspot shape: {0}", shapeText);
             throw new IllegalArgumentException(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage") + " " + shapeText);
         }
 

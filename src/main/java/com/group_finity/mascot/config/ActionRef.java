@@ -50,7 +50,6 @@ public class ActionRef implements IActionBuilder {
     @Override
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(name)) {
-            log.log(Level.SEVERE, "There is no corresponding action for action reference: {0}", this);
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + " (" + this + ")");
         }
     }

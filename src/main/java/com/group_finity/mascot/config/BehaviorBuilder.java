@@ -114,7 +114,6 @@ public class BehaviorBuilder {
      */
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
-            log.log(Level.SEVERE, "There is no corresponding action for behavior: {0}", this);
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + " (" + this + ")");
         }
     }
@@ -131,7 +130,6 @@ public class BehaviorBuilder {
         try {
             return new UserBehavior(name, configuration.buildAction(actionName, params), configuration);
         } catch (final ActionInstantiationException e) {
-            log.log(Level.SEVERE, "Failed to initialize the corresponding action for behavior: " + this, e);
             throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage") + " (" + this + ")", e);
         }
     }
