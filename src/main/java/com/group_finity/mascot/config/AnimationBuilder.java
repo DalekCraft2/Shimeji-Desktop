@@ -54,9 +54,7 @@ public class AnimationBuilder {
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Pose"))) {
             try {
                 poses.add(loadPose(frameNode));
-            } catch (IOException e) {
-                throw new ConfigurationException(e);
-            } catch (RuntimeException e) {
+            } catch (IOException | RuntimeException e) {
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage") + " " + frameNode.getAttributes().toString(), e);
             }
         }
