@@ -37,7 +37,7 @@ public class ActionRef implements IActionBuilder {
 
     @Override
     public String toString() {
-        return "Action(" + name + ")";
+        return "ActionRef[name=" + name + "]";
     }
 
     @Override

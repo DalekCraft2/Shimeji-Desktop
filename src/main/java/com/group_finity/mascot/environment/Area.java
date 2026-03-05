@@ -152,6 +152,6 @@ public class Area {
 
     @Override
     public String toString() {
-        return "Area [left=" + left + ", top=" + top + ", right=" + right + ", bottom=" + bottom + "]";
+        return "Area[left=" + left + ",top=" + top + ",right=" + right + ",bottom=" + bottom + "]";
     }
 }

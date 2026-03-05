@@ -62,7 +62,7 @@ public class ActionBuilder implements IActionBuilder {
 
     @Override
     public String toString() {
-        return "Action(" + name + "," + type + "," + className + ")";
+        return "Action[name=" + name + ",type=" + type + ",className=" + className + "]";
     }
 
     @Override

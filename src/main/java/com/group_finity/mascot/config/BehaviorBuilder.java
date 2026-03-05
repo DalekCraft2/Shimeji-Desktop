@@ -90,7 +90,7 @@ public class BehaviorBuilder {
 
     @Override
     public String toString() {
-        return "Behavior(" + name + "," + frequency + "," + actionName + ")";
+        return "Behavior[name=" + name + ",frequency=" + frequency + ",actionName=" + actionName + "]";
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions) {

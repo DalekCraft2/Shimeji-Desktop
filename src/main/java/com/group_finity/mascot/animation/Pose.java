@@ -54,7 +54,7 @@ public class Pose {
 
     @Override
     public String toString() {
-        return "Pose(" + getImageName() + "," + dx + "," + dy + "," + duration + ", " + sound + ")";
+        return "Pose[image=" + image + ",rightImage=" + rightImage + ",dx=" + dx + ",dy=" + dy + ",duration=" + duration + ",sound=" + sound + "]";
     }
 
     public void next(final Mascot mascot) {
