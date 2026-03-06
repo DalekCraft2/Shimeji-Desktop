@@ -116,6 +116,12 @@ public class BehaviorBuilder {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + " (" + this + ")");
         }
+        for (final BehaviorBuilder builder : nextBehaviorBuilders) {
+            if (!configuration.getBehaviorNames().contains(builder.name)) {
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + builder + ")");
+            }
+            builder.validate();
+        }
     }
 
     /**
