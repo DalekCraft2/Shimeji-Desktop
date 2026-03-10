@@ -48,7 +48,7 @@ public class Configuration {
         } else {
             schema = SCHEMA_EN;
         }
-        log.log(Level.FINE, "Using " + schema.getLocale().toLanguageTag() + " schema");
+        log.log(Level.FINE, "Using {0} schema", schema.getLocale().toLanguageTag());
 
         for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
             constants.put(constant.getAttribute(schema.getString("Name")),

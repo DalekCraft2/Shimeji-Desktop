@@ -205,9 +205,9 @@ public class SettingsWindow extends JDialog {
                 desktop.browse(new URI(url));
             } else {
                 if (desktop == null) {
-                    log.log(Level.WARNING, "Can not open URL \"" + url + "\", as desktop operations are not supported on this platform");
+                    log.log(Level.WARNING, "Can not open URL \"{0}\", as desktop operations are not supported on this platform", url);
                 } else {
-                    log.log(Level.WARNING, "Can not open URL \"" + url + "\", as the desktop browse operation is not supported on this platform");
+                    log.log(Level.WARNING, "Can not open URL \"{0}\", as the desktop browse operation is not supported on this platform", url);
                 }
                 JOptionPane.showMessageDialog(this, Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url, "Error", JOptionPane.ERROR_MESSAGE);
             }

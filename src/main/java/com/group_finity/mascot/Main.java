@@ -115,7 +115,7 @@ public class Main {
             if (exception.getClass().getName().startsWith("com.group_finity.mascot.exception")) {
                 messageBuilder.append("\n").append(exception.getMessage());
             } else if (exception instanceof SAXParseException) {
-                messageBuilder.append("\n" + "Line ").append(((SAXParseException) exception).getLineNumber()).append(": ").append(exception.getMessage());
+                messageBuilder.append("\nLine ").append(((SAXParseException) exception).getLineNumber()).append(": ").append(exception.getMessage());
             } else {
                 messageBuilder.append("\n").append(exception);
             }
