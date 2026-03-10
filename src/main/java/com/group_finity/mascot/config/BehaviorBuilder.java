@@ -108,9 +108,10 @@ public class BehaviorBuilder {
     }
 
     /**
-     * Validates the behavior. Should be called after {@link #buildBehavior()} has been called.
+     * Ensures that this behavior and all of its children do not reference nonexistent actions or behaviors.
+     * Should be called after all behaviors have been loaded from {@code behaviors.xml}.
      *
-     * @throws ConfigurationException if the behavior references a nonexistent action
+     * @throws ConfigurationException if the behavior or one of its children references a nonexistent action or behavior
      */
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(actionName)) {

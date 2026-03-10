@@ -87,6 +87,13 @@ public class ActionBuilder implements IActionBuilder {
     }
 
     @Override
+    public void validate() throws ConfigurationException {
+        for (final IActionBuilder ref : actionRefs) {
+            ref.validate();
+        }
+    }
+
+    @Override
     public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
         try {
             // Create Variable Map
@@ -145,13 +152,6 @@ public class ActionBuilder implements IActionBuilder {
             throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedCreateAnimationErrorMessage") + " (" + this + ")", e);
         } catch (final VariableException e) {
             throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage") + " (" + this + ")", e);
-        }
-    }
-
-    @Override
-    public void validate() throws ConfigurationException {
-        for (final IActionBuilder ref : actionRefs) {
-            ref.validate();
         }
     }
 

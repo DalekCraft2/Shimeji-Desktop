@@ -41,16 +41,16 @@ public class ActionRef implements IActionBuilder {
     }
 
     @Override
-    public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
-        final Map<String, String> newParams = new LinkedHashMap<>(params);
-        newParams.putAll(this.params);
-        return configuration.buildAction(name, newParams);
-    }
-
-    @Override
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(name)) {
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + " (" + this + ")");
         }
+    }
+
+    @Override
+    public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
+        final Map<String, String> newParams = new LinkedHashMap<>(params);
+        newParams.putAll(this.params);
+        return configuration.buildAction(name, newParams);
     }
 }

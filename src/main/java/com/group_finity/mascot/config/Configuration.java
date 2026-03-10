@@ -115,15 +115,6 @@ public class Configuration {
         }
     }
 
-    public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
-        final ActionBuilder factory = actionBuilders.get(name);
-        if (factory == null) {
-            throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage") + ": " + name);
-        }
-
-        return factory.buildAction(params);
-    }
-
     private void loadInformation(final Entry list) {
         for (final Entry node : list.getChildren()) {
             if (node.getName().equals(schema.getString("Name")) ||
@@ -154,6 +145,15 @@ public class Configuration {
         for (final BehaviorBuilder builder : behaviorBuilders.values()) {
             builder.validate();
         }
+    }
+
+    public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
+        final ActionBuilder factory = actionBuilders.get(name);
+        if (factory == null) {
+            throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage") + ": " + name);
+        }
+
+        return factory.buildAction(params);
     }
 
     public Behavior buildNextBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
