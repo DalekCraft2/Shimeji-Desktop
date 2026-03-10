@@ -172,6 +172,8 @@ public class SettingsWindow extends JDialog {
         chkWindowModeEnabled.setText(language.getString("WindowedModeEnabled"));
         lblDimensions.setText(language.getString("Dimensions"));
         lblBackground.setText(language.getString("Background"));
+        lblBackgroundColour.setText(language.getString("Colour"));
+        lblBackgroundImageCaption.setText(language.getString("Image"));
         btnBackgroundColourChange.setText(language.getString("Change"));
         btnBackgroundImageChange.setText(language.getString("Change"));
         cmbBackgroundImageMode.addItem(language.getString("BackgroundModeCentre"));
