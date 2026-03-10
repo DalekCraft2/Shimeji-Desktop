@@ -385,29 +385,28 @@ public class Mascot {
         JMenuItem item;
         JCheckBoxMenuItem toggleItem;
         final Configuration config = Main.getInstance().getConfiguration(imageSet);
-        for (String behaviorName : config.getBehaviorNames()) {
-            final String command = behaviorName;
+        for (final String behaviorName : config.getBehaviorNames()) {
             try {
-                if (!config.isBehaviorHidden(command)) {
+                if (!config.isBehaviorHidden(behaviorName)) {
                     String caption = behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
-                    if (config.isBehaviorEnabled(command, this) && !command.contains("/")) {
+                    if (config.isBehaviorEnabled(behaviorName, this) && !behaviorName.contains("/")) {
                         item = new JMenuItem(languageBundle.containsKey(behaviorName) ? languageBundle.getString(behaviorName) : caption);
                         item.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(final ActionEvent e) {
                                 try {
-                                    setBehavior(config.buildBehavior(command));
+                                    setBehavior(config.buildBehavior(behaviorName));
                                 } catch (BehaviorInstantiationException | CantBeAliveException ex) {
-                                    log.log(Level.SEVERE, "Failed to set behavior to \"" + command + "\" for mascot \"" + this + "\"", ex);
+                                    log.log(Level.SEVERE, "Failed to set behavior to \"" + behaviorName + "\" for mascot \"" + this + "\"", ex);
                                     Main.showError(languageBundle.getString("CouldNotSetBehaviourErrorMessage"), ex);
                                 }
                             }
                         });
                         submenu.add(item);
                     }
-                    if (config.isBehaviorToggleable(command) && !command.contains("/")) {
-                        toggleItem = new JCheckBoxMenuItem(caption, config.isBehaviorEnabled(command, this));
-                        toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(command, this, !config.isBehaviorEnabled(command, this)));
+                    if (config.isBehaviorToggleable(behaviorName) && !behaviorName.contains("/")) {
+                        toggleItem = new JCheckBoxMenuItem(caption, config.isBehaviorEnabled(behaviorName, this));
+                        toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(behaviorName, this, !config.isBehaviorEnabled(behaviorName, this)));
                         allowedSubmenu.add(toggleItem);
                     }
                 }
