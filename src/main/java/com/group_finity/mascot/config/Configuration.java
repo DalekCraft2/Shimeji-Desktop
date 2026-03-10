@@ -96,7 +96,7 @@ public class Configuration {
         log.log(Level.FINE, "Configuration loaded successfully");
     }
 
-    private void loadBehaviors(final Entry list, final List<String> conditions) {
+    private void loadBehaviors(final Entry list, final List<String> conditions) throws ConfigurationException {
         for (final Entry node : list.getChildren()) {
             if (node.getName().equals(schema.getString("Condition"))) {
                 final List<String> newConditions = new ArrayList<>(conditions);
@@ -105,6 +105,11 @@ public class Configuration {
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(schema.getString("Behaviour"))) {
                 final BehaviorBuilder behavior = new BehaviorBuilder(this, node, conditions);
+
+                if (behaviorBuilders.containsKey(behavior.getName())) {
+                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("DuplicateBehaviourErrorMessage") + ": " + behavior.getName());
+                }
+
                 behaviorBuilders.put(behavior.getName(), behavior);
             }
         }
