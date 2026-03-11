@@ -6,12 +6,12 @@ import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Action of falling whilst holding a window.
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 // TODO: Modify this, WalkWithIE, and ThrowIE to use scaling so they line up the sprites with the windows' corner at any scale.
 public class FallWithIE extends Fall {
-    private static final Logger log = Logger.getLogger(FallWithIE.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(FallWithIE.class);
 
     public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
 
@@ -48,7 +48,7 @@ public class FallWithIE extends Fall {
     protected void tick() throws LostGroundException, VariableException {
         final Area activeIE = getEnvironment().getActiveIE();
         if (!activeIE.isVisible()) {
-            log.log(Level.INFO, "IE not visible ({0}, {1})", new Object[]{getMascot(), this});
+            log.info("IE not visible ({}, {})", getMascot(), this);
             throw new LostGroundException();
         }
 
@@ -62,13 +62,13 @@ public class FallWithIE extends Fall {
         if (getMascot().isLookRight()) {
             if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
+                log.info("Lost ground ({}, {})", getMascot(), this);
                 throw new LostGroundException();
             }
         } else {
             if (getMascot().getAnchor().x + offsetX != activeIE.getRight()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
+                log.info("Lost ground ({}, {})", getMascot(), this);
                 throw new LostGroundException();
             }
         }

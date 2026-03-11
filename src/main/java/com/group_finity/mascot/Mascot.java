@@ -15,6 +15,8 @@ import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.platform.TranslucentWindow;
 import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.Clip;
 import javax.swing.*;
@@ -27,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Mascot object.
@@ -45,7 +45,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Mascot {
-    private static final Logger log = Logger.getLogger(Mascot.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Mascot.class);
 
     /**
      * The ID of the last generated {@code Mascot}.
@@ -158,7 +158,7 @@ public class Mascot {
         id = lastId.incrementAndGet();
         this.imageSet = imageSet;
 
-        log.log(Level.INFO, "Created mascot \"{0}\" with image set \"{1}\"", new Object[]{this, imageSet});
+        log.info("Created mascot \"{}\" with image set \"{}\"", this, imageSet);
 
         Runnable runnable = () -> {
             window = NativeFactory.getInstance().newTranslucentWindow();
@@ -291,7 +291,7 @@ public class Mascot {
                 try {
                     behavior.mousePressed(event);
                 } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Severe error in mouse press handler for mascot \"" + this + "\"", e);
+                    log.error("Severe error in mouse press handler for mascot \"{}\"", this, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
                     dispose();
                 }
@@ -309,7 +309,7 @@ public class Mascot {
                 try {
                     behavior.mouseReleased(event);
                 } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Severe error in mouse release handler for mascot \"" + this + "\"", e);
+                    log.error("Severe error in mouse release handler for mascot \"{}\"", this, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
                     dispose();
                 }
@@ -397,7 +397,7 @@ public class Mascot {
                                 try {
                                     setBehavior(config.buildBehavior(behaviorName));
                                 } catch (BehaviorInstantiationException | CantBeAliveException ex) {
-                                    log.log(Level.SEVERE, "Failed to set behavior to \"" + behaviorName + "\" for mascot \"" + this + "\"", ex);
+                                    log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorName, this, ex);
                                     Main.showError(languageBundle.getString("CouldNotSetBehaviourErrorMessage"), ex);
                                 }
                             }
@@ -456,7 +456,7 @@ public class Mascot {
                 try {
                     behavior.next();
                 } catch (final CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Could not get next behavior for mascot \"" + this + "\"", e);
+                    log.error("Could not get next behavior for mascot \"{}\"", this, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), e);
                     dispose();
                 }
@@ -515,7 +515,7 @@ public class Mascot {
     }
 
     public synchronized void dispose() {
-        log.log(Level.INFO, "Destroying mascot \"{0}\"", this);
+        log.info("Destroying mascot \"{}\"", this);
 
         SwingUtilities.invokeLater(() -> {
             if (debugWindow != null) {

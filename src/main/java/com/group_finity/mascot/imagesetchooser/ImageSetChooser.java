@@ -4,6 +4,8 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.config.Entry;
 import com.group_finity.mascot.exception.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -22,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Chooser used to select the Shimeji image sets in use.
@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * @since 1.0.2
  */
 public class ImageSetChooser extends JDialog {
-    private static final Logger log = Logger.getLogger(ImageSetChooser.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ImageSetChooser.class);
     private final ArrayList<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
@@ -201,7 +201,7 @@ public class ImageSetChooser extends JDialog {
                 index++;
             }
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to read image sets", e);
+            log.error("Failed to read image sets", e);
         }
 
         setUpList(lstImageSets);

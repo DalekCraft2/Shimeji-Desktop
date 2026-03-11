@@ -6,6 +6,8 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.config.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -18,15 +20,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.21
  */
 public class InformationWindow extends JFrame {
-    private static final Logger log = Logger.getLogger(InformationWindow.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(InformationWindow.class);
 
     /**
      * Creates new form InformationWindow
@@ -143,14 +143,14 @@ public class InformationWindow extends JFrame {
                                 desktop.browse(new URI(url));
                             } else {
                                 if (desktop == null) {
-                                    log.log(Level.WARNING, "Can not open URL \"{0}\", as desktop operations are not supported on this platform", url);
+                                    log.warn("Can not open URL \"{}\", as desktop operations are not supported on this platform", url);
                                 } else {
-                                    log.log(Level.WARNING, "Can not open URL \"{0}\", as the desktop browse operation is not supported on this platform", url);
+                                    log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
                                 }
                                 JOptionPane.showMessageDialog(this, Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url, "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } catch (IOException | UnsupportedOperationException | URISyntaxException ex) {
-                            log.log(Level.SEVERE, "Failed to open URL \"" + url + "\"", ex);
+                            log.error("Failed to open URL \"{}\"", url, ex);
                             JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }

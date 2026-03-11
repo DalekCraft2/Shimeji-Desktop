@@ -7,20 +7,20 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.20
  */
 public class ScanJump extends ActionBase {
-    private static final Logger log = Logger.getLogger(ScanJump.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ScanJump.class);
 
     public static final String PARAMETER_BEHAVIOUR = "Behaviour";
 
@@ -125,7 +125,9 @@ public class ScanJump extends ActionBase {
                     }
                 }
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                log.log(Level.SEVERE, "Failed to set behavior to \"" + (setFirstBehavior ? getTargetBehavior() : getBehavior()) + "\" for mascot \"" + (setFirstBehavior ? target.get() : getMascot()) + "\"", e);
+                log.error("Failed to set behavior to \"{}\" for mascot \"{}\"",
+                        setFirstBehavior ? getTargetBehavior() : getBehavior(),
+                        setFirstBehavior ? target.get() : getMascot(), e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
             }
         }

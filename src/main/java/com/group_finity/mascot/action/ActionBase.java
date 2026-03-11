@@ -8,10 +8,11 @@ import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Abstract class that implements common functionality of actions.
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public abstract class ActionBase implements Action {
-    private static final Logger log = Logger.getLogger(ActionBase.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ActionBase.class);
 
     public static final String PARAMETER_DURATION = "Duration";
 

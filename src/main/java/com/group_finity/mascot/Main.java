@@ -16,6 +16,8 @@ import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.sound.Sounds;
 import com.jthemedetecor.OsThemeDetector;
 import org.apache.commons.exec.OS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -48,9 +50,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * Program entry point.
@@ -59,7 +59,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Main {
-    private static final Logger log = Logger.getLogger(Main.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     public static final Path CONFIG_DIRECTORY = Path.of("conf");
     public static final Path IMAGE_DIRECTORY = Path.of("img");
@@ -77,7 +77,7 @@ public class Main {
         try (InputStream input = Files.newInputStream(LOGGING_FILE)) {
             LogManager.getLogManager().readConfiguration(input);
         } catch (final SecurityException | IOException e) {
-            log.log(Level.SEVERE, "Failed to load log properties", e);
+            log.error("Failed to load log properties", e);
         }
     }
 
@@ -138,7 +138,7 @@ public class Main {
         try {
             instance.run();
         } catch (OutOfMemoryError err) {
-            log.log(Level.SEVERE, "Out of memory. There are probably too many "
+            log.error("Out of memory. There are probably too many "
                     + "Shimeji mascots in the image folder for your computer to handle. "
                     + "Select fewer image sets or move some to the "
                     + "img/unused folder and try again.", err);
@@ -158,7 +158,7 @@ public class Main {
             try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
                 properties.load(input);
             } catch (IOException e) {
-                log.log(Level.SEVERE, "Failed to load settings", e);
+                log.error("Failed to load settings", e);
             }
         }
 
@@ -170,7 +170,7 @@ public class Main {
                 languageBundle = ResourceBundle.getBundle("language", locale, loader);
             }
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to load language file for locale " + locale.toLanguageTag(), e);
+            log.error("Failed to load language file for locale {}", locale.toLanguageTag(), e);
             showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
             exit();
         }
@@ -275,7 +275,7 @@ public class Main {
                 actionsFile = filePath.resolve("1.xml");
             }
 
-            log.log(Level.INFO, "Reading action file \"{0}\" for image set \"{1}\"", new Object[]{actionsFile, imageSet});
+            log.info("Reading action file \"{}\" for image set \"{}\"", actionsFile, imageSet);
 
             final Document actions = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
                     Files.newInputStream(actionsFile));
@@ -331,7 +331,7 @@ public class Main {
                 behaviorsFile = filePath.resolve("2.xml");
             }
 
-            log.log(Level.INFO, "Reading behavior file \"{0}\" for image set \"{1}\"", new Object[]{behaviorsFile, imageSet});
+            log.info("Reading behavior file \"{}\" for image set \"{}\"", behaviorsFile, imageSet);
 
             final Document behaviors = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
                     Files.newInputStream(behaviorsFile));
@@ -352,7 +352,7 @@ public class Main {
             }
 
             if (Files.exists(infoFile)) {
-                log.log(Level.INFO, "Reading information file \"{0}\" for image set \"{1}\"", new Object[]{infoFile, imageSet});
+                log.info("Reading information file \"{}\" for image set \"{}\"", infoFile, imageSet);
 
                 final Document information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Files.newInputStream(infoFile));
 
@@ -394,7 +394,7 @@ public class Main {
             return true;
         } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException |
                  RuntimeException e) {
-            log.log(Level.SEVERE, "Failed to load configuration for image set \"" + imageSet + "\"", e);
+            log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
             showError(languageBundle.getString("FailedLoadConfigErrorMessage") + " (" + imageSet + ")", e);
         }
 
@@ -414,16 +414,16 @@ public class Main {
             // If the settings say to show the tray icon but the system tray isn't supported,
             // tell the user (via log) that the persistent menu window is being used as an alternative
             if (showTrayIcon && !SystemTray.isSupported()) {
-                log.log(Level.WARNING, "System tray not supported; creating persistent menu window instead");
+                log.warn("System tray not supported; creating persistent menu window instead");
                 // Change the setting to false so the warning doesn't happen on every startup after this
                 properties.setProperty("ShowTrayIcon", "false");
             } else
-                log.log(Level.INFO, "Creating persistent menu window");
+                log.info("Creating persistent menu window");
             createTrayMenu(false, null);
             return;
         }
 
-        log.log(Level.INFO, "Creating tray icon");
+        log.info("Creating tray icon");
 
         // get the tray icon image
         BufferedImage image = getIcon();
@@ -506,7 +506,7 @@ public class Main {
             // Show tray icon
             SystemTray.getSystemTray().add(icon);
         } catch (final AWTException e) {
-            log.log(Level.SEVERE, "Failed to create tray icon", e);
+            log.error("Failed to create tray icon", e);
             showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage"), e);
             exit();
         }
@@ -1058,7 +1058,7 @@ public class Main {
      * @param imageSet the image set to use
      */
     public void createMascot(String imageSet) {
-        log.log(Level.INFO, "Creating mascot with image set \"{0}\"", imageSet);
+        log.info("Creating mascot with image set \"{}\"", imageSet);
 
         // Create one mascot
         final Mascot mascot = new Mascot(imageSet);
@@ -1074,15 +1074,15 @@ public class Main {
             manager.add(mascot);
         } catch (final BehaviorInstantiationException e) {
             // Not sure why this says "first action" instead of "first behavior", but changing it would require changing all of the translations, so...
-            log.log(Level.SEVERE, "Failed to initialize the first action for mascot \"" + mascot + "\"", e);
+            log.error("Failed to initialize the first action for mascot \"{}\"", mascot, e);
             showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage"), e);
             mascot.dispose();
         } catch (final CantBeAliveException e) {
-            log.log(Level.SEVERE, "Could not create mascot \"" + mascot + "\"", e);
+            log.error("Could not create mascot \"{}\"", mascot, e);
             showError(languageBundle.getString("FailedInitialiseFirstActionErrorMessage"), e);
             mascot.dispose();
         } catch (RuntimeException e) {
-            log.log(Level.SEVERE, "Could not create mascot \"" + mascot + "\"", e);
+            log.error("Could not create mascot \"{}\"", mascot, e);
             showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + " " + imageSet, e);
             mascot.dispose();
         }
@@ -1095,7 +1095,7 @@ public class Main {
                 languageBundle = ResourceBundle.getBundle("language", locale, loader);
             }
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to load language file for locale " + locale.toLanguageTag(), e);
+            log.error("Failed to load language file for locale {}", locale.toLanguageTag(), e);
             showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
             exit();
         }
@@ -1166,7 +1166,7 @@ public class Main {
         try (OutputStream output = Files.newOutputStream(SETTINGS_FILE)) {
             properties.store(output, "Shimeji-ee Configuration Options");
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to save settings", e);
+            log.error("Failed to save settings", e);
         }
     }
 
@@ -1293,10 +1293,10 @@ public class Main {
             executorService.shutdownNow();
 
             if (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
-                log.log(Level.WARNING, "The executor service did not terminate in the allotted time.");
+                log.warn("The executor service did not terminate in the allotted time.");
             }
         } catch (final InterruptedException | SecurityException e) {
-            log.log(Level.SEVERE, "Failed to shutdown the executor service.", e);
+            log.error("Failed to shutdown the executor service.", e);
         }
         manager.disposeAll();
         manager.stop();
@@ -1344,7 +1344,7 @@ public class Main {
                 icon = ImageIO.read(Files.newInputStream(ICON_FILE));
                 return icon;
             } catch (final IOException e) {
-                log.log(Level.WARNING, "Failed to load custom icon file", e);
+                log.warn("Failed to load custom icon file", e);
             }
         }
 
@@ -1352,7 +1352,7 @@ public class Main {
             icon = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/icon.png")));
             return icon;
         } catch (final IOException e) {
-            log.log(Level.WARNING, "Failed to load default icon file", e);
+            log.warn("Failed to load default icon file", e);
         }
 
         icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);

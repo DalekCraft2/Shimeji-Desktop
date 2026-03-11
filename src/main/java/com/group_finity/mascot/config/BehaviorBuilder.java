@@ -9,13 +9,13 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An object that builds behaviors.
@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class BehaviorBuilder {
 
-    private static final Logger log = Logger.getLogger(BehaviorBuilder.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(BehaviorBuilder.class);
 
     private final Configuration configuration;
 
@@ -65,7 +65,7 @@ public class BehaviorBuilder {
             toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Toggleable")));
         }
 
-        log.log(Level.FINE, "Loading behavior: {0}", this);
+        log.debug("Loading behavior: {}", this);
 
         params.putAll(behaviorNode.getAttributes());
         params.remove(configuration.getSchema().getString("Name"));
@@ -85,7 +85,7 @@ public class BehaviorBuilder {
 
         this.nextAdditive = nextAdditive;
 
-        log.log(Level.FINE, "Finished loading behavior: {0}", this);
+        log.debug("Finished loading behavior: {}", this);
     }
 
     @Override

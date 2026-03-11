@@ -7,18 +7,18 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.12
  */
 public class Transform extends Animate {
-    private static final Logger log = Logger.getLogger(Transform.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Transform.class);
 
     public static final String PARAMETER_TRANSFORMBEHAVIOUR = "TransformBehaviour";
 
@@ -48,7 +48,7 @@ public class Transform extends Animate {
             getMascot().setImageSet(childType);
             getMascot().setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getTransformBehavior(), getMascot()));
         } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-            log.log(Level.SEVERE, "Failed to set behavior to \"" + getTransformBehavior() + "\" for mascot \"" + getMascot() + "\"", e);
+            log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", getTransformBehavior(), getMascot(), e);
             Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
         }
     }

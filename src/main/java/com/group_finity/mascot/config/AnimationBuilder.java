@@ -11,6 +11,8 @@ import com.group_finity.mascot.image.ImagePairLoader;
 import com.group_finity.mascot.image.ImagePairLoader.Filter;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -22,8 +24,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An object that builds animations.
@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class AnimationBuilder {
-    private static final Logger log = Logger.getLogger(AnimationBuilder.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(AnimationBuilder.class);
     private final String condition;
     private String imageSet = "";
     private final List<Pose> poses = new ArrayList<>();
@@ -49,7 +49,7 @@ public class AnimationBuilder {
         condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
         turn = animationNode.getAttribute(schema.getString("IsTurn")) != null && Boolean.parseBoolean(animationNode.getAttribute(schema.getString("IsTurn")));
 
-        log.log(Level.FINE, "Loading animations");
+        log.debug("Loading animations");
 
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Pose"))) {
             try {
@@ -67,7 +67,7 @@ public class AnimationBuilder {
             }
         }
 
-        log.log(Level.FINE, "Finished loading animations");
+        log.debug("Finished loading animations");
     }
 
     private Pose loadPose(final Entry frameNode) throws IOException {
@@ -135,7 +135,7 @@ public class AnimationBuilder {
 
         final Pose pose = new Pose(imagePath, imageRightPath, moveX, moveY, duration, soundText);
 
-        log.log(Level.FINE, "Finished loading pose: {0}", pose);
+        log.debug("Finished loading pose: {}", pose);
 
         return pose;
     }
@@ -166,7 +166,7 @@ public class AnimationBuilder {
 
         final Hotspot hotspot = new Hotspot(behaviourText, shape);
 
-        log.log(Level.FINE, "Finished loading hotspot: {0}", hotspot);
+        log.debug("Finished loading hotspot: {}", hotspot);
 
         return hotspot;
     }

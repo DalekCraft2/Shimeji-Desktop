@@ -6,11 +6,12 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.environment.Location;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Action for being dragged.
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Dragged extends ActionBase {
-    private static final Logger log = Logger.getLogger(Dragged.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Dragged.class);
 
     private static final String VARIABLE_FOOTX = "FootX";
 

@@ -6,11 +6,11 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Action for resisting being dragged.
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 // TODO: Try to fix the typos of "resist" and "resistance" being "regist" and "registance" without breaking compatibility.
 public class Regist extends ActionBase {
-    private static final Logger log = Logger.getLogger(Regist.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Regist.class);
 
     public static final String PARAMETER_OFFSETX = "OffsetX";
 
@@ -68,7 +68,7 @@ public class Regist extends ActionBase {
 
             getMascot().setLookRight(Math.random() < 0.5);
 
-            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
+            log.info("Lost ground ({}, {})", getMascot(), this);
             throw new LostGroundException();
         }
     }

@@ -9,11 +9,11 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An object that build actions.
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class ActionBuilder implements IActionBuilder {
 
-    private static final Logger log = Logger.getLogger(ActionBuilder.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ActionBuilder.class);
 
     /**
      * List of valid values for the "Type" attribute. "Embedded" is excluded because that is checked separately.
@@ -45,7 +45,7 @@ public class ActionBuilder implements IActionBuilder {
         type = actionNode.getAttribute(schema.getString("Type"));
         className = actionNode.getAttribute(schema.getString("Class"));
 
-        log.log(Level.FINE, "Loading action: {0}", this);
+        log.debug("Loading action: {}", this);
 
         try {
             params.putAll(actionNode.getAttributes());
@@ -78,7 +78,7 @@ public class ActionBuilder implements IActionBuilder {
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage") + " (" + this + ")");
         }
 
-        log.log(Level.FINE, "Finished loading action: {0}", this);
+        log.debug("Finished loading action: {}", this);
     }
 
     @Override

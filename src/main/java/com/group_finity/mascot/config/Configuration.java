@@ -11,12 +11,12 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An object that represents all data contained within a mascot's configuration files
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Configuration {
-    private static final Logger log = Logger.getLogger(Configuration.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
     private static final ResourceBundle SCHEMA_EN = ResourceBundle.getBundle("schema", Locale.US);
     private static final ResourceBundle SCHEMA_JA = ResourceBundle.getBundle("schema", Locale.JAPAN);
@@ -39,7 +39,7 @@ public class Configuration {
     private ResourceBundle schema;
 
     public void load(final Entry configurationNode, final String imageSet) throws ConfigurationException {
-        log.log(Level.FINE, "Reading configuration file...");
+        log.debug("Reading configuration file...");
 
         // check for Japanese XML tag and adapt locale accordingly
         if (configurationNode.hasChild("\u52D5\u4F5C\u30EA\u30B9\u30C8") ||
@@ -48,16 +48,16 @@ public class Configuration {
         } else {
             schema = SCHEMA_EN;
         }
-        log.log(Level.FINE, "Using {0} schema", schema.getLocale().toLanguageTag());
+        log.debug("Using {} schema", schema.getLocale().toLanguageTag());
 
         for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
             constants.put(constant.getAttribute(schema.getString("Name")),
                     constant.getAttribute(schema.getString("Value")));
         }
 
-        log.log(Level.FINE, "Reading action lists");
+        log.debug("Reading action lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
-            log.log(Level.FINE, "Reading an action list...");
+            log.debug("Reading an action list...");
 
             for (final Entry node : list.selectChildren(schema.getString("Action"))) {
                 final ActionBuilder action = new ActionBuilder(this, node, imageSet);
@@ -69,31 +69,31 @@ public class Configuration {
                 actionBuilders.put(action.getName(), action);
             }
 
-            log.log(Level.FINE, "Finished reading an action list");
+            log.debug("Finished reading an action list");
         }
-        log.log(Level.FINE, "Finished reading all action lists");
+        log.debug("Finished reading all action lists");
 
-        log.log(Level.FINE, "Reading behavior lists");
+        log.debug("Reading behavior lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("BehaviourList"))) {
-            log.log(Level.FINE, "Reading a behavior list...");
+            log.debug("Reading a behavior list...");
 
             loadBehaviors(list, new ArrayList<>());
 
-            log.log(Level.FINE, "Finished reading a behavior list");
+            log.debug("Finished reading a behavior list");
         }
-        log.log(Level.FINE, "Finished reading all behavior lists");
+        log.debug("Finished reading all behavior lists");
 
-        log.log(Level.FINE, "Reading information");
+        log.debug("Reading information");
         for (final Entry list : configurationNode.selectChildren(schema.getString("Information"))) {
-            log.log(Level.FINE, "Reading an information group...");
+            log.debug("Reading an information group...");
 
             loadInformation(list);
 
-            log.log(Level.FINE, "Finished reading information group");
+            log.debug("Finished reading information group");
         }
-        log.log(Level.FINE, "Finished reading all information");
+        log.debug("Finished reading all information");
 
-        log.log(Level.FINE, "Configuration loaded successfully");
+        log.debug("Configuration loaded successfully");
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions) throws ConfigurationException {
@@ -179,7 +179,7 @@ public class Configuration {
                         totalFrequency += behaviorFactory.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.log(Level.WARNING, "Failed to calculate the frequency of the behavior", e);
+                    log.warn("Failed to calculate the frequency of the behavior", e);
                 }
             }
         }
@@ -192,7 +192,7 @@ public class Configuration {
                         totalFrequency += behaviorFactory.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.log(Level.WARNING, "Failed to calculate the frequency of the behavior", e);
+                    log.warn("Failed to calculate the frequency of the behavior", e);
                 }
             }
         }

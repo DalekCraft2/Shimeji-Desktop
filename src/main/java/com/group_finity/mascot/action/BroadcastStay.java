@@ -2,10 +2,11 @@ package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  */
 @Deprecated
 public class BroadcastStay extends Stay {
-    private static final Logger log = Logger.getLogger(BroadcastStay.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(BroadcastStay.class);
 
     public BroadcastStay(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);

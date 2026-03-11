@@ -9,6 +9,7 @@ module com.group_finity.mascot {
     requires org.apache.commons.exec;
     requires com.jthemedetector;
     requires com.formdev.flatlaf;
+    requires org.slf4j;
 
     exports com.group_finity.mascot;
     exports com.group_finity.mascot.action;

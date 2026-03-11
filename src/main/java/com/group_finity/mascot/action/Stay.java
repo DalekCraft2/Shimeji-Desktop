@@ -4,11 +4,11 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An action that does not move.
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class Stay extends BorderedAction {
 
-    private static final Logger log = Logger.getLogger(Stay.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Stay.class);
 
     public Stay(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
@@ -30,7 +30,7 @@ public class Stay extends BorderedAction {
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
             // The mascot is off the ground
-            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
+            log.info("Lost ground ({}, {})", getMascot(), this);
             throw new LostGroundException();
         }
 

@@ -5,6 +5,9 @@
  */
 package com.group_finity.mascot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
@@ -22,8 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,7 +32,7 @@ import java.util.stream.IntStream;
  * @author Kilkakon
  */
 public class SettingsWindow extends JDialog {
-    private static final Logger log = Logger.getLogger(SettingsWindow.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(SettingsWindow.class);
     private final ArrayList<String> listData = new ArrayList<>();
     private final ArrayList<String> blacklistData = new ArrayList<>();
     private Boolean showTrayIcon = true;
@@ -207,14 +208,14 @@ public class SettingsWindow extends JDialog {
                 desktop.browse(new URI(url));
             } else {
                 if (desktop == null) {
-                    log.log(Level.WARNING, "Can not open URL \"{0}\", as desktop operations are not supported on this platform", url);
+                    log.warn("Can not open URL \"{}\", as desktop operations are not supported on this platform", url);
                 } else {
-                    log.log(Level.WARNING, "Can not open URL \"{0}\", as the desktop browse operation is not supported on this platform", url);
+                    log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
                 }
                 JOptionPane.showMessageDialog(this, Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url, "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (IOException | UnsupportedOperationException | URISyntaxException e) {
-            log.log(Level.SEVERE, "Failed to open URL \"" + url + "\"", e);
+            log.error("Failed to open URL \"{}\"", url, e);
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -820,7 +821,7 @@ public class SettingsWindow extends JDialog {
 
             properties.store(output, "Shimeji-ee Configuration Options");
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to save settings", e);
+            log.error("Failed to save settings", e);
         }
 
         dispose();

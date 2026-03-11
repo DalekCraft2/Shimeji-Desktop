@@ -8,20 +8,20 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.21.3
  */
 public class ComplexMove extends BorderedAction {
-    private static final Logger log = Logger.getLogger(ComplexMove.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ComplexMove.class);
 
     private final Breed.Delegate delegate = new Breed.Delegate(this);
 
@@ -124,7 +124,7 @@ public class ComplexMove extends BorderedAction {
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
             // The mascot is off the wall
-            log.log(Level.INFO, "Lost Ground ({0},{1})", new Object[]{getMascot(), this});
+            log.info("Lost ground ({}, {})", getMascot(), this);
             throw new LostGroundException();
         }
 
@@ -184,7 +184,9 @@ public class ComplexMove extends BorderedAction {
                     }
                 }
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                log.log(Level.SEVERE, "Failed to set behavior to \"" + (setFirstBehavior ? getTargetBehavior() : getBehavior()) + "\" for mascot \"" + (setFirstBehavior ? target.get() : getMascot()) + "\"", e);
+                log.error("Failed to set behavior to \"{}\" for mascot \"{}\"",
+                        setFirstBehavior ? getTargetBehavior() : getBehavior(),
+                        setFirstBehavior ? target.get() : getMascot(), e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
             }
         }

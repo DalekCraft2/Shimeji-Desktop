@@ -12,12 +12,12 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Simple {@link Behavior} implementation.
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class UserBehavior implements Behavior {
-    private static final Logger log = Logger.getLogger(UserBehavior.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(UserBehavior.class);
 
     public static final String BEHAVIOURNAME_FALL = "Fall";
 
@@ -67,7 +67,7 @@ public class UserBehavior implements Behavior {
 
         this.mascot = mascot;
 
-        log.log(Level.INFO, "Initializing behavior \"{0}\" for mascot \"{1}\"", new Object[]{name, mascot});
+        log.info("Initializing behavior \"{}\" for mascot \"{}\"", name, mascot);
 
         try {
             action.init(mascot);
@@ -215,7 +215,7 @@ public class UserBehavior implements Behavior {
                             <= getEnvironment().getScreen().getLeft()
                             || getEnvironment().getScreen().getRight() <= mascot.getBounds().getX()
                             || getEnvironment().getScreen().getBottom() <= mascot.getBounds().getY()) {
-                        log.log(Level.INFO, "Out of the screen bounds ({0}, {1})", new Object[]{mascot, this});
+                        log.info("Out of the screen bounds ({}, {})", mascot, this);
 
                         Area area = Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))
                                 ? getEnvironment().getScreen() : getEnvironment().getWorkArea();
@@ -229,7 +229,7 @@ public class UserBehavior implements Behavior {
                         }
                     }
                 } else {
-                    log.log(Level.INFO, "Completed behavior \"{0}\" for mascot \"{1}\"", new Object[]{name, mascot});
+                    log.info("Completed behavior \"{}\" for mascot \"{}\"", name, mascot);
 
                     try {
                         mascot.setBehavior(configuration.buildNextBehavior(name, mascot));
@@ -239,7 +239,7 @@ public class UserBehavior implements Behavior {
                 }
             }
         } catch (final LostGroundException e) {
-            log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{mascot, this});
+            log.info("Lost ground ({}, {})", mascot, this);
 
             try {
                 mascot.setCursorPosition(null);

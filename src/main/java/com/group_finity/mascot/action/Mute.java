@@ -4,18 +4,19 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.Clip;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.16
  */
 public class Mute extends InstantAction {
-    private static final Logger log = Logger.getLogger(Mute.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Mute.class);
 
     public static final String PARAMETER_SOUND = "Sound";
 

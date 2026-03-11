@@ -7,11 +7,12 @@ import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Action of throwing a window.
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class ThrowIE extends Animate {
-    private static final Logger log = Logger.getLogger(ThrowIE.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ThrowIE.class);
 
     public static final String PARAMETER_INITIALVX = "InitialVX";
 

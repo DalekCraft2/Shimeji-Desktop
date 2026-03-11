@@ -2,10 +2,11 @@ package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Action for offsetting.
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class Offset extends InstantAction {
 
-    private static final Logger log = Logger.getLogger(Offset.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Offset.class);
 
     public static final String PARAMETER_OFFSETX = "X";
 

@@ -6,11 +6,12 @@ import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Jumping action.
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Jump extends ActionBase {
-    private static final Logger log = Logger.getLogger(Jump.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Jump.class);
 
     public static final String PARAMETER_TARGETX = "TargetX";
 

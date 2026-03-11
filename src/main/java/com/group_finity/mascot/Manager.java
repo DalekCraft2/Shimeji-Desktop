@@ -5,13 +5,13 @@ import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.platform.NativeFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An object that manages the list of {@link Mascot Mascots} and takes timing.
@@ -24,8 +24,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Manager {
-
-    private static final Logger log = Logger.getLogger(Manager.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Manager.class);
 
     /**
      * The duration of each tick, in milliseconds.
@@ -125,7 +124,7 @@ public class Manager {
                                 // Move the mascots.
                                 tick();
                             } catch (RuntimeException e) {
-                                log.log(Level.SEVERE, "An error occurred while running the tick method.", e);
+                                log.error("An error occurred while running the tick method.", e);
                             }
                         }
                         continue;
@@ -232,7 +231,7 @@ public class Manager {
                     Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);
+                    log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
                     mascot.dispose();
                 }
@@ -255,7 +254,7 @@ public class Manager {
                         mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                     }
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Failed to set behavior to \"" + name + "\" for mascot \"" + mascot + "\"", e);
+                    log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
                     mascot.dispose();
                 }

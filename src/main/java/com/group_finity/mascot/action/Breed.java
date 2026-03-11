@@ -8,12 +8,12 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Multiplying action.
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class Breed extends Animate {
-    private static final Logger log = Logger.getLogger(Breed.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Breed.class);
 
     // thanks to LavenderSnek for the idea for this delegate, cleans up the breeding code nicely
     static class Delegate {
@@ -79,7 +79,7 @@ public class Breed extends Animate {
                 // Create a mascot
                 final Mascot mascot = new Mascot(childType);
 
-                log.log(Level.INFO, "Breed Mascot ({0},{1},{2})", new Object[]{action.getMascot(), action, mascot});
+                log.info("Breed Mascot ({},{},{})", action.getMascot(), action, mascot);
 
                 // Start outside the range
                 if (action.getMascot().isLookRight()) {
@@ -95,7 +95,7 @@ public class Breed extends Animate {
                     mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour(), action.getMascot()));
                     action.getMascot().getManager().add(mascot);
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                    log.log(Level.SEVERE, "Failed to create mascot \"" + mascot + "\" with behavior \"" + getBornBehaviour() + "\"", e);
+                    log.error("Failed to create mascot \"{}\" with behavior \"{}\"", mascot, getBornBehaviour(), e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage"), e);
                     mascot.dispose();
                 }

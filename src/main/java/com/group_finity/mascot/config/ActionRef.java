@@ -4,11 +4,11 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.exception.ActionInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An object that builds action references.
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class ActionRef implements IActionBuilder {
 
-    private static final Logger log = Logger.getLogger(ActionRef.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ActionRef.class);
 
     private final Configuration configuration;
 
@@ -32,7 +32,7 @@ public class ActionRef implements IActionBuilder {
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
         params.putAll(refNode.getAttributes());
 
-        log.log(Level.FINE, "Finished loading action reference: {0}", this);
+        log.debug("Finished loading action reference: {}", this);
     }
 
     @Override

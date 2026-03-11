@@ -6,12 +6,12 @@ import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Action of walking with a window.
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author Shimeji-ee Group
  */
 public class WalkWithIE extends Move {
-    private static final Logger log = Logger.getLogger(WalkWithIE.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(WalkWithIE.class);
 
     public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
 
@@ -56,7 +56,7 @@ public class WalkWithIE extends Move {
     protected void tick() throws LostGroundException, VariableException {
         final Area activeIE = getEnvironment().getActiveIE();
         if (!activeIE.isVisible()) {
-            log.log(Level.INFO, "IE was hidden ({0}, {1})", new Object[]{getMascot(), this});
+            log.info("IE was hidden ({}, {})", getMascot(), this);
             throw new LostGroundException();
         }
 
@@ -69,13 +69,13 @@ public class WalkWithIE extends Move {
         if (getMascot().isLookRight()) {
             if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
+                log.info("Lost ground ({}, {})", getMascot(), this);
                 throw new LostGroundException();
             }
         } else {
             if (getMascot().getAnchor().x + offsetX != activeIE.getRight()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.log(Level.INFO, "Lost ground ({0}, {1})", new Object[]{getMascot(), this});
+                log.info("Lost ground ({}, {})", getMascot(), this);
                 throw new LostGroundException();
             }
         }

@@ -3,10 +3,11 @@ package com.group_finity.mascot.action;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * A base class for actions that can be completed instantly by simply changing the state of the mascot.
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  */
 public abstract class InstantAction extends ActionBase {
 
-    private static final Logger log = Logger.getLogger(InstantAction.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(InstantAction.class);
 
     public InstantAction(ResourceBundle schema, final VariableMap context) {
         super(schema, new ArrayList<>(), context);

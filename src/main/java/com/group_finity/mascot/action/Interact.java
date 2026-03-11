@@ -7,18 +7,18 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.VariableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Kilkakon
  * @since 1.0.14
  */
 public class Interact extends Animate {
-    private static final Logger log = Logger.getLogger(Interact.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Interact.class);
 
     public static final String PARAMETER_BEHAVIOUR = "Behaviour";
 
@@ -41,7 +41,7 @@ public class Interact extends Animate {
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                log.log(Level.SEVERE, "Failed to set behavior to \"" + getBehavior() + "\" for mascot \"" + getMascot() + "\"", e);
+                log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", getBehavior(), getMascot(), e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
             }
         }
