@@ -87,6 +87,13 @@ public class Main {
     private List<String> imageSets = new ArrayList<>();
     private final Map<String, Configuration> configurations = new ConcurrentHashMap<>();
     private final Map<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
+
+    /**
+     * A collection of configurations that failed to load.
+     * This is used to avoid attempting to load these configurations more than once.
+     */
+    private final Collection<String> failedConfigurations = new ArrayList<>();
+
     private final Properties properties = new Properties();
     private ResourceBundle languageBundle;
 
@@ -202,6 +209,8 @@ public class Main {
                     index--;
                 }
             }
+            // Clear any items that were added to this collection during the loading sequence
+            failedConfigurations.clear();
         }
         while (imageSets.isEmpty());
 
@@ -236,6 +245,8 @@ public class Main {
     private boolean loadConfiguration(final String imageSet) {
         if (configurations.containsKey(imageSet)) {
             return true;
+        } else if (failedConfigurations.contains(imageSet)) {
+            return false;
         }
         try {
             // try to load in the correct XML files
@@ -401,6 +412,7 @@ public class Main {
             log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
             showError(languageBundle.getString("FailedLoadConfigErrorMessage") + " (" + imageSet + ")", e);
             configurations.remove(imageSet);
+            failedConfigurations.add(imageSet);
         }
 
         return false;
@@ -775,12 +787,19 @@ public class Main {
                     ImagePairs.clear();
                     configurations.clear();
 
-                    // Load settings
-                    for (String imageSet : imageSets) {
-                        loadConfiguration(imageSet);
+                    // Load mascot configurations
+                    for (int index = 0; index < imageSets.size(); index++) {
+                        String imageSet = imageSets.get(index);
+                        if (!loadConfiguration(imageSet)) {
+                            // failed to load
+                            imageSets.remove(imageSet);
+                            index--;
+                        }
                     }
+                    // Clear any items that were added to this collection during the loading sequence
+                    failedConfigurations.clear();
 
-                    // Create the first mascot
+                    // Create mascots
                     for (String imageSet : imageSets) {
                         createMascot(imageSet);
                     }
@@ -1214,6 +1233,9 @@ public class Main {
         for (String a : toAdd)
             addImageSet(a);
 
+        // Clear any items that were added to this collection during the loading sequence
+        failedConfigurations.clear();
+
         manager.setExitOnLastRemoved(isExit);
     }
 
@@ -1272,7 +1294,7 @@ public class Main {
         if (configurations.containsKey(imageSet)) {
             imageSets.add(imageSet);
             createMascot(imageSet);
-        } else {
+        } else if (!failedConfigurations.contains(imageSet)) {
             if (loadConfiguration(imageSet)) {
                 imageSets.add(imageSet);
                 String informationAlreadySeen = properties.getProperty("InformationDismissed", "");
