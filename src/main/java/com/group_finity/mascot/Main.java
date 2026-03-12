@@ -45,6 +45,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,9 +84,9 @@ public class Main {
 
     private static final Main instance = new Main();
     private final Manager manager = new Manager();
-    private ArrayList<String> imageSets = new ArrayList<>();
-    private final ConcurrentHashMap<String, Configuration> configurations = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
+    private List<String> imageSets = new ArrayList<>();
+    private final Map<String, Configuration> configurations = new ConcurrentHashMap<>();
+    private final Map<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
     private final Properties properties = new Properties();
     private ResourceBundle languageBundle;
 
@@ -1189,7 +1190,7 @@ public class Main {
         toRemove.removeAll(newImageSets);
 
         Collection<String> toAdd = new ArrayList<>();
-        ArrayList<String> toRetain = new ArrayList<>();
+        Collection<String> toRetain = new ArrayList<>();
         for (String set : newImageSets) {
             if (!imageSets.contains(set)) {
                 toAdd.add(set);
@@ -1197,7 +1198,7 @@ public class Main {
             if (!toRetain.contains(set)) {
                 toRetain.add(set);
             }
-            populateArrayListWithChildSets(set, toRetain);
+            populateCollectionWithChildSets(set, toRetain);
         }
 
         boolean isExit = manager.isExitOnLastRemoved();
@@ -1212,18 +1213,18 @@ public class Main {
         manager.setExitOnLastRemoved(isExit);
     }
 
-    private void populateArrayListWithChildSets(String imageSet, ArrayList<String> childList) {
+    private void populateCollectionWithChildSets(String imageSet, Collection<String> childList) {
         if (childImageSets.containsKey(imageSet)) {
             for (String set : childImageSets.get(imageSet)) {
                 if (!childList.contains(set)) {
-                    populateArrayListWithChildSets(set, childList);
                     childList.add(set);
+                    populateCollectionWithChildSets(set, childList);
                 }
             }
         }
     }
 
-    private void removeLoadedImageSet(String imageSet, ArrayList<String> setsToIgnore) {
+    private void removeLoadedImageSet(String imageSet, Collection<String> setsToIgnore) {
         /*
          * If a mascot "Mascot1" has the ability to transform into another mascot type "Mascot2", Mascot2 is stored as a child image set of Mascot1.
          * If Mascot2 is unchecked in the Shimeji chooser, the existing Mascot2 mascots will only be removed if no Mascot1 instances exist, because Mascot2 is a child of Mascot1.
