@@ -1229,25 +1229,19 @@ public class Main {
          * If Mascot2 is unchecked in the Shimeji chooser, the existing Mascot2 mascots will only be removed if no Mascot1 instances exist, because Mascot2 is a child of Mascot1.
          * It's confusing, but it prevents errors.
          */
-        // TODO: Change this to remove the mascots of the provided image set ALWAYS, but hold off on unloading the actual image set until all mascots that have it as a child image set have also been unloaded.
-        if (childImageSets.containsKey(imageSet)) {
-            for (String set : childImageSets.get(imageSet)) {
-                if (!setsToIgnore.contains(set)) {
-                    setsToIgnore.add(set);
-                    imageSets.remove(imageSet);
-                    manager.remainNone(imageSet);
-                    configurations.remove(imageSet);
-                    ImagePairs.removeAll(imageSet);
-                    removeLoadedImageSet(set, setsToIgnore);
-                }
-            }
-        }
-
+        // TODO: Remove entries from childImageSets and Sounds to prevent unnecessary memory allocation
         if (!setsToIgnore.contains(imageSet)) {
+            setsToIgnore.add(imageSet);
             imageSets.remove(imageSet);
             manager.remainNone(imageSet);
             configurations.remove(imageSet);
             ImagePairs.removeAll(imageSet);
+        }
+
+        if (childImageSets.containsKey(imageSet)) {
+            for (String set : childImageSets.get(imageSet)) {
+                removeLoadedImageSet(set, setsToIgnore);
+            }
         }
     }
 
