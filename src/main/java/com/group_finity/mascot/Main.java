@@ -1213,6 +1213,12 @@ public class Main {
         manager.setExitOnLastRemoved(isExit);
     }
 
+    /**
+     * Recursively populates the given collection with all child image sets of the given image set.
+     *
+     * @param imageSet the image set whose children should be added to the collection
+     * @param childList the collection to populate
+     */
     private void populateCollectionWithChildSets(String imageSet, Collection<String> childList) {
         if (childImageSets.containsKey(imageSet)) {
             for (String set : childImageSets.get(imageSet)) {
@@ -1224,12 +1230,16 @@ public class Main {
         }
     }
 
+    /**
+     * Unloads the given image set and disposes of any mascots of that image set, unless it is a child image set of
+     * an image set that has been selected in the image set chooser.
+     * If the given image set has any children image sets that have not been selected in the image set chooser,
+     * those image sets will also be unloaded and their mascots will be disposed.
+     *
+     * @param imageSet the image set to remove
+     * @param setsToIgnore a collection of image sets that should not be removed
+     */
     private void removeLoadedImageSet(String imageSet, Collection<String> setsToIgnore) {
-        /*
-         * If a mascot "Mascot1" has the ability to transform into another mascot type "Mascot2", Mascot2 is stored as a child image set of Mascot1.
-         * If Mascot2 is unchecked in the Shimeji chooser, the existing Mascot2 mascots will only be removed if no Mascot1 instances exist, because Mascot2 is a child of Mascot1.
-         * It's confusing, but it prevents errors.
-         */
         // TODO: Remove entries from childImageSets and Sounds to prevent unnecessary memory allocation
         if (!setsToIgnore.contains(imageSet)) {
             setsToIgnore.add(imageSet);
@@ -1246,6 +1256,14 @@ public class Main {
         }
     }
 
+    /**
+     * Loads the given image set's configuration if it is not yet loaded, adds it to the list of loaded image sets,
+     * and creates a mascot of the image set.
+     * If the given image set's configuration is not yet loaded and its information has not been seen,
+     * its information window will be shown after the configuration has loaded.
+     *
+     * @param imageSet the image set to add
+     */
     private void addImageSet(String imageSet) {
         if (configurations.containsKey(imageSet)) {
             imageSets.add(imageSet);
