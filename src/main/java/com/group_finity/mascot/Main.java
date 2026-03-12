@@ -195,10 +195,10 @@ public class Main {
 
             // Load mascot configurations
             for (int index = 0; index < imageSets.size(); index++) {
-                if (!loadConfiguration(imageSets.get(index))) {
-                    // failed validation
-                    configurations.remove(imageSets.get(index));
-                    imageSets.remove(imageSets.get(index));
+                String imageSet = imageSets.get(index);
+                if (!loadConfiguration(imageSet)) {
+                    // failed to load
+                    imageSets.remove(imageSet);
                     index--;
                 }
             }
@@ -234,6 +234,9 @@ public class Main {
      * @param imageSet the image set to load
      */
     private boolean loadConfiguration(final String imageSet) {
+        if (configurations.containsKey(imageSet)) {
+            return true;
+        }
         try {
             // try to load in the correct XML files
             Path filePath = CONFIG_DIRECTORY;
@@ -397,6 +400,7 @@ public class Main {
                  RuntimeException e) {
             log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
             showError(languageBundle.getString("FailedLoadConfigErrorMessage") + " (" + imageSet + ")", e);
+            configurations.remove(imageSet);
         }
 
         return false;
@@ -1282,9 +1286,6 @@ public class Main {
                     updateConfigFile();
                 }
                 createMascot(imageSet);
-            } else {
-                // conf failed
-                configurations.remove(imageSet); // maybe move this to the loadConfig catch
             }
         }
     }
