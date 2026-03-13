@@ -155,8 +155,6 @@ public class Main {
                     + "Select fewer image sets or move some to the\n"
                     + "img/unused folder and try again.");
             System.exit(0);
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -190,29 +188,9 @@ public class Main {
                     imageSets.add(set.trim());
                 }
         }
-        do {
-            if (imageSets.isEmpty()) {
-                SwingUtilities.invokeAndWait(() -> {
-                    imageSets = new ImageSetChooser(frame, true).display();
-                    if (imageSets == null) {
-                        exit();
-                    }
-                });
-            }
 
-            // Load mascot configurations
-            for (int index = 0; index < imageSets.size(); index++) {
-                String imageSet = imageSets.get(index);
-                if (!loadConfiguration(imageSet)) {
-                    // failed to load
-                    imageSets.remove(imageSet);
-                    index--;
-                }
-            }
-            // Clear any items that were added to this collection during the loading sequence
-            failedConfigurations.clear();
-        }
-        while (imageSets.isEmpty());
+        // Load mascot configurations
+        configurationLoadLoop();
 
         // Create the tray icon
         SwingUtilities.invokeLater(this::createTrayIcon);
@@ -235,6 +213,40 @@ public class Main {
         }
 
         manager.start();
+    }
+
+    /**
+     * Shows the image set chooser if there are no image sets selected, and then loads the selected image sets.
+     * If none of the selected image sets' configurations successfully load, the process repeats.
+     */
+    private void configurationLoadLoop() {
+        do {
+            if (imageSets.isEmpty()) {
+                try {
+                    SwingUtilities.invokeAndWait(() -> {
+                        imageSets = new ImageSetChooser(frame, true).display();
+                        if (imageSets == null) {
+                            exit();
+                        }
+                    });
+                } catch (InterruptedException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            // Load mascot configurations
+            for (int index = 0; index < imageSets.size(); index++) {
+                String imageSet = imageSets.get(index);
+                if (!loadConfiguration(imageSet)) {
+                    // failed to load
+                    imageSets.remove(imageSet);
+                    index--;
+                }
+            }
+            // Clear any items that were added to this collection during the loading sequence
+            failedConfigurations.clear();
+        }
+        while (imageSets.isEmpty());
     }
 
     /**
@@ -788,16 +800,7 @@ public class Main {
                     configurations.clear();
 
                     // Load mascot configurations
-                    for (int index = 0; index < imageSets.size(); index++) {
-                        String imageSet = imageSets.get(index);
-                        if (!loadConfiguration(imageSet)) {
-                            // failed to load
-                            imageSets.remove(imageSet);
-                            index--;
-                        }
-                    }
-                    // Clear any items that were added to this collection during the loading sequence
-                    failedConfigurations.clear();
+                    configurationLoadLoop();
 
                     // Create mascots
                     for (String imageSet : imageSets) {
@@ -1235,6 +1238,11 @@ public class Main {
 
         // Clear any items that were added to this collection during the loading sequence
         failedConfigurations.clear();
+
+        if (imageSets.isEmpty()) {
+            // All configurations failed to load, so prompt the user to select image sets again
+            configurationLoadLoop();
+        }
 
         manager.setExitOnLastRemoved(isExit);
     }
