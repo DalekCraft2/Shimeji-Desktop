@@ -13,7 +13,8 @@ import java.io.IOException;
  */
 public class SoundLoader {
     public static void load(final String name, final float volume) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        if (Sounds.contains(name + volume)) {
+        String key = name + volume;
+        if (Sounds.contains(key)) {
             return;
         }
 
@@ -27,6 +28,6 @@ public class SoundLoader {
             }
         });
 
-        Sounds.put(name + volume, clip);
+        Sounds.put(key, clip);
     }
 }

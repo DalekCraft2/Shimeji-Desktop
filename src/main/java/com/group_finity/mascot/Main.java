@@ -799,6 +799,7 @@ public class Main {
 
                     // Wipe all loaded data
                     ImagePairs.clear();
+                    Sounds.clear();
                     configurations.clear();
 
                     // Load mascot configurations

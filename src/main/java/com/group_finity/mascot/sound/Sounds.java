@@ -27,6 +27,13 @@ public class Sounds {
         return SOUNDS.containsKey(fileName);
     }
 
+    public static void clear() {
+        for (Clip clip : SOUNDS.values()) {
+            clip.close();
+        }
+        SOUNDS.clear();
+    }
+
     public static Clip getSound(String fileName) {
         if (!SOUNDS.containsKey(fileName)) {
             return null;
