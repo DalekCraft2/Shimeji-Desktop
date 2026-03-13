@@ -53,16 +53,14 @@ public class Sounds {
         SOUNDS.clear();
     }
 
-    public static boolean isMuted() {
-        return !Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Sounds", "true"));
+    public static boolean isEnabled() {
+        return Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Sounds", "true"));
     }
 
-    public static void setMuted(boolean mutedFlag) {
-        if (mutedFlag) {
-            // mute everything
-            for (Clip clip : SOUNDS.values()) {
-                clip.stop();
-            }
+    public static void stopAll() {
+        // mute everything
+        for (Clip clip : SOUNDS.values()) {
+            clip.stop();
         }
     }
 }

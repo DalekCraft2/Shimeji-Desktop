@@ -504,7 +504,7 @@ public class Mascot {
         });
 
         // play sound if requested
-        if (!Sounds.isMuted() && sound != null && Sounds.contains(sound)) {
+        if (Sounds.isEnabled() && sound != null && Sounds.contains(sound)) {
             Clip clip = Sounds.getSound(sound);
             if (!clip.isRunning()) {
                 clip.stop();

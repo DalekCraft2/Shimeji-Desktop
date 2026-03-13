@@ -55,9 +55,8 @@ public class Mute extends InstantAction {
                 }
             }
         } else {
-            if (!Sounds.isMuted()) {
-                Sounds.setMuted(true);
-                Sounds.setMuted(false);
+            if (Sounds.isEnabled()) {
+                Sounds.stopAll();
             }
         }
     }

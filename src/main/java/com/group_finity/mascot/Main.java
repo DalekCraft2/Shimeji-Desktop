@@ -705,7 +705,8 @@ public class Main {
             soundsMenu.addItemListener(e1 -> {
                 boolean result = toggleBooleanSetting("Sounds", true);
                 soundsMenu.setState(result);
-                Sounds.setMuted(!result);
+                if (!result)
+                    Sounds.stopAll();
                 updateConfigFile();
                 btnAllowedBehaviours.setEnabled(true);
             });
