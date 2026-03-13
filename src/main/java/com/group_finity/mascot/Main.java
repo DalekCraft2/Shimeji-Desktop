@@ -424,6 +424,8 @@ public class Main {
             log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
             showError(languageBundle.getString("FailedLoadConfigErrorMessage") + " (" + imageSet + ")", e);
             configurations.remove(imageSet);
+            childImageSets.remove(imageSet);
+            ImagePairs.removeAll(imageSet);
             failedConfigurations.add(imageSet);
         }
 
@@ -1274,7 +1276,7 @@ public class Main {
      * @param setsToIgnore a collection of image sets that should not be removed
      */
     private void removeLoadedImageSet(String imageSet, Collection<String> setsToIgnore) {
-        // TODO: Remove entries from childImageSets and Sounds to prevent unnecessary memory allocation
+        // TODO: Remove entries from Sounds to prevent unnecessary memory allocation
         if (!setsToIgnore.contains(imageSet)) {
             setsToIgnore.add(imageSet);
             imageSets.remove(imageSet);
@@ -1287,6 +1289,8 @@ public class Main {
                     removeLoadedImageSet(set, setsToIgnore);
                 }
             }
+
+            childImageSets.remove(imageSet);
         }
     }
 
