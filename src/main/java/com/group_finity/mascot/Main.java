@@ -1281,11 +1281,11 @@ public class Main {
             manager.remainNone(imageSet);
             configurations.remove(imageSet);
             ImagePairs.removeAll(imageSet);
-        }
 
-        if (childImageSets.containsKey(imageSet)) {
-            for (String set : childImageSets.get(imageSet)) {
-                removeLoadedImageSet(set, setsToIgnore);
+            if (childImageSets.containsKey(imageSet)) {
+                for (String set : childImageSets.get(imageSet)) {
+                    removeLoadedImageSet(set, setsToIgnore);
+                }
             }
         }
     }
