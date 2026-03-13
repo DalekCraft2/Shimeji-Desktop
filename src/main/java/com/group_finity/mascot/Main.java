@@ -86,7 +86,7 @@ public class Main {
     private final Manager manager = new Manager();
     private List<String> imageSets = new ArrayList<>();
     private final Map<String, Configuration> configurations = new ConcurrentHashMap<>();
-    private final Map<String, ArrayList<String>> childImageSets = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> childImageSets = new ConcurrentHashMap<>();
 
     /**
      * A collection of configurations that failed to load.
@@ -390,7 +390,7 @@ public class Main {
 
             configurations.put(imageSet, configuration);
 
-            ArrayList<String> childMascots = new ArrayList<>();
+            List<String> childMascots = new ArrayList<>();
 
             // born mascot bit goes here...
             for (final Entry list : new Entry(actions.getDocumentElement()).selectChildren(actionsSchema.getString("ActionList"))) {
@@ -1155,7 +1155,7 @@ public class Main {
     }
 
     private void setMascotInformationDismissed(final String imageSet) {
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         String[] data = properties.getProperty("InformationDismissed", "").split("/");
 
         if (data.length > 0 && !data[0].isEmpty()) {
@@ -1169,7 +1169,7 @@ public class Main {
     }
 
     public void setMascotBehaviorEnabled(final String name, final Mascot mascot, boolean enabled) {
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         String[] data = properties.getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/");
 
         if (data.length > 0 && !data[0].isEmpty()) {
