@@ -1119,7 +1119,7 @@ public class Main {
         }
     }
 
-    private void refreshLanguage(Locale locale) {
+    private void loadLanguage(Locale locale) {
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
             try (URLClassLoader loader = new URLClassLoader(urls)) {
@@ -1135,14 +1135,14 @@ public class Main {
     private void updateLanguage(Locale locale) {
         if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(locale.toLanguageTag())) {
             properties.setProperty("Language", locale.toLanguageTag());
-            refreshLanguage(locale);
+            loadLanguage(locale);
         }
     }
 
     private void updateLanguage(String languageTag) {
         if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(languageTag)) {
             properties.setProperty("Language", languageTag);
-            refreshLanguage(Locale.forLanguageTag(languageTag));
+            loadLanguage(Locale.forLanguageTag(languageTag));
         }
     }
 
