@@ -159,7 +159,7 @@ public class Main {
     }
 
     public void run() throws InterruptedException, InvocationTargetException {
-        // load settings
+        // Load settings
         if (Files.isRegularFile(SETTINGS_FILE)) {
             try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
                 properties.load(input);
@@ -168,18 +168,9 @@ public class Main {
             }
         }
 
-        // load languages
+        // Load language
         Locale locale = Locale.forLanguageTag(properties.getProperty("Language", Locale.UK.toLanguageTag()));
-        try {
-            URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
-            try (URLClassLoader loader = new URLClassLoader(urls)) {
-                languageBundle = ResourceBundle.getBundle("language", locale, loader);
-            }
-        } catch (IOException e) {
-            log.error("Failed to load language file for locale {}", locale.toLanguageTag(), e);
-            showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
-            exit();
-        }
+        loadLanguage(locale);
 
         // Get the image sets to use
         if (!Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"))) {
