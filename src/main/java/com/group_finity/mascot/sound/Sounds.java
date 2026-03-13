@@ -15,23 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0.9
  */
 public class Sounds {
-    private static final ConcurrentHashMap<String, Clip> SOUNDS = new ConcurrentHashMap<>();
-
-    public static void put(final String fileName, final Clip clip) {
-        if (!SOUNDS.containsKey(fileName)) {
-            SOUNDS.put(fileName, clip);
-        }
-    }
+    private static final Map<String, Clip> SOUNDS = new ConcurrentHashMap<>();
 
     public static boolean contains(String fileName) {
         return SOUNDS.containsKey(fileName);
-    }
-
-    public static void clear() {
-        for (Clip clip : SOUNDS.values()) {
-            clip.close();
-        }
-        SOUNDS.clear();
     }
 
     public static Clip getSound(String fileName) {
@@ -51,6 +38,19 @@ public class Sounds {
             }
         }
         return sounds;
+    }
+
+    public static void put(final String fileName, final Clip clip) {
+        if (!SOUNDS.containsKey(fileName)) {
+            SOUNDS.put(fileName, clip);
+        }
+    }
+
+    public static void clear() {
+        for (Clip clip : SOUNDS.values()) {
+            clip.close();
+        }
+        SOUNDS.clear();
     }
 
     public static boolean isMuted() {
