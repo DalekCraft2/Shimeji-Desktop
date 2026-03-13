@@ -9,21 +9,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ImagePairs {
     private static final ConcurrentHashMap<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
 
-    public static void put(final String filename, final ImagePair imagepair) {
-        if (!imagePairs.containsKey(filename)) {
-            imagePairs.put(filename, imagepair);
+    public static void put(final String fileName, final ImagePair imagePair) {
+        if (!imagePairs.containsKey(fileName)) {
+            imagePairs.put(fileName, imagePair);
         }
     }
 
-    public static ImagePair getImagePair(String filename) {
-        if (!imagePairs.containsKey(filename)) {
+    public static ImagePair getImagePair(String fileName) {
+        if (!imagePairs.containsKey(fileName)) {
             return null;
         }
-        return imagePairs.get(filename);
+        return imagePairs.get(fileName);
     }
 
-    public static boolean contains(String filename) {
-        return imagePairs.containsKey(filename);
+    public static boolean contains(String fileName) {
+        return imagePairs.containsKey(fileName);
     }
 
     public static void clear() {
@@ -38,10 +38,10 @@ public class ImagePairs {
         imagePairs.keySet().removeIf(key -> searchTerm.equals(Path.of(key).getParent().toString()));
     }
 
-    public static MascotImage getImage(String filename, boolean isLookRight) {
-        if (!imagePairs.containsKey(filename)) {
+    public static MascotImage getImage(String fileName, boolean isLookRight) {
+        if (!imagePairs.containsKey(fileName)) {
             return null;
         }
-        return imagePairs.get(filename).getImage(isLookRight);
+        return imagePairs.get(fileName).getImage(isLookRight);
     }
 }
