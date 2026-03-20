@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class ImageSetChooser extends JDialog {
     private static final Logger log = LoggerFactory.getLogger(ImageSetChooser.class);
-    private final ArrayList<String> imageSets = new ArrayList<>();
+    private final List<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
 
@@ -209,7 +209,7 @@ public class ImageSetChooser extends JDialog {
         lstImageSets.setSelectedIndices(convertIntegers(selectedIndices));
     }
 
-    public ArrayList<String> display() {
+    public List<String> display() {
         setTitle(Main.getInstance().getLanguageBundle().getString("ShimejiImageSetChooser"));
         jLabel1.setText(Main.getInstance().getLanguageBundle().getString("SelectImageSetsToUse"));
         useSelectedButton.setText(Main.getInstance().getLanguageBundle().getString("UseSelected"));
