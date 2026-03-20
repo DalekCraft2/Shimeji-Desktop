@@ -17,14 +17,24 @@ import java.util.stream.Collectors;
  */
 public class Sounds {
     /**
-     * A map that maps keys with the format "fileName:volume" to sound clips.
+     * A map of strings (in the format "fileName:volume") and sound clips.
      */
     private static final Map<String, Clip> SOUNDS = new ConcurrentHashMap<>();
 
     /**
-     * A map that maps sound file names to lists of all sound clips associated with that sound file.
+     * A map of sound file names and lists of all sound clips associated with that sound file.
      */
     private static final Map<String, List<String>> FILE_NAME_MAP = new ConcurrentHashMap<>();
+
+    /**
+     * A map that stores which image sets use the sound with the given key.
+     */
+    private static final Map<String, List<String>> SOUNDS_TO_IMAGESETS = new ConcurrentHashMap<>();
+
+    /**
+     * A map that stores which sounds are used by the given image set.
+     */
+    private static final Map<String, List<String>> IMAGESETS_TO_SOUNDS = new ConcurrentHashMap<>();
 
     public static boolean contains(String key) {
         return SOUNDS.containsKey(key);
@@ -50,12 +60,68 @@ public class Sounds {
         }
     }
 
+    /**
+     * Marks a sound as being used by the given image set.
+     *
+     * @param sound the key of a sound clip, in the format "fileName:volume"
+     * @param imageSet the name of the image set that uses the sound
+     */
+    public static void addUsage(String sound, String imageSet) {
+        SOUNDS_TO_IMAGESETS.putIfAbsent(sound, new ArrayList<>(4));
+        IMAGESETS_TO_SOUNDS.putIfAbsent(imageSet, new ArrayList<>(4));
+        if (!SOUNDS_TO_IMAGESETS.get(sound).contains(imageSet)) {
+            SOUNDS_TO_IMAGESETS.get(sound).add(imageSet);
+            IMAGESETS_TO_SOUNDS.get(imageSet).add(sound);
+        }
+    }
+
+    /**
+     * Marks a sound as not being used by the given image set.
+     * If the given sound is no longer used by any image sets after the operation, it is unloaded.
+     *
+     * @param sound the key of the sound clip, in the format "fileName:volume"
+     * @param imageSet the name of the image set that no longer uses the sound
+     */
+    public static void removeUsage(String sound, String imageSet) {
+        List<String> usages = SOUNDS_TO_IMAGESETS.get(sound);
+        usages.remove(imageSet);
+        if (usages.isEmpty()) {
+            // If there are no more usages of this particular sound clip, remove it from the other two maps
+            SOUNDS_TO_IMAGESETS.remove(sound);
+            SOUNDS.remove(sound).close();
+            String fileName = sound.substring(0, sound.lastIndexOf(':'));
+            FILE_NAME_MAP.get(fileName).remove(sound);
+            if (FILE_NAME_MAP.get(fileName).isEmpty()) {
+                FILE_NAME_MAP.remove(fileName);
+            }
+        }
+    }
+
+    public static void removeAll(String searchTerm) {
+        if (!IMAGESETS_TO_SOUNDS.containsKey(searchTerm)) {
+            return;
+        }
+
+        /* Because sounds can be loaded from a global sounds folder, it's possible that some image sets share common
+         * sounds. This means we can't indiscriminately unload all sounds used by this image set like
+         * ImagePairs.removeAll() does with image pairs; instead, we have to mark each sound as no longer being used by
+         * the image set, and then unload them only if no other image sets are using them.
+         */
+        for (String sound : IMAGESETS_TO_SOUNDS.get(searchTerm)) {
+            removeUsage(sound, searchTerm);
+        }
+
+        IMAGESETS_TO_SOUNDS.remove(searchTerm);
+    }
+
     public static void clear() {
         for (Clip clip : SOUNDS.values()) {
             clip.close();
         }
         SOUNDS.clear();
         FILE_NAME_MAP.clear();
+        SOUNDS_TO_IMAGESETS.clear();
+        IMAGESETS_TO_SOUNDS.clear();
     }
 
     public static boolean isEnabled() {

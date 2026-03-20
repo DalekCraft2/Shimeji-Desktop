@@ -417,6 +417,7 @@ public class Main {
             configurations.remove(imageSet);
             childImageSets.remove(imageSet);
             ImagePairs.removeAll(imageSet);
+            Sounds.removeAll(imageSet);
             failedConfigurations.add(imageSet);
         }
 
@@ -1269,13 +1270,13 @@ public class Main {
      * @param setsToIgnore a collection of image sets that should not be removed
      */
     private void removeLoadedImageSet(String imageSet, Collection<String> setsToIgnore) {
-        // TODO: Remove entries from Sounds to prevent unnecessary memory allocation
         if (!setsToIgnore.contains(imageSet)) {
             setsToIgnore.add(imageSet);
             imageSets.remove(imageSet);
             manager.remainNone(imageSet);
             configurations.remove(imageSet);
             ImagePairs.removeAll(imageSet);
+            Sounds.removeAll(imageSet);
 
             if (childImageSets.containsKey(imageSet)) {
                 for (String set : childImageSets.get(imageSet)) {

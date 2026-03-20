@@ -11,6 +11,7 @@ import com.group_finity.mascot.image.ImagePairLoader;
 import com.group_finity.mascot.image.ImagePairLoader.Filter;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
+import com.group_finity.mascot.sound.Sounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,6 +129,7 @@ public class AnimationBuilder {
                 float volume = Float.parseFloat(volumeText);
                 SoundLoader.load(soundText, volume);
                 soundText += ":" + volume;
+                Sounds.addUsage(soundText, imageSet);
             } catch (IOException | NumberFormatException | UnsupportedAudioFileException | LineUnavailableException e) {
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText, e);
             }
