@@ -71,7 +71,6 @@ public class ActionBuilder implements IActionBuilder {
             } catch (final ClassNotFoundException e) {
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage") + " (" + this + ")", e);
             } catch (final ClassCastException e) {
-                // TODO: Get translations for the following error message
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("ClassIsNotActionErrorMessage") + " (" + this + ")", e);
             }
         } else if (VALID_TYPES.stream().noneMatch(type -> this.type.equals(schema.getString(type)))) {
@@ -123,7 +122,6 @@ public class ActionBuilder implements IActionBuilder {
 
                     return cls.getConstructor().newInstance();
                 } catch (final NoSuchMethodException e) {
-                    // TODO: Get translations for the following error message
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("ClassConstructorNotFoundErrorMessage") + " (" + this + ")", e);
                 } catch (final InstantiationException e) {
                     throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage") + " (" + this + ")", e);
