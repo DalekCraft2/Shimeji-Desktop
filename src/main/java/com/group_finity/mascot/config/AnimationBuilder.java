@@ -127,8 +127,8 @@ public class AnimationBuilder {
 
                 float volume = Float.parseFloat(volumeText);
                 SoundLoader.load(soundText, volume);
-                soundText += volume;
-            } catch (IOException | NumberFormatException | LineUnavailableException | UnsupportedAudioFileException e) {
+                soundText += ":" + volume;
+            } catch (IOException | NumberFormatException | UnsupportedAudioFileException | LineUnavailableException e) {
                 throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText, e);
             }
         }

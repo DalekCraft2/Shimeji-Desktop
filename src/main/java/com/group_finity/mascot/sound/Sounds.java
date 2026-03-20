@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * This static class contains all the sounds loaded by Shimeji-ee.
@@ -15,34 +16,37 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0.9
  */
 public class Sounds {
+    /**
+     * A map that maps keys with the format "fileName:volume" to sound clips.
+     */
     private static final Map<String, Clip> SOUNDS = new ConcurrentHashMap<>();
 
-    public static boolean contains(String fileName) {
-        return SOUNDS.containsKey(fileName);
+    /**
+     * A map that maps sound file names to lists of all sound clips associated with that sound file.
+     */
+    private static final Map<String, List<String>> FILE_NAME_MAP = new ConcurrentHashMap<>();
+
+    public static boolean contains(String key) {
+        return SOUNDS.containsKey(key);
     }
 
-    public static Clip getSound(String fileName) {
-        if (!SOUNDS.containsKey(fileName)) {
+    public static Clip getSound(String key) {
+        if (!SOUNDS.containsKey(key)) {
             return null;
         }
-        return SOUNDS.get(fileName);
+        return SOUNDS.get(key);
     }
 
     public static List<Clip> getSoundsIgnoringVolume(String fileName) {
-        List<Clip> sounds = new ArrayList<>(5);
-        for (Map.Entry<String, Clip> entry : SOUNDS.entrySet()) {
-            String soundName = entry.getKey();
-            Clip soundClip = entry.getValue();
-            if (soundName.startsWith(fileName)) {
-                sounds.add(soundClip);
-            }
-        }
-        return sounds;
+        return FILE_NAME_MAP.get(fileName).stream().map(SOUNDS::get).collect(Collectors.toList());
     }
 
-    public static void put(final String fileName, final Clip clip) {
-        if (!SOUNDS.containsKey(fileName)) {
-            SOUNDS.put(fileName, clip);
+    public static void put(final String key, final Clip clip) {
+        if (!SOUNDS.containsKey(key)) {
+            SOUNDS.put(key, clip);
+            String fileName = key.substring(0, key.lastIndexOf(':'));
+            FILE_NAME_MAP.putIfAbsent(fileName, new ArrayList<>(4));
+            FILE_NAME_MAP.get(fileName).add(key);
         }
     }
 
@@ -51,6 +55,7 @@ public class Sounds {
             clip.close();
         }
         SOUNDS.clear();
+        FILE_NAME_MAP.clear();
     }
 
     public static boolean isEnabled() {

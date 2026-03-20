@@ -12,13 +12,13 @@ import java.io.IOException;
  * @since 1.0.9
  */
 public class SoundLoader {
-    public static void load(final String name, final float volume) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        String key = name + volume;
+    public static void load(final String fileName, final float volume) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        String key = fileName + ":" + volume;
         if (Sounds.contains(key)) {
             return;
         }
 
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(name));
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(fileName));
         final Clip clip = AudioSystem.getClip();
         clip.open(audioInputStream);
         ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
