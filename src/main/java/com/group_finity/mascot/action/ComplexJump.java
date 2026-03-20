@@ -139,14 +139,12 @@ public class ComplexJump extends ActionBase {
 
             putVariable(getSchema().getString("TargetX"), targetX);
             putVariable(getSchema().getString("TargetY"), targetY);
-
-            if (getMascot().getAnchor().x != targetX) {
-                getMascot().setLookRight(getMascot().getAnchor().x < targetX);
-            }
         } else {
             targetX = getTargetX();
             targetY = getTargetY();
+        }
 
+        if (getMascot().getAnchor().x != targetX) {
             getMascot().setLookRight(getMascot().getAnchor().x < targetX);
         }
 
