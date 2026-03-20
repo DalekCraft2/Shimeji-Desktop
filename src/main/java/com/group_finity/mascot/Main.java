@@ -158,7 +158,7 @@ public class Main {
         }
     }
 
-    public void run() throws InterruptedException, InvocationTargetException {
+    public void run() {
         // Load settings
         if (Files.isRegularFile(SETTINGS_FILE)) {
             try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
@@ -514,7 +514,7 @@ public class Main {
                 }
 
                 private void onPopupTrigger(MouseEvent event) {
-                    createTrayMenu(useSystemTray, event);
+                    createTrayMenu(true, event);
                 }
 
                 @Override
