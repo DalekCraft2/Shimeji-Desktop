@@ -94,10 +94,18 @@
         </dependency>
 
         <dependency>
+            <!-- SLF4J API -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
+        </dependency>
+
+        <dependency>
             <!-- SLF4J JDK 1.4 Provider -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <version>2.0.17</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
