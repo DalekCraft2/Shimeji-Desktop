@@ -10,27 +10,27 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ImagePairs {
     private static final Map<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
 
-    public static boolean contains(String fileName) {
-        return imagePairs.containsKey(fileName);
+    public static boolean contains(String key) {
+        return imagePairs.containsKey(key);
     }
 
-    public static ImagePair getImagePair(String fileName) {
-        if (!imagePairs.containsKey(fileName)) {
+    public static ImagePair getImagePair(String key) {
+        if (!imagePairs.containsKey(key)) {
             return null;
         }
-        return imagePairs.get(fileName);
+        return imagePairs.get(key);
     }
 
-    public static MascotImage getImage(String fileName, boolean isLookRight) {
-        if (!imagePairs.containsKey(fileName)) {
+    public static MascotImage getImage(String key, boolean isLookRight) {
+        if (!imagePairs.containsKey(key)) {
             return null;
         }
-        return imagePairs.get(fileName).getImage(isLookRight);
+        return imagePairs.get(key).getImage(isLookRight);
     }
 
-    public static void put(final String fileName, final ImagePair imagePair) {
-        if (!imagePairs.containsKey(fileName)) {
-            imagePairs.put(fileName, imagePair);
+    public static void put(final String key, final ImagePair imagePair) {
+        if (!imagePairs.containsKey(key)) {
+            imagePairs.put(key, imagePair);
         }
     }
 
