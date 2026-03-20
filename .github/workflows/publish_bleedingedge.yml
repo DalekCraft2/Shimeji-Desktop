@@ -2,7 +2,7 @@ name: Publish continuous release of Shimeji-Desktop
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
