@@ -88,8 +88,9 @@ public class ComplexMove extends BorderedAction {
             if (getMascot().getManager() != null) {
                 target = getMascot().getManager().getMascotWithAffordance(getAffordance());
             }
-            putVariable(getSchema().getString("TargetX"), target != null && target.get() != null ? target.get().getAnchor().x : null);
-            putVariable(getSchema().getString("TargetY"), target != null && target.get() != null ? target.get().getAnchor().y : null);
+            Mascot targetMascot = target == null ? null : target.get();
+            putVariable(getSchema().getString("TargetX"), targetMascot != null ? targetMascot.getAnchor().x : null);
+            putVariable(getSchema().getString("TargetY"), targetMascot != null ? targetMascot.getAnchor().y : null);
         }
     }
 
@@ -100,7 +101,8 @@ public class ComplexMove extends BorderedAction {
                 return super.hasNext();
             }
 
-            return super.hasNext() && (turning || target != null && target.get() != null && target.get().getAffordances().contains(getAffordance()));
+            Mascot targetMascot = target == null ? null : target.get();
+            return super.hasNext() && (turning || targetMascot != null && targetMascot.getAffordances().contains(getAffordance()));
         } else {
             final int targetX = getTargetX();
             final int targetY = getTargetY();
@@ -128,12 +130,19 @@ public class ComplexMove extends BorderedAction {
             throw new LostGroundException();
         }
 
-        int targetX = scanEnabled ? target.get().getAnchor().x : getTargetX();
-        int targetY = scanEnabled ? target.get().getAnchor().y : getTargetY();
+        int targetX;
+        int targetY;
 
+        Mascot targetMascot = target == null ? null : target.get();
         if (scanEnabled) {
+            targetX = targetMascot.getAnchor().x;
+            targetY = targetMascot.getAnchor().y;
+
             putVariable(getSchema().getString("TargetX"), targetX);
             putVariable(getSchema().getString("TargetY"), targetY);
+        } else {
+            targetX = getTargetX();
+            targetY = getTargetY();
         }
 
         if (getMascot().getAnchor().x != targetX) {
@@ -176,7 +185,6 @@ public class ComplexMove extends BorderedAction {
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
                 setFirstBehavior = true;
-                Mascot targetMascot = target.get();
                 if (targetMascot != null) {
                     targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
                     if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
@@ -186,7 +194,7 @@ public class ComplexMove extends BorderedAction {
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                 log.error("Failed to set behavior to \"{}\" for mascot \"{}\"",
                         setFirstBehavior ? getTargetBehavior() : getBehavior(),
-                        setFirstBehavior ? target.get() : getMascot(), e);
+                        setFirstBehavior ? targetMascot : getMascot(), e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
             }
         }

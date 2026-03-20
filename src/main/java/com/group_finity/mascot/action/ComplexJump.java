@@ -97,8 +97,9 @@ public class ComplexJump extends ActionBase {
             if (getMascot().getManager() != null) {
                 target = getMascot().getManager().getMascotWithAffordance(getAffordance());
             }
-            putVariable(getSchema().getString("TargetX"), target != null && target.get() != null ? target.get().getAnchor().x : null);
-            putVariable(getSchema().getString("TargetY"), target != null && target.get() != null ? target.get().getAnchor().y : null);
+            Mascot targetMascot = target == null ? null : target.get();
+            putVariable(getSchema().getString("TargetX"), targetMascot != null ? targetMascot.getAnchor().x : null);
+            putVariable(getSchema().getString("TargetY"), targetMascot != null ? targetMascot.getAnchor().y : null);
         }
     }
 
@@ -108,8 +109,8 @@ public class ComplexJump extends ActionBase {
             if (getMascot().getManager() == null) {
                 return super.hasNext();
             }
-
-            return super.hasNext() && target != null && target.get() != null && target.get().getAffordances().contains(getAffordance());
+            Mascot targetMascot = target == null ? null : target.get();
+            return super.hasNext() && targetMascot != null && targetMascot.getAffordances().contains(getAffordance());
         } else {
             final int targetX = getTargetX();
             final int targetY = getTargetY();
@@ -128,12 +129,13 @@ public class ComplexJump extends ActionBase {
         int targetX;
         int targetY;
 
+        Mascot targetMascot = target == null ? null : target.get();
         if (scanEnabled) {
             // cannot broadcast while scanning for an affordance
             getMascot().getAffordances().clear();
 
-            targetX = target.get().getAnchor().x;
-            targetY = target.get().getAnchor().y;
+            targetX = targetMascot.getAnchor().x;
+            targetY = targetMascot.getAnchor().y;
 
             putVariable(getSchema().getString("TargetX"), targetX);
             putVariable(getSchema().getString("TargetY"), targetY);
@@ -175,7 +177,6 @@ public class ComplexJump extends ActionBase {
                 try {
                     getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
                     setFirstBehavior = true;
-                    Mascot targetMascot = target.get();
                     if (targetMascot != null) {
                         targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
                         if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
@@ -185,7 +186,7 @@ public class ComplexJump extends ActionBase {
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"",
                             setFirstBehavior ? getTargetBehavior() : getBehavior(),
-                            setFirstBehavior ? target.get() : getMascot(), e);
+                            setFirstBehavior ? targetMascot : getMascot(), e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
                 }
             }

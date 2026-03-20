@@ -75,17 +75,19 @@ public class ScanInteract extends BorderedAction {
         }
 
         // refresh target
-        if (getMascot().getManager() != null && (target == null || target.get() == null || !target.get().getAffordances().contains(getAffordance()))) {
+        Mascot targetMascot = target == null ? null : target.get();
+        if (getMascot().getManager() != null && (targetMascot == null || !targetMascot.getAffordances().contains(getAffordance()))) {
             target = getMascot().getManager().getMascotWithAffordance(getAffordance());
+            targetMascot = target == null ? null : target.get();
         }
-        putVariable(getSchema().getString("TargetX"), target != null && target.get() != null ? target.get().getAnchor().x : null);
-        putVariable(getSchema().getString("TargetY"), target != null && target.get() != null ? target.get().getAnchor().y : null);
+        putVariable(getSchema().getString("TargetX"), targetMascot != null ? targetMascot.getAnchor().x : null);
+        putVariable(getSchema().getString("TargetY"), targetMascot != null ? targetMascot.getAnchor().y : null);
 
-        if (target != null && target.get() != null && target.get().getAffordances().contains(getAffordance())) {
-            if (getMascot().getAnchor().x != target.get().getAnchor().x) {
+        if (targetMascot != null && targetMascot.getAffordances().contains(getAffordance())) {
+            if (getMascot().getAnchor().x != targetMascot.getAnchor().x) {
                 // Activate turning animation if we change directions
-                turning = hasTurningAnimation() && (turning || getMascot().getAnchor().x < target.get().getAnchor().x != getMascot().isLookRight());
-                getMascot().setLookRight(getMascot().getAnchor().x < target.get().getAnchor().x);
+                turning = hasTurningAnimation() && (turning || getMascot().getAnchor().x < targetMascot.getAnchor().x != getMascot().isLookRight());
+                getMascot().setLookRight(getMascot().getAnchor().x < targetMascot.getAnchor().x);
             }
 
             // Check whether turning animation has finished
@@ -101,19 +103,16 @@ public class ScanInteract extends BorderedAction {
                 try {
                     getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
                     setFirstBehavior = true;
-                    Mascot targetMascot = target.get();
-                    if (targetMascot != null) {
-                        if (!getTargetBehavior().trim().isEmpty()) {
-                            targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
-                        }
-                        if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
-                            targetMascot.setLookRight(!getMascot().isLookRight());
-                        }
+                    if (!getTargetBehavior().trim().isEmpty()) {
+                        targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
+                    }
+                    if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
+                        targetMascot.setLookRight(!getMascot().isLookRight());
                     }
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"",
                             setFirstBehavior ? getTargetBehavior() : getBehavior(),
-                            setFirstBehavior ? target.get() : getMascot(), e);
+                            setFirstBehavior ? targetMascot : getMascot(), e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
                 }
             }

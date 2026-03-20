@@ -63,8 +63,9 @@ public class ScanJump extends ActionBase {
         if (getMascot().getManager() != null) {
             target = getMascot().getManager().getMascotWithAffordance(getAffordance());
         }
-        putVariable(getSchema().getString("TargetX"), target != null && target.get() != null ? target.get().getAnchor().x : null);
-        putVariable(getSchema().getString("TargetY"), target != null && target.get() != null ? target.get().getAnchor().y : null);
+        Mascot targetMascot = target == null ? null : target.get();
+        putVariable(getSchema().getString("TargetX"), targetMascot != null ? targetMascot.getAnchor().x : null);
+        putVariable(getSchema().getString("TargetY"), targetMascot != null ? targetMascot.getAnchor().y : null);
     }
 
     @Override
@@ -73,7 +74,8 @@ public class ScanJump extends ActionBase {
             return super.hasNext();
         }
 
-        return super.hasNext() && target != null && target.get() != null && target.get().getAffordances().contains(getAffordance());
+        Mascot targetMascot = target == null ? null : target.get();
+        return super.hasNext() && targetMascot != null && targetMascot.getAffordances().contains(getAffordance());
     }
 
     @Override
@@ -81,8 +83,10 @@ public class ScanJump extends ActionBase {
         // cannot broadcast while scanning for an affordance
         getMascot().getAffordances().clear();
 
-        int targetX = target.get().getAnchor().x;
-        int targetY = target.get().getAnchor().y;
+        Mascot targetMascot = target == null ? null : target.get();
+        // TODO: Figure out how to handle targetMascot possibly being null here and in other "Scan"/"Complex" action classes
+        int targetX = targetMascot.getAnchor().x;
+        int targetY = targetMascot.getAnchor().y;
 
         putVariable(getSchema().getString("TargetX"), targetX);
         putVariable(getSchema().getString("TargetY"), targetY);
@@ -117,17 +121,14 @@ public class ScanJump extends ActionBase {
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
                 setFirstBehavior = true;
-                Mascot targetMascot = target.get();
-                if (targetMascot != null) {
-                    targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
-                    if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
-                        targetMascot.setLookRight(!getMascot().isLookRight());
-                    }
+                targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
+                if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
+                    targetMascot.setLookRight(!getMascot().isLookRight());
                 }
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                 log.error("Failed to set behavior to \"{}\" for mascot \"{}\"",
                         setFirstBehavior ? getTargetBehavior() : getBehavior(),
-                        setFirstBehavior ? target.get() : getMascot(), e);
+                        setFirstBehavior ? targetMascot : getMascot(), e);
                 Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
             }
         }
