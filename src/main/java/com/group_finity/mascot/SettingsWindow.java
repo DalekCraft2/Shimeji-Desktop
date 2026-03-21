@@ -950,7 +950,7 @@ public class SettingsWindow extends JDialog {
     private void btnBackgroundImageChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundImageChangeActionPerformed
         final JFileChooser dialog = new JFileChooser();
         dialog.setDialogTitle(Main.getInstance().getLanguageBundle().getString("ChooseBackgroundImage"));
-        // dialog.setFileFilter(  );
+        // dialog.setFileFilter();
 
         if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
@@ -1020,7 +1020,7 @@ public class SettingsWindow extends JDialog {
 
     private void refreshBackgroundImage() {
         Dimension size = pnlBackgroundImage.getPreferredSize();
-        Image image = new ImageIcon(backgroundImage).getImage();
+        Image image = Toolkit.getDefaultToolkit().createImage(backgroundImage);
 
         if (backgroundMode.equals("stretch")) {
             image = image.getScaledInstance(size.width,
