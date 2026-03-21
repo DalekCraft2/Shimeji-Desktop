@@ -66,7 +66,7 @@
             </element>
             <element name="Support" type="tns:Contributor" minOccurs="0" maxOccurs="unbounded">
                 <annotation>
-                    <documentation>The person(s) to contact for support for this mascot.</documentation>
+                    <documentation>The website(s) to use for supporting the creators of this mascot.</documentation>
                 </annotation>
             </element>
         </sequence>
