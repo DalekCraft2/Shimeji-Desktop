@@ -63,7 +63,7 @@ public class Configuration {
                 final ActionBuilder action = new ActionBuilder(this, node, imageSet);
 
                 if (actionBuilders.containsKey(action.getName())) {
-                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage") + ": " + action.getName());
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage"), action.getName()));
                 }
 
                 actionBuilders.put(action.getName(), action);
@@ -107,7 +107,7 @@ public class Configuration {
                 final BehaviorBuilder behavior = new BehaviorBuilder(this, node, conditions);
 
                 if (behaviorBuilders.containsKey(behavior.getName())) {
-                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("DuplicateBehaviourErrorMessage") + ": " + behavior.getName());
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateBehaviourErrorMessage"), behavior.getName()));
                 }
 
                 behaviorBuilders.put(behavior.getName(), behavior);
@@ -150,7 +150,7 @@ public class Configuration {
     public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
         final ActionBuilder factory = actionBuilders.get(name);
         if (factory == null) {
-            throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage") + ": " + name);
+            throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage"), name));
         }
 
         return factory.buildAction(params);
@@ -229,7 +229,7 @@ public class Configuration {
                 return buildBehavior(schema.getString(UserBehavior.BEHAVIOURNAME_FALL));
             }
         } else {
-            throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + name + ")");
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name));
         }
     }
 
@@ -237,7 +237,7 @@ public class Configuration {
         if (behaviorBuilders.containsKey(name)) {
             return behaviorBuilders.get(name).buildBehavior();
         } else {
-            throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + name + ")");
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name));
         }
     }
 

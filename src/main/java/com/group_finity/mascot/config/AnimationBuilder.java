@@ -56,7 +56,7 @@ public class AnimationBuilder {
             try {
                 poses.add(loadPose(frameNode));
             } catch (IOException | RuntimeException e) {
-                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage") + " " + frameNode.getAttributes().toString(), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage"), frameNode.getAttributes()), e);
             }
         }
 
@@ -64,7 +64,7 @@ public class AnimationBuilder {
             try {
                 hotspots.add(loadHotspot(frameNode));
             } catch (RuntimeException e) {
-                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage") + " " + frameNode.getAttributes().toString(), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), frameNode.getAttributes()), e);
             }
         }
 
@@ -102,7 +102,7 @@ public class AnimationBuilder {
                 if (imageRightPath != null) {
                     imagePairString += ", " + imageRightPath;
                 }
-                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage") + " " + imagePairString, e);
+                throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage"), imagePairString), e);
             }
         }
 
@@ -131,7 +131,7 @@ public class AnimationBuilder {
                 soundText += ":" + volume;
                 Sounds.addUsage(soundText, imageSet);
             } catch (IOException | NumberFormatException | UnsupportedAudioFileException | LineUnavailableException e) {
-                throw new IOException(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage") + soundText, e);
+                throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage"), soundText), e);
             }
         }
 
@@ -163,7 +163,7 @@ public class AnimationBuilder {
         } else if (shapeText.equalsIgnoreCase("Ellipse")) {
             shape = new Ellipse2D.Float(origin.x, origin.y, size.width, size.height);
         } else {
-            throw new IllegalArgumentException(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage") + " " + shapeText);
+            throw new IllegalArgumentException(String.format(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage"), shapeText));
         }
 
         final Hotspot hotspot = new Hotspot(behaviourText, shape);

@@ -115,11 +115,11 @@ public class BehaviorBuilder {
      */
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
-            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + " (" + this + ")");
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage"), this));
         }
         for (final BehaviorBuilder builder : nextBehaviorBuilders) {
             if (!configuration.getBehaviorNames().contains(builder.name)) {
-                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage") + " (" + builder + ")");
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), builder));
             }
             builder.validate();
         }
@@ -137,7 +137,7 @@ public class BehaviorBuilder {
         try {
             return new UserBehavior(name, configuration.buildAction(actionName, params), configuration);
         } catch (final ActionInstantiationException e) {
-            throw new BehaviorInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage") + " (" + this + ")", e);
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), this), e);
         }
     }
 

@@ -30,7 +30,7 @@ public class Script extends Variable {
         try {
             compiled = ENGINE.compile(this.source);
         } catch (final ScriptException e) {
-            throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptCompilationErrorMessage") + ": " + this.source, e);
+            throw new VariableException(String.format(Main.getInstance().getLanguageBundle().getString("ScriptCompilationErrorMessage"), this.source), e);
         }
     }
 
@@ -60,7 +60,7 @@ public class Script extends Variable {
         try {
             value = compiled.eval(variables);
         } catch (final ScriptException e) {
-            throw new VariableException(Main.getInstance().getLanguageBundle().getString("ScriptEvaluationErrorMessage") + ": " + source, e);
+            throw new VariableException(String.format(Main.getInstance().getLanguageBundle().getString("ScriptEvaluationErrorMessage"), source), e);
         }
 
         return value;

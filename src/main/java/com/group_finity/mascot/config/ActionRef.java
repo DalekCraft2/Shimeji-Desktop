@@ -43,7 +43,7 @@ public class ActionRef implements IActionBuilder {
     @Override
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(name)) {
-            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage") + " (" + this + ")");
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage"), this));
         }
     }
 

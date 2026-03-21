@@ -64,65 +64,65 @@ public class InformationWindow extends JFrame {
         html.append(lblSplashImage.getFont().getFontName());
         html.append("\">");
         if (config.containsInformationKey("ArtistName")) {
-            html.append(language.getString("ArtBy"));
-            html.append(" ");
+            String artistHtml = "";
             if (config.containsInformationKey("ArtistURL")) {
-                html.append("<a href=\"");
-                html.append(config.getInformation("ArtistURL"));
-                html.append("\">");
+                artistHtml += "<a href=\"";
+                artistHtml += config.getInformation("ArtistURL");
+                artistHtml += "\">";
             }
-            html.append(config.getInformation("ArtistName"));
+            artistHtml += config.getInformation("ArtistName");
             if (config.containsInformationKey("ArtistURL")) {
-                html.append("</a>");
+                artistHtml += "</a>";
             }
+            html.append(String.format(language.getString("ArtBy"), artistHtml));
         }
         if (config.containsInformationKey("ScripterName")) {
             if (config.containsInformationKey("ArtistName")) {
                 html.append(" - ");
             }
-            html.append(language.getString("ScriptedBy"));
-            html.append(" ");
+            String scripterHtml = "";
             if (config.containsInformationKey("ScripterURL")) {
-                html.append("<a href=\"");
-                html.append(config.getInformation("ScripterURL"));
-                html.append("\">");
+                scripterHtml += "<a href=\"";
+                scripterHtml += config.getInformation("ScripterURL");
+                scripterHtml += "\">";
             }
-            html.append(config.getInformation("ScripterName"));
+            scripterHtml += config.getInformation("ScripterName");
             if (config.containsInformationKey("ScripterURL")) {
-                html.append("</a>");
+                scripterHtml += "</a>";
             }
+            html.append(String.format(language.getString("ScriptedBy"), scripterHtml));
         }
         if (config.containsInformationKey("CommissionerName")) {
             if (config.containsInformationKey("ArtistName") || config.containsInformationKey("ScripterName")) {
                 html.append(" - ");
             }
-            html.append(language.getString("CommissionedBy"));
-            html.append(" ");
+            String commissionerHtml = "";
             if (config.containsInformationKey("CommissionerURL")) {
-                html.append("<a href=\"");
-                html.append(config.getInformation("CommissionerURL"));
-                html.append("\">");
+                commissionerHtml += "<a href=\"";
+                commissionerHtml += config.getInformation("CommissionerURL");
+                commissionerHtml += "\">";
             }
-            html.append(config.getInformation("CommissionerName"));
+            commissionerHtml += config.getInformation("CommissionerName");
             if (config.containsInformationKey("CommissionerURL")) {
-                html.append("</a>");
+                commissionerHtml += "</a>";
             }
+            html.append(String.format(language.getString("CommissionedBy"), commissionerHtml));
         }
         if (config.containsInformationKey("SupportName")) {
             if (config.containsInformationKey("ArtistName") || config.containsInformationKey("ScripterName") || config.containsInformationKey("CommissionerName")) {
                 html.append(" - ");
             }
-            html.append(language.getString("SupportAt"));
-            html.append(" ");
+            String supportHtml = "";
             if (config.containsInformationKey("SupportURL")) {
-                html.append("<a href=\"");
-                html.append(config.getInformation("SupportURL"));
-                html.append("\">");
+                supportHtml += "<a href=\"";
+                supportHtml += config.getInformation("SupportURL");
+                supportHtml += "\">";
             }
-            html.append(config.getInformation("SupportName"));
+            supportHtml += config.getInformation("SupportName");
             if (config.containsInformationKey("SupportURL")) {
-                html.append("</a>");
+                supportHtml += "</a>";
             }
+            html.append(String.format(language.getString("SupportAt"), supportHtml));
         }
         html.append("</center>");
 
@@ -147,7 +147,7 @@ public class InformationWindow extends JFrame {
                                 } else {
                                     log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
                                 }
-                                JOptionPane.showMessageDialog(this, Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage") + " " + url, "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this, String.format(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } catch (IOException | UnsupportedOperationException | URISyntaxException ex) {
                             log.error("Failed to open URL \"{}\"", url, ex);

@@ -413,7 +413,7 @@ public class Main {
         } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException |
                  RuntimeException e) {
             log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
-            showError(languageBundle.getString("FailedLoadConfigErrorMessage") + " (" + imageSet + ")", e);
+            showError(String.format(languageBundle.getString("FailedLoadConfigErrorMessage"), imageSet), e);
             configurations.remove(imageSet);
             childImageSets.remove(imageSet);
             ImagePairs.removeAll(imageSet);
@@ -1106,7 +1106,7 @@ public class Main {
             mascot.dispose();
         } catch (RuntimeException e) {
             log.error("Could not create mascot \"{}\"", mascot, e);
-            showError(languageBundle.getString("CouldNotCreateShimejiErrorMessage") + " " + imageSet, e);
+            showError(String.format(languageBundle.getString("CouldNotCreateShimejiErrorMessage"), imageSet), e);
             mascot.dispose();
         }
     }
