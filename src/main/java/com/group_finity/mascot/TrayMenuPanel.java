@@ -81,6 +81,51 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         chkThrowing.setSelected(Boolean.parseBoolean(properties.getProperty("Throwing", "true")));
         chkSounds.setSelected(Boolean.parseBoolean(properties.getProperty("Sounds", "true")));
         chkMultiscreen.setSelected(Boolean.parseBoolean(properties.getProperty("Multiscreen", "true")));
+
+        String languageTag = properties.getProperty("Language", Locale.UK.toLanguageTag());
+        if (languageTag.equals(Locale.UK.toLanguageTag())) {
+            itmEnglish.setSelected(true);
+        } else if (languageTag.equals("ar-SA")) {
+            itmArabic.setSelected(true);
+        } else if (languageTag.equals("ca-ES")) {
+            itmCatalan.setSelected(true);
+        } else if (languageTag.equals(Locale.GERMANY.toLanguageTag())) {
+            itmGerman.setSelected(true);
+        } else if (languageTag.equals("es-ES")) {
+            itmSpanish.setSelected(true);
+        } else if (languageTag.equals(Locale.FRANCE.toLanguageTag())) {
+            itmFrench.setSelected(true);
+        } else if (languageTag.equals("hr-HR")) {
+            itmCroatian.setSelected(true);
+        } else if (languageTag.equals(Locale.ITALY.toLanguageTag())) {
+            itmItalian.setSelected(true);
+        } else if (languageTag.equals("nl-NL")) {
+            itmDutch.setSelected(true);
+        } else if (languageTag.equals("pl-PL")) {
+            itmPolish.setSelected(true);
+        } else if (languageTag.equals("pt-BR")) {
+            itmBrazilianPortuguese.setSelected(true);
+        } else if (languageTag.equals("pt-PT")) {
+            itmPortuguese.setSelected(true);
+        } else if (languageTag.equals("ru-RU")) {
+            itmRussian.setSelected(true);
+        } else if (languageTag.equals("ro-RO")) {
+            itmRomanian.setSelected(true);
+        } else if (languageTag.equals("sr-RS")) {
+            itmSerbian.setSelected(true);
+        } else if (languageTag.equals("fi-FI")) {
+            itmFinnish.setSelected(true);
+        } else if (languageTag.equals("vi-VN")) {
+            itmVietnamese.setSelected(true);
+        } else if (languageTag.equals(Locale.SIMPLIFIED_CHINESE.toLanguageTag())) {
+            itmChinese.setSelected(true);
+        } else if (languageTag.equals(Locale.TRADITIONAL_CHINESE.toLanguageTag())) {
+            itmChineseTraditional.setSelected(true);
+        } else if (languageTag.equals(Locale.KOREA.toLanguageTag())) {
+            itmKorean.setSelected(true);
+        } else if (languageTag.equals(Locale.JAPAN.toLanguageTag())) {
+            itmJapanese.setSelected(true);
+        }
     }
 
     /**
@@ -118,28 +163,29 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         chkSounds = new javax.swing.JCheckBoxMenuItem();
         chkMultiscreen = new javax.swing.JCheckBoxMenuItem();
         languagePopup = new javax.swing.JPopupMenu();
-        itmEnglish = new javax.swing.JMenuItem();
+        itmEnglish = new javax.swing.JCheckBoxMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        itmArabic = new javax.swing.JMenuItem();
-        itmCatalan = new javax.swing.JMenuItem();
-        itmGerman = new javax.swing.JMenuItem();
-        itmSpanish = new javax.swing.JMenuItem();
-        itmFrench = new javax.swing.JMenuItem();
-        itmCroatian = new javax.swing.JMenuItem();
-        itmItalian = new javax.swing.JMenuItem();
-        itmDutch = new javax.swing.JMenuItem();
-        itmPolish = new javax.swing.JMenuItem();
-        itmBrazilianPortuguese = new javax.swing.JMenuItem();
-        itmPortuguese = new javax.swing.JMenuItem();
-        itmRussian = new javax.swing.JMenuItem();
-        itmRomanian = new javax.swing.JMenuItem();
-        itmSerbian = new javax.swing.JMenuItem();
-        itmFinnish = new javax.swing.JMenuItem();
-        itmVietnamese = new javax.swing.JMenuItem();
-        itmChinese = new javax.swing.JMenuItem();
-        itmChineseTraditional = new javax.swing.JMenuItem();
-        itmKorean = new javax.swing.JMenuItem();
-        itmJapanese = new javax.swing.JMenuItem();
+        itmArabic = new javax.swing.JCheckBoxMenuItem();
+        itmCatalan = new javax.swing.JCheckBoxMenuItem();
+        itmGerman = new javax.swing.JCheckBoxMenuItem();
+        itmSpanish = new javax.swing.JCheckBoxMenuItem();
+        itmFrench = new javax.swing.JCheckBoxMenuItem();
+        itmCroatian = new javax.swing.JCheckBoxMenuItem();
+        itmItalian = new javax.swing.JCheckBoxMenuItem();
+        itmDutch = new javax.swing.JCheckBoxMenuItem();
+        itmPolish = new javax.swing.JCheckBoxMenuItem();
+        itmBrazilianPortuguese = new javax.swing.JCheckBoxMenuItem();
+        itmPortuguese = new javax.swing.JCheckBoxMenuItem();
+        itmRussian = new javax.swing.JCheckBoxMenuItem();
+        itmRomanian = new javax.swing.JCheckBoxMenuItem();
+        itmSerbian = new javax.swing.JCheckBoxMenuItem();
+        itmFinnish = new javax.swing.JCheckBoxMenuItem();
+        itmVietnamese = new javax.swing.JCheckBoxMenuItem();
+        itmChinese = new javax.swing.JCheckBoxMenuItem();
+        itmChineseTraditional = new javax.swing.JCheckBoxMenuItem();
+        itmKorean = new javax.swing.JCheckBoxMenuItem();
+        itmJapanese = new javax.swing.JCheckBoxMenuItem();
+        grpLanguage = new javax.swing.ButtonGroup();
         btnCallShimeji = new javax.swing.JButton();
         btnFollowCursor = new javax.swing.JButton();
         btnReduceToOne = new javax.swing.JButton();
@@ -203,88 +249,109 @@ public class TrayMenuPanel extends javax.swing.JPanel {
             }
         });
 
+        grpLanguage.add(itmEnglish);
         itmEnglish.setText("English");
         itmEnglish.addActionListener(this::itmEnglishActionPerformed);
         languagePopup.add(itmEnglish);
         languagePopup.add(jSeparator3);
 
+        grpLanguage.add(itmArabic);
         itmArabic.setText("عربي");
         itmArabic.addActionListener(this::itmArabicActionPerformed);
         languagePopup.add(itmArabic);
 
+        grpLanguage.add(itmCatalan);
         itmCatalan.setText("Català");
         itmCatalan.addActionListener(this::itmCatalanActionPerformed);
         languagePopup.add(itmCatalan);
 
+        grpLanguage.add(itmGerman);
         itmGerman.setText("Deutsch");
         itmGerman.addActionListener(this::itmGermanActionPerformed);
         languagePopup.add(itmGerman);
 
+        grpLanguage.add(itmSpanish);
         itmSpanish.setText("Español");
         itmSpanish.addActionListener(this::itmSpanishActionPerformed);
         languagePopup.add(itmSpanish);
 
+        grpLanguage.add(itmFrench);
         itmFrench.setText("Français");
         itmFrench.addActionListener(this::itmFrenchActionPerformed);
         languagePopup.add(itmFrench);
 
+        grpLanguage.add(itmCroatian);
         itmCroatian.setText("Hrvatski");
         itmCroatian.addActionListener(this::itmCroatianActionPerformed);
         languagePopup.add(itmCroatian);
 
+        grpLanguage.add(itmItalian);
         itmItalian.setText("Italiano");
         itmItalian.addActionListener(this::itmItalianActionPerformed);
         languagePopup.add(itmItalian);
 
+        grpLanguage.add(itmDutch);
         itmDutch.setText("Nederlands");
         itmDutch.addActionListener(this::itmDutchActionPerformed);
         languagePopup.add(itmDutch);
 
+        grpLanguage.add(itmPolish);
         itmPolish.setText("Polski");
         itmPolish.addActionListener(this::itmPolishActionPerformed);
         languagePopup.add(itmPolish);
 
+        grpLanguage.add(itmBrazilianPortuguese);
         itmBrazilianPortuguese.setText("Português Brasileiro");
         itmBrazilianPortuguese.addActionListener(this::itmBrazilianPortugueseActionPerformed);
         languagePopup.add(itmBrazilianPortuguese);
 
+        grpLanguage.add(itmPortuguese);
         itmPortuguese.setText("Português");
         itmPortuguese.addActionListener(this::itmPortugueseActionPerformed);
         languagePopup.add(itmPortuguese);
 
+        grpLanguage.add(itmRussian);
         itmRussian.setText("ру́сский язы́к");
         itmRussian.addActionListener(this::itmRussianActionPerformed);
         languagePopup.add(itmRussian);
 
+        grpLanguage.add(itmRomanian);
         itmRomanian.setText("Română");
         itmRomanian.addActionListener(this::itmRomanianActionPerformed);
         languagePopup.add(itmRomanian);
 
+        grpLanguage.add(itmSerbian);
         itmSerbian.setText("Srpski");
         itmSerbian.addActionListener(this::itmSerbianActionPerformed);
         languagePopup.add(itmSerbian);
 
+        grpLanguage.add(itmFinnish);
         itmFinnish.setText("Suomi");
         itmFinnish.addActionListener(this::itmFinnishActionPerformed);
         languagePopup.add(itmFinnish);
 
+        grpLanguage.add(itmVietnamese);
         itmVietnamese.setText("tiếng Việt");
         itmVietnamese.addActionListener(this::itmVietnameseActionPerformed);
         languagePopup.add(itmVietnamese);
 
+        grpLanguage.add(itmChinese);
         itmChinese.setText("简体中文");
         itmChinese.addActionListener(this::itmChineseActionPerformed);
         languagePopup.add(itmChinese);
 
+        grpLanguage.add(itmChineseTraditional);
         itmChineseTraditional.setText("繁體中文");
         itmChineseTraditional.addActionListener(this::itmChineseTraditionalActionPerformed);
         languagePopup.add(itmChineseTraditional);
 
+        grpLanguage.add(itmKorean);
         itmKorean.setText("한국어");
         itmKorean.setToolTipText("");
         itmKorean.addActionListener(this::itmKoreanActionPerformed);
         languagePopup.add(itmKorean);
 
+        grpLanguage.add(itmJapanese);
         itmJapanese.setText("日本語");
         itmJapanese.addActionListener(this::itmJapaneseActionPerformed);
         languagePopup.add(itmJapanese);
@@ -714,27 +781,28 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBoxMenuItem chkThrowing;
     private javax.swing.JCheckBoxMenuItem chkTransformation;
     private javax.swing.JCheckBoxMenuItem chkTransient;
-    private javax.swing.JMenuItem itmArabic;
-    private javax.swing.JMenuItem itmBrazilianPortuguese;
-    private javax.swing.JMenuItem itmCatalan;
-    private javax.swing.JMenuItem itmChinese;
-    private javax.swing.JMenuItem itmChineseTraditional;
-    private javax.swing.JMenuItem itmCroatian;
-    private javax.swing.JMenuItem itmDutch;
-    private javax.swing.JMenuItem itmEnglish;
-    private javax.swing.JMenuItem itmFinnish;
-    private javax.swing.JMenuItem itmFrench;
-    private javax.swing.JMenuItem itmGerman;
-    private javax.swing.JMenuItem itmItalian;
-    private javax.swing.JMenuItem itmJapanese;
-    private javax.swing.JMenuItem itmKorean;
-    private javax.swing.JMenuItem itmPolish;
-    private javax.swing.JMenuItem itmPortuguese;
-    private javax.swing.JMenuItem itmRomanian;
-    private javax.swing.JMenuItem itmRussian;
-    private javax.swing.JMenuItem itmSerbian;
-    private javax.swing.JMenuItem itmSpanish;
-    private javax.swing.JMenuItem itmVietnamese;
+    private javax.swing.ButtonGroup grpLanguage;
+    private javax.swing.JCheckBoxMenuItem itmArabic;
+    private javax.swing.JCheckBoxMenuItem itmBrazilianPortuguese;
+    private javax.swing.JCheckBoxMenuItem itmCatalan;
+    private javax.swing.JCheckBoxMenuItem itmChinese;
+    private javax.swing.JCheckBoxMenuItem itmChineseTraditional;
+    private javax.swing.JCheckBoxMenuItem itmCroatian;
+    private javax.swing.JCheckBoxMenuItem itmDutch;
+    private javax.swing.JCheckBoxMenuItem itmEnglish;
+    private javax.swing.JCheckBoxMenuItem itmFinnish;
+    private javax.swing.JCheckBoxMenuItem itmFrench;
+    private javax.swing.JCheckBoxMenuItem itmGerman;
+    private javax.swing.JCheckBoxMenuItem itmItalian;
+    private javax.swing.JCheckBoxMenuItem itmJapanese;
+    private javax.swing.JCheckBoxMenuItem itmKorean;
+    private javax.swing.JCheckBoxMenuItem itmPolish;
+    private javax.swing.JCheckBoxMenuItem itmPortuguese;
+    private javax.swing.JCheckBoxMenuItem itmRomanian;
+    private javax.swing.JCheckBoxMenuItem itmRussian;
+    private javax.swing.JCheckBoxMenuItem itmSerbian;
+    private javax.swing.JCheckBoxMenuItem itmSpanish;
+    private javax.swing.JCheckBoxMenuItem itmVietnamese;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;

@@ -76,8 +76,11 @@
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="itmEnglish">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmEnglish">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="English"/>
           </Properties>
           <Events>
@@ -86,152 +89,209 @@
         </MenuItem>
         <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
         </Component>
-        <MenuItem class="javax.swing.JMenuItem" name="itmArabic">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmArabic">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x639;&#x631;&#x628;&#x64a;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmArabicActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmCatalan">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmCatalan">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Catal&#xe0;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmCatalanActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmGerman">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmGerman">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Deutsch"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmGermanActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmSpanish">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmSpanish">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Espa&#xf1;ol"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmSpanishActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmFrench">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmFrench">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Fran&#xe7;ais"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmFrenchActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmCroatian">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmCroatian">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Hrvatski"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmCroatianActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmItalian">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmItalian">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Italiano"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmItalianActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmDutch">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmDutch">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Nederlands"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmDutchActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmPolish">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmPolish">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Polski"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmPolishActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmBrazilianPortuguese">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmBrazilianPortuguese">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Portugu&#xea;s Brasileiro"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmBrazilianPortugueseActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmPortuguese">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmPortuguese">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Portugu&#xea;s"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmPortugueseActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmRussian">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmRussian">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x440;&#x443;&#x301;&#x441;&#x441;&#x43a;&#x438;&#x439; &#x44f;&#x437;&#x44b;&#x301;&#x43a;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmRussianActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmRomanian">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmRomanian">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Rom&#xe2;n&#x103;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmRomanianActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmSerbian">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmSerbian">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Srpski"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmSerbianActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmFinnish">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmFinnish">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Suomi"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmFinnishActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmVietnamese">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmVietnamese">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="ti&#x1ebf;ng Vi&#x1ec7;t"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmVietnameseActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmChinese">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmChinese">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x7b80;&#x4f53;&#x4e2d;&#x6587;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmChineseActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmChineseTraditional">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmChineseTraditional">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x7e41;&#x9ad4;&#x4e2d;&#x6587;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmChineseTraditionalActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmKorean">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmKorean">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#xd55c;&#xad6d;&#xc5b4;"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
@@ -239,8 +299,11 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itmKoreanActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="itmJapanese">
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="itmJapanese">
           <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grpLanguage"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x65e5;&#x672c;&#x8a9e;"/>
           </Properties>
           <Events>
@@ -249,6 +312,8 @@
         </MenuItem>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.ButtonGroup" name="grpLanguage">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
