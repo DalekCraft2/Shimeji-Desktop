@@ -12,7 +12,6 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
-import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.sound.Sounds;
 import com.jthemedetecor.OsThemeDetector;
 import org.apache.commons.exec.OS;
@@ -25,9 +24,6 @@ import org.xml.sax.SAXParseException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
@@ -50,7 +46,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.logging.LogManager;
 
 /**
@@ -104,12 +99,20 @@ public class Main {
     private static BufferedImage icon;
 
     private static JFrame frame;
-    private Window form;
+    private Window trayMenuWindow;
 
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public static Main getInstance() {
         return instance;
+    }
+
+    static JFrame getFrame() {
+        return frame;
+    }
+
+    static ExecutorService getExecutorService() {
+        return executorService;
     }
 
     public static void showError(String message) {
@@ -198,7 +201,7 @@ public class Main {
                     info.display();
                 });
                 setMascotInformationDismissed(imageSet);
-                updateConfigFile();
+                saveSettings();
             }
             createMascot(imageSet);
         }
@@ -539,14 +542,14 @@ public class Main {
      * Creates the popup menu used by the tray icon.
      *
      * @param useSystemTray whether the system tray is being used.
-     *                      If true, the menu will be disposed after one of its options has been pressed.
-     *                      If false, the menu will not be disposed.
+     * If true, the menu will be disposed after one of its options has been pressed.
+     * If false, the menu will not be disposed.
      * @param event the mouse event that will be used to position the menu, if the menu was opened via the system tray
      */
     private void createTrayMenu(boolean useSystemTray, MouseEvent event) {
-        // close the form if it's open
-        if (useSystemTray && form != null) {
-            form.dispose();
+        // close the tray menu window if it's open
+        if (useSystemTray && trayMenuWindow != null) {
+            trayMenuWindow.dispose();
         }
 
         String title = properties.getProperty("ShimejiEENameOverride", "").trim();
@@ -554,15 +557,16 @@ public class Main {
             title = languageBundle.getString("ShimejiEE");
         }
 
-        // create the form and border
+        // create the tray menu window
         if (useSystemTray) {
-            form = new JDialog(frame, title, false);
-            ((JDialog) form).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            trayMenuWindow = new JDialog(frame, title, false);
+            ((JDialog) trayMenuWindow).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         } else {
-            // Use a JFrame when not using the system tray, because the JFrame has a minimize button
-            form = new JFrame(title);
-            ((JFrame) form).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            form.addWindowListener(new WindowListener() {
+            // Use a JFrame when not using the system tray,
+            // because the JFrame has a minimize button and shows up in the taskbar
+            trayMenuWindow = new JFrame(title);
+            ((JFrame) trayMenuWindow).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            trayMenuWindow.addWindowListener(new WindowListener() {
                 @Override
                 public void windowOpened(WindowEvent e) {
 
@@ -599,471 +603,38 @@ public class Main {
                 }
             });
         }
-        form.setIconImage(getIcon());
-        form.toFront();
-        form.setAlwaysOnTop(useSystemTray);
+        trayMenuWindow.setIconImage(getIcon());
+        trayMenuWindow.toFront();
+        trayMenuWindow.setAlwaysOnTop(useSystemTray);
 
-        final JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        form.add(panel);
+        final TrayMenuPanel panel = new TrayMenuPanel(useSystemTray);
+        trayMenuWindow.add(panel);
 
-        // buttons and action handling
-        JButton btnCallShimeji = new JButton(languageBundle.getString("CallShimeji"));
-        btnCallShimeji.addActionListener(e -> {
-            createMascot();
-            if (useSystemTray)
-                form.dispose();
-        });
-
-        JButton btnFollowCursor = new JButton(languageBundle.getString("FollowCursor"));
-        btnFollowCursor.addActionListener(e -> {
-            manager.setBehaviorAll(BEHAVIOR_GATHER);
-            if (useSystemTray)
-                form.dispose();
-        });
-
-        JButton btnReduceToOne = new JButton(languageBundle.getString("ReduceToOne"));
-        btnReduceToOne.addActionListener(e -> {
-            manager.remainOne();
-            if (useSystemTray)
-                form.dispose();
-        });
-
-        JButton btnRestoreWindows = new JButton(languageBundle.getString("RestoreWindows"));
-        btnRestoreWindows.addActionListener(e -> {
-            NativeFactory.getInstance().getEnvironment().restoreIE();
-            if (useSystemTray)
-                form.dispose();
-        });
-
-        final JButton btnAllowedBehaviours = new JButton(languageBundle.getString("AllowedBehaviours"));
-        btnAllowedBehaviours.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                btnAllowedBehaviours.setEnabled(true);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-        btnAllowedBehaviours.addActionListener(e -> {
-            // "Disable Breeding" menu item
-            final JCheckBoxMenuItem breedingMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingCloning"), Boolean.parseBoolean(properties.getProperty("Breeding", "true")));
-            breedingMenu.addItemListener(e1 -> {
-                breedingMenu.setState(toggleBooleanSetting("Breeding", true));
-                updateConfigFile();
-                btnAllowedBehaviours.setEnabled(true);
-            });
-
-            // "Disable Breeding Transient" menu item
-            final JCheckBoxMenuItem transientMenu = new JCheckBoxMenuItem(languageBundle.getString("BreedingTransient"), Boolean.parseBoolean(properties.getProperty("Transients", "true")));
-            transientMenu.addItemListener(e1 -> {
-                transientMenu.setState(toggleBooleanSetting("Transients", true));
-                updateConfigFile();
-                btnAllowedBehaviours.setEnabled(true);
-            });
-
-            // "Disable Transformations" menu item
-            final JCheckBoxMenuItem transformationMenu = new JCheckBoxMenuItem(languageBundle.getString("Transformation"), Boolean.parseBoolean(properties.getProperty("Transformation", "true")));
-            transformationMenu.addItemListener(e1 -> {
-                transformationMenu.setState(toggleBooleanSetting("Transformation", true));
-                updateConfigFile();
-                btnAllowedBehaviours.setEnabled(true);
-            });
-
-            // "Throwing Windows" menu item
-            final JCheckBoxMenuItem throwingMenu = new JCheckBoxMenuItem(languageBundle.getString("ThrowingWindows"), Boolean.parseBoolean(properties.getProperty("Throwing", "true")));
-            throwingMenu.addItemListener(e1 -> {
-                throwingMenu.setState(toggleBooleanSetting("Throwing", true));
-                updateConfigFile();
-                btnAllowedBehaviours.setEnabled(true);
-            });
-
-            // "Mute Sounds" menu item
-            final JCheckBoxMenuItem soundsMenu = new JCheckBoxMenuItem(languageBundle.getString("SoundEffects"), Boolean.parseBoolean(properties.getProperty("Sounds", "true")));
-            soundsMenu.addItemListener(e1 -> {
-                boolean result = toggleBooleanSetting("Sounds", true);
-                soundsMenu.setState(result);
-                if (!result)
-                    Sounds.stopAll();
-                updateConfigFile();
-                btnAllowedBehaviours.setEnabled(true);
-            });
-
-            // "Multiscreen" menu item
-            final JCheckBoxMenuItem multiscreenMenu = new JCheckBoxMenuItem(languageBundle.getString("Multiscreen"), Boolean.parseBoolean(properties.getProperty("Multiscreen", "true")));
-            multiscreenMenu.addItemListener(e1 -> {
-                multiscreenMenu.setState(toggleBooleanSetting("Multiscreen", true));
-                updateConfigFile();
-                btnAllowedBehaviours.setEnabled(true);
-            });
-
-            JPopupMenu behaviourPopup = new JPopupMenu();
-            behaviourPopup.add(breedingMenu);
-            behaviourPopup.add(transientMenu);
-            behaviourPopup.add(transformationMenu);
-            behaviourPopup.add(throwingMenu);
-            behaviourPopup.add(soundsMenu);
-            behaviourPopup.add(multiscreenMenu);
-            behaviourPopup.addPopupMenuListener(new PopupMenuListener() {
-                @Override
-                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                }
-
-                @Override
-                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                    if (panel.getMousePosition() != null) {
-                        btnAllowedBehaviours.setEnabled(!(panel.getMousePosition().x > btnAllowedBehaviours.getX() &&
-                                panel.getMousePosition().x < btnAllowedBehaviours.getX() + btnAllowedBehaviours.getWidth() &&
-                                panel.getMousePosition().y > btnAllowedBehaviours.getY() &&
-                                panel.getMousePosition().y < btnAllowedBehaviours.getY() + btnAllowedBehaviours.getHeight()));
-                    } else {
-                        btnAllowedBehaviours.setEnabled(true);
-                    }
-                }
-
-                @Override
-                public void popupMenuCanceled(PopupMenuEvent e) {
-                }
-            });
-            behaviourPopup.show(btnAllowedBehaviours, 0, btnAllowedBehaviours.getHeight());
-            btnAllowedBehaviours.requestFocusInWindow();
-        });
-
-        final JButton btnChooseShimeji = new JButton(languageBundle.getString("ChooseShimeji"));
-        btnChooseShimeji.addActionListener(e -> {
-            if (useSystemTray)
-                form.dispose();
-            // Needed to stop the guys from potentially throwing away the image set chooser window
-            manager.setEnabled(false);
-
-            ImageSetChooser chooser = new ImageSetChooser(frame, true);
-            chooser.setIconImage(getIcon());
-            Collection<String> result = chooser.display();
-
-            /*
-             * We're on the Event Dispatch Thread here,
-             * so do this on a separate thread to avoid making the UI unresponsive.
-             */
-            executorService.submit(() -> setActiveImageSets(result));
-
-            manager.setEnabled(true);
-        });
-
-        final JButton btnSettings = new JButton(languageBundle.getString("Settings"));
-        btnSettings.addActionListener(e -> {
-            if (useSystemTray)
-                form.dispose();
-            // Needed to stop the guys from potentially throwing away the settings window
-            manager.setEnabled(false);
-
-            SettingsWindow dialog = new SettingsWindow(frame, true);
-            dialog.setIconImage(getIcon());
-            dialog.init();
-            dialog.display();
-
-            /*
-             * We're on the Event Dispatch Thread here,
-             * so do this on a separate thread to avoid making the UI unresponsive.
-             */
-            executorService.submit(() -> {
-                if (dialog.getEnvironmentReloadRequired()) {
-                    NativeFactory.getInstance().getEnvironment().dispose();
-                    NativeFactory.resetInstance();
-                }
-                if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
-                    // need to reload the shimeji as the images have rescaled
-                    boolean isExit = manager.isExitOnLastRemoved();
-                    manager.setExitOnLastRemoved(false);
-                    manager.disposeAll();
-
-                    // Wipe all loaded data
-                    ImagePairs.clear();
-                    Sounds.clear();
-                    configurations.clear();
-
-                    // Load mascot configurations
-                    configurationLoadLoop();
-
-                    // Create mascots
-                    for (String imageSet : imageSets) {
-                        createMascot(imageSet);
-                    }
-
-                    manager.setExitOnLastRemoved(isExit);
-                }
-                if (dialog.getInteractiveWindowReloadRequired()) {
-                    NativeFactory.getInstance().getEnvironment().refreshCache();
-                }
-            });
-
-            manager.setEnabled(true);
-        });
-
-        final JButton btnLanguage = new JButton(languageBundle.getString("Language"));
-        btnLanguage.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                btnLanguage.setEnabled(true);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-
-        Consumer<Locale> langUpdateFunc = locale -> {
-            if (useSystemTray)
-                form.dispose();
-            updateLanguage(locale);
-            updateConfigFile();
-        };
-        Consumer<String> langTagUpdateFunc = languageTag -> {
-            if (useSystemTray)
-                form.dispose();
-            updateLanguage(languageTag);
-            updateConfigFile();
-        };
-        btnLanguage.addActionListener(e -> {
-            // English menu item
-            final JMenuItem englishMenu = new JMenuItem("English");
-            englishMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.UK));
-
-            // Arabic menu item
-            final JMenuItem arabicMenu = new JMenuItem("\u0639\u0631\u0628\u064A");
-            arabicMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ar-SA"));
-
-            // Catalan menu item
-            final JMenuItem catalanMenu = new JMenuItem("Catal\u00E0");
-            catalanMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ca-ES"));
-
-            // German menu item
-            final JMenuItem germanMenu = new JMenuItem("Deutsch");
-            germanMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.GERMANY));
-
-            // Spanish menu item
-            final JMenuItem spanishMenu = new JMenuItem("Espa\u00F1ol");
-            spanishMenu.addActionListener(e1 -> langTagUpdateFunc.accept("es-ES"));
-
-            // French menu item
-            final JMenuItem frenchMenu = new JMenuItem("Fran\u00E7ais");
-            frenchMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.FRANCE));
-
-            // Croatian menu item
-            final JMenuItem croatianMenu = new JMenuItem("Hrvatski");
-            croatianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("hr-HR"));
-
-            // Italian menu item
-            final JMenuItem italianMenu = new JMenuItem("Italiano");
-            italianMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.ITALY));
-
-            // Dutch menu item
-            final JMenuItem dutchMenu = new JMenuItem("Nederlands");
-            dutchMenu.addActionListener(e1 -> langTagUpdateFunc.accept("nl-NL"));
-
-            // Polish menu item
-            final JMenuItem polishMenu = new JMenuItem("Polski");
-            polishMenu.addActionListener(e1 -> langTagUpdateFunc.accept("pl-PL"));
-
-            // Brazilian Portuguese menu item
-            final JMenuItem brazilianPortugueseMenu = new JMenuItem("Portugu\u00eas Brasileiro");
-            brazilianPortugueseMenu.addActionListener(e1 -> langTagUpdateFunc.accept("pt-BR"));
-
-            // Portuguese menu item
-            final JMenuItem portugueseMenu = new JMenuItem("Portugu\u00eas");
-            portugueseMenu.addActionListener(e1 -> langTagUpdateFunc.accept("pt-PT"));
-
-            // Russian menu item
-            final JMenuItem russianMenu = new JMenuItem("\u0440\u0443\u0301\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u0301\u043a");
-            russianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ru-RU"));
-
-            // Romanian menu item
-            final JMenuItem romanianMenu = new JMenuItem("Rom\u00e2n\u0103");
-            romanianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("ro-RO"));
-
-            // Serbian menu item
-            final JMenuItem serbianMenu = new JMenuItem("Srpski");
-            serbianMenu.addActionListener(e1 -> langTagUpdateFunc.accept("sr-RS"));
-
-            // Finnish menu item
-            final JMenuItem finnishMenu = new JMenuItem("Suomi");
-            finnishMenu.addActionListener(e1 -> langTagUpdateFunc.accept("fi-FI"));
-
-            // Vietnamese menu item
-            final JMenuItem vietnameseMenu = new JMenuItem("ti\u1ebfng Vi\u1ec7t");
-            vietnameseMenu.addActionListener(e1 -> langTagUpdateFunc.accept("vi-VN"));
-
-            // Chinese menu item
-            final JMenuItem chineseMenu = new JMenuItem("\u7b80\u4f53\u4e2d\u6587");
-            chineseMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.SIMPLIFIED_CHINESE));
-
-            // Chinese (Traditional) menu item
-            final JMenuItem chineseTraditionalMenu = new JMenuItem("\u7E41\u9AD4\u4E2D\u6587");
-            chineseTraditionalMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.TRADITIONAL_CHINESE));
-
-            // Korean menu item
-            final JMenuItem koreanMenu = new JMenuItem("\ud55c\uad6d\uc5b4");
-            koreanMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.KOREA));
-
-            // Japanese menu item
-            final JMenuItem japaneseMenu = new JMenuItem("\u65E5\u672C\u8A9E");
-            japaneseMenu.addActionListener(e1 -> langUpdateFunc.accept(Locale.JAPAN));
-
-            JPopupMenu languagePopup = new JPopupMenu();
-            languagePopup.add(englishMenu);
-            languagePopup.addSeparator();
-            languagePopup.add(arabicMenu);
-            languagePopup.add(catalanMenu);
-            languagePopup.add(germanMenu);
-            languagePopup.add(spanishMenu);
-            languagePopup.add(frenchMenu);
-            languagePopup.add(croatianMenu);
-            languagePopup.add(italianMenu);
-            languagePopup.add(dutchMenu);
-            languagePopup.add(polishMenu);
-            languagePopup.add(portugueseMenu);
-            languagePopup.add(brazilianPortugueseMenu);
-            languagePopup.add(russianMenu);
-            languagePopup.add(romanianMenu);
-            languagePopup.add(serbianMenu);
-            languagePopup.add(finnishMenu);
-            languagePopup.add(vietnameseMenu);
-            languagePopup.add(chineseMenu);
-            languagePopup.add(chineseTraditionalMenu);
-            languagePopup.add(koreanMenu);
-            languagePopup.add(japaneseMenu);
-            languagePopup.addPopupMenuListener(new PopupMenuListener() {
-                @Override
-                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                }
-
-                @Override
-                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                    if (panel.getMousePosition() != null) {
-                        btnLanguage.setEnabled(!(panel.getMousePosition().x > btnLanguage.getX() &&
-                                panel.getMousePosition().x < btnLanguage.getX() + btnLanguage.getWidth() &&
-                                panel.getMousePosition().y > btnLanguage.getY() &&
-                                panel.getMousePosition().y < btnLanguage.getY() + btnLanguage.getHeight()));
-                    } else {
-                        btnLanguage.setEnabled(true);
-                    }
-                }
-
-                @Override
-                public void popupMenuCanceled(PopupMenuEvent e) {
-                }
-            });
-            languagePopup.show(btnLanguage, 0, btnLanguage.getHeight());
-            btnLanguage.requestFocusInWindow();
-        });
-
-        JButton btnPauseAll = new JButton(manager.isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
-        btnPauseAll.addActionListener(e1 -> {
-            if (useSystemTray)
-                form.dispose();
-            manager.togglePauseAll();
-        });
-
-        JButton btnDismissAll = new JButton(languageBundle.getString("DismissAll"));
-        btnDismissAll.addActionListener(e1 -> exit());
-
-        // layout
-        panel.setLayout(new GridBagLayout());
-        GridBagConstraints gridBag = new GridBagConstraints();
-        gridBag.fill = GridBagConstraints.HORIZONTAL;
-        gridBag.gridx = 0;
-        gridBag.gridy = 0;
-        panel.add(btnCallShimeji, gridBag);
-        gridBag.insets = new Insets(5, 0, 0, 0);
-        gridBag.gridy++;
-        panel.add(btnFollowCursor, gridBag);
-        gridBag.gridy++;
-        panel.add(btnReduceToOne, gridBag);
-        gridBag.gridy++;
-        panel.add(btnRestoreWindows, gridBag);
-        gridBag.gridy++;
-        panel.add(new JSeparator(), gridBag);
-        gridBag.gridy++;
-        panel.add(btnAllowedBehaviours, gridBag);
-        gridBag.gridy++;
-        panel.add(btnChooseShimeji, gridBag);
-        gridBag.gridy++;
-        panel.add(btnSettings, gridBag);
-        gridBag.gridy++;
-        panel.add(btnLanguage, gridBag);
-        gridBag.gridy++;
-        panel.add(new JSeparator(), gridBag);
-        gridBag.gridy++;
-        panel.add(btnPauseAll, gridBag);
-        gridBag.gridy++;
-        panel.add(btnDismissAll, gridBag);
-
-        // set the form dimensions
-        FontMetrics metrics = btnCallShimeji.getFontMetrics(btnCallShimeji.getFont());
-        int width = metrics.stringWidth(btnCallShimeji.getText());
-        width = Math.max(metrics.stringWidth(btnFollowCursor.getText()), width);
-        width = Math.max(metrics.stringWidth(btnReduceToOne.getText()), width);
-        width = Math.max(metrics.stringWidth(btnRestoreWindows.getText()), width);
-        width = Math.max(metrics.stringWidth(btnAllowedBehaviours.getText()), width);
-        width = Math.max(metrics.stringWidth(btnChooseShimeji.getText()), width);
-        width = Math.max(metrics.stringWidth(btnSettings.getText()), width);
-        width = Math.max(metrics.stringWidth(btnLanguage.getText()), width);
-        width = Math.max(metrics.stringWidth(btnPauseAll.getText()), width);
-        width = Math.max(metrics.stringWidth(btnDismissAll.getText()), width);
-        panel.setPreferredSize(new Dimension(width + 64,
-                24 + // 12 padding on top and bottom
-                        75 + // 13 insets of 5 height normally
-                        10 * metrics.getHeight() + // 10 button faces
-                        84));
-        form.pack();
-        form.setMinimumSize(form.getSize());
+        // set the window dimensions
+        trayMenuWindow.pack();
+        trayMenuWindow.setMinimumSize(trayMenuWindow.getSize());
 
         if (event != null) {
             // get the DPI of the screen, and divide 96 by it to get a ratio
             double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
 
-            // setting location of the form
-            form.setLocation((int) Math.round(event.getX() * dpiScaleInverse) - form.getWidth(), (int) Math.round(event.getY() * dpiScaleInverse) - form.getHeight());
+            // setting location of the window
+            trayMenuWindow.setLocation((int) Math.round(event.getX() * dpiScaleInverse) - trayMenuWindow.getWidth(), (int) Math.round(event.getY() * dpiScaleInverse) - trayMenuWindow.getHeight());
 
             // make sure that it is on the screen if people are using exotic taskbar locations
             Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-            if (form.getX() < screen.getX()) {
-                form.setLocation((int) Math.round(event.getX() * dpiScaleInverse), form.getY());
+            if (trayMenuWindow.getX() < screen.getX()) {
+                trayMenuWindow.setLocation((int) Math.round(event.getX() * dpiScaleInverse), trayMenuWindow.getY());
             }
-            if (form.getY() < screen.getY()) {
-                form.setLocation(form.getX(), (int) Math.round(event.getY() * dpiScaleInverse));
+            if (trayMenuWindow.getY() < screen.getY()) {
+                trayMenuWindow.setLocation(trayMenuWindow.getX(), (int) Math.round(event.getY() * dpiScaleInverse));
             }
         } else {
             // Center the window
-            form.setLocationRelativeTo(null);
+            trayMenuWindow.setLocationRelativeTo(null);
         }
 
-        form.setVisible(true);
+        trayMenuWindow.setVisible(true);
     }
 
     /**
@@ -1111,7 +682,7 @@ public class Main {
         }
     }
 
-    private void loadLanguage(Locale locale) {
+    void loadLanguage(Locale locale) {
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
             try (URLClassLoader loader = new URLClassLoader(urls)) {
@@ -1121,30 +692,6 @@ public class Main {
             log.error("Failed to load language file for locale {}", locale.toLanguageTag(), e);
             showError("The language file for locale " + locale.toLanguageTag() + " could not be loaded. Ensure that you have the latest Shimeji language.properties in your conf directory.");
             exit();
-        }
-    }
-
-    private void updateLanguage(Locale locale) {
-        if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(locale.toLanguageTag())) {
-            properties.setProperty("Language", locale.toLanguageTag());
-            loadLanguage(locale);
-        }
-    }
-
-    private void updateLanguage(String languageTag) {
-        if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(languageTag)) {
-            properties.setProperty("Language", languageTag);
-            loadLanguage(Locale.forLanguageTag(languageTag));
-        }
-    }
-
-    private boolean toggleBooleanSetting(String propertyName, boolean defaultValue) {
-        if (Boolean.parseBoolean(properties.getProperty(propertyName, String.valueOf(defaultValue)))) {
-            properties.setProperty(propertyName, "false");
-            return false;
-        } else {
-            properties.setProperty(propertyName, "true");
-            return true;
         }
     }
 
@@ -1182,15 +729,36 @@ public class Main {
             properties.setProperty("DisabledBehaviours." + mascot.getImageSet(), list.toString().replace("[", "").replace("]", "").replace(", ", "/"));
         }
 
-        updateConfigFile();
+        saveSettings();
     }
 
-    private void updateConfigFile() {
+    void saveSettings() {
         try (OutputStream output = Files.newOutputStream(SETTINGS_FILE)) {
             properties.store(output, "Shimeji-ee Configuration Options");
         } catch (IOException e) {
             log.error("Failed to save settings", e);
         }
+    }
+
+    void reloadAllImageSets() {
+        boolean isExit = manager.isExitOnLastRemoved();
+        manager.setExitOnLastRemoved(false);
+        manager.disposeAll();
+
+        // Wipe all loaded data
+        ImagePairs.clear();
+        Sounds.clear();
+        configurations.clear();
+
+        // Load mascot configurations
+        configurationLoadLoop();
+
+        // Create mascots
+        for (String imageSet : imageSets) {
+            createMascot(imageSet);
+        }
+
+        manager.setExitOnLastRemoved(isExit);
     }
 
     /**
@@ -1201,7 +769,7 @@ public class Main {
      * @author LavenderSnek
      * @author Kilkakon (did some tweaks)
      */
-    private void setActiveImageSets(Collection<String> newImageSets) {
+    void setActiveImageSets(Collection<String> newImageSets) {
         if (newImageSets == null) {
             return;
         }
@@ -1311,7 +879,7 @@ public class Main {
                     info.init(imageSet, configurations.get(imageSet));
                     info.display();
                     setMascotInformationDismissed(imageSet);
-                    updateConfigFile();
+                    saveSettings();
                 }
                 createMascot(imageSet);
             }
@@ -1328,6 +896,10 @@ public class Main {
 
     public ResourceBundle getLanguageBundle() {
         return languageBundle;
+    }
+
+    Manager getManager() {
+        return manager;
     }
 
     public void exit() {
