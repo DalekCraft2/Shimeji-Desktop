@@ -601,11 +601,8 @@ public class Mascot {
             final int left = anchor.x - image.getCenter().x;
 
             prevBounds = new Rectangle(left, top, image.getSize().width, image.getSize().height);
-            return prevBounds;
-        } else {
-            // As we have no image, let's return what we were last frame
-            return prevBounds;
         }
+        return prevBounds;
     }
 
     public int getTime() {
