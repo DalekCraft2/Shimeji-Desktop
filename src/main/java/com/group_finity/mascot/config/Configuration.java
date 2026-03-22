@@ -42,11 +42,13 @@ public class Configuration {
         log.debug("Reading configuration file...");
 
         // check for Japanese XML tag and adapt locale accordingly
-        if (configurationNode.hasChild("\u52D5\u4F5C\u30EA\u30B9\u30C8") ||
-                configurationNode.hasChild("\u884C\u52D5\u30EA\u30B9\u30C8")) {
+        String rootTagName = configurationNode.getName();
+        if (rootTagName.equals(SCHEMA_JA.getString("Mascot"))) {
             schema = SCHEMA_JA;
-        } else {
+        } else if (configurationNode.getName().equals(SCHEMA_EN.getString("Mascot"))) {
             schema = SCHEMA_EN;
+        } else {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnrecognizedRootTagNameErrorMessage"), rootTagName));
         }
         log.debug("Using {} schema", schema.getLocale().toLanguageTag());
 
