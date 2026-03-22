@@ -590,6 +590,10 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         dialog.init();
         dialog.display();
 
+        if (dialog.getTrayMenuReloadRequired()) {
+            Main.getInstance().createTrayIcon();
+        }
+
         /*
          * We're on the Event Dispatch Thread here,
          * so do this on a separate thread to avoid making the UI unresponsive.

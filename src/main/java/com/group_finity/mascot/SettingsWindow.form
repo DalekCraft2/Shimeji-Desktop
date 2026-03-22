@@ -32,7 +32,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnlFooter" pref="0" max="32767" attributes="0"/>
-                  <Component id="pnlTabs" pref="368" max="32767" attributes="0"/>
+                  <Component id="pnlTabs" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -226,7 +226,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="chkShowTrayIcon">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Show Tray Icon (Requires restart)"/>
+                <Property name="text" type="java.lang.String" value="Show Tray Icon"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkShowTrayIconItemStateChanged"/>

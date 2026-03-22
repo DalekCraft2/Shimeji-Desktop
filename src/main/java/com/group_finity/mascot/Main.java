@@ -99,7 +99,9 @@ public class Main {
     private static BufferedImage icon;
 
     private static JFrame frame;
+    private TrayIcon trayIcon;
     private Window trayMenuWindow;
+    private WindowListener trayMenuWindowListener;
 
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -430,8 +432,20 @@ public class Main {
     /**
      * Creates a tray icon.
      */
-    private void createTrayIcon() {
-        // Read this property only here so changes to it only reflect upon restarting the program
+    void createTrayIcon() {
+        if (trayIcon != null) {
+            SystemTray.getSystemTray().remove(trayIcon);
+            trayIcon = null;
+        }
+        if (trayMenuWindow != null) {
+            if (trayMenuWindowListener != null) {
+                trayMenuWindow.removeWindowListener(trayMenuWindowListener);
+                trayMenuWindowListener = null;
+            }
+            trayMenuWindow.dispose();
+            trayMenuWindow = null;
+        }
+
         final boolean showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
         // If this is false, replace the tray icon with a window that stops the program when closed.
         final boolean useSystemTray = showTrayIcon && SystemTray.isSupported();
@@ -460,11 +474,11 @@ public class Main {
             if (tooltip.isEmpty()) {
                 tooltip = languageBundle.getString("ShimejiEE");
             }
-            final TrayIcon icon = new TrayIcon(image, tooltip);
-            icon.setImageAutoSize(true);
+            trayIcon = new TrayIcon(image, tooltip);
+            trayIcon.setImageAutoSize(true);
 
             // attach menu
-            icon.addMouseListener(new MouseListener() {
+            trayIcon.addMouseListener(new MouseListener() {
                 boolean debouncing = false;
                 final Timer debounceTimer = new Timer(1000, event -> debouncing = false);
 
@@ -530,7 +544,7 @@ public class Main {
             });
 
             // Show tray icon
-            SystemTray.getSystemTray().add(icon);
+            SystemTray.getSystemTray().add(trayIcon);
         } catch (final AWTException e) {
             log.error("Failed to create tray icon", e);
             showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage"), e);
@@ -566,7 +580,7 @@ public class Main {
             // because the JFrame has a minimize button and shows up in the taskbar
             trayMenuWindow = new JFrame(title);
             ((JFrame) trayMenuWindow).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            trayMenuWindow.addWindowListener(new WindowListener() {
+            trayMenuWindowListener = new WindowListener() {
                 @Override
                 public void windowOpened(WindowEvent e) {
 
@@ -601,7 +615,8 @@ public class Main {
                 public void windowDeactivated(WindowEvent e) {
 
                 }
-            });
+            };
+            trayMenuWindow.addWindowListener(trayMenuWindowListener);
         }
         trayMenuWindow.setIconImage(getIcon());
         trayMenuWindow.toFront();

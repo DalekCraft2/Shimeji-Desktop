@@ -49,10 +49,11 @@ public class SettingsWindow extends JDialog {
     private String backgroundImage = null;
     private final String[] backgroundModes = {"centre", "fill", "fit", "stretch"};
 
-    private Boolean suppressTextChanged = true;
-    private Boolean imageReloadRequired = false;
-    private Boolean interactiveWindowReloadRequired = false;
-    private Boolean environmentReloadRequired = false;
+    private boolean suppressTextChanged = true;
+    private boolean environmentReloadRequired = false;
+    private boolean imageReloadRequired = false;
+    private boolean interactiveWindowReloadRequired = false;
+    private boolean trayMenuReloadRequired = false;
 
     /**
      * Creates new form SettingsWindow
@@ -232,6 +233,10 @@ public class SettingsWindow extends JDialog {
         return interactiveWindowReloadRequired;
     }
 
+    public boolean getTrayMenuReloadRequired() {
+        return trayMenuReloadRequired;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -352,7 +357,7 @@ public class SettingsWindow extends JDialog {
         chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
         chkAlwaysShowInformationScreen.addItemListener(this::chkAlwaysShowInformationScreenItemStateChanged);
 
-        chkShowTrayIcon.setText("Show Tray Icon (Requires restart)");
+        chkShowTrayIcon.setText("Show Tray Icon");
         chkShowTrayIcon.addItemListener(this::chkShowTrayIconItemStateChanged);
 
         chkDrawShimejiBounds.setText("Draw Shimeji Bounds");
@@ -767,7 +772,7 @@ public class SettingsWindow extends JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlFooter, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(pnlTabs, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE))
+                    .addComponent(pnlTabs))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -801,6 +806,7 @@ public class SettingsWindow extends JDialog {
                 Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
         interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "").equals(interactiveWindows) ||
                 !properties.getProperty("InteractiveWindowsBlacklist", "").equals(interactiveWindowsBlacklist);
+        trayMenuReloadRequired = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true")) != showTrayIcon;
 
         try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
             properties.setProperty("ShowTrayIcon", showTrayIcon.toString());
