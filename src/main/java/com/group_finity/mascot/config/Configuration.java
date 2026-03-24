@@ -62,7 +62,12 @@ public class Configuration {
             log.debug("Reading an action list...");
 
             for (final Entry node : list.selectChildren(schema.getString("Action"))) {
-                final ActionBuilder action = new ActionBuilder(this, node, imageSet);
+                final ActionBuilder action;
+                try {
+                    action = new ActionBuilder(this, node, imageSet);
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
+                }
 
                 if (actionBuilders.containsKey(action.getName())) {
                     throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage"), action.getName()));
@@ -142,10 +147,18 @@ public class Configuration {
 
     public void validate() throws ConfigurationException {
         for (final ActionBuilder builder : actionBuilders.values()) {
-            builder.validate();
+            try {
+                builder.validate();
+            } catch (ConfigurationException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateActionErrorMessage"), builder), e);
+            }
         }
         for (final BehaviorBuilder builder : behaviorBuilders.values()) {
-            builder.validate();
+            try {
+                builder.validate();
+            } catch (ConfigurationException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), builder), e);
+            }
         }
     }
 

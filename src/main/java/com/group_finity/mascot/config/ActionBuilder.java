@@ -47,21 +47,26 @@ public class ActionBuilder implements IActionBuilder {
 
         log.debug("Loading action: {}", this);
 
-        try {
-            params.putAll(actionNode.getAttributes());
-            for (final Entry node : actionNode.selectChildren(schema.getString("Animation"))) {
+        params.putAll(actionNode.getAttributes());
+        List<Entry> selectChildren = actionNode.selectChildren(schema.getString("Animation"));
+        for (Entry node : selectChildren) {
+            try {
                 animationBuilders.add(new AnimationBuilder(schema, node, imageSet));
+            } catch (ConfigurationException e) {
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadAnimationErrorMessage"), e);
             }
+        }
 
-            for (final Entry node : actionNode.getChildren()) {
-                if (node.getName().equals(schema.getString("ActionReference"))) {
-                    actionRefs.add(new ActionRef(configuration, node));
-                } else if (node.getName().equals(schema.getString("Action"))) {
+        for (final Entry node : actionNode.getChildren()) {
+            if (node.getName().equals(schema.getString("ActionReference"))) {
+                actionRefs.add(new ActionRef(configuration, node));
+            } else if (node.getName().equals(schema.getString("Action"))) {
+                try {
                     actionRefs.add(new ActionBuilder(configuration, node, imageSet));
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
                 }
             }
-        } catch (ConfigurationException e) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), name, imageSet), e);
         }
 
         if (type.equals(schema.getString("Embedded"))) {
@@ -69,12 +74,12 @@ public class ActionBuilder implements IActionBuilder {
             try {
                 cls = Class.forName(className).asSubclass(Action.class);
             } catch (final ClassNotFoundException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage"), this), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage"), className), e);
             } catch (final ClassCastException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassIsNotActionErrorMessage"), this), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassIsNotActionErrorMessage"), className), e);
             }
         } else if (VALID_TYPES.stream().noneMatch(type -> this.type.equals(schema.getString(type)))) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), this));
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
         }
 
         log.debug("Finished loading action: {}", this);
@@ -88,7 +93,11 @@ public class ActionBuilder implements IActionBuilder {
     @Override
     public void validate() throws ConfigurationException {
         for (final IActionBuilder ref : actionRefs) {
-            ref.validate();
+            try {
+                ref.validate();
+            } catch (ConfigurationException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateActionErrorMessage"), ref), e);
+            }
         }
     }
 
@@ -108,30 +117,29 @@ public class ActionBuilder implements IActionBuilder {
                 try {
                     try {
                         return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
-                    } catch (IllegalAccessException | IllegalArgumentException | InstantiationException |
-                             NoSuchMethodException | SecurityException | InvocationTargetException e) {
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InstantiationException | InvocationTargetException e) {
                         // NOTE There seems to be no constructor, so move on to the next
                     }
 
                     try {
                         return cls.getConstructor(ResourceBundle.class, VariableMap.class).newInstance(schema, variables);
-                    } catch (IllegalAccessException | IllegalArgumentException | InstantiationException |
-                             NoSuchMethodException | SecurityException | InvocationTargetException e) {
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InstantiationException | InvocationTargetException e) {
                         // NOTE There seems to be no constructor, so move on to the next
                     }
 
                     return cls.getConstructor().newInstance();
                 } catch (final NoSuchMethodException e) {
                     throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassConstructorNotFoundErrorMessage"), this), e);
-                } catch (final InstantiationException e) {
-                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), this), e);
                 } catch (final IllegalAccessException e) {
                     throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("CannotAccessClassActionErrorMessage"), this), e);
+                } catch (final InstantiationException e) {
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), this), e);
                 } catch (final InvocationTargetException e) {
                     // TODO: Think of a unique error message for this without wording it confusingly
                     throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), this), e);
                 }
-
             } else if (type.equals(schema.getString("Move"))) {
                 return new Move(schema, animations, variables);
             } else if (type.equals(schema.getString("Stay"))) {
@@ -143,9 +151,8 @@ public class ActionBuilder implements IActionBuilder {
             } else if (type.equals(schema.getString("Select"))) {
                 return new Select(schema, variables, actions.toArray(new Action[0]));
             } else {
-                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), this));
+                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
             }
-
         } catch (final AnimationInstantiationException e) {
             throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedCreateAnimationErrorMessage"), this), e);
         } catch (final VariableException e) {

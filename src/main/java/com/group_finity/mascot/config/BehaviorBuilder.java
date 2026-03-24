@@ -115,13 +115,17 @@ public class BehaviorBuilder {
      */
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage"), this));
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage"), actionName));
+        }
+        if (!configuration.getBehaviorNames().contains(name)) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name));
         }
         for (final BehaviorBuilder builder : nextBehaviorBuilders) {
-            if (!configuration.getBehaviorNames().contains(builder.name)) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), builder));
+            try {
+                builder.validate();
+            } catch (ConfigurationException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), builder), e);
             }
-            builder.validate();
         }
     }
 
