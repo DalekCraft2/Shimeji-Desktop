@@ -52,6 +52,13 @@ public class AnimationBuilder {
 
         log.debug("Loading animations");
 
+        try {
+            // Verify that the condition can be parsed
+            Variable.parse(condition);
+        } catch (final VariableException e) {
+            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+        }
+
         for (final Entry frameNode : animationNode.selectChildren(schema.getString("Pose"))) {
             try {
                 poses.add(loadPose(frameNode));

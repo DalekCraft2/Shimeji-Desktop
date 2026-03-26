@@ -47,14 +47,22 @@ public class BehaviorBuilder {
 
     private final Map<String, String> params = new LinkedHashMap<>();
 
-    public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) {
+    public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
         name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
         actionName = behaviorNode.getAttribute(configuration.getSchema().getString("Action")) == null ? name : behaviorNode.getAttribute(configuration.getSchema().getString("Action"));
         frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
         hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
+
+        String condition = behaviorNode.getAttribute(configuration.getSchema().getString("Condition"));
+        try {
+            // Verify that the condition can be parsed
+            Variable.parse(condition);
+        } catch (final VariableException e) {
+            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+        }
         this.conditions = new ArrayList<>(conditions);
-        this.conditions.add(behaviorNode.getAttribute(configuration.getSchema().getString("Condition")));
+        this.conditions.add(condition);
 
         // override of toggleable state for required fields
         if (name.equals(UserBehavior.BEHAVIOURNAME_FALL) ||
@@ -75,6 +83,15 @@ public class BehaviorBuilder {
         params.remove(configuration.getSchema().getString("Condition"));
         params.remove(configuration.getSchema().getString("Toggleable"));
 
+        // Verify that all parameters can be parsed
+        for (final Map.Entry<String, String> param : params.entrySet()) {
+            try {
+                Variable.parse(param.getValue());
+            } catch (final VariableException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+            }
+        }
+
         boolean nextAdditive = true;
 
         for (final Entry nextList : behaviorNode.selectChildren(configuration.getSchema().getString("NextBehaviourList"))) {
@@ -93,11 +110,18 @@ public class BehaviorBuilder {
         return "Behavior[name=" + name + ",frequency=" + frequency + ",actionName=" + actionName + "]";
     }
 
-    private void loadBehaviors(final Entry list, final List<String> conditions) {
+    private void loadBehaviors(final Entry list, final List<String> conditions) throws ConfigurationException {
         for (final Entry node : list.getChildren()) {
             if (node.getName().equals(configuration.getSchema().getString("Condition"))) {
+                String condition = node.getAttribute(configuration.getSchema().getString("Condition"));
+                try {
+                    // Verify that the condition can be parsed
+                    Variable.parse(condition);
+                } catch (final VariableException e) {
+                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+                }
                 final List<String> newConditions = new ArrayList<>(conditions);
-                newConditions.add(node.getAttribute(configuration.getSchema().getString("Condition")));
+                newConditions.add(condition);
 
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(configuration.getSchema().getString("BehaviourReference"))) {

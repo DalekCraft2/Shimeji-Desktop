@@ -106,12 +106,24 @@ public class Configuration {
     private void loadBehaviors(final Entry list, final List<String> conditions) throws ConfigurationException {
         for (final Entry node : list.getChildren()) {
             if (node.getName().equals(schema.getString("Condition"))) {
+                String condition = node.getAttribute(schema.getString("Condition"));
+                try {
+                    // Verify that the condition can be parsed
+                    Variable.parse(condition);
+                } catch (final VariableException e) {
+                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+                }
                 final List<String> newConditions = new ArrayList<>(conditions);
-                newConditions.add(node.getAttribute(schema.getString("Condition")));
+                newConditions.add(condition);
 
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(schema.getString("Behaviour"))) {
-                final BehaviorBuilder behavior = new BehaviorBuilder(this, node, conditions);
+                final BehaviorBuilder behavior;
+                try {
+                    behavior = new BehaviorBuilder(this, node, conditions);
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadBehaviourErrorMessage"), node.getAttributes()), e);
+                }
 
                 if (behaviorBuilders.containsKey(behavior.getName())) {
                     throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateBehaviourErrorMessage"), behavior.getName()));
