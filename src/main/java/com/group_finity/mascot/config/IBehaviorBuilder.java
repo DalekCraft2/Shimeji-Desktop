@@ -1,9 +1,7 @@
 package com.group_finity.mascot.config;
 
 import com.group_finity.mascot.behavior.Behavior;
-import com.group_finity.mascot.exception.ActionInstantiationException;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
-import com.group_finity.mascot.exception.ConfigurationException;
 
 import java.util.Map;
 

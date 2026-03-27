@@ -2,8 +2,6 @@ package com.group_finity.mascot.config;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.behavior.Behavior;
-import com.group_finity.mascot.behavior.UserBehavior;
-import com.group_finity.mascot.exception.ActionInstantiationException;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
