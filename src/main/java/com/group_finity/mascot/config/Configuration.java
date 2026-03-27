@@ -189,7 +189,7 @@ public class Configuration {
         context.putAll(constants); // put first so they can't override mascot
         context.put("mascot", mascot);
 
-        final Collection<BehaviorBuilder> candidates = new ArrayList<>();
+        final Collection<IBehaviorBuilder> candidates = new ArrayList<>();
         long totalFrequency = 0;
 
         final BehaviorBuilder previousBehaviorFactory;
@@ -207,20 +207,20 @@ public class Configuration {
                         totalFrequency += behaviorFactory.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.warn("Failed to calculate the frequency of the behavior", e);
+                    log.warn("Failed to calculate frequency for behavior: {}", behaviorFactory, e);
                 }
             }
         }
 
         if (previousName != null) {
-            for (final BehaviorBuilder behaviorFactory : previousBehaviorFactory.getNextBehaviorBuilders()) {
+            for (final BehaviorRef behaviorFactory : previousBehaviorFactory.getNextBehaviorBuilders()) {
                 try {
-                    if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
+                    if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory.getName(), mascot)) {
                         candidates.add(behaviorFactory);
                         totalFrequency += behaviorFactory.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.warn("Failed to calculate the frequency of the behavior", e);
+                    log.warn("Failed to calculate frequency for behavior: {}", behaviorFactory, e);
                 }
             }
         }
@@ -235,7 +235,7 @@ public class Configuration {
 
         double random = Math.random() * totalFrequency;
 
-        for (final BehaviorBuilder behaviorFactory : candidates) {
+        for (final IBehaviorBuilder behaviorFactory : candidates) {
             random -= behaviorFactory.getFrequency();
             if (random < 0) {
                 return behaviorFactory.buildBehavior();
@@ -302,6 +302,10 @@ public class Configuration {
 
     Map<String, ActionBuilder> getActionBuilders() {
         return actionBuilders;
+    }
+
+    Map<String, BehaviorBuilder> getBehaviorBuilders() {
+        return behaviorBuilders;
     }
 
     public Set<String> getBehaviorNames() {

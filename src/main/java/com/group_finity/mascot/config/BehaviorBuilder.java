@@ -23,7 +23,7 @@ import java.util.Map;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-public class BehaviorBuilder {
+public class BehaviorBuilder implements IBehaviorBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(BehaviorBuilder.class);
 
@@ -43,7 +43,7 @@ public class BehaviorBuilder {
 
     private final boolean nextAdditive;
 
-    private final List<BehaviorBuilder> nextBehaviorBuilders = new ArrayList<>();
+    private final List<BehaviorRef> nextBehaviorBuilders = new ArrayList<>();
 
     private final Map<String, String> params = new LinkedHashMap<>();
 
@@ -126,7 +126,7 @@ public class BehaviorBuilder {
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(configuration.getSchema().getString("BehaviourReference"))) {
                 try {
-                    nextBehaviorBuilders.add(new BehaviorBuilder(configuration, node, conditions));
+                    nextBehaviorBuilders.add(new BehaviorRef(configuration, node, conditions));
                 } catch (ConfigurationException e) {
                     throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadBehaviourReferenceErrorMessage"), node.getAttributes()), e);
                 }
@@ -144,29 +144,29 @@ public class BehaviorBuilder {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage"), actionName));
         }
-        if (!configuration.getBehaviorNames().contains(name)) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name));
-        }
-        for (final BehaviorBuilder builder : nextBehaviorBuilders) {
+        for (final BehaviorRef ref : nextBehaviorBuilders) {
             try {
-                builder.validate();
+                ref.validate();
             } catch (ConfigurationException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), builder), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), ref), e);
             }
         }
     }
 
-    /**
-     * Builds the behavior, its corresponding action, and all of the corresponding action's children actions/action
-     * references.
-     *
-     * @return the built behavior
-     * @throws BehaviorInstantiationException if the behavior's corresponding action fails to be built
-     * @see IActionBuilder#buildAction(Map)
-     */
+    @Override
     public Behavior buildBehavior() throws BehaviorInstantiationException {
         try {
             return new UserBehavior(name, configuration.buildAction(actionName, params), configuration);
+        } catch (final ActionInstantiationException e) {
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), this), e);
+        }
+    }
+
+    public Behavior buildBehavior(final Map<String, String> params) throws BehaviorInstantiationException {
+        final Map<String, String> newParams = new LinkedHashMap<>(this.params);
+        newParams.putAll(params);
+        try {
+            return new UserBehavior(name, configuration.buildAction(actionName, newParams), configuration);
         } catch (final ActionInstantiationException e) {
             throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), this), e);
         }
@@ -192,6 +192,7 @@ public class BehaviorBuilder {
         return name;
     }
 
+    @Override
     public int getFrequency() {
         return frequency;
     }
@@ -208,7 +209,7 @@ public class BehaviorBuilder {
         return nextAdditive;
     }
 
-    public List<BehaviorBuilder> getNextBehaviorBuilders() {
+    public List<BehaviorRef> getNextBehaviorBuilders() {
         return nextBehaviorBuilders;
     }
 }
