@@ -62,7 +62,7 @@ public class ActionBuilder implements IActionBuilder {
                 try {
                     actionRefs.add(new ActionRef(configuration, node));
                 } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionReferenceErrorMessage"), node.getAttributes()), e);
                 }
             } else if (node.getName().equals(schema.getString("Action"))) {
                 try {

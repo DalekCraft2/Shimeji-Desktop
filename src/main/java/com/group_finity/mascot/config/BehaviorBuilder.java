@@ -125,8 +125,11 @@ public class BehaviorBuilder {
 
                 loadBehaviors(node, newConditions);
             } else if (node.getName().equals(configuration.getSchema().getString("BehaviourReference"))) {
-                final BehaviorBuilder behavior = new BehaviorBuilder(configuration, node, conditions);
-                nextBehaviorBuilders.add(behavior);
+                try {
+                    nextBehaviorBuilders.add(new BehaviorBuilder(configuration, node, conditions));
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadBehaviourReferenceErrorMessage"), node.getAttributes()), e);
+                }
             }
         }
     }
