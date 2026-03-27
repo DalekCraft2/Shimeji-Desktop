@@ -59,7 +59,11 @@ public class ActionBuilder implements IActionBuilder {
 
         for (final Entry node : actionNode.getChildren()) {
             if (node.getName().equals(schema.getString("ActionReference"))) {
-                actionRefs.add(new ActionRef(configuration, node));
+                try {
+                    actionRefs.add(new ActionRef(configuration, node));
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
+                }
             } else if (node.getName().equals(schema.getString("Action"))) {
                 try {
                     actionRefs.add(new ActionBuilder(configuration, node, imageSet));

@@ -4,6 +4,8 @@ import com.group_finity.mascot.Main;
 import com.group_finity.mascot.action.Action;
 import com.group_finity.mascot.exception.ActionInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
+import com.group_finity.mascot.exception.VariableException;
+import com.group_finity.mascot.script.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +28,20 @@ public class ActionRef implements IActionBuilder {
 
     private final Map<String, String> params = new LinkedHashMap<>();
 
-    public ActionRef(final Configuration configuration, final Entry refNode) {
+    public ActionRef(final Configuration configuration, final Entry refNode) throws ConfigurationException {
         this.configuration = configuration;
 
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
         params.putAll(refNode.getAttributes());
+
+        // Verify that all parameters can be parsed
+        for (final Map.Entry<String, String> param : params.entrySet()) {
+            try {
+                Variable.parse(param.getValue());
+            } catch (final VariableException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+            }
+        }
 
         log.debug("Finished loading action reference: {}", this);
     }
