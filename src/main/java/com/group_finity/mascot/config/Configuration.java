@@ -10,6 +10,7 @@ import com.group_finity.mascot.exception.ActionInstantiationException;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
+import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
