@@ -368,6 +368,9 @@ public class Manager {
 
     public boolean isPaused() {
         synchronized (mascots) {
+            if (mascots.isEmpty()) {
+                return false;
+            }
             return mascots.stream().allMatch(Mascot::isPaused);
         }
     }

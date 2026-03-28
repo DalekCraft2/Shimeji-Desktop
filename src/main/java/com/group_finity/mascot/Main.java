@@ -101,6 +101,7 @@ public class Main {
     private static JFrame frame;
     private TrayIcon trayIcon;
     private Window trayMenuWindow;
+    private TrayMenuPanel trayMenuPanel;
     private WindowListener trayMenuWindowListener;
 
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -458,6 +459,7 @@ public class Main {
             }
             trayMenuWindow.dispose();
             trayMenuWindow = null;
+            trayMenuPanel = null;
         }
 
         final boolean showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
@@ -636,8 +638,8 @@ public class Main {
         trayMenuWindow.toFront();
         trayMenuWindow.setAlwaysOnTop(useSystemTray);
 
-        final TrayMenuPanel panel = new TrayMenuPanel(useSystemTray);
-        trayMenuWindow.add(panel);
+        trayMenuPanel = new TrayMenuPanel(useSystemTray);
+        trayMenuWindow.add(trayMenuPanel);
 
         // set the window dimensions
         trayMenuWindow.pack();
@@ -664,6 +666,12 @@ public class Main {
         }
 
         trayMenuWindow.setVisible(true);
+    }
+
+    void notifyMascotPauseToggled() {
+        if (trayMenuPanel != null) {
+            trayMenuPanel.refreshPauseText();
+        }
     }
 
     /**

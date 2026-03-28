@@ -376,7 +376,10 @@ public class Mascot {
 
         // "Paused" Menu item
         final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? languageBundle.getString("PauseAnimations") : languageBundle.getString("ResumeAnimations"));
-        pauseMenu.addActionListener(event -> paused = !paused);
+        pauseMenu.addActionListener(event -> {
+            paused = !paused;
+            Main.getInstance().notifyMascotPauseToggled();
+        });
 
         // Add the Behaviors submenu.
         JMenu submenu = new JMenu(languageBundle.getString("SetBehaviour"));

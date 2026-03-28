@@ -73,6 +73,12 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         btnDismissAll.setText(language.getString("DismissAll"));
     }
 
+    void refreshPauseText() {
+        ResourceBundle language = Main.getInstance().getLanguageBundle();
+        Manager manager = Main.getInstance().getManager();
+        btnPauseAll.setText(manager.isPaused() ? language.getString("ResumeAnimations") : language.getString("PauseAnimations"));
+    }
+
     private void initComponentStates() {
         Properties properties = Main.getInstance().getProperties();
         chkBreeding.setSelected(Boolean.parseBoolean(properties.getProperty("Breeding", "true")));
@@ -722,12 +728,11 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     private void btnPauseAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseAllActionPerformed
         if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
-        } else {
-            ResourceBundle language = Main.getInstance().getLanguageBundle();
-            Manager manager = Main.getInstance().getManager();
-            btnPauseAll.setText(manager.isPaused() ? language.getString("ResumeAnimations") : language.getString("PauseAnimations"));
         }
         Main.getInstance().getManager().togglePauseAll();
+        if (!useSystemTray) {
+            refreshPauseText();
+        }
     }//GEN-LAST:event_btnPauseAllActionPerformed
 
     private void btnDismissAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDismissAllActionPerformed
