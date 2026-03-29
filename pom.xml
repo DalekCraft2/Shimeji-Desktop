@@ -55,7 +55,7 @@
         <dependency>
             <!-- Java Native Access Platform -->
             <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
+            <artifactId>jna-platform-jpms</artifactId>
             <version>5.18.1</version>
         </dependency>
 
@@ -79,11 +79,31 @@
             <artifactId>jSystemThemeDetector</artifactId>
             <version>3.9.1</version>
             <exclusions>
+                <!-- Exclude these so we can use the modular versions -->
+                <exclusion>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.oshi</groupId>
+                    <artifactId>oshi-core</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core-java11</artifactId>
+            <version>6.9.3</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
