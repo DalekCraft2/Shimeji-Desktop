@@ -158,7 +158,7 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         try {
             return new UserBehavior(name, configuration.buildAction(actionName, params), configuration);
         } catch (final ActionInstantiationException e) {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), this), e);
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), actionName), name, e);
         }
     }
 
@@ -168,7 +168,7 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         try {
             return new UserBehavior(name, configuration.buildAction(actionName, newParams), configuration);
         } catch (final ActionInstantiationException e) {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), this), e);
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), actionName), name, e);
         }
     }
 

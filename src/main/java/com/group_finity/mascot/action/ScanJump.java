@@ -126,10 +126,10 @@ public class ScanJump extends ActionBase {
                     targetMascot.setLookRight(!getMascot().isLookRight());
                 }
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                log.error("Failed to set behavior to \"{}\" for mascot \"{}\"",
-                        setFirstBehavior ? getTargetBehavior() : getBehavior(),
-                        setFirstBehavior ? targetMascot : getMascot(), e);
-                Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
+                String behaviorParam = setFirstBehavior ? getTargetBehavior() : getBehavior();
+                Mascot mascotParam = setFirstBehavior ? targetMascot : getMascot();
+                log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorParam, mascotParam, e);
+                Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), behaviorParam, mascotParam), e);
             }
         }
     }

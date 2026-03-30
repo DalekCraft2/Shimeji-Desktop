@@ -257,7 +257,7 @@ public class Configuration {
                 return buildBehavior(schema.getString(UserBehavior.BEHAVIOURNAME_FALL));
             }
         } else {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name));
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name), name);
         }
     }
 
@@ -265,7 +265,7 @@ public class Configuration {
         if (behaviorBuilders.containsKey(name)) {
             return behaviorBuilders.get(name).buildBehavior();
         } else {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name));
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name), name);
         }
     }
 

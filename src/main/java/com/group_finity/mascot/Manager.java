@@ -232,7 +232,7 @@ public class Manager {
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
+                    Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
                     mascot.dispose();
                 }
             }
@@ -255,7 +255,7 @@ public class Manager {
                     }
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
+                    Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
                     mascot.dispose();
                 }
             }

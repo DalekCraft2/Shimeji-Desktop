@@ -42,7 +42,7 @@ public class Interact extends Animate {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                 log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", getBehavior(), getMascot(), e);
-                Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
+                Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), getBehavior(), getMascot()), e);
             }
         }
     }

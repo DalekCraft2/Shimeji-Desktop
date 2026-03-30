@@ -401,7 +401,7 @@ public class Mascot {
                                     setBehavior(config.buildBehavior(behaviorName));
                                 } catch (BehaviorInstantiationException | CantBeAliveException ex) {
                                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorName, this, ex);
-                                    Main.showError(languageBundle.getString("CouldNotSetBehaviourErrorMessage"), ex);
+                                    Main.showError(String.format(languageBundle.getString("FailedSetBehaviourErrorMessage"), behaviorName, this), ex);
                                 }
                             }
                         });
@@ -460,7 +460,7 @@ public class Mascot {
                     behavior.next();
                 } catch (final CantBeAliveException e) {
                     log.error("Could not get next behavior for mascot \"{}\"", this, e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), e);
+                    Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), this), e);
                     dispose();
                 }
 

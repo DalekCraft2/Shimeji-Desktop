@@ -49,7 +49,7 @@ public class Transform extends Animate {
             getMascot().setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getTransformBehavior(), getMascot()));
         } catch (final BehaviorInstantiationException | CantBeAliveException e) {
             log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", getTransformBehavior(), getMascot(), e);
-            Main.showError(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), e);
+            Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), getTransformBehavior(), getMascot()), e);
         }
     }
 
