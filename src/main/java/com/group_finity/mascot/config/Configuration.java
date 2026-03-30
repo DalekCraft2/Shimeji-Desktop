@@ -214,7 +214,7 @@ public class Configuration {
         }
 
         if (totalFrequency == 0) {
-            Area area = Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))
+            Area area = Main.getInstance().getSettings().multiscreen
                     ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
             // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
             mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
@@ -238,7 +238,7 @@ public class Configuration {
             if (isBehaviorEnabled(name, mascot)) {
                 return behaviorBuilders.get(name).buildBehavior();
             } else {
-                Area area = Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))
+                Area area = Main.getInstance().getSettings().multiscreen
                         ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
                 // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
                 mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
@@ -258,8 +258,8 @@ public class Configuration {
     }
 
     public boolean isBehaviorEnabled(final BehaviorBuilder builder, final Mascot mascot) {
-        if (builder.isToggleable()) {
-            return Arrays.stream(Main.getInstance().getProperties().getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/")).noneMatch(behaviour -> behaviour.equals(builder.getName()));
+        if (builder.isToggleable() && Main.getInstance().getSettings().disabledBehaviors.containsKey(mascot.getImageSet())) {
+            return Main.getInstance().getSettings().disabledBehaviors.get(mascot.getImageSet()).stream().noneMatch(behaviour -> behaviour.equals(builder.getName()));
         }
         return true;
     }

@@ -66,7 +66,7 @@ public class Fall extends ActionBase {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+        scaling = Main.getInstance().getSettings().scaling;
 
         /*
          * FIXME: Shimejis start falling much more quickly (if scaled up) or slowly (if scaled down) than they should

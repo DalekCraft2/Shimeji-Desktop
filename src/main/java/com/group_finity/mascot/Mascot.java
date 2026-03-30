@@ -211,7 +211,7 @@ public class Mascot {
                 @Override
                 public void paintComponent(Graphics g) {
                     // TODO: Consider a more efficient way of doing this than setting the enabled state on every repaint.
-                    setEnabled(Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("DrawShimejiBounds", "false")));
+                    setEnabled(Main.getInstance().getSettings().drawShimejiBounds);
                     if (isEnabled()) {
                         super.paintComponent(g);
 

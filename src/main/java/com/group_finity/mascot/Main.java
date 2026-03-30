@@ -34,7 +34,6 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -89,7 +88,7 @@ public class Main {
      */
     private final Collection<String> failedConfigurations = new ArrayList<>();
 
-    private final Properties properties = new Properties();
+    private final Settings settings = new Settings();
     private ResourceBundle languageBundle;
 
     /**
@@ -166,21 +165,14 @@ public class Main {
 
     public void run() {
         // Load settings
-        if (Files.isRegularFile(SETTINGS_FILE)) {
-            try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
-                properties.load(input);
-            } catch (IOException e) {
-                log.error("Failed to load settings", e);
-            }
-        }
+        settings.load();
 
         // Load language
-        Locale locale = Locale.forLanguageTag(properties.getProperty("Language", Locale.UK.toLanguageTag()));
-        loadLanguage(locale);
+        loadLanguage(settings.language);
 
         // Get the image sets to use
-        if (!Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"))) {
-            for (String set : properties.getProperty("ActiveShimeji", "").split("/"))
+        if (!settings.alwaysShowShimejiChooser) {
+            for (String set : settings.activeImageSets)
                 if (!set.trim().isEmpty()) {
                     imageSets.add(set.trim());
                 }
@@ -194,17 +186,15 @@ public class Main {
 
         // Create mascots
         for (String imageSet : imageSets) {
-            String informationAlreadySeen = properties.getProperty("InformationDismissed", "");
             if (configurations.get(imageSet).containsInformationKey("SplashImage") &&
-                    (Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false")) ||
-                            !informationAlreadySeen.contains(imageSet))) {
+                    (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
                 SwingUtilities.invokeLater(() -> {
                     InformationWindow info = new InformationWindow();
                     info.init(imageSet, configurations.get(imageSet));
                     info.display();
                 });
                 setMascotInformationDismissed(imageSet);
-                saveSettings();
+                settings.saveInformationDismissed();
             }
             createMascot(imageSet);
         }
@@ -462,7 +452,7 @@ public class Main {
             trayMenuPanel = null;
         }
 
-        final boolean showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
+        final boolean showTrayIcon = settings.showTrayIcon;
         // If this is false, replace the tray icon with a window that stops the program when closed.
         final boolean useSystemTray = showTrayIcon && SystemTray.isSupported();
 
@@ -472,7 +462,8 @@ public class Main {
             if (showTrayIcon && !SystemTray.isSupported()) {
                 log.warn("System tray not supported; creating persistent menu window instead");
                 // Change the setting to false so the warning doesn't happen on every startup after this
-                properties.setProperty("ShowTrayIcon", "false");
+                settings.showTrayIcon = false;
+                settings.saveUserSettings();
             } else
                 log.info("Creating persistent menu window");
             createTrayMenu(false, null);
@@ -486,7 +477,7 @@ public class Main {
 
         try {
             // Create the tray icon
-            String tooltip = properties.getProperty("ShimejiEENameOverride", "").trim();
+            String tooltip = settings.shimejiEeNameOverride;
             if (tooltip.isEmpty()) {
                 tooltip = languageBundle.getString("ShimejiEE");
             }
@@ -582,7 +573,7 @@ public class Main {
             trayMenuWindow.dispose();
         }
 
-        String title = properties.getProperty("ShimejiEENameOverride", "").trim();
+        String title = settings.shimejiEeNameOverride;
         if (title.isEmpty()) {
             title = languageBundle.getString("ShimejiEE");
         }
@@ -733,26 +724,15 @@ public class Main {
     }
 
     private void setMascotInformationDismissed(final String imageSet) {
-        List<String> list = new ArrayList<>();
-        String[] data = properties.getProperty("InformationDismissed", "").split("/");
-
-        if (data.length > 0 && !data[0].isEmpty()) {
-            list.addAll(Arrays.asList(data));
+        if (!settings.informationDismissed.contains(imageSet)) {
+            settings.informationDismissed.add(imageSet);
         }
-        if (!list.contains(imageSet)) {
-            list.add(imageSet);
-        }
-
-        properties.setProperty("InformationDismissed", list.toString().replace("[", "").replace("]", "").replace(", ", "/"));
     }
 
     public void setMascotBehaviorEnabled(final String name, final Mascot mascot, boolean enabled) {
         List<String> list = new ArrayList<>();
-        String[] data = properties.getProperty("DisabledBehaviours." + mascot.getImageSet(), "").split("/");
-
-        if (data.length > 0 && !data[0].isEmpty()) {
-            list.addAll(Arrays.asList(data));
-        }
+        if (settings.disabledBehaviors.containsKey(mascot.getImageSet()))
+            list = settings.disabledBehaviors.get(mascot.getImageSet());
 
         if (list.contains(name) && enabled) {
             list.remove(name);
@@ -761,20 +741,12 @@ public class Main {
         }
 
         if (list.isEmpty()) {
-            properties.remove("DisabledBehaviours." + mascot.getImageSet());
+            settings.disabledBehaviors.remove(mascot.getImageSet());
         } else {
-            properties.setProperty("DisabledBehaviours." + mascot.getImageSet(), list.toString().replace("[", "").replace("]", "").replace(", ", "/"));
+            settings.disabledBehaviors.put(mascot.getImageSet(), list);
         }
 
-        saveSettings();
-    }
-
-    void saveSettings() {
-        try (OutputStream output = Files.newOutputStream(SETTINGS_FILE)) {
-            properties.store(output, "Shimeji-ee Configuration Options");
-        } catch (IOException e) {
-            log.error("Failed to save settings", e);
-        }
+        settings.savePopupSettings();
     }
 
     void reloadAllImageSets() {
@@ -908,15 +880,13 @@ public class Main {
         } else if (!failedConfigurations.contains(imageSet)) {
             if (loadConfiguration(imageSet)) {
                 imageSets.add(imageSet);
-                String informationAlreadySeen = properties.getProperty("InformationDismissed", "");
                 if (configurations.get(imageSet).containsInformationKey("SplashImage") &&
-                        (Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false")) ||
-                                !informationAlreadySeen.contains(imageSet))) {
+                        (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
                     InformationWindow info = new InformationWindow();
                     info.init(imageSet, configurations.get(imageSet));
                     info.display();
                     setMascotInformationDismissed(imageSet);
-                    saveSettings();
+                    settings.saveInformationDismissed();
                 }
                 createMascot(imageSet);
             }
@@ -927,8 +897,8 @@ public class Main {
         return configurations.get(imageSet);
     }
 
-    public Properties getProperties() {
-        return properties;
+    public Settings getSettings() {
+        return settings;
     }
 
     public ResourceBundle getLanguageBundle() {

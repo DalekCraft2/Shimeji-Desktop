@@ -49,7 +49,7 @@ public class Jump extends ActionBase {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+        scaling = Main.getInstance().getSettings().scaling;
     }
 
     @Override

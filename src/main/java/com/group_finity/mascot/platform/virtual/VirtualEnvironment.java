@@ -107,24 +107,21 @@ class VirtualEnvironment extends Environment {
                 }
             });
             display.setAutoRequestFocus(false);
-            String title = Main.getInstance().getProperties().getProperty("ShimejiEENameOverride", "").trim();
+            String title = Main.getInstance().getSettings().shimejiEeNameOverride;
             if (title.isEmpty()) {
                 title = Main.getInstance().getLanguageBundle().getString("ShimejiEE");
             }
             display.setTitle(title);
-            String[] windowArray = Main.getInstance().getProperties().getProperty("WindowSize", "600x500").split("x");
 
             BufferedImage image = null;
             try {
-                if (!Main.getInstance().getProperties().getProperty("BackgroundImage", "").isEmpty()) {
-                    image = ImageIO.read(new File(Main.getInstance().getProperties().getProperty("BackgroundImage", "")));
+                if (!Main.getInstance().getSettings().backgroundImage.isEmpty()) {
+                    image = ImageIO.read(new File(Main.getInstance().getSettings().backgroundImage));
                 }
             } catch (IOException ignored) {
             }
-            display.setContentPane(new VirtualContentPanel(new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1])),
-                    Color.decode(Main.getInstance().getProperties().getProperty("Background", "#00FF00")),
-                    image,
-                    Main.getInstance().getProperties().getProperty("BackgroundMode", "centre")));
+            display.setContentPane(new VirtualContentPanel(new Dimension(Main.getInstance().getSettings().windowSize),
+                    Main.getInstance().getSettings().backgroundColor, image, Main.getInstance().getSettings().backgroundMode));
             display.setBackground(display.getContentPane().getBackground());
 
             display.setIconImage(Main.getIcon());

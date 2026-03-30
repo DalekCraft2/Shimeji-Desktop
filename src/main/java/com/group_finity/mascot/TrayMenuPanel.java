@@ -14,7 +14,6 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
@@ -44,8 +43,8 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         Manager manager = Main.getInstance().getManager();
 
         if (getTopLevelAncestor() != null) {
-            Properties properties = Main.getInstance().getProperties();
-            String title = properties.getProperty("ShimejiEENameOverride", "").trim();
+            Settings settings = Main.getInstance().getSettings();
+            String title = settings.shimejiEeNameOverride;
             if (title.isEmpty()) {
                 title = language.getString("ShimejiEE");
             }
@@ -80,15 +79,15 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }
 
     private void initComponentStates() {
-        Properties properties = Main.getInstance().getProperties();
-        chkBreeding.setSelected(Boolean.parseBoolean(properties.getProperty("Breeding", "true")));
-        chkTransient.setSelected(Boolean.parseBoolean(properties.getProperty("Transients", "true")));
-        chkTransformation.setSelected(Boolean.parseBoolean(properties.getProperty("Transformation", "true")));
-        chkThrowing.setSelected(Boolean.parseBoolean(properties.getProperty("Throwing", "true")));
-        chkSounds.setSelected(Boolean.parseBoolean(properties.getProperty("Sounds", "true")));
-        chkMultiscreen.setSelected(Boolean.parseBoolean(properties.getProperty("Multiscreen", "true")));
+        Settings settings = Main.getInstance().getSettings();
+        chkBreeding.setSelected(settings.breeding);
+        chkTransient.setSelected(settings.transients);
+        chkTransformation.setSelected(settings.transformation);
+        chkThrowing.setSelected(settings.throwing);
+        chkSounds.setSelected(settings.sounds);
+        chkMultiscreen.setSelected(settings.multiscreen);
 
-        String languageTag = properties.getProperty("Language", Locale.UK.toLanguageTag());
+        String languageTag = settings.language.toLanguageTag();
         if (languageTag.equals(Locale.UK.toLanguageTag())) {
             itmEnglish.setSelected(true);
         } else if (languageTag.equals("ar-SA")) {
@@ -522,45 +521,45 @@ public class TrayMenuPanel extends javax.swing.JPanel {
 
     private void chkBreedingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkBreedingItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getProperties().setProperty("Breeding", String.valueOf(selected));
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().breeding = selected;
+        Main.getInstance().getSettings().savePopupSettings();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkBreedingItemStateChanged
 
     private void chkTransientItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransientItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getProperties().setProperty("Transients", String.valueOf(selected));
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().transients = selected;
+        Main.getInstance().getSettings().savePopupSettings();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransientItemStateChanged
 
     private void chkTransformationItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransformationItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getProperties().setProperty("Transformation", String.valueOf(selected));
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().transformation = selected;
+        Main.getInstance().getSettings().savePopupSettings();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransformationItemStateChanged
 
     private void chkThrowingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkThrowingItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getProperties().setProperty("Throwing", String.valueOf(selected));
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().throwing = selected;
+        Main.getInstance().getSettings().savePopupSettings();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkThrowingItemStateChanged
 
     private void chkSoundsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSoundsItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getProperties().setProperty("Sounds", String.valueOf(selected));
+        Main.getInstance().getSettings().sounds = selected;
         if (!selected)
             Sounds.stopAll();
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().savePopupSettings();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkSoundsItemStateChanged
 
     private void chkMultiscreenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkMultiscreenItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getProperties().setProperty("Multiscreen", String.valueOf(selected));
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().multiscreen = selected;
+        Main.getInstance().getSettings().savePopupSettings();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkMultiscreenItemStateChanged
 
@@ -743,9 +742,9 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     private void updateLanguage(Locale locale) {
         if (useSystemTray)
             ((Window) getTopLevelAncestor()).dispose();
-        Properties properties = Main.getInstance().getProperties();
-        if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(locale.toLanguageTag())) {
-            properties.setProperty("Language", locale.toLanguageTag());
+        Settings settings = Main.getInstance().getSettings();
+        if (!settings.language.equals(locale)) {
+            settings.language = locale;
             Main.getInstance().loadLanguage(locale);
             if (!useSystemTray) {
                 refreshComponentText();
@@ -753,15 +752,15 @@ public class TrayMenuPanel extends javax.swing.JPanel {
                 repackWindow();
             }
         }
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().savePopupSettings();
     }
 
     private void updateLanguage(String languageTag) {
         if (useSystemTray)
             ((Window) getTopLevelAncestor()).dispose();
-        Properties properties = Main.getInstance().getProperties();
-        if (!properties.getProperty("Language", Locale.UK.toLanguageTag()).equals(languageTag)) {
-            properties.setProperty("Language", languageTag);
+        Settings settings = Main.getInstance().getSettings();
+        if (!settings.language.toLanguageTag().equals(languageTag)) {
+            settings.language = Locale.forLanguageTag(languageTag);
             Main.getInstance().loadLanguage(Locale.forLanguageTag(languageTag));
             if (!useSystemTray) {
                 refreshComponentText();
@@ -769,7 +768,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
                 repackWindow();
             }
         }
-        Main.getInstance().saveSettings();
+        Main.getInstance().getSettings().savePopupSettings();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

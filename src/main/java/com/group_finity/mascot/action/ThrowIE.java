@@ -47,13 +47,13 @@ public class ThrowIE extends Animate {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+        scaling = Main.getInstance().getSettings().scaling;
         activeWindowId = getEnvironment().getActiveWindowId();
     }
 
     @Override
     public boolean hasNext() throws VariableException {
-        if (!Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Throwing", "true"))) {
+        if (!Main.getInstance().getSettings().throwing) {
             return false;
         }
 

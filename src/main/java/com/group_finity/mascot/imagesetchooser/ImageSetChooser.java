@@ -16,12 +16,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -135,19 +133,14 @@ public class ImageSetChooser extends JDialog {
     }
 
     private List<String> readConfigFile() {
-        // now with properties style loading!
-        List<String> activeImageSets = new ArrayList<>(Arrays.asList(Main.getInstance().getProperties().getProperty("ActiveShimeji", "").split("/")));
-        selectAllSets = activeImageSets.get(0).trim().isEmpty(); // if no active ones, activate them all!
+        List<String> activeImageSets = new ArrayList<>(Main.getInstance().getSettings().activeImageSets);
+        selectAllSets = activeImageSets.isEmpty(); // if no active ones, activate them all!
         return activeImageSets;
     }
 
     private void updateConfigFile() {
-        try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
-            Main.getInstance().getProperties().setProperty("ActiveShimeji", imageSets.toString().replace("[", "").replace("]", "").replace(", ", "/"));
-            Main.getInstance().getProperties().store(output, "Shimeji-ee Configuration Options");
-        } catch (IOException e) {
-            // Doesn't matter at all
-        }
+        Main.getInstance().getSettings().activeImageSets = imageSets;
+        Main.getInstance().getSettings().saveActiveImageSets();
     }
 
     /**

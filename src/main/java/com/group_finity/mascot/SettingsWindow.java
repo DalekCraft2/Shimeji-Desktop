@@ -5,6 +5,7 @@
  */
 package com.group_finity.mascot;
 
+import com.group_finity.mascot.image.ImagePairLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +21,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,7 +38,7 @@ public class SettingsWindow extends JDialog {
     private Boolean alwaysShowShimejiChooser = false;
     private Boolean alwaysShowInformationScreen = false;
     private Boolean drawShimejiBounds = false;
-    private String filter = "nearest";
+    private ImagePairLoader.Filter filter = ImagePairLoader.Filter.NEAREST_NEIGHBOUR;
     private double scaling = 1.0;
     private double opacity = 1.0;
     private Boolean windowedMode = false;
@@ -78,34 +77,27 @@ public class SettingsWindow extends JDialog {
         }
 
         // load existing settings
-        Properties properties = Main.getInstance().getProperties();
-        showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
-        alwaysShowShimejiChooser = Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"));
-        alwaysShowInformationScreen = Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false"));
-        drawShimejiBounds = Boolean.parseBoolean(properties.getProperty("DrawShimejiBounds", "false"));
-        String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
-        filter = "nearest";
-        if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
-            filter = "hqx";
-        } else if (filterText.equalsIgnoreCase("bicubic")) {
-            filter = "bicubic";
-        }
-        opacity = Double.parseDouble(properties.getProperty("Opacity", "1.0"));
-        scaling = Double.parseDouble(properties.getProperty("Scaling", "1.0"));
-        windowedMode = properties.getProperty("Environment", "generic").equals("virtual");
-        String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
-        windowSize = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
-        backgroundColour = Color.decode(properties.getProperty("Background", "#00FF00"));
-        backgroundImage = properties.getProperty("BackgroundImage", "");
-        backgroundMode = properties.getProperty("BackgroundMode", "centre");
+        Settings settings = Main.getInstance().getSettings();
+        showTrayIcon = settings.showTrayIcon;
+        alwaysShowShimejiChooser = settings.alwaysShowShimejiChooser;
+        alwaysShowInformationScreen = settings.alwaysShowInformationScreen;
+        drawShimejiBounds = settings.drawShimejiBounds;
+        filter = settings.filter;
+        opacity = settings.opacity;
+        scaling = settings.scaling;
+        windowedMode = settings.windowedMode;
+        windowSize = new Dimension(settings.windowSize);
+        backgroundColour = settings.backgroundColor;
+        backgroundImage = settings.backgroundImage;
+        backgroundMode = settings.backgroundMode;
         chkShowTrayIcon.setSelected(showTrayIcon);
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
         chkDrawShimejiBounds.setSelected(drawShimejiBounds);
         radFilterHqx.setEnabled(scaling == 2 || scaling == 3 || scaling == 4 || scaling == 6 || scaling == 8);
-        if (filter.equals("bicubic")) {
+        if (filter == ImagePairLoader.Filter.BICUBIC) {
             radFilterBicubic.setSelected(true);
-        } else if (filter.equals("hqx") && radFilterHqx.isEnabled()) {
+        } else if (filter == ImagePairLoader.Filter.HQX && radFilterHqx.isEnabled()) {
             radFilterHqx.setSelected(true);
         } else {
             radFilterNearest.setSelected(true);
@@ -113,12 +105,12 @@ public class SettingsWindow extends JDialog {
         sldOpacity.setValue((int) (opacity * 100));
         sldScaling.setValue((int) (scaling * 10));
 
-        for (String item : properties.getProperty("InteractiveWindows", "").split("/"))
+        for (String item : settings.interactiveWindows)
             if (!item.trim().isEmpty()) {
                 listData.add(item);
             }
         lstInteractiveWindows.setListData(listData.toArray(new String[0]));
-        for (String item : properties.getProperty("InteractiveWindowsBlacklist", "").split("/"))
+        for (String item : settings.interactiveWindowsBlacklist)
             if (!item.trim().isEmpty()) {
                 blacklistData.add(item);
             }
@@ -790,45 +782,36 @@ public class SettingsWindow extends JDialog {
 
     private void btnDoneActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnDoneActionPerformed
         // done button
-        Properties properties = Main.getInstance().getProperties();
-        String interactiveWindows = listData.toString().replace("[", "").replace("]", "").replace(", ", "/");
-        String interactiveWindowsBlacklist = blacklistData.toString().replace("[", "").replace("]", "").replace(", ", "/");
-        String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
-        Dimension window = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
+        Settings settings = Main.getInstance().getSettings();
 
-        environmentReloadRequired = properties.getProperty("Environment", "generic").equals("virtual") != windowedMode ||
-                !window.equals(windowSize) ||
-                !Color.decode(properties.getProperty("Background", "#00FF00")).equals(backgroundColour) ||
-                !properties.getProperty("BackgroundMode", "centre").equals(backgroundMode) ||
-                !properties.getProperty("BackgroundImage", "").equalsIgnoreCase(backgroundImage == null ? "" : backgroundImage);
-        imageReloadRequired = !properties.getProperty("Filter", "false").equalsIgnoreCase(filter) ||
-                Double.parseDouble(properties.getProperty("Scaling", "1.0")) != scaling ||
-                Double.parseDouble(properties.getProperty("Opacity", "1.0")) != opacity;
-        interactiveWindowReloadRequired = !properties.getProperty("InteractiveWindows", "").equals(interactiveWindows) ||
-                !properties.getProperty("InteractiveWindowsBlacklist", "").equals(interactiveWindowsBlacklist);
-        trayMenuReloadRequired = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true")) != showTrayIcon;
+        environmentReloadRequired = settings.windowedMode != windowedMode ||
+                !settings.windowSize.equals(windowSize) ||
+                !settings.backgroundColor.equals(backgroundColour) ||
+                !settings.backgroundMode.equals(backgroundMode) ||
+                !settings.backgroundImage.equalsIgnoreCase(backgroundImage == null ? "" : backgroundImage);
+        imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
+        interactiveWindowReloadRequired = !settings.interactiveWindows.equals(listData) ||
+                !settings.interactiveWindowsBlacklist.equals(blacklistData);
+        trayMenuReloadRequired = settings.showTrayIcon != showTrayIcon;
 
-        try (OutputStream output = Files.newOutputStream(Main.SETTINGS_FILE)) {
-            properties.setProperty("ShowTrayIcon", showTrayIcon.toString());
-            properties.setProperty("AlwaysShowShimejiChooser", alwaysShowShimejiChooser.toString());
-            properties.setProperty("AlwaysShowInformationScreen", alwaysShowInformationScreen.toString());
-            properties.setProperty("Opacity", Double.toString(opacity));
-            properties.setProperty("Scaling", Double.toString(scaling));
-            properties.setProperty("Filter", filter);
-            properties.setProperty("DrawShimejiBounds", drawShimejiBounds.toString());
-            properties.setProperty("InteractiveWindows", interactiveWindows);
-            properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
-            if (windowedMode) {
-                properties.setProperty("WindowSize", windowSize.width + "x" + windowSize.height);
-                properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColour.getRed(), backgroundColour.getGreen(), backgroundColour.getBlue()));
-                properties.setProperty("BackgroundMode", backgroundMode);
-                properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage);
-            }
-
-            properties.store(output, "Shimeji-ee Configuration Options");
-        } catch (IOException e) {
-            log.error("Failed to save settings", e);
+        settings.showTrayIcon = showTrayIcon;
+        settings.alwaysShowShimejiChooser = alwaysShowShimejiChooser;
+        settings.alwaysShowInformationScreen = alwaysShowInformationScreen;
+        settings.opacity = opacity;
+        settings.scaling = scaling;
+        settings.filter = filter;
+        settings.drawShimejiBounds = drawShimejiBounds;
+        settings.interactiveWindows = listData;
+        settings.interactiveWindowsBlacklist = blacklistData;
+        settings.windowedMode = windowedMode;
+        if (windowedMode) {
+            settings.windowSize = new Dimension(windowSize);
+            settings.backgroundColor = backgroundColour;
+            settings.backgroundMode = backgroundMode;
+            settings.backgroundImage = backgroundImage == null ? "" : backgroundImage;
         }
+
+        settings.saveUserSettings();
 
         dispose();
     }//GEN-LAST:event_btnDoneActionPerformed
@@ -882,11 +865,11 @@ public class SettingsWindow extends JDialog {
             Object source = evt.getItemSelectable();
 
             if (source == radFilterNearest) {
-                filter = "nearest";
+                filter = ImagePairLoader.Filter.NEAREST_NEIGHBOUR;
             } else if (source == radFilterHqx) {
-                filter = "hqx";
+                filter = ImagePairLoader.Filter.HQX;
             } else {
-                filter = "bicubic";
+                filter = ImagePairLoader.Filter.BICUBIC;
             }
         }
     }//GEN-LAST:event_radFilterItemStateChanged

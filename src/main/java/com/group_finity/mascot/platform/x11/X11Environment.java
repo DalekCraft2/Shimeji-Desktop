@@ -118,7 +118,7 @@ class X11Environment extends Environment {
         // blacklist takes precedence over whitelist
         boolean blacklistInUse = false;
         if (windowTitlesBlacklist == null) {
-            windowTitlesBlacklist = Main.getInstance().getProperties().getProperty("InteractiveWindowsBlacklist", "").split("/");
+            windowTitlesBlacklist = Main.getInstance().getSettings().interactiveWindowsBlacklist.toArray(new String[0]);
         }
         for (String windowTitle : windowTitlesBlacklist) {
             if (!windowTitle.trim().isEmpty()) {
@@ -133,7 +133,7 @@ class X11Environment extends Environment {
         // whitelist
         boolean whitelistInUse = false;
         if (windowTitles == null) {
-            windowTitles = Main.getInstance().getProperties().getProperty("InteractiveWindows", "").split("/");
+            windowTitles = Main.getInstance().getSettings().interactiveWindows.toArray(new String[0]);
         }
         for (String windowTitle : windowTitles) {
             if (!windowTitle.trim().isEmpty()) {

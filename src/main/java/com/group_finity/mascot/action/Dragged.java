@@ -54,7 +54,7 @@ public class Dragged extends ActionBase {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+        scaling = Main.getInstance().getSettings().scaling;
 
         footX = getEnvironment().getCursor().getX() + (int) Math.round(getOffsetX() * scaling);
         setTimeToRegist(250);

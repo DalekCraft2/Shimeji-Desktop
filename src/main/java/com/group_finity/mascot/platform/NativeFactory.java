@@ -34,9 +34,11 @@ public abstract class NativeFactory {
      * Creates an instance of the subclass.
      */
     public static void resetInstance() {
-        String environment = Main.getInstance().getProperties().getProperty("Environment", "generic");
+        boolean windowedMode = Main.getInstance().getSettings().windowedMode;
 
-        if (environment.equals("generic")) {
+        if (windowedMode) {
+            instance = new VirtualNativeFactory();
+        } else {
             if (Platform.isWindows()) {
                 instance = new WindowsNativeFactory();
             } else if (Platform.isMac()) {
@@ -45,8 +47,6 @@ public abstract class NativeFactory {
                 // Because Linux uses X11, this functions as the Linux support.
                 instance = new X11NativeFactory();
             }
-        } else if (environment.equals("virtual")) {
-            instance = new VirtualNativeFactory();
         }
     }
 

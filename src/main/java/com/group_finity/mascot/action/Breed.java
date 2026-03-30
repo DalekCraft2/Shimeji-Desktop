@@ -55,13 +55,13 @@ public class Breed extends Animate {
         }
 
         void initScaling() {
-            scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+            scaling = Main.getInstance().getSettings().scaling;
         }
 
         boolean isEnabled() throws VariableException {
             return getBornTransient() ?
-                    Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Transients", "true")) :
-                    Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Breeding", "true"));
+                    Main.getInstance().getSettings().transients :
+                    Main.getInstance().getSettings().breeding;
         }
 
         boolean isIntervalFrame() throws VariableException {

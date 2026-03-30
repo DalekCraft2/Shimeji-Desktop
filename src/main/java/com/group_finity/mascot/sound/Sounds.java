@@ -125,7 +125,7 @@ public class Sounds {
     }
 
     public static boolean isEnabled() {
-        return Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Sounds", "true"));
+        return Main.getInstance().getSettings().sounds;
     }
 
     public static void stopAll() {

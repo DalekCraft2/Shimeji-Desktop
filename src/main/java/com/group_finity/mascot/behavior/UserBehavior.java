@@ -217,7 +217,7 @@ public class UserBehavior implements Behavior {
                             || getEnvironment().getScreen().getBottom() <= mascot.getBounds().getY()) {
                         log.info("Out of the screen bounds ({}, {})", mascot, this);
 
-                        Area area = Boolean.parseBoolean(Main.getInstance().getProperties().getProperty("Multiscreen", "true"))
+                        Area area = Main.getInstance().getSettings().multiscreen
                                 ? getEnvironment().getScreen() : getEnvironment().getWorkArea();
                         // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
                         mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));

@@ -87,16 +87,10 @@ public class AnimationBuilder {
         String soundText = frameNode.getAttribute(schema.getString("Sound"));
         final String volumeText = frameNode.getAttribute(schema.getString("Volume")) != null ? frameNode.getAttribute(schema.getString("Volume")) : "0";
 
-        final double opacity = Double.parseDouble(Main.getInstance().getProperties().getProperty("Opacity", "1.0"));
-        final double scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+        final double opacity = Main.getInstance().getSettings().opacity;
+        final double scaling = Main.getInstance().getSettings().scaling;
 
-        String filterText = Main.getInstance().getProperties().getProperty("Filter", "false");
-        Filter filter = Filter.NEAREST_NEIGHBOUR;
-        if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
-            filter = ImagePairLoader.Filter.HQX;
-        } else if (filterText.equalsIgnoreCase("bicubic")) {
-            filter = ImagePairLoader.Filter.BICUBIC;
-        }
+        Filter filter = Main.getInstance().getSettings().filter;
 
         if (imagePath != null) {
             final String[] anchorCoordinates = anchorText.split(",");
@@ -156,7 +150,7 @@ public class AnimationBuilder {
         final String originText = frameNode.getAttribute(schema.getString("Origin"));
         final String sizeText = frameNode.getAttribute(schema.getString("Size"));
         final String behaviourText = frameNode.getAttribute(schema.getString("Behaviour"));
-        final double scaling = Double.parseDouble(Main.getInstance().getProperties().getProperty("Scaling", "1.0"));
+        final double scaling = Main.getInstance().getSettings().scaling;
 
         final String[] originCoordinates = originText.split(",");
         final String[] sizeCoordinates = sizeText.split(",");
