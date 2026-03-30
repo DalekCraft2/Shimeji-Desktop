@@ -58,7 +58,6 @@ public class Configuration {
                     constant.getAttribute(schema.getString("Value")));
         }
 
-        log.debug("Reading action lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
             log.debug("Reading an action list...");
 
@@ -76,30 +75,19 @@ public class Configuration {
 
                 actionBuilders.put(action.getName(), action);
             }
-
-            log.debug("Finished reading an action list");
         }
-        log.debug("Finished reading all action lists");
 
-        log.debug("Reading behavior lists");
         for (final Entry list : configurationNode.selectChildren(schema.getString("BehaviourList"))) {
             log.debug("Reading a behavior list...");
 
             loadBehaviors(list, new ArrayList<>());
-
-            log.debug("Finished reading a behavior list");
         }
-        log.debug("Finished reading all behavior lists");
 
-        log.debug("Reading information");
         for (final Entry list : configurationNode.selectChildren(schema.getString("Information"))) {
             log.debug("Reading an information group...");
 
             loadInformation(list);
-
-            log.debug("Finished reading information group");
         }
-        log.debug("Finished reading all information");
 
         log.debug("Configuration loaded successfully");
     }
