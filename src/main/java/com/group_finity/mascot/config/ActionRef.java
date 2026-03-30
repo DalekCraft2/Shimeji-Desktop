@@ -34,6 +34,8 @@ public class ActionRef implements IActionBuilder {
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
         params.putAll(refNode.getAttributes());
 
+        log.debug("Loading action reference: {}", this);
+
         // Verify that all parameters can be parsed
         for (final Map.Entry<String, String> param : params.entrySet()) {
             try {
@@ -42,8 +44,6 @@ public class ActionRef implements IActionBuilder {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
             }
         }
-
-        log.debug("Finished loading action reference: {}", this);
     }
 
     @Override

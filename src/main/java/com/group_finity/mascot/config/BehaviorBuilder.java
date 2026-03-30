@@ -54,6 +54,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
         hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
 
+        log.debug("Loading behavior: {}", this);
+
         String condition = behaviorNode.getAttribute(configuration.getSchema().getString("Condition"));
         try {
             // Verify that the condition can be parsed
@@ -72,8 +74,6 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         } else {
             toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Toggleable")));
         }
-
-        log.debug("Loading behavior: {}", this);
 
         params.putAll(behaviorNode.getAttributes());
         params.remove(configuration.getSchema().getString("Name"));

@@ -39,6 +39,8 @@ public class BehaviorRef implements IBehaviorBuilder {
         name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
         frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
 
+        log.debug("Loading behavior reference: {}", this);
+
         String condition = behaviorNode.getAttribute(configuration.getSchema().getString("Condition"));
         try {
             // Verify that the condition can be parsed
@@ -48,8 +50,6 @@ public class BehaviorRef implements IBehaviorBuilder {
         }
         this.conditions = new ArrayList<>(conditions);
         this.conditions.add(condition);
-
-        log.debug("Loading behavior reference: {}", this);
 
         params.putAll(behaviorNode.getAttributes());
         params.remove(configuration.getSchema().getString("Name"));
@@ -67,8 +67,6 @@ public class BehaviorRef implements IBehaviorBuilder {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
             }
         }
-
-        log.debug("Finished loading behavior reference: {}", this);
     }
 
     @Override

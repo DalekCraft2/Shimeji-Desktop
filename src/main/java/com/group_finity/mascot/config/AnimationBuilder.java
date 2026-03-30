@@ -50,7 +50,7 @@ public class AnimationBuilder {
         condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
         turn = animationNode.getAttribute(schema.getString("IsTurn")) != null && Boolean.parseBoolean(animationNode.getAttribute(schema.getString("IsTurn")));
 
-        log.debug("Loading animations");
+        log.debug("Loading an animation");
 
         try {
             // Verify that the condition can be parsed
@@ -74,11 +74,11 @@ public class AnimationBuilder {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), frameNode.getAttributes()), e);
             }
         }
-
-        log.debug("Finished loading animations");
     }
 
     private Pose loadPose(final Entry frameNode) throws IOException {
+        log.debug("Loading pose: {}", frameNode.getAttributes());
+
         final Path imagePath = frameNode.getAttribute(schema.getString("Image")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("Image"))) : null;
         final Path imageRightPath = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))) : null;
         final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor"));
@@ -150,6 +150,8 @@ public class AnimationBuilder {
     }
 
     private Hotspot loadHotspot(final Entry frameNode) {
+        log.debug("Loading hotspot: {}", frameNode.getAttributes());
+
         final String shapeText = frameNode.getAttribute(schema.getString("Shape"));
         final String originText = frameNode.getAttribute(schema.getString("Origin"));
         final String sizeText = frameNode.getAttribute(schema.getString("Size"));
