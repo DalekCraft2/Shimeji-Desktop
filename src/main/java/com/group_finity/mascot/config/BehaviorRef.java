@@ -34,14 +34,14 @@ public class BehaviorRef implements IBehaviorBuilder {
 
     private final Map<String, String> params = new LinkedHashMap<>();
 
-    public BehaviorRef(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) throws ConfigurationException {
+    public BehaviorRef(final Configuration configuration, final Entry refNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
-        name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
-        frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
+        name = refNode.getAttribute(configuration.getSchema().getString("Name"));
+        frequency = Integer.parseInt(refNode.getAttribute(configuration.getSchema().getString("Frequency")));
 
         log.debug("Loading behavior reference: {}", this);
 
-        String condition = behaviorNode.getAttribute(configuration.getSchema().getString("Condition"));
+        String condition = refNode.getAttribute(configuration.getSchema().getString("Condition"));
         try {
             // Verify that the condition can be parsed
             Variable.parse(condition);
@@ -51,7 +51,7 @@ public class BehaviorRef implements IBehaviorBuilder {
         this.conditions = new ArrayList<>(conditions);
         this.conditions.add(condition);
 
-        params.putAll(behaviorNode.getAttributes());
+        params.putAll(refNode.getAttributes());
         params.remove(configuration.getSchema().getString("Name"));
         params.remove(configuration.getSchema().getString("Action"));
         params.remove(configuration.getSchema().getString("Frequency"));
