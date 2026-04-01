@@ -694,13 +694,9 @@ public class Main {
         try {
             mascot.setBehavior(getConfiguration(imageSet).buildNextBehavior(null, mascot));
             manager.add(mascot);
-        } catch (final BehaviorInstantiationException e) {
+        } catch (final BehaviorInstantiationException | CantBeAliveException e) {
             // Not sure why this says "first action" instead of "first behavior", but changing it would require changing all of the translations, so...
             log.error("Failed to initialize the first action for mascot \"{}\"", mascot, e);
-            showError(String.format(languageBundle.getString("FailedInitialiseFirstActionErrorMessage"), mascot), e);
-            mascot.dispose();
-        } catch (final CantBeAliveException e) {
-            log.error("Could not create mascot \"{}\"", mascot, e);
             showError(String.format(languageBundle.getString("FailedInitialiseFirstActionErrorMessage"), mascot), e);
             mascot.dispose();
         } catch (RuntimeException e) {
