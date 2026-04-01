@@ -160,11 +160,9 @@ public class InformationWindow extends JFrame {
         btnClose.setText(language.getString("Close"));
     }
 
-    public boolean display() {
+    public void display() {
         setLocationRelativeTo(null);
         setVisible(true);
-
-        return true;
     }
 
     /**

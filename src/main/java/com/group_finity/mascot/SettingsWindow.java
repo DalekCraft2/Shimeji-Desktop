@@ -185,13 +185,11 @@ public class SettingsWindow extends JDialog {
         IntStream.range(0, backgroundModes.length).filter(index -> backgroundMode.equals(backgroundModes[index])).findFirst().ifPresent(index -> cmbBackgroundImageMode.setSelectedIndex(index));
     }
 
-    public boolean display() {
+    public void display() {
         setLocationRelativeTo(null);
         suppressTextChanged = false;
         setVisible(true);
         suppressTextChanged = true;
-
-        return true;
     }
 
     private void browseToUrl(String url) {
