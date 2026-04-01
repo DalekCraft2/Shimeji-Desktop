@@ -884,7 +884,7 @@ public class SettingsWindow extends JDialog {
                     radFilterHqx.setEnabled(true);
                 } else {
                     radFilterHqx.setEnabled(false);
-                    if (filter.equals("hqx")) {
+                    if (filter == ImagePairLoader.Filter.HQX) {
                         radFilterNearest.setSelected(true);
                     }
                 }
