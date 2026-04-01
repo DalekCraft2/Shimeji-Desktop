@@ -150,11 +150,11 @@ public abstract class ActionBase implements Action {
         }
     }
 
-    public Boolean isDraggable() throws VariableException {
+    public boolean isDraggable() throws VariableException {
         return eval(schema.getString(PARAMETER_DRAGGABLE), Boolean.class, DEFAULT_DRAGGABLE);
     }
 
-    private Boolean isEffective() throws VariableException {
+    private boolean isEffective() throws VariableException {
         return eval(schema.getString(PARAMETER_CONDITION), Boolean.class, DEFAULT_CONDITION);
     }
 

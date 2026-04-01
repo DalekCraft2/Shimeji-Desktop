@@ -38,7 +38,7 @@ public class MascotEnvironment {
      * @param ignoreSettings whether to force the current work area to be recalculated
      * @return the screen containing this environment's {@link Mascot}
      */
-    public Area getWorkArea(Boolean ignoreSettings) {
+    public Area getWorkArea(boolean ignoreSettings) {
         if (currentWorkArea != null) {
             if (ignoreSettings || Main.getInstance().getSettings().multiscreen) {
                 // NOTE For Windows multi-monitor support: The Windows work area is smaller than the main screen.

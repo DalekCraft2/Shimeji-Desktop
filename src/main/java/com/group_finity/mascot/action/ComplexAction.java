@@ -69,7 +69,7 @@ public abstract class ComplexAction extends ActionBase {
     }
 
     @Override
-    public Boolean isDraggable() throws VariableException {
+    public boolean isDraggable() throws VariableException {
         boolean draggable = true;
         if (currentAction < actions.length && actions[currentAction] != null && actions[currentAction] instanceof ActionBase) {
             return ((ActionBase) actions[currentAction]).isDraggable();

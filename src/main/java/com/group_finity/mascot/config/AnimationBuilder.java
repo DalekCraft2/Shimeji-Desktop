@@ -39,7 +39,7 @@ public class AnimationBuilder {
     private final List<Pose> poses = new ArrayList<>();
     private final List<Hotspot> hotspots = new ArrayList<>();
     private final ResourceBundle schema;
-    private final Boolean turn;
+    private final boolean turn;
 
     public AnimationBuilder(final ResourceBundle schema, final Entry animationNode, final String imageSet) throws ConfigurationException {
         if (!imageSet.isEmpty()) {

@@ -544,7 +544,7 @@ public class Mascot {
         }
     }
 
-    private void refreshCursor(Boolean useHand) {
+    private void refreshCursor(boolean useHand) {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> refreshCursor(useHand));
         }

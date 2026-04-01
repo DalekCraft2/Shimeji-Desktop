@@ -27,7 +27,7 @@ public class Look extends InstantAction {
         getMascot().setLookRight(isLookRight());
     }
 
-    private Boolean isLookRight() throws VariableException {
+    private boolean isLookRight() throws VariableException {
         return eval(getSchema().getString(PARAMETER_LOOKRIGHT), Boolean.class, !getMascot().isLookRight());
     }
 }

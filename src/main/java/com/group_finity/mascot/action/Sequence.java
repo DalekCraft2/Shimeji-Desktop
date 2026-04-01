@@ -36,7 +36,7 @@ public class Sequence extends ComplexAction {
         super.setCurrentAction(isLoop() ? currentAction % getActions().length : currentAction);
     }
 
-    private Boolean isLoop() throws VariableException {
+    private boolean isLoop() throws VariableException {
         return eval(getSchema().getString(PARAMETER_LOOP), Boolean.class, DEFAULT_LOOP);
     }
 }
