@@ -47,7 +47,7 @@ public class ImageSetChooser extends JDialog {
         super(owner, modal);
         initComponents();
 
-        List<String> activeImageSets = readConfigFile();
+        List<String> activeImageSets = readSettings();
 
         List<ImageSetChooserPanel> listData = new ArrayList<>();
         Collection<Integer> selectedIndices = new ArrayList<>();
@@ -132,13 +132,13 @@ public class ImageSetChooser extends JDialog {
         return imageSets;
     }
 
-    private List<String> readConfigFile() {
+    private List<String> readSettings() {
         List<String> activeImageSets = new ArrayList<>(Main.getInstance().getSettings().activeImageSets);
         selectAllSets = activeImageSets.isEmpty(); // if no active ones, activate them all!
         return activeImageSets;
     }
 
-    private void updateConfigFile() {
+    private void saveSettings() {
         Main.getInstance().getSettings().activeImageSets = imageSets;
         Main.getInstance().getSettings().saveActiveImageSets();
     }
@@ -286,13 +286,13 @@ public class ImageSetChooser extends JDialog {
             }
         }
 
-        updateConfigFile();
+        saveSettings();
         closeProgram = false;
         dispose();
     }//GEN-LAST:event_useSelectedButtonActionPerformed
 
     private void useAllButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useAllButtonActionPerformed
-        updateConfigFile();
+        saveSettings();
         closeProgram = false;
         dispose();
     }//GEN-LAST:event_useAllButtonActionPerformed
