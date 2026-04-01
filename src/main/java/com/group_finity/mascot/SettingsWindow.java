@@ -410,11 +410,6 @@ public class SettingsWindow extends JDialog {
 
         pnlTabs.addTab("General", pnlGeneral);
 
-        lstInteractiveWindows.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(lstInteractiveWindows);
 
         javax.swing.GroupLayout pnlWhitelistTabLayout = new javax.swing.GroupLayout(pnlWhitelistTab);
@@ -436,11 +431,6 @@ public class SettingsWindow extends JDialog {
 
         pnlInteractiveTabs.addTab("Whitelist", pnlWhitelistTab);
 
-        lstInteractiveWindowsBlacklist.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane3.setViewportView(lstInteractiveWindowsBlacklist);
 
         javax.swing.GroupLayout pnlBlacklistTabLayout = new javax.swing.GroupLayout(pnlBlacklistTab);
