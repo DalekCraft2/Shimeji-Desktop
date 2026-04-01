@@ -210,9 +210,10 @@ public class Mascot {
             JComponent debugComp = new JComponent() {
                 @Override
                 public void paintComponent(Graphics g) {
-                    // TODO: Consider a more efficient way of doing this than setting the enabled state on every repaint.
-                    setEnabled(Main.getInstance().getSettings().drawShimejiBounds);
-                    if (isEnabled()) {
+                    boolean shouldBeEnabled = Main.getInstance().getSettings().drawShimejiBounds;
+                    if (isEnabled() != shouldBeEnabled)
+                        setEnabled(shouldBeEnabled);
+                    if (shouldBeEnabled) {
                         super.paintComponent(g);
 
                         MascotImage image = getImage();
@@ -544,7 +545,10 @@ public class Mascot {
     }
 
     private void refreshCursor(Boolean useHand) {
-        SwingUtilities.invokeLater(() -> window.asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR)));
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> refreshCursor(useHand));
+        }
+        window.asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
     }
 
     public Manager getManager() {
@@ -584,7 +588,9 @@ public class Mascot {
             }
 
             final Component windowComponent = window.asComponent();
-            windowComponent.setVisible(image != null);
+            boolean shouldBeVisible = image != null;
+            if (windowComponent.isVisible() != shouldBeVisible)
+                windowComponent.setVisible(shouldBeVisible);
             window.updateImage();
         });
     }
