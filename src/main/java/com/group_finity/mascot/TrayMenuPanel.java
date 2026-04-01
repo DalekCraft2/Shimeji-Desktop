@@ -717,6 +717,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_itmChineseTraditionalActionPerformed
 
     private void itmKoreanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmKoreanActionPerformed
+        // FIXME: Korean characters do not display properly in the font used by Swing
         updateLanguage(Locale.KOREA);
     }//GEN-LAST:event_itmKoreanActionPerformed
 

@@ -134,6 +134,10 @@ class VirtualEnvironment extends Environment {
             initialized = true;
             isInitializing = false;
 
+            /* FIXME: This call is always reached after the mascots are created on startup,
+                which means the screen's size info isn't updated in time and the mascots
+                always appear on the upper-left corner of the window upon calculating where to start falling
+             */
             tick();
         };
         if (SwingUtilities.isEventDispatchThread()) {
