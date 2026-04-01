@@ -59,7 +59,7 @@ public class Breed extends Animate {
         }
 
         boolean isEnabled() throws VariableException {
-            return getBornTransient() ?
+            return isBornTransient() ?
                     Main.getInstance().getSettings().transients :
                     Main.getInstance().getSettings().breeding;
         }
@@ -130,7 +130,7 @@ public class Breed extends Animate {
             return action.eval(action.getSchema().getString(PARAMETER_BORNMASCOT), String.class, DEFAULT_BORNMASCOT);
         }
 
-        private boolean getBornTransient() throws VariableException {
+        private boolean isBornTransient() throws VariableException {
             return action.eval(action.getSchema().getString(PARAMETER_BORNTRANSIENT), Boolean.class, DEFAULT_BORNTRANSIENT);
         }
 

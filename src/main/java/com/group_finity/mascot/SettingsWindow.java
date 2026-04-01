@@ -211,19 +211,19 @@ public class SettingsWindow extends JDialog {
         }
     }
 
-    public boolean getEnvironmentReloadRequired() {
+    public boolean isEnvironmentReloadRequired() {
         return environmentReloadRequired;
     }
 
-    public boolean getImageReloadRequired() {
+    public boolean isImageReloadRequired() {
         return imageReloadRequired;
     }
 
-    public boolean getInteractiveWindowReloadRequired() {
+    public boolean isInteractiveWindowReloadRequired() {
         return interactiveWindowReloadRequired;
     }
 
-    public boolean getTrayMenuReloadRequired() {
+    public boolean isTrayMenuReloadRequired() {
         return trayMenuReloadRequired;
     }
 

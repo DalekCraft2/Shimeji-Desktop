@@ -595,7 +595,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         dialog.init();
         dialog.display();
 
-        if (dialog.getTrayMenuReloadRequired()) {
+        if (dialog.isTrayMenuReloadRequired()) {
             Main.getInstance().createTrayIcon();
         }
 
@@ -604,15 +604,15 @@ public class TrayMenuPanel extends javax.swing.JPanel {
          * so do this on a separate thread to avoid making the UI unresponsive.
          */
         Main.getExecutorService().submit(() -> {
-            if (dialog.getEnvironmentReloadRequired()) {
+            if (dialog.isEnvironmentReloadRequired()) {
                 NativeFactory.getInstance().getEnvironment().dispose();
                 NativeFactory.resetInstance();
             }
-            if (dialog.getEnvironmentReloadRequired() || dialog.getImageReloadRequired()) {
+            if (dialog.isEnvironmentReloadRequired() || dialog.isImageReloadRequired()) {
                 // need to reload the shimeji as the images have rescaled
                 Main.getInstance().reloadAllImageSets();
             }
-            if (dialog.getInteractiveWindowReloadRequired()) {
+            if (dialog.isInteractiveWindowReloadRequired()) {
                 NativeFactory.getInstance().getEnvironment().refreshCache();
             }
         });

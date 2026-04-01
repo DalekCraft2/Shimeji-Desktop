@@ -106,7 +106,7 @@ public class ScanInteract extends BorderedAction {
                     if (!getTargetBehavior().trim().isEmpty()) {
                         targetMascot.setBehavior(Main.getInstance().getConfiguration(targetMascot.getImageSet()).buildBehavior(getTargetBehavior(), targetMascot));
                     }
-                    if (getTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
+                    if (isTargetLook() && targetMascot.isLookRight() == getMascot().isLookRight()) {
                         targetMascot.setLookRight(!getMascot().isLookRight());
                     }
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
@@ -155,7 +155,7 @@ public class ScanInteract extends BorderedAction {
         return eval(getSchema().getString(PARAMETER_TARGETBEHAVIOUR), String.class, DEFAULT_TARGETBEHAVIOUR);
     }
 
-    private boolean getTargetLook() throws VariableException {
+    private boolean isTargetLook() throws VariableException {
         return eval(getSchema().getString(PARAMETER_TARGETLOOK), Boolean.class, DEFAULT_TARGETLOOK);
     }
 }
