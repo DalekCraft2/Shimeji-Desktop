@@ -21,7 +21,7 @@ import static com.group_finity.mascot.Main.SETTINGS_FILE;
 public class Settings {
     private static final Logger log = LoggerFactory.getLogger(Settings.class);
 
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     public String shimejiEeNameOverride = "";
     public List<String> activeImageSets = new ArrayList<>();
