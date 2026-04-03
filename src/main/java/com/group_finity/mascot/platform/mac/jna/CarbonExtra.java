@@ -52,6 +52,4 @@ public interface CarbonExtra extends Library {
     long
             kAXValueCGPointType = 1,
             kAXValueCGSizeType = 2;
-    long
-            kCFNumberInt32Type = 3;
 }
