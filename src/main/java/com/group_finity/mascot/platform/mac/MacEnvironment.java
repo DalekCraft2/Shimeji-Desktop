@@ -75,7 +75,7 @@ class MacEnvironment extends Environment {
 
         // XXX: Is error checking necessary other than here?
         if (carbonEx.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindow, windowp) == carbonEx.kAXErrorSuccess) {
+                application, kAXFocusedWindow, windowp) == CarbonExtra.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef();
             window.setPointer(windowp.getValue());
             ret = getRectOfWindow(window);
@@ -104,7 +104,7 @@ class MacEnvironment extends Environment {
 
         carbonEx.AXUIElementCopyAttributeValue(window, kAXPosition, valuep);
         axvalue.setPointer(valuep.getValue());
-        carbonEx.AXValueGetValue(axvalue, carbonEx.kAXValueCGPointType, position.getPointer());
+        carbonEx.AXValueGetValue(axvalue, CarbonExtra.kAXValueCGPointType, position.getPointer());
         position.read();
 
         return position;
@@ -117,7 +117,7 @@ class MacEnvironment extends Environment {
 
         carbonEx.AXUIElementCopyAttributeValue(window, kAXSize, valuep);
         axvalue.setPointer(valuep.getValue());
-        carbonEx.AXValueGetValue(axvalue, carbonEx.kAXValueCGSizeType, size.getPointer());
+        carbonEx.AXValueGetValue(axvalue, CarbonExtra.kAXValueCGSizeType, size.getPointer());
         size.read();
 
         return size;
@@ -130,7 +130,7 @@ class MacEnvironment extends Environment {
         PointerByReference windowp = new PointerByReference();
 
         if (carbonEx.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindow, windowp) == carbonEx.kAXErrorSuccess) {
+                application, kAXFocusedWindow, windowp) == CarbonExtra.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef();
             window.setPointer(windowp.getValue());
             moveWindow(window, point.x, point.y);
@@ -189,7 +189,7 @@ class MacEnvironment extends Environment {
         CGPoint position = new CGPoint(x, y);
         position.write();
         AXValueRef axvalue = carbonEx.AXValueCreate(
-                carbonEx.kAXValueCGPointType, position.getPointer());
+                CarbonExtra.kAXValueCGPointType, position.getPointer());
         carbonEx.AXUIElementSetAttributeValue(window, kAXPosition, axvalue);
     }
 
@@ -240,7 +240,7 @@ class MacEnvironment extends Environment {
     private static String getDockOrientation() {
         CFTypeRef orientationRef =
                 carbonEx.CFPreferencesCopyValue(
-                        kOrientation, kDock, carbonEx.kCurrentUser, carbonEx.kAnyHost);
+                        kOrientation, kDock, CarbonExtra.kCurrentUser, CarbonExtra.kAnyHost);
 
         // There are environments where CFPreferencesCopyValue returns null
         if (orientationRef == null) {
