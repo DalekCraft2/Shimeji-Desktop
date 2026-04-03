@@ -19,6 +19,45 @@ import com.sun.jna.ptr.PointerByReference;
 public interface CarbonExtra extends Library {
     CarbonExtra INSTANCE = Native.load("Carbon", CarbonExtra.class);
 
+    NativeLibrary nl = NativeLibrary.getProcess();
+
+    /**
+     * <a href="https://developer.apple.com/documentation/corefoundation/kcfpreferencescurrentuser">Apple docs: kCFPreferencesCurrentUser</a>
+     * <p>
+     * Indicates a preference that applies only to the current user.
+     */
+    Pointer kCFPreferencesCurrentUser = nl.getGlobalVariableAddress("kCFPreferencesCurrentUser").getPointer(0);
+
+    /**
+     * <a href="https://developer.apple.com/documentation/corefoundation/kcfpreferencesanyhost">Apple docs: kCFPreferencesAnyHost</a>
+     * <p>
+     * Indicates a preference that applies only to the current user.
+     * <h1>Discussion</h1>
+     * This option is not supported.
+     */
+    Pointer kCFPreferencesAnyHost = nl.getGlobalVariableAddress("kCFPreferencesAnyHost").getPointer(0);
+
+    /**
+     * <a href="https://developer.apple.com/documentation/applicationservices/axerror/kaxerrorsuccess">Apple docs: kAXErrorSuccess</a>
+     * <p>
+     * No error occurred.
+     */
+    long kAXErrorSuccess = 0;
+
+    /**
+     * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgpointtype">Apple docs: kAXValueCGPointType</a>
+     * <p>
+     * a wrapper for CGPoint; see CoreGraphics.h
+     */
+    long kAXValueCGPointType = 1;
+
+    /**
+     * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgsizetype">Apple docs: kAXValueCGSizeType</a>
+     * <p>
+     * a wrapper for CGSize; see CoreGraphics.h
+     */
+    long kAXValueCGSizeType = 2;
+
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/1501050-getfrontprocess">Apple docs: GetFrontProcess</a>
      *
@@ -194,43 +233,4 @@ public interface CarbonExtra extends Library {
      * @param obj A Core Foundation object derived from CFType. If {@code obj} is not a Core Foundation object, an assertion is raised.
      */
     void CFShow(CFTypeRef obj);
-
-    NativeLibrary nl = NativeLibrary.getProcess();
-
-    /**
-     * <a href="https://developer.apple.com/documentation/corefoundation/kcfpreferencescurrentuser">Apple docs: kCFPreferencesCurrentUser</a>
-     * <p>
-     * Indicates a preference that applies only to the current user.
-     */
-    Pointer kCFPreferencesCurrentUser = nl.getGlobalVariableAddress("kCFPreferencesCurrentUser").getPointer(0);
-
-    /**
-     * <a href="https://developer.apple.com/documentation/corefoundation/kcfpreferencesanyhost">Apple docs: kCFPreferencesAnyHost</a>
-     * <p>
-     * Indicates a preference that applies only to the current user.
-     * <h1>Discussion</h1>
-     * This option is not supported.
-     */
-    Pointer kCFPreferencesAnyHost = nl.getGlobalVariableAddress("kCFPreferencesAnyHost").getPointer(0);
-
-    /**
-     * <a href="https://developer.apple.com/documentation/applicationservices/axerror/kaxerrorsuccess">Apple docs: kAXErrorSuccess</a>
-     * <p>
-     * No error occurred.
-     */
-    long kAXErrorSuccess = 0;
-
-    /**
-     * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgpointtype">Apple docs: kAXValueCGPointType</a>
-     * <p>
-     * a wrapper for CGPoint; see CoreGraphics.h
-     */
-    long kAXValueCGPointType = 1;
-
-    /**
-     * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgsizetype">Apple docs: kAXValueCGSizeType</a>
-     * <p>
-     * a wrapper for CGSize; see CoreGraphics.h
-     */
-    long kAXValueCGSizeType = 2;
 }
