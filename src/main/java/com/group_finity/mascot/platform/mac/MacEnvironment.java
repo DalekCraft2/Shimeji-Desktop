@@ -14,7 +14,7 @@ import com.sun.jna.platform.mac.CoreFoundation.CFArrayRef;
 import com.sun.jna.platform.mac.CoreFoundation.CFIndex;
 import com.sun.jna.platform.mac.CoreFoundation.CFStringRef;
 import com.sun.jna.platform.mac.CoreFoundation.CFTypeRef;
-import com.sun.jna.ptr.LongByReference;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 import java.awt.*;
@@ -48,12 +48,12 @@ class MacEnvironment extends Environment {
 
     // On Mac, ManagementFactory.getRuntimeMXBean().getName()
     // returns the "PID@machine name" string
-    private static final long myPID =
-            Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
+    private static final int myPID =
+            Integer.parseInt(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 
-    private static long currentPID = myPID;
+    private static int currentPID = myPID;
 
-    private static final Set<Long> touchedProcesses = new HashSet<>();
+    private static final Set<Integer> touchedProcesses = new HashSet<>();
 
     static final CFStringRef
             kAXPosition = createCFString("AXPosition"),
@@ -66,7 +66,7 @@ class MacEnvironment extends Environment {
 
     private static Rectangle getFrontmostAppRect() {
         Rectangle ret;
-        long pid = getCurrentPID();
+        int pid = getCurrentPID();
 
         AXUIElementRef application =
                 carbonEx.AXUIElementCreateApplication(pid);
@@ -87,9 +87,9 @@ class MacEnvironment extends Environment {
         return ret;
     }
 
-    private static long getFrontmostAppsPID() {
+    private static int getFrontmostAppsPID() {
         ProcessSerialNumber frontProcessPsn = new ProcessSerialNumber();
-        LongByReference frontProcessPidp = new LongByReference();
+        IntByReference frontProcessPidp = new IntByReference();
 
         carbonEx.GetFrontProcess(frontProcessPsn);
         carbonEx.GetProcessPID(frontProcessPsn, frontProcessPidp);
@@ -140,7 +140,7 @@ class MacEnvironment extends Environment {
     }
 
     private static void restoreWindowsNotIn(final Rectangle rect) {
-        for (long pid : touchedProcesses) {
+        for (int pid : touchedProcesses) {
             AXUIElementRef application =
                     carbonEx.AXUIElementCreateApplication(pid);
 
@@ -282,11 +282,11 @@ class MacEnvironment extends Environment {
         carbonEx.CFPreferencesAppSynchronize(kDock);
     }
 
-    private static long getCurrentPID() {
+    private static int getCurrentPID() {
         return currentPID;
     }
 
-    private static void setCurrentPID(long newPID) {
+    private static void setCurrentPID(int newPID) {
         if (newPID != myPID) {
             currentPID = newPID;
             touchedProcesses.add(newPID);
@@ -308,7 +308,7 @@ class MacEnvironment extends Environment {
     }
 
     private static void updateFrontmostApp() {
-        long newPID = getFrontmostAppsPID();
+        int newPID = getFrontmostAppsPID();
         setCurrentPID(newPID);
     }
 

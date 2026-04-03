@@ -10,7 +10,7 @@ import com.sun.jna.NativeLibrary;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.mac.CoreFoundation.CFStringRef;
 import com.sun.jna.platform.mac.CoreFoundation.CFTypeRef;
-import com.sun.jna.ptr.LongByReference;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
@@ -26,7 +26,7 @@ public interface CarbonExtra extends Library {
      * <p>
      * Indicates a preference that applies only to the current user.
      */
-    Pointer kCFPreferencesCurrentUser = nl.getGlobalVariableAddress("kCFPreferencesCurrentUser").getPointer(0);
+    CFStringRef kCFPreferencesCurrentUser = new CFStringRef(nl.getGlobalVariableAddress("kCFPreferencesCurrentUser"));
 
     /**
      * <a href="https://developer.apple.com/documentation/corefoundation/kcfpreferencesanyhost">Apple docs: kCFPreferencesAnyHost</a>
@@ -35,28 +35,28 @@ public interface CarbonExtra extends Library {
      * <h1>Discussion</h1>
      * This option is not supported.
      */
-    Pointer kCFPreferencesAnyHost = nl.getGlobalVariableAddress("kCFPreferencesAnyHost").getPointer(0);
+    CFStringRef kCFPreferencesAnyHost = new CFStringRef(nl.getGlobalVariableAddress("kCFPreferencesAnyHost"));
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/axerror/kaxerrorsuccess">Apple docs: kAXErrorSuccess</a>
      * <p>
      * No error occurred.
      */
-    long kAXErrorSuccess = 0;
+    int kAXErrorSuccess = 0;
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgpointtype">Apple docs: kAXValueCGPointType</a>
      * <p>
      * a wrapper for CGPoint; see CoreGraphics.h
      */
-    long kAXValueCGPointType = 1;
+    int kAXValueCGPointType = 1;
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgsizetype">Apple docs: kAXValueCGSizeType</a>
      * <p>
      * a wrapper for CGSize; see CoreGraphics.h
      */
-    long kAXValueCGSizeType = 2;
+    int kAXValueCGSizeType = 2;
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/1501050-getfrontprocess">Apple docs: GetFrontProcess</a>
@@ -65,7 +65,7 @@ public interface CarbonExtra extends Library {
      * @return
      */
     @Deprecated
-    long GetFrontProcess(ProcessSerialNumber psn);
+    short GetFrontProcess(ProcessSerialNumber psn);
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/1500992-getprocesspid">Apple docs: GetProcessPID</a>
@@ -75,7 +75,7 @@ public interface CarbonExtra extends Library {
      * @return
      */
     @Deprecated
-    long GetProcessPID(final ProcessSerialNumber psn, LongByReference pid);
+    short GetProcessPID(final ProcessSerialNumber psn, IntByReference pid);
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/1462085-axuielementcopyattributevalue">Apple docs: AXUIElementCopyAttributeValue</a>
@@ -93,7 +93,7 @@ public interface CarbonExtra extends Library {
      * <p>{@code kAXErrorCannotComplete} - The function cannot complete because messaging has failed in some way.
      * <p>{@code kAXErrorNotImplemented} - The process does not fully support the accessibility API.
      */
-    long AXUIElementCopyAttributeValue(
+    int AXUIElementCopyAttributeValue(
             AXUIElementRef element, CFStringRef attribute, PointerByReference value);
 
     /**
@@ -124,7 +124,7 @@ public interface CarbonExtra extends Library {
      * @param pid The process ID of an application.
      * @return The AXUIElementRef representing the top-level accessibility object for the application with the specified process ID.
      */
-    AXUIElementRef AXUIElementCreateApplication(long pid);
+    AXUIElementRef AXUIElementCreateApplication(int pid);
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/1462933-axvaluegetvalue">Apple docs: AXValueGetValue</a>
@@ -136,7 +136,7 @@ public interface CarbonExtra extends Library {
      * @param valuePtr
      * @return
      */
-    boolean AXValueGetValue(AXValueRef value, long theType, Pointer valuePtr);
+    boolean AXValueGetValue(AXValueRef value, int theType, Pointer valuePtr);
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/1459351-axvaluecreate">Apple docs: AXValueCreate</a>
@@ -147,7 +147,7 @@ public interface CarbonExtra extends Library {
      * @param valuePtr
      * @return
      */
-    AXValueRef AXValueCreate(long theType, Pointer valuePtr);
+    AXValueRef AXValueCreate(int theType, Pointer valuePtr);
 
     /**
      * <a href="https://developer.apple.com/documentation/corefoundation/cfpreferencescopyvalue(_:_:_:_:)">Apple docs: CFPreferencesCopyValue</a>
@@ -171,7 +171,7 @@ public interface CarbonExtra extends Library {
      * the <a href="https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html#//apple_ref/doc/uid/20001148-103029">The Create Rule</a>.
      */
     CFTypeRef CFPreferencesCopyValue(
-            CFStringRef key, CFStringRef applicationID, Pointer userName, Pointer hostName);
+            CFStringRef key, CFStringRef applicationID, CFStringRef userName, CFStringRef hostName);
 
     /**
      * <a href="https://developer.apple.com/documentation/corefoundation/cfpreferencesappsynchronize(_:)">Apple docs: CFPreferencesAppSynchronize</a>
