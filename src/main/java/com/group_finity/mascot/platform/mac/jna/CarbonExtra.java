@@ -45,8 +45,8 @@ public interface CarbonExtra extends Library {
     void CFShow(CFTypeRef any);
 
     NativeLibrary nl = NativeLibrary.getProcess();
-    Pointer kCurrentUser = nl.getGlobalVariableAddress("kCFPreferencesCurrentUser").getPointer(0);
-    Pointer kAnyHost = nl.getGlobalVariableAddress("kCFPreferencesAnyHost").getPointer(0);
+    Pointer kCFPreferencesCurrentUser = nl.getGlobalVariableAddress("kCFPreferencesCurrentUser").getPointer(0);
+    Pointer kCFPreferencesAnyHost = nl.getGlobalVariableAddress("kCFPreferencesAnyHost").getPointer(0);
 
     long kAXErrorSuccess = 0;
     long

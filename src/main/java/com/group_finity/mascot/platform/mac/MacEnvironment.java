@@ -240,7 +240,7 @@ class MacEnvironment extends Environment {
     private static String getDockOrientation() {
         CFTypeRef orientationRef =
                 carbonEx.CFPreferencesCopyValue(
-                        kOrientation, kDock, CarbonExtra.kCurrentUser, CarbonExtra.kAnyHost);
+                        kOrientation, kDock, CarbonExtra.kCFPreferencesCurrentUser, CarbonExtra.kCFPreferencesAnyHost);
 
         // There are environments where CFPreferencesCopyValue returns null
         if (orientationRef == null) {
