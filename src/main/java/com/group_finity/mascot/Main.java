@@ -126,7 +126,7 @@ public class Main {
     public static void showError(String message, Throwable exception) {
         StringBuilder messageBuilder = new StringBuilder(message);
         do {
-            if (exception.getClass().getName().startsWith("com.group_finity.mascot.exception")) {
+            if (exception.getClass().getPackageName().equals("com.group_finity.mascot.exception")) {
                 messageBuilder.append("\n").append(exception.getMessage());
             } else if (exception instanceof SAXParseException) {
                 messageBuilder.append("\nLine ").append(((SAXParseException) exception).getLineNumber()).append(": ").append(exception.getMessage());
