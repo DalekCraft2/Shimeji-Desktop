@@ -20,7 +20,6 @@ public class MascotEnvironment {
     public MascotEnvironment(Mascot mascot) {
         this.mascot = mascot;
         impl = NativeFactory.getInstance().getEnvironment();
-        impl.init();
     }
 
     /**

@@ -599,14 +599,26 @@ public class TrayMenuPanel extends javax.swing.JPanel {
             Main.getInstance().createTrayIcon();
         }
 
+        boolean windowedMode = Main.getInstance().getSettings().windowedMode;
+        if (windowedMode && dialog.isEnvironmentReloadRequired()) {
+            /*
+             * If in windowed mode, initialize the environment on the EDT before loading any mascots
+             * so the mascots spawn at the correct positions
+             */
+            NativeFactory.getInstance().getEnvironment().dispose();
+            NativeFactory.resetInstance();
+            NativeFactory.getInstance().getEnvironment().init();
+        }
+
         /*
          * We're on the Event Dispatch Thread here,
          * so do this on a separate thread to avoid making the UI unresponsive.
          */
         Main.getExecutorService().submit(() -> {
-            if (dialog.isEnvironmentReloadRequired()) {
+            if (!windowedMode && dialog.isEnvironmentReloadRequired()) {
                 NativeFactory.getInstance().getEnvironment().dispose();
                 NativeFactory.resetInstance();
+                NativeFactory.getInstance().getEnvironment().init();
             }
             if (dialog.isEnvironmentReloadRequired() || dialog.isImageReloadRequired()) {
                 // need to reload the shimeji as the images have rescaled

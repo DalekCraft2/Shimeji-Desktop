@@ -12,6 +12,7 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
+import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.sound.Sounds;
 import com.jthemedetecor.OsThemeDetector;
 import org.apache.commons.exec.OS;
@@ -183,6 +184,20 @@ public class Main {
 
         // Create the tray icon
         SwingUtilities.invokeLater(this::createTrayIcon);
+
+        // Initialize the environment
+        if (settings.windowedMode) {
+            try {
+                /*
+                 * If in windowed mode, initialize the environment on the EDT before loading any mascots
+                 * so the mascots spawn at the correct positions
+                 */
+                SwingUtilities.invokeAndWait(() -> NativeFactory.getInstance().getEnvironment().init());
+            } catch (InterruptedException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else
+            NativeFactory.getInstance().getEnvironment().init();
 
         // Create mascots
         for (String imageSet : imageSets) {
