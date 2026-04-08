@@ -25,7 +25,7 @@ public interface Behavior {
     void init(Mascot mascot) throws CantBeAliveException;
 
     /**
-     * Advances the mascot to the next frame.
+     * Advances the associated {@link Mascot} to the next frame.
      *
      * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
      * disposed
