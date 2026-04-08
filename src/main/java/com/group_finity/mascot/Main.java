@@ -674,7 +674,7 @@ public class Main {
         trayMenuWindow.setVisible(true);
     }
 
-    void notifyMascotPauseToggled() {
+    void refreshTrayMenuPauseText() {
         if (trayMenuPanel != null) {
             trayMenuPanel.refreshPauseText();
         }

@@ -376,11 +376,8 @@ public class Mascot {
         closeMenu.addActionListener(e -> Main.getInstance().exit());
 
         // "Paused" Menu item
-        final JMenuItem pauseMenu = new JMenuItem(isAnimating() ? languageBundle.getString("PauseAnimations") : languageBundle.getString("ResumeAnimations"));
-        pauseMenu.addActionListener(event -> {
-            paused = !paused;
-            Main.getInstance().notifyMascotPauseToggled();
-        });
+        final JMenuItem pauseMenu = new JMenuItem(isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
+        pauseMenu.addActionListener(event -> setPaused(!isPaused()));
 
         // Add the Behaviors submenu.
         JMenu submenu = new JMenu(languageBundle.getString("SetBehaviour"));
@@ -676,6 +673,11 @@ public class Mascot {
     }
 
     public void setPaused(final boolean paused) {
+        this.paused = paused;
+        Main.getInstance().refreshTrayMenuPauseText();
+    }
+
+    void setPausedNoCallback(final boolean paused) {
         this.paused = paused;
     }
 

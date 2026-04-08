@@ -361,7 +361,7 @@ public class Manager {
             boolean isPaused = mascots.stream().allMatch(Mascot::isPaused);
 
             for (final Mascot mascot : mascots) {
-                mascot.setPaused(!isPaused);
+                mascot.setPausedNoCallback(!isPaused);
             }
         }
     }
