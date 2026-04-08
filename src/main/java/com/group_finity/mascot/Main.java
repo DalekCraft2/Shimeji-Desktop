@@ -76,7 +76,7 @@ public class Main {
         }
     }
 
-    private static final Main instance = new Main();
+    private static final Main INSTANCE = new Main();
     private final Manager manager = new Manager();
     private List<String> imageSets = new ArrayList<>();
     private final Map<String, Configuration> configurations = new ConcurrentHashMap<>();
@@ -106,7 +106,7 @@ public class Main {
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public static Main getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     static JFrame getFrame() {
@@ -136,7 +136,7 @@ public class Main {
         }
         while (exception != null);
         message = messageBuilder.toString();
-        showError(message + "\n" + instance.languageBundle.getString("SeeLogForDetails"));
+        showError(message + "\n" + INSTANCE.languageBundle.getString("SeeLogForDetails"));
     }
 
     public static void main(final String[] args) throws InterruptedException, InvocationTargetException {
@@ -149,7 +149,7 @@ public class Main {
         OsThemeDetector.getDetector().registerListener(ignored -> SwingUtilities.invokeLater(Main::updateLookAndFeel));
 
         try {
-            instance.run();
+            INSTANCE.run();
         } catch (OutOfMemoryError err) {
             log.error("Out of memory. There are probably too many "
                     + "Shimeji mascots in the image folder for your computer to handle. "
