@@ -2,6 +2,7 @@ package com.group_finity.mascot.platform;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.Environment;
+import com.group_finity.mascot.platform.generic.GenericNativeFactory;
 import com.group_finity.mascot.platform.mac.MacNativeFactory;
 import com.group_finity.mascot.platform.virtual.VirtualNativeFactory;
 import com.group_finity.mascot.platform.win.WindowsNativeFactory;
@@ -43,9 +44,10 @@ public abstract class NativeFactory {
                 instance = new WindowsNativeFactory();
             } else if (Platform.isMac()) {
                 instance = new MacNativeFactory();
-            } else if (/* Platform.isLinux() */ Platform.isX11()) {
-                // Because Linux uses X11, this functions as the Linux support.
+            } else if (Platform.isX11()) {
                 instance = new X11NativeFactory();
+            } else {
+                instance = new GenericNativeFactory();
             }
         }
     }
