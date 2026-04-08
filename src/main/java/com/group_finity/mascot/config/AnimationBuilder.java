@@ -38,15 +38,16 @@ public class AnimationBuilder {
     private String imageSet = "";
     private final List<Pose> poses = new ArrayList<>();
     private final List<Hotspot> hotspots = new ArrayList<>();
-    private final ResourceBundle schema;
+    private final Configuration configuration;
     private final boolean turn;
 
-    public AnimationBuilder(final ResourceBundle schema, final Entry animationNode, final String imageSet) throws ConfigurationException {
+    public AnimationBuilder(final Configuration configuration, final Entry animationNode, final String imageSet) throws ConfigurationException {
         if (!imageSet.isEmpty()) {
             this.imageSet = imageSet;
         }
 
-        this.schema = schema;
+        this.configuration = configuration;
+        ResourceBundle schema = configuration.getSchema();
         condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
         turn = animationNode.getAttribute(schema.getString("IsTurn")) != null && Boolean.parseBoolean(animationNode.getAttribute(schema.getString("IsTurn")));
 
@@ -78,6 +79,8 @@ public class AnimationBuilder {
 
     private Pose loadPose(final Entry frameNode) throws IOException {
         log.debug("Loading pose: {}", frameNode.getAttributes());
+
+        ResourceBundle schema = configuration.getSchema();
 
         final Path imagePath = frameNode.getAttribute(schema.getString("Image")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("Image"))) : null;
         final Path imageRightPath = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))) : null;
@@ -146,6 +149,8 @@ public class AnimationBuilder {
     private Hotspot loadHotspot(final Entry frameNode) {
         log.debug("Loading hotspot: {}", frameNode.getAttributes());
 
+        ResourceBundle schema = configuration.getSchema();
+
         final String shapeText = frameNode.getAttribute(schema.getString("Shape"));
         final String originText = frameNode.getAttribute(schema.getString("Origin"));
         final String sizeText = frameNode.getAttribute(schema.getString("Size"));
@@ -174,6 +179,15 @@ public class AnimationBuilder {
         log.debug("Finished loading hotspot: {}", hotspot);
 
         return hotspot;
+    }
+
+    public void validate() throws ConfigurationException {
+        for (Hotspot hotspot : hotspots) {
+            String behavior = hotspot.getBehaviour();
+            if (behavior != null && !configuration.getBehaviorNames().contains(behavior)) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), behavior));
+            }
+        }
     }
 
     public Animation buildAnimation() throws AnimationInstantiationException {

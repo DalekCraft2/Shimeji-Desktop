@@ -51,7 +51,7 @@ public class ActionBuilder implements IActionBuilder {
         List<Entry> selectChildren = actionNode.selectChildren(schema.getString("Animation"));
         for (Entry node : selectChildren) {
             try {
-                animationBuilders.add(new AnimationBuilder(schema, node, imageSet));
+                animationBuilders.add(new AnimationBuilder(configuration, node, imageSet));
             } catch (ConfigurationException e) {
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadAnimationErrorMessage"), e);
             }
@@ -110,6 +110,13 @@ public class ActionBuilder implements IActionBuilder {
                 ref.validate();
             } catch (ConfigurationException e) {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateActionErrorMessage"), ref), e);
+            }
+        }
+        for (final AnimationBuilder animationBuilder : animationBuilders) {
+            try {
+                animationBuilder.validate();
+            } catch (ConfigurationException e) {
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedValidateAnimationErrorMessage"), e);
             }
         }
     }
