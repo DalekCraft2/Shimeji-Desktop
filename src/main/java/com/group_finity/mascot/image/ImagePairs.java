@@ -50,7 +50,7 @@ public class ImagePairs {
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
                 new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
-        put(key, ip);
+        imagePairs.put(key, ip);
     }
 
     public static boolean contains(String key) {
@@ -69,12 +69,6 @@ public class ImagePairs {
             return null;
         }
         return imagePairs.get(key).getImage(isLookRight);
-    }
-
-    public static void put(final String key, final ImagePair imagePair) {
-        if (!imagePairs.containsKey(key)) {
-            imagePairs.put(key, imagePair);
-        }
     }
 
     public static void removeAll(String searchTerm) {

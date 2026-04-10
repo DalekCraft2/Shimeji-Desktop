@@ -63,7 +63,9 @@ public class Sounds {
             }
         });
 
-        put(key, clip);
+        SOUNDS.put(key, clip);
+        FILE_NAME_MAP.putIfAbsent(fileName, new ArrayList<>(4));
+        FILE_NAME_MAP.get(fileName).add(key);
     }
 
     public static boolean contains(String key) {
@@ -79,15 +81,6 @@ public class Sounds {
 
     public static List<Clip> getSoundsIgnoringVolume(String fileName) {
         return FILE_NAME_MAP.get(fileName).stream().map(SOUNDS::get).collect(Collectors.toList());
-    }
-
-    public static void put(final String key, final Clip clip) {
-        if (!SOUNDS.containsKey(key)) {
-            SOUNDS.put(key, clip);
-            String fileName = key.substring(0, key.lastIndexOf(':'));
-            FILE_NAME_MAP.putIfAbsent(fileName, new ArrayList<>(4));
-            FILE_NAME_MAP.get(fileName).add(key);
-        }
     }
 
     /**
