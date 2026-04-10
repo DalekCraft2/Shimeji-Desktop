@@ -2,7 +2,9 @@ package com.group_finity.mascot.sound;
 
 import com.group_finity.mascot.Main;
 
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * This static class contains all the sounds loaded by Shimeji-ee.
+ * Loads and stores sounds.
  *
  * @author Kilkakon
  * @since 1.0.9
@@ -35,6 +37,34 @@ public class Sounds {
      * A map that stores which sounds are used by the given image set.
      */
     private static final Map<String, List<String>> IMAGESETS_TO_SOUNDS = new ConcurrentHashMap<>();
+
+    /**
+     * Loads a sound.
+     *
+     * @param fileName file path of the sound to load
+     * @param volume the volume of the sound
+     * @throws IOException if an error occurs when reading the sound file or when creating an {@code AudioInputStream}
+     * @throws UnsupportedAudioFileException if the sound file uses a format that is not recognized by the system
+     * @throws LineUnavailableException if there is no {@link Clip} object available to use to load the sound
+     */
+    public static void load(final String fileName, final float volume) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        String key = fileName + ":" + volume;
+        if (contains(key)) {
+            return;
+        }
+
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(fileName));
+        final Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
+        clip.addLineListener(event -> {
+            if (event.getType() == LineEvent.Type.STOP) {
+                ((Clip) event.getLine()).stop();
+            }
+        });
+
+        put(key, clip);
+    }
 
     public static boolean contains(String key) {
         return SOUNDS.containsKey(key);
