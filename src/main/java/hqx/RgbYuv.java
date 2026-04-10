@@ -44,6 +44,8 @@ public final class RgbYuv {
      */
     public static void hqxInit() {
         /* Initialize RGB-to-YUV lookup table */
+        if (RGBtoYUV == null)
+            RGBtoYUV = new int[0x1000000];
         int r, g, b, y, u, v;
         for (int c = 0x1000000 - 1; c >= 0; c--) {
             r = (c & 0xFF0000) >> 16;

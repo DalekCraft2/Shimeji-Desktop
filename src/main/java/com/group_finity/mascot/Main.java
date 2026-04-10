@@ -10,12 +10,14 @@ import com.group_finity.mascot.config.Entry;
 import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.ConfigurationException;
+import com.group_finity.mascot.image.Filter;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.image.ImageUtils;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.sound.Sounds;
 import com.jthemedetecor.OsThemeDetector;
+import hqx.RgbYuv;
 import org.apache.commons.exec.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,6 +225,11 @@ public class Main {
      * If none of the selected image sets' configurations successfully load, the process repeats.
      */
     private void configurationLoadLoop() {
+        boolean isUsingHqx = settings.filter == Filter.HQX && (settings.scaling % 2 == 0 || settings.scaling % 3 == 0);
+        if (isUsingHqx) {
+            RgbYuv.hqxInit();
+        }
+
         do {
             if (imageSets.isEmpty()) {
                 try {
@@ -250,6 +257,10 @@ public class Main {
             failedConfigurations.clear();
         }
         while (imageSets.isEmpty());
+
+        if (isUsingHqx) {
+            RgbYuv.hqxDeinit();
+        }
     }
 
     /**
@@ -818,8 +829,15 @@ public class Main {
         for (String r : toRemove)
             removeLoadedImageSet(r, toRetain);
 
+        boolean isUsingHqx = settings.filter == Filter.HQX && (settings.scaling % 2 == 0 || settings.scaling % 3 == 0);
+        if (isUsingHqx) {
+            RgbYuv.hqxInit();
+        }
         for (String a : toAdd)
             addImageSet(a);
+        if (isUsingHqx) {
+            RgbYuv.hqxDeinit();
+        }
 
         // Clear any items that were added to this collection during the loading sequence
         failedConfigurations.clear();
