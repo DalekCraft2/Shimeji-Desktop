@@ -672,7 +672,7 @@
             </annotation>
             <simpleType>
                 <restriction base="string">
-                    <pattern value=".+\.(png|gif|jpeg|jpg|bmp|PNG|GIF|JPEG|JPG|BMP)"/>
+                    <pattern value=".+\.(png|gif|jpeg|jpg|jpe|jif|jfif|jfi|bmp|dib|tiff|tif|wbmp|PNG|GIF|JPEG|JPG|JPE|JIF|JFIF|JFI|BMP|DIB|TIFF|TIF|WBMP)"/>
                 </restriction>
             </simpleType>
         </attribute>
@@ -686,7 +686,7 @@
             </annotation>
             <simpleType>
                 <restriction base="string">
-                    <pattern value=".+\.(png|gif|jpeg|jpg|bmp|PNG|GIF|JPEG|JPG|BMP)"/>
+                    <pattern value=".+\.(png|gif|jpeg|jpg|jpe|jif|jfif|jfi|bmp|dib|tiff|tif|wbmp|PNG|GIF|JPEG|JPG|JPE|JIF|JFIF|JFI|BMP|DIB|TIFF|TIF|WBMP)"/>
                 </restriction>
             </simpleType>
         </attribute>
@@ -727,7 +727,7 @@
             </annotation>
             <simpleType>
                 <restriction base="string">
-                    <pattern value=".+\.(aiff|au|wav|wave|mid|midi|rmf|AIFF|AU|WAV|WAVE|MID|MIDI|RMF)"/>
+                    <pattern value=".+\.(aiff|aif|aifc|au|snd|wave|wav|midi|mid|smf|rmf|AIFF|AIF|AIFC|AU|SND|WAVE|WAV|MIDI|MID|SMF|RMF)"/>
                 </restriction>
             </simpleType>
         </attribute>
