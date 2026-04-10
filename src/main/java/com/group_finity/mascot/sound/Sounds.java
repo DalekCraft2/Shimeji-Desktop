@@ -43,14 +43,15 @@ public class Sounds {
      *
      * @param fileName file path of the sound to load
      * @param volume the volume of the sound
+     * @return a key to access the loaded sound
      * @throws IOException if an error occurs when reading the sound file or when creating an {@code AudioInputStream}
      * @throws UnsupportedAudioFileException if the sound file uses a format that is not recognized by the system
      * @throws LineUnavailableException if there is no {@link Clip} object available to use to load the sound
      */
-    public static void load(final String fileName, final float volume) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+    public static String load(final String fileName, final float volume) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         String key = fileName + ":" + volume;
         if (contains(key)) {
-            return;
+            return key;
         }
 
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(fileName));
@@ -66,6 +67,8 @@ public class Sounds {
         SOUNDS.put(key, clip);
         FILE_NAME_MAP.putIfAbsent(fileName, new ArrayList<>(4));
         FILE_NAME_MAP.get(fileName).add(key);
+
+        return key;
     }
 
     public static boolean contains(String key) {
@@ -73,10 +76,7 @@ public class Sounds {
     }
 
     public static Clip getSound(String key) {
-        if (!SOUNDS.containsKey(key)) {
-            return null;
-        }
-        return SOUNDS.get(key);
+        return key == null ? null : SOUNDS.get(key);
     }
 
     public static List<Clip> getSoundsIgnoringVolume(String fileName) {

@@ -12,64 +12,38 @@ import java.nio.file.Path;
  * @author Shimeji-ee Group
  */
 public class Pose {
-    private final Path image;
-    private final Path rightImage;
+    private final String imageKey;
     private final int dx;
     private final int dy;
     private final int duration;
-    private final String sound;
+    private final String soundKey;
 
-    public Pose(final Path image) {
-        this(image, null, 0, 0, 1);
-    }
-
-    public Pose(final Path image, final int duration) {
-        this(image, null, 0, 0, duration);
-    }
-
-    public Pose(final Path image, final int dx, final int dy, final int duration) {
-        this(image, null, dx, dy, duration);
-    }
-
-    public Pose(final Path image, final Path rightImage) {
-        this(image, rightImage, 0, 0, 1);
-    }
-
-    public Pose(final Path image, final Path rightImage, final int duration) {
-        this(image, rightImage, 0, 0, duration);
-    }
-
-    public Pose(final Path image, final Path rightImage, final int dx, final int dy, final int duration) {
-        this(image, rightImage, dx, dy, duration, null);
-    }
-
-    public Pose(final Path image, final Path rightImage, final int dx, final int dy, final int duration, final String sound) {
-        this.image = image;
-        this.rightImage = rightImage;
+    public Pose(final String imageKey, final int dx, final int dy, final int duration, final String soundKey) {
+        this.imageKey = imageKey;
         this.dx = dx;
         this.dy = dy;
         this.duration = duration;
-        this.sound = sound;
+        this.soundKey = soundKey;
     }
 
     @Override
     public String toString() {
-        return "Pose[image=" + image + ",rightImage=" + rightImage + ",dx=" + dx + ",dy=" + dy + ",duration=" + duration + ",sound=" + sound + "]";
+        return "Pose[imageKey=" + imageKey + ",dx=" + dx + ",dy=" + dy + ",duration=" + duration + ",soundKey=" + soundKey + "]";
     }
 
     public void next(final Mascot mascot) {
         mascot.setAnchor(new Point(mascot.getAnchor().x + (mascot.isLookRight() ? -dx : dx),
                 mascot.getAnchor().y + dy));
-        mascot.setImage(ImagePairs.getImage(getImageName(), mascot.isLookRight()));
-        mascot.setSound(sound);
+        mascot.setImage(ImagePairs.getImage(getImageKey(), mascot.isLookRight()));
+        mascot.setSound(soundKey);
     }
 
-    public String getImageName() {
-        return (image == null ? "" : image.toString()) + (rightImage == null ? "" : rightImage.toString());
+    public String getImageKey() {
+        return imageKey;
     }
 
     public ImagePair getImage() {
-        return ImagePairs.getImagePair(getImageName());
+        return ImagePairs.getImagePair(getImageKey());
     }
 
     public int getDx() {
@@ -84,7 +58,7 @@ public class Pose {
         return duration;
     }
 
-    public String getSoundName() {
-        return sound;
+    public String getSoundKey() {
+        return soundKey;
     }
 }

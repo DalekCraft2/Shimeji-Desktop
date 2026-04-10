@@ -86,7 +86,7 @@ public class AnimationBuilder {
         final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor"));
         final String moveText = frameNode.getAttribute(schema.getString("Velocity"));
         final String durationText = frameNode.getAttribute(schema.getString("Duration"));
-        String soundText = frameNode.getAttribute(schema.getString("Sound"));
+        final String soundText = frameNode.getAttribute(schema.getString("Sound"));
         final String volumeText = frameNode.getAttribute(schema.getString("Volume")) != null ? frameNode.getAttribute(schema.getString("Volume")) : "0";
 
         final double opacity = Main.getInstance().getSettings().opacity;
@@ -94,12 +94,13 @@ public class AnimationBuilder {
 
         Filter filter = Main.getInstance().getSettings().filter;
 
+        String imageKey = null;
         if (imagePath != null) {
             final String[] anchorCoordinates = anchorText.split(",");
             final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
 
             try {
-                ImagePairs.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
+                imageKey = ImagePairs.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
             } catch (IOException | NumberFormatException e) {
                 String imagePairString = imagePath.toString();
                 if (imageRightPath != null) {
@@ -117,6 +118,7 @@ public class AnimationBuilder {
 
         final int duration = Integer.parseInt(durationText);
 
+        String soundKey = null;
         if (soundText != null) {
             try {
                 Path soundPath;
@@ -127,18 +129,16 @@ public class AnimationBuilder {
                 } else {
                     soundPath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText);
                 }
-                soundText = soundPath.toString();
 
                 float volume = Float.parseFloat(volumeText);
-                Sounds.load(soundText, volume);
-                soundText += ":" + volume;
-                Sounds.addUsage(soundText, imageSet);
+                soundKey = Sounds.load(soundPath.toString(), volume);
+                Sounds.addUsage(soundKey, imageSet);
             } catch (IOException | NumberFormatException | UnsupportedAudioFileException | LineUnavailableException e) {
                 throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage"), soundText), e);
             }
         }
 
-        final Pose pose = new Pose(imagePath, imageRightPath, moveX, moveY, duration, soundText);
+        final Pose pose = new Pose(imageKey, moveX, moveY, duration, soundKey);
 
         log.debug("Finished loading pose: {}", pose);
 

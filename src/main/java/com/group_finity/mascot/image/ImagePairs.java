@@ -30,12 +30,13 @@ public class ImagePairs {
      * @param scaling the scale factor of the image
      * @param filter the type of filter to use to generate the image
      * @param opacity the opacity of the image
+     * @return a key to access the loaded image pair
      * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
      */
-    public static void load(final Path path, final Path rightPath, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
-        String key = path.toString() + (rightPath == null ? "" : rightPath);
-        if (contains(key)) {
-            return;
+    public static String load(final Path path, final Path rightPath, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
+        String key = path.toString() + (rightPath == null ? "" : ":" + rightPath);
+        if (imagePairs.containsKey(key)) {
+            return key;
         }
 
         BufferedImage leftImage = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))));
@@ -51,6 +52,8 @@ public class ImagePairs {
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
                 new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
         imagePairs.put(key, ip);
+
+        return key;
     }
 
     public static boolean contains(String key) {
@@ -58,17 +61,11 @@ public class ImagePairs {
     }
 
     public static ImagePair getImagePair(String key) {
-        if (!imagePairs.containsKey(key)) {
-            return null;
-        }
-        return imagePairs.get(key);
+        return key == null ? null : imagePairs.get(key);
     }
 
     public static MascotImage getImage(String key, boolean isLookRight) {
-        if (!imagePairs.containsKey(key)) {
-            return null;
-        }
-        return imagePairs.get(key).getImage(isLookRight);
+        return key == null || !imagePairs.containsKey(key) ? null : imagePairs.get(key).getImage(isLookRight);
     }
 
     public static void removeAll(String searchTerm) {
