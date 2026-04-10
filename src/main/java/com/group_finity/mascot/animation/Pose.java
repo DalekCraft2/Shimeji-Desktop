@@ -1,11 +1,9 @@
 package com.group_finity.mascot.animation;
 
 import com.group_finity.mascot.Mascot;
-import com.group_finity.mascot.image.ImagePair;
 import com.group_finity.mascot.image.ImagePairs;
 
 import java.awt.*;
-import java.nio.file.Path;
 
 /**
  * @author Yuki Yamada
@@ -34,16 +32,13 @@ public class Pose {
     public void next(final Mascot mascot) {
         mascot.setAnchor(new Point(mascot.getAnchor().x + (mascot.isLookRight() ? -dx : dx),
                 mascot.getAnchor().y + dy));
-        mascot.setImage(ImagePairs.getImage(getImageKey(), mascot.isLookRight()));
+        mascot.setImage(getImageKey() == null ? null :
+                ImagePairs.getImagePair(getImageKey()).getImage(mascot.isLookRight()));
         mascot.setSound(soundKey);
     }
 
     public String getImageKey() {
         return imageKey;
-    }
-
-    public ImagePair getImage() {
-        return ImagePairs.getImagePair(getImageKey());
     }
 
     public int getDx() {

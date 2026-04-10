@@ -64,10 +64,6 @@ public class ImagePairs {
         return key == null ? null : imagePairs.get(key);
     }
 
-    public static MascotImage getImage(String key, boolean isLookRight) {
-        return key == null || !imagePairs.containsKey(key) ? null : imagePairs.get(key).getImage(isLookRight);
-    }
-
     public static void removeAll(String searchTerm) {
         if (imagePairs.isEmpty()) {
             return;
