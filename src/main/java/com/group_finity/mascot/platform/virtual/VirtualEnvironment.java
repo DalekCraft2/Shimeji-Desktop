@@ -3,6 +3,7 @@ package com.group_finity.mascot.platform.virtual;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.Environment;
+import com.group_finity.mascot.image.ImageUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -116,7 +117,7 @@ class VirtualEnvironment extends Environment {
             BufferedImage image = null;
             try {
                 if (!Main.getInstance().getSettings().backgroundImage.isEmpty()) {
-                    image = ImageIO.read(new File(Main.getInstance().getSettings().backgroundImage));
+                    image = ImageUtils.toCompatibleImage(ImageIO.read(new File(Main.getInstance().getSettings().backgroundImage)));
                 }
             } catch (IOException ignored) {
             }

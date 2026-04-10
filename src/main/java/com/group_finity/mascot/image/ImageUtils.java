@@ -12,10 +12,62 @@ import java.awt.image.BufferedImage;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @author DalekCraft
  */
 public class ImageUtils {
     private ImageUtils() {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Creates a copy of the given image that is optimized for the system's default graphics configuration.
+     *
+     * @param src the image to convert
+     * @return an image compatible with the default graphics configuration
+     */
+    public static BufferedImage toCompatibleImage(BufferedImage src) {
+        GraphicsConfiguration graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+
+        if (src.getColorModel().equals(graphicsConfig.getColorModel())) {
+            return src;
+        }
+
+        BufferedImage compatible = graphicsConfig.createCompatibleImage(src.getWidth(), src.getHeight(), src.getTransparency());
+        Graphics2D g2d = compatible.createGraphics();
+        g2d.drawImage(src, 0, 0, null);
+        g2d.dispose();
+
+        return compatible;
+    }
+
+    /**
+     * Creates an image with the specified dimensions.
+     * The image will be optimized for the system's default graphics configuration.
+     *
+     * @param width the width of the returned image
+     * @param height the height of the returned image
+     * @return an image compatible with the default graphics configuration
+     */
+    public static BufferedImage createCompatibleImage(int width, int height) {
+        GraphicsConfiguration graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+        return graphicsConfig.createCompatibleImage(width, height);
+    }
+
+    /**
+     * Creates an image with the specified dimensions and transparency mode.
+     * The image will be optimized for the system's default graphics configuration.
+     *
+     * @param width the width of the returned image
+     * @param height the height of the returned image
+     * @param transparency the specified transparency mode
+     * @return an image compatible with the default graphics configuration
+     * @see Transparency#OPAQUE
+     * @see Transparency#BITMASK
+     * @see Transparency#TRANSLUCENT
+     */
+    public static BufferedImage createCompatibleImage(int width, int height, int transparency) {
+        GraphicsConfiguration graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+        return graphicsConfig.createCompatibleImage(width, height, transparency);
     }
 
     /**
@@ -25,8 +77,7 @@ public class ImageUtils {
      * @return horizontally flipped image
      */
     public static BufferedImage flip(final BufferedImage src) {
-        final BufferedImage copy = new BufferedImage(src.getWidth(), src.getHeight(),
-                src.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB : src.getType());
+        final BufferedImage copy = createCompatibleImage(src.getWidth(), src.getHeight(), src.getTransparency());
 
         for (int y = 0; y < src.getHeight(); y++) {
             for (int x = 0; x < src.getWidth(); x++) {
@@ -37,8 +88,7 @@ public class ImageUtils {
     }
 
     public static BufferedImage premultiply(final BufferedImage source, final double opacity) {
-        final BufferedImage returnImage = new BufferedImage(source.getWidth(), source.getHeight(),
-                source.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB_PRE : source.getType());
+        final BufferedImage returnImage = createCompatibleImage(source.getWidth(), source.getHeight(), opacity == 1 ? source.getTransparency() : Transparency.TRANSLUCENT);
         Color colour;
         float[] components;
 
@@ -96,7 +146,7 @@ public class ImageUtils {
 
             // if hqx is still on then apply the changes
             if (filter == Filter.HQX) {
-                workingImage = new BufferedImage((int) Math.round(width * effectiveScaling), (int) Math.round(height * effectiveScaling), BufferedImage.TYPE_INT_ARGB_PRE);
+                workingImage = createCompatibleImage((int) Math.round(width * effectiveScaling), (int) Math.round(height * effectiveScaling), Transparency.TRANSLUCENT);
                 int srcColIndex = 0;
                 int srcRowIndex = 0;
 
@@ -120,7 +170,7 @@ public class ImageUtils {
         width = (int) Math.round(width * effectiveScaling);
         height = (int) Math.round(height * effectiveScaling);
 
-        final BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB_PRE);
+        final BufferedImage copy = createCompatibleImage(width, height, workingImage != null ? Transparency.TRANSLUCENT : source.getTransparency());
 
         Graphics2D g2d = copy.createGraphics();
         Object renderHint = filter == Filter.BICUBIC

@@ -1,5 +1,7 @@
 package com.group_finity.mascot.imagesetchooser;
 
+import com.group_finity.mascot.image.ImageUtils;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +33,7 @@ public class ImageSetChooserPanel extends JPanel {
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
         try {
-            BufferedImage img = ImageIO.read(Files.newInputStream(imageLocation));
+            BufferedImage img = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(imageLocation)));
             image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
         } catch (IOException e) {
             // Doesn't matter, the image just won't show

@@ -11,6 +11,7 @@ import com.group_finity.mascot.exception.BehaviorInstantiationException;
 import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
+import com.group_finity.mascot.image.ImageUtils;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.sound.Sounds;
@@ -973,7 +974,7 @@ public class Main {
 
         if (Files.exists(ICON_FILE)) {
             try {
-                icon = ImageIO.read(Files.newInputStream(ICON_FILE));
+                icon = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(ICON_FILE)));
                 return icon;
             } catch (final IOException e) {
                 log.warn("Failed to load custom icon file", e);
@@ -981,13 +982,13 @@ public class Main {
         }
 
         try {
-            icon = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/icon.png")));
+            icon = ImageUtils.toCompatibleImage(ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/icon.png"))));
             return icon;
         } catch (final IOException e) {
             log.warn("Failed to load default icon file", e);
         }
 
-        icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+        icon = ImageUtils.createCompatibleImage(16, 16);
         return icon;
     }
 }
