@@ -1,59 +1,21 @@
 package com.group_finity.mascot.image;
 
-import com.group_finity.mascot.Main;
 import hqx.Hqx_2x;
 import hqx.Hqx_3x;
 import hqx.Hqx_4x;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
- * Loads image pairs.
+ * A collection of methods for transforming images.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-public class ImagePairLoader {
-    public enum Filter {
-        NEAREST_NEIGHBOUR,
-        HQX,
-        BICUBIC
-    }
-
-    /**
-     * Loads an image pair.
-     *
-     * @param path file path of left-facing image to load
-     * @param rightPath file path of right-facing image to load. If {@code null}, the left-facing image will be copied
-     * and horizontally flipped.
-     * @param center image center coordinate
-     * @param scaling the scale factor of the image
-     * @param filter the type of filter to use to generate the image
-     * @param opacity the opacity of the image
-     * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
-     */
-    public static void load(final Path path, final Path rightPath, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
-        String key = path.toString() + (rightPath == null ? "" : rightPath);
-        if (ImagePairs.contains(key)) {
-            return;
-        }
-
-        final BufferedImage leftImage = scale(premultiply(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))), opacity), scaling, filter);
-        final BufferedImage rightImage;
-        if (rightPath == null) {
-            rightImage = flip(leftImage);
-        } else {
-            rightImage = scale(premultiply(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))), opacity), scaling, filter);
-        }
-
-        ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
-                new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
-        ImagePairs.put(key, ip);
+public class ImageUtils {
+    private ImageUtils() {
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -62,7 +24,7 @@ public class ImagePairLoader {
      * @param src the image to flip horizontally
      * @return horizontally flipped image
      */
-    private static BufferedImage flip(final BufferedImage src) {
+    public static BufferedImage flip(final BufferedImage src) {
         final BufferedImage copy = new BufferedImage(src.getWidth(), src.getHeight(),
                 src.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB : src.getType());
 
@@ -74,7 +36,7 @@ public class ImagePairLoader {
         return copy;
     }
 
-    private static BufferedImage premultiply(final BufferedImage source, final double opacity) {
+    public static BufferedImage premultiply(final BufferedImage source, final double opacity) {
         final BufferedImage returnImage = new BufferedImage(source.getWidth(), source.getHeight(),
                 source.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_INT_ARGB_PRE : source.getType());
         Color colour;
@@ -96,7 +58,7 @@ public class ImagePairLoader {
         return returnImage;
     }
 
-    private static BufferedImage scale(final BufferedImage source, final double scaling, Filter filter) {
+    public static BufferedImage scale(final BufferedImage source, final double scaling, Filter filter) {
         int width = source.getWidth();
         int height = source.getHeight();
         BufferedImage workingImage = null;

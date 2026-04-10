@@ -1,6 +1,6 @@
 package com.group_finity.mascot;
 
-import com.group_finity.mascot.image.ImagePairLoader;
+import com.group_finity.mascot.image.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class Settings {
     public boolean alwaysShowShimejiChooser = false;
     public boolean alwaysShowInformationScreen = false;
     public boolean drawShimejiBounds = false;
-    public ImagePairLoader.Filter filter = ImagePairLoader.Filter.NEAREST_NEIGHBOUR;
+    public Filter filter = Filter.NEAREST_NEIGHBOUR;
     public double opacity = 1.0;
     public double scaling = 1.0;
 
@@ -91,11 +91,11 @@ public class Settings {
         alwaysShowInformationScreen = Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false"));
         String filterText = properties.getProperty("Filter", "false");
         if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
-            filter = ImagePairLoader.Filter.HQX;
+            filter = Filter.HQX;
         } else if (filterText.equalsIgnoreCase("bicubic")) {
-            filter = ImagePairLoader.Filter.BICUBIC;
+            filter = Filter.BICUBIC;
         } else {
-            filter = ImagePairLoader.Filter.NEAREST_NEIGHBOUR;
+            filter = Filter.NEAREST_NEIGHBOUR;
         }
         opacity = Double.parseDouble(properties.getProperty("Opacity", "1.0"));
         scaling = Double.parseDouble(properties.getProperty("Scaling", "1.0"));

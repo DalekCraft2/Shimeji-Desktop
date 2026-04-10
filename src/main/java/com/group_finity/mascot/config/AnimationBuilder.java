@@ -7,8 +7,8 @@ import com.group_finity.mascot.animation.Pose;
 import com.group_finity.mascot.exception.AnimationInstantiationException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.exception.VariableException;
-import com.group_finity.mascot.image.ImagePairLoader;
-import com.group_finity.mascot.image.ImagePairLoader.Filter;
+import com.group_finity.mascot.image.Filter;
+import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.sound.SoundLoader;
 import com.group_finity.mascot.sound.Sounds;
@@ -100,7 +100,7 @@ public class AnimationBuilder {
             final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
 
             try {
-                ImagePairLoader.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
+                ImagePairs.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
             } catch (IOException | NumberFormatException e) {
                 String imagePairString = imagePath.toString();
                 if (imageRightPath != null) {

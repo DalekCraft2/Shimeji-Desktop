@@ -5,7 +5,7 @@
  */
 package com.group_finity.mascot;
 
-import com.group_finity.mascot.image.ImagePairLoader;
+import com.group_finity.mascot.image.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class SettingsWindow extends JDialog {
     private boolean alwaysShowShimejiChooser = false;
     private boolean alwaysShowInformationScreen = false;
     private boolean drawShimejiBounds = false;
-    private ImagePairLoader.Filter filter = ImagePairLoader.Filter.NEAREST_NEIGHBOUR;
+    private Filter filter = Filter.NEAREST_NEIGHBOUR;
     private double scaling = 1.0;
     private double opacity = 1.0;
     private boolean windowedMode = false;
@@ -95,9 +95,9 @@ public class SettingsWindow extends JDialog {
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
         chkDrawShimejiBounds.setSelected(drawShimejiBounds);
         radFilterHqx.setEnabled(scaling == 2 || scaling == 3 || scaling == 4 || scaling == 6 || scaling == 8);
-        if (filter == ImagePairLoader.Filter.BICUBIC) {
+        if (filter == Filter.BICUBIC) {
             radFilterBicubic.setSelected(true);
-        } else if (filter == ImagePairLoader.Filter.HQX && radFilterHqx.isEnabled()) {
+        } else if (filter == Filter.HQX && radFilterHqx.isEnabled()) {
             radFilterHqx.setSelected(true);
         } else {
             radFilterNearest.setSelected(true);
@@ -853,11 +853,11 @@ public class SettingsWindow extends JDialog {
             Object source = evt.getItemSelectable();
 
             if (source == radFilterNearest) {
-                filter = ImagePairLoader.Filter.NEAREST_NEIGHBOUR;
+                filter = Filter.NEAREST_NEIGHBOUR;
             } else if (source == radFilterHqx) {
-                filter = ImagePairLoader.Filter.HQX;
+                filter = Filter.HQX;
             } else {
-                filter = ImagePairLoader.Filter.BICUBIC;
+                filter = Filter.BICUBIC;
             }
         }
     }//GEN-LAST:event_radFilterItemStateChanged
@@ -872,7 +872,7 @@ public class SettingsWindow extends JDialog {
                     radFilterHqx.setEnabled(true);
                 } else {
                     radFilterHqx.setEnabled(false);
-                    if (filter == ImagePairLoader.Filter.HQX) {
+                    if (filter == Filter.HQX) {
                         radFilterNearest.setSelected(true);
                     }
                 }

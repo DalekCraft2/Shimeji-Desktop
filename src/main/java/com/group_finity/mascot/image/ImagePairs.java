@@ -1,14 +1,55 @@
 package com.group_finity.mascot.image;
 
+import com.group_finity.mascot.Main;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Loads and stores image pairs.
+ *
+ * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class ImagePairs {
     private static final Map<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
+
+    /**
+     * Loads an image pair.
+     *
+     * @param path file path of left-facing image to load
+     * @param rightPath file path of right-facing image to load. If {@code null}, the left-facing image will be copied
+     * and horizontally flipped.
+     * @param center image center coordinate
+     * @param scaling the scale factor of the image
+     * @param filter the type of filter to use to generate the image
+     * @param opacity the opacity of the image
+     * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
+     */
+    public static void load(final Path path, final Path rightPath, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
+        String key = path.toString() + (rightPath == null ? "" : rightPath);
+        if (contains(key)) {
+            return;
+        }
+
+        final BufferedImage leftImage = ImageUtils.scale(ImageUtils.premultiply(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))), opacity), scaling, filter);
+        final BufferedImage rightImage;
+        if (rightPath == null) {
+            rightImage = ImageUtils.flip(leftImage);
+        } else {
+            rightImage = ImageUtils.scale(ImageUtils.premultiply(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))), opacity), scaling, filter);
+        }
+
+        ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
+                new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
+        put(key, ip);
+    }
 
     public static boolean contains(String key) {
         return imagePairs.containsKey(key);
