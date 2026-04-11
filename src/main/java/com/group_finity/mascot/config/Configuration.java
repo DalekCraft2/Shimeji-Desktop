@@ -133,8 +133,8 @@ public class Configuration {
                     node.getName().equals(schema.getString("Scripter")) ||
                     node.getName().equals(schema.getString("Commissioner")) ||
                     node.getName().equals(schema.getString("Support"))) {
-                String nameText = node.getAttribute(schema.getString("Name")) != null ? node.getAttribute(schema.getString("Name")) : null;
-                String linkText = node.getAttribute(schema.getString("URL")) != null ? node.getAttribute(schema.getString("URL")) : null;
+                String nameText = node.hasAttribute(schema.getString("Name")) ? node.getAttribute(schema.getString("Name")) : null;
+                String linkText = node.hasAttribute(schema.getString("URL")) ? node.getAttribute(schema.getString("URL")) : null;
 
                 if (nameText != null) {
                     information.put(node.getName() + schema.getString("Name"), nameText);

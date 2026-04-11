@@ -47,8 +47,8 @@ public class AnimationBuilder {
 
         this.configuration = configuration;
         ResourceBundle schema = configuration.getSchema();
-        condition = animationNode.getAttribute(schema.getString("Condition")) == null ? "true" : animationNode.getAttribute(schema.getString("Condition"));
-        turn = animationNode.getAttribute(schema.getString("IsTurn")) != null && Boolean.parseBoolean(animationNode.getAttribute(schema.getString("IsTurn")));
+        condition = animationNode.hasAttribute(schema.getString("Condition")) ? animationNode.getAttribute(schema.getString("Condition")) : "true";
+        turn = animationNode.hasAttribute(schema.getString("IsTurn")) && Boolean.parseBoolean(animationNode.getAttribute(schema.getString("IsTurn")));
 
         log.debug("Loading an animation");
 
@@ -81,13 +81,13 @@ public class AnimationBuilder {
 
         ResourceBundle schema = configuration.getSchema();
 
-        final Path imagePath = poseNode.getAttribute(schema.getString("Image")) != null ? Path.of(imageSet, poseNode.getAttribute(schema.getString("Image"))) : null;
-        final Path imageRightPath = poseNode.getAttribute(schema.getString("ImageRight")) != null ? Path.of(imageSet, poseNode.getAttribute(schema.getString("ImageRight"))) : null;
+        final Path imagePath = poseNode.hasAttribute(schema.getString("Image")) ? Path.of(imageSet, poseNode.getAttribute(schema.getString("Image"))) : null;
+        final Path imageRightPath = poseNode.hasAttribute(schema.getString("ImageRight")) ? Path.of(imageSet, poseNode.getAttribute(schema.getString("ImageRight"))) : null;
         final String anchorText = poseNode.getAttribute(schema.getString("ImageAnchor"));
         final String velocityText = poseNode.getAttribute(schema.getString("Velocity"));
         final String durationText = poseNode.getAttribute(schema.getString("Duration"));
         final String soundText = poseNode.getAttribute(schema.getString("Sound"));
-        final String volumeText = poseNode.getAttribute(schema.getString("Volume")) != null ? poseNode.getAttribute(schema.getString("Volume")) : "0";
+        final String volumeText = poseNode.hasAttribute(schema.getString("Volume")) ? poseNode.getAttribute(schema.getString("Volume")) : "0";
 
         final double opacity = Main.getInstance().getSettings().opacity;
         final double scaling = Main.getInstance().getSettings().scaling;

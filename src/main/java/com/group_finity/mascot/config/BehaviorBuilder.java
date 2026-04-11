@@ -50,7 +50,7 @@ public class BehaviorBuilder implements IBehaviorBuilder {
     public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
         name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
-        actionName = behaviorNode.getAttribute(configuration.getSchema().getString("Action")) == null ? name : behaviorNode.getAttribute(configuration.getSchema().getString("Action"));
+        actionName = behaviorNode.hasAttribute(configuration.getSchema().getString("Action")) ? behaviorNode.getAttribute(configuration.getSchema().getString("Action")) : name;
         frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
         hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
 
