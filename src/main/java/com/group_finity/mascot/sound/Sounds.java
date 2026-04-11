@@ -75,11 +75,11 @@ public class Sounds {
         return SOUNDS.containsKey(key);
     }
 
-    public static Clip getSound(String key) {
+    public static Clip get(String key) {
         return key == null ? null : SOUNDS.get(key);
     }
 
-    public static List<Clip> getSoundsIgnoringVolume(String fileName) {
+    public static List<Clip> getAllByFile(String fileName) {
         return FILE_NAME_MAP.get(fileName).stream().map(SOUNDS::get).collect(Collectors.toList());
     }
 

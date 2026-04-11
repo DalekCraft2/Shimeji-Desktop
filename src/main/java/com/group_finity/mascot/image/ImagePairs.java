@@ -60,7 +60,7 @@ public class ImagePairs {
         return imagePairs.containsKey(key);
     }
 
-    public static ImagePair getImagePair(String key) {
+    public static ImagePair get(String key) {
         return key == null ? null : imagePairs.get(key);
     }
 

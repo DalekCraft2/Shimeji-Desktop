@@ -506,7 +506,7 @@ public class Mascot {
 
         // play sound if requested
         if (Sounds.isEnabled() && sound != null && Sounds.contains(sound)) {
-            Clip clip = Sounds.getSound(sound);
+            Clip clip = Sounds.get(sound);
             if (!clip.isRunning()) {
                 clip.stop();
                 clip.setMicrosecondPosition(0);

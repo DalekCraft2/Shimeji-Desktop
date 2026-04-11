@@ -33,7 +33,7 @@ public class Pose {
         mascot.setAnchor(new Point(mascot.getAnchor().x + (mascot.isLookRight() ? -dx : dx),
                 mascot.getAnchor().y + dy));
         mascot.setImage(imageKey == null || !ImagePairs.contains(imageKey) ? null :
-                ImagePairs.getImagePair(imageKey).getImage(mascot.isLookRight()));
+                ImagePairs.get(imageKey).getImage(mascot.isLookRight()));
         mascot.setSound(soundKey);
     }
 
