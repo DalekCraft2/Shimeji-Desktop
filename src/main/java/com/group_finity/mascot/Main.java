@@ -301,7 +301,7 @@ public class Main {
 
             Path infoFile = getInfoFile(imageSet);
 
-            if (Files.exists(infoFile)) {
+            if (Files.isRegularFile(infoFile)) {
                 log.info("Reading information file \"{}\" for image set \"{}\"", infoFile, imageSet);
 
                 final Document information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Files.newInputStream(infoFile));
@@ -358,41 +358,41 @@ public class Main {
 
     public static Path getActionsFile(String imageSet) {
         Path filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
-        if (Files.exists(filePath.resolve("actions.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("actions.xml"))) {
             return filePath.resolve("actions.xml");
-        } else if (Files.exists(filePath.resolve("\u52D5\u4F5C.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u52D5\u4F5C.xml"))) {
             return filePath.resolve("\u52D5\u4F5C.xml");
-        } else if (Files.exists(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
             return filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml");
-        } else if (Files.exists(filePath.resolve("\u00A6-\u00BA@.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00A6-\u00BA@.xml"))) {
             return filePath.resolve("\u00A6-\u00BA@.xml");
-        } else if (Files.exists(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
             return filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml");
-        } else if (Files.exists(filePath.resolve("one.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("one.xml"))) {
             return filePath.resolve("one.xml");
-        } else if (Files.exists(filePath.resolve("1.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("1.xml"))) {
             return filePath.resolve("1.xml");
         }
 
         filePath = CONFIG_DIRECTORY.resolve(imageSet);
-        if (Files.exists(filePath.resolve("actions.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("actions.xml"))) {
             return filePath.resolve("actions.xml");
-        } else if (Files.exists(filePath.resolve("\u52D5\u4F5C.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u52D5\u4F5C.xml"))) {
             return filePath.resolve("\u52D5\u4F5C.xml");
-        } else if (Files.exists(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
             return filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml");
-        } else if (Files.exists(filePath.resolve("\u00A6-\u00BA@.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00A6-\u00BA@.xml"))) {
             return filePath.resolve("\u00A6-\u00BA@.xml");
-        } else if (Files.exists(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
             return filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml");
-        } else if (Files.exists(filePath.resolve("one.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("one.xml"))) {
             return filePath.resolve("one.xml");
-        } else if (Files.exists(filePath.resolve("1.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("1.xml"))) {
             return filePath.resolve("1.xml");
         }
 
         filePath = CONFIG_DIRECTORY;
-        if (Files.exists(filePath.resolve("\u52D5\u4F5C.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("\u52D5\u4F5C.xml"))) {
             return filePath.resolve("\u52D5\u4F5C.xml");
         }
 
@@ -401,45 +401,45 @@ public class Main {
 
     public static Path getBehaviorsFile(String imageSet) {
         Path filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
-        if (Files.exists(filePath.resolve("behaviors.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("behaviors.xml"))) {
             return filePath.resolve("behaviors.xml");
-        } else if (Files.exists(filePath.resolve("behavior.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("behavior.xml"))) {
             return filePath.resolve("behavior.xml");
-        } else if (Files.exists(filePath.resolve("\u884C\u52D5.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u884C\u52D5.xml"))) {
             return filePath.resolve("\u884C\u52D5.xml");
-        } else if (Files.exists(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
             return filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml");
-        } else if (Files.exists(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
             return filePath.resolve("\u00AA\u00B5\u00A6-.xml");
-        } else if (Files.exists(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
             return filePath.resolve("\u00ECs\u00F4\u00AB.xml");
-        } else if (Files.exists(filePath.resolve("two.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("two.xml"))) {
             return filePath.resolve("two.xml");
-        } else if (Files.exists(filePath.resolve("2.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("2.xml"))) {
             return filePath.resolve("2.xml");
         }
 
         filePath = CONFIG_DIRECTORY.resolve(imageSet);
-        if (Files.exists(filePath.resolve("behaviors.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("behaviors.xml"))) {
             return filePath.resolve("behaviors.xml");
-        } else if (Files.exists(filePath.resolve("behavior.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("behavior.xml"))) {
             return filePath.resolve("behavior.xml");
-        } else if (Files.exists(filePath.resolve("\u884C\u52D5.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u884C\u52D5.xml"))) {
             return filePath.resolve("\u884C\u52D5.xml");
-        } else if (Files.exists(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
             return filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml");
-        } else if (Files.exists(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
             return filePath.resolve("\u00AA\u00B5\u00A6-.xml");
-        } else if (Files.exists(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
             return filePath.resolve("\u00ECs\u00F4\u00AB.xml");
-        } else if (Files.exists(filePath.resolve("two.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("two.xml"))) {
             return filePath.resolve("two.xml");
-        } else if (Files.exists(filePath.resolve("2.xml"))) {
+        } else if (Files.isRegularFile(filePath.resolve("2.xml"))) {
             return filePath.resolve("2.xml");
         }
 
         filePath = CONFIG_DIRECTORY;
-        if (Files.exists(filePath.resolve("\u884C\u52D5.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("\u884C\u52D5.xml"))) {
             return filePath.resolve("\u884C\u52D5.xml");
         }
 
@@ -448,12 +448,12 @@ public class Main {
 
     public static Path getInfoFile(String imageSet) {
         Path filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
-        if (Files.exists(filePath.resolve("info.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("info.xml"))) {
             return filePath.resolve("info.xml");
         }
 
         filePath = CONFIG_DIRECTORY.resolve(imageSet);
-        if (Files.exists(filePath.resolve("info.xml"))) {
+        if (Files.isRegularFile(filePath.resolve("info.xml"))) {
             return filePath.resolve("info.xml");
         }
 
@@ -990,7 +990,7 @@ public class Main {
             return icon;
         }
 
-        if (Files.exists(ICON_FILE)) {
+        if (Files.isRegularFile(ICON_FILE)) {
             try {
                 icon = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(ICON_FILE)));
                 return icon;

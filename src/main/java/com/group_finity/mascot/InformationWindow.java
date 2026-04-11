@@ -39,7 +39,7 @@ public class InformationWindow extends JFrame {
         // load image
         if (config.containsInformationKey("SplashImage")) {
             Path splashImagePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(config.getInformation("SplashImage"));
-            if (Files.exists(splashImagePath)) {
+            if (Files.isRegularFile(splashImagePath)) {
                 Icon icon = new ImageIcon(splashImagePath.toString());
                 lblSplashImage.setIcon(icon);
             }

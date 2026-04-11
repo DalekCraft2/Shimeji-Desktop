@@ -78,7 +78,7 @@ public class ImageSetChooser extends JDialog {
                 Path imageFile = imageSetDir.resolve("shime1.png");
                 String caption = imageSet;
                 try {
-                    if (Files.exists(infoFile)) {
+                    if (Files.isRegularFile(infoFile)) {
                         Configuration configuration = new Configuration();
 
                         final Document information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Files.newInputStream(infoFile));
