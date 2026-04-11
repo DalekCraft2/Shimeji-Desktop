@@ -125,12 +125,12 @@ public class AnimationBuilder {
         if (soundText != null) {
             try {
                 Path soundPath;
-                if (Files.isRegularFile(Main.SOUND_DIRECTORY.resolve(soundText))) {
-                    soundPath = Main.SOUND_DIRECTORY.resolve(soundText);
+                if (Files.isRegularFile(Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText))) {
+                    soundPath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText);
                 } else if (Files.isRegularFile(Main.SOUND_DIRECTORY.resolve(imageSet).resolve(soundText))) {
                     soundPath = Main.SOUND_DIRECTORY.resolve(imageSet).resolve(soundText);
                 } else {
-                    soundPath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText);
+                    soundPath = Main.SOUND_DIRECTORY.resolve(soundText);
                 }
 
                 float volume = Float.parseFloat(volumeText);

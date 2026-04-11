@@ -720,8 +720,8 @@
             <annotation>
                 <documentation>
                     The path to an optional sound file to be played when the pose becomes active.
-                    The root's "sound/" directory is searched first for the file, then "sound/[image_set]/", and finally
-                    "img/[image_set]/sound/".
+                    The "img/[image_set]/sound/" directory is searched first for the file, then
+                    "sound/[image_set]/", and finally "sound/".
                     If present, the "Volume" attribute may optionally be provided.
                 </documentation>
             </annotation>
