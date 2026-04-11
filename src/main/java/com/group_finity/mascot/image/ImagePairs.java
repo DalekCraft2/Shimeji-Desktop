@@ -34,7 +34,7 @@ public class ImagePairs {
      * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
      */
     public static String load(final Path path, final Path rightPath, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
-        String key = path.toString() + (rightPath == null ? "" : ":" + rightPath);
+        String key = center.x + "," + center.y + ":" + path.toString() + (rightPath == null ? "" : ":" + rightPath);
         if (imagePairs.containsKey(key)) {
             return key;
         }
@@ -69,7 +69,7 @@ public class ImagePairs {
             return;
         }
 
-        imagePairs.keySet().removeIf(key -> searchTerm.equals(Path.of(key.split(":")[0]).getParent().toString()));
+        imagePairs.keySet().removeIf(key -> searchTerm.equals(Path.of(key.split(":")[1]).getParent().toString()));
     }
 
     public static void clear() {
