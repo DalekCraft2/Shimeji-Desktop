@@ -26,6 +26,10 @@ public class ImageUtils {
      * @return an image compatible with the default graphics configuration
      */
     public static BufferedImage toCompatibleImage(BufferedImage src) {
+        if (src == null) {
+            return null;
+        }
+
         GraphicsConfiguration graphicsConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 
         if (src.getColorModel().equals(graphicsConfig.getColorModel())) {
@@ -77,6 +81,10 @@ public class ImageUtils {
      * @return horizontally flipped image
      */
     public static BufferedImage flip(final BufferedImage src) {
+        if (src == null) {
+            return null;
+        }
+
         final BufferedImage copy = createCompatibleImage(src.getWidth(), src.getHeight(), src.getTransparency());
 
         for (int y = 0; y < src.getHeight(); y++) {
@@ -88,6 +96,10 @@ public class ImageUtils {
     }
 
     public static BufferedImage premultiply(final BufferedImage source, final double opacity) {
+        if (source == null) {
+            return null;
+        }
+
         final BufferedImage returnImage = createCompatibleImage(source.getWidth(), source.getHeight(), opacity == 1 ? source.getTransparency() : Transparency.TRANSLUCENT);
         Color colour;
         float[] components;
@@ -109,6 +121,10 @@ public class ImageUtils {
     }
 
     public static BufferedImage scale(final BufferedImage source, final double scaling, Filter filter) {
+        if (source == null) {
+            return null;
+        }
+
         int width = source.getWidth();
         int height = source.getHeight();
         BufferedImage workingImage = null;

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class Settings {
     public boolean windowedMode = false;
     public Dimension windowSize = new Dimension(600, 500);
     public Color backgroundColor = Color.GREEN;
-    public String backgroundImage = "";
+    public Path backgroundImage = null;
     public String backgroundMode = "centre";
 
     public void load() {
@@ -109,7 +110,8 @@ public class Settings {
         String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
         windowSize = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
         backgroundColor = Color.decode(properties.getProperty("Background", "#00FF00"));
-        backgroundImage = properties.getProperty("BackgroundImage", "");
+        String backgroundImageString = properties.getProperty("BackgroundImage");
+        backgroundImage = backgroundImageString == null || backgroundImageString.isEmpty() ? null : Path.of(properties.getProperty("BackgroundImage"));
         backgroundMode = properties.getProperty("BackgroundMode", "centre");
     }
 
@@ -213,6 +215,6 @@ public class Settings {
         properties.setProperty("WindowSize", windowSize.width + "x" + windowSize.height);
         properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
         properties.setProperty("BackgroundMode", backgroundMode);
-        properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage);
+        properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage.toString());
     }
 }

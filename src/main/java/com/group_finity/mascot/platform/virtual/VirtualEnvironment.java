@@ -11,8 +11,9 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Virtual desktop environment.
@@ -116,8 +117,9 @@ class VirtualEnvironment extends Environment {
 
             BufferedImage image = null;
             try {
-                if (!Main.getInstance().getSettings().backgroundImage.isEmpty()) {
-                    image = ImageUtils.toCompatibleImage(ImageIO.read(new File(Main.getInstance().getSettings().backgroundImage)));
+                Path backgroundImage = Main.getInstance().getSettings().backgroundImage;
+                if (backgroundImage != null) {
+                    image = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(backgroundImage)));
                 }
             } catch (IOException ignored) {
             }

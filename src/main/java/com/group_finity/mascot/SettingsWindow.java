@@ -6,9 +6,11 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.image.Filter;
+import com.group_finity.mascot.image.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
@@ -23,6 +25,8 @@ import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -45,7 +49,7 @@ public class SettingsWindow extends JDialog {
     private Dimension windowSize = new Dimension(600, 500);
     private Color backgroundColour = new Color(0, 255, 0);
     private String backgroundMode = "centre";
-    private String backgroundImage = null;
+    private Path backgroundImage = null;
     private final String[] backgroundModes = {"centre", "fill", "fit", "stretch"};
 
     private boolean suppressTextChanged = true;
@@ -129,10 +133,8 @@ public class SettingsWindow extends JDialog {
         pnlBackgroundPreview.setBackground(backgroundColour);
         if (backgroundImage != null) {
             try {
-                Dimension size = pnlBackgroundImage.getPreferredSize();
                 refreshBackgroundImage();
-                pnlBackgroundImage.setPreferredSize(size);
-            } catch (RuntimeException e) {
+            } catch (IOException | RuntimeException e) {
                 backgroundImage = null;
                 lblBackgroundImage.setIcon(null);
             }
@@ -776,7 +778,7 @@ public class SettingsWindow extends JDialog {
                 !settings.windowSize.equals(windowSize) ||
                 !settings.backgroundColor.equals(backgroundColour) ||
                 !settings.backgroundMode.equals(backgroundMode) ||
-                !settings.backgroundImage.equalsIgnoreCase(backgroundImage == null ? "" : backgroundImage);
+                !Objects.equals(settings.backgroundImage, backgroundImage);
         imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
         interactiveWindowReloadRequired = !settings.interactiveWindows.equals(listData) ||
                 !settings.interactiveWindowsBlacklist.equals(blacklistData);
@@ -796,7 +798,7 @@ public class SettingsWindow extends JDialog {
             settings.windowSize = new Dimension(windowSize);
             settings.backgroundColor = backgroundColour;
             settings.backgroundMode = backgroundMode;
-            settings.backgroundImage = backgroundImage == null ? "" : backgroundImage;
+            settings.backgroundImage = backgroundImage;
         }
 
         settings.saveUserSettings();
@@ -931,7 +933,7 @@ public class SettingsWindow extends JDialog {
 
         if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                backgroundImage = dialog.getSelectedFile().getCanonicalPath();
+                backgroundImage = dialog.getSelectedFile().toPath().toRealPath();
                 refreshBackgroundImage();
             } catch (IOException e) {
                 backgroundImage = null;
@@ -953,7 +955,12 @@ public class SettingsWindow extends JDialog {
         if (cmbBackgroundImageMode.getSelectedIndex() > -1) {
             backgroundMode = backgroundModes[cmbBackgroundImageMode.getSelectedIndex()];
         }
-        refreshBackgroundImage();
+        try {
+            refreshBackgroundImage();
+        } catch (IOException | RuntimeException e) {
+            backgroundImage = null;
+            lblBackgroundImage.setIcon(null);
+        }
     }//GEN-LAST:event_cmbBackgroundImageModeActionPerformed
 
     private void chkAlwaysShowInformationScreenItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkAlwaysShowInformationScreenItemStateChanged
@@ -995,9 +1002,19 @@ public class SettingsWindow extends JDialog {
         return colour;
     }
 
-    private void refreshBackgroundImage() {
+    private void refreshBackgroundImage() throws IOException {
+        if (backgroundImage == null) {
+            lblBackgroundImage.setIcon(null);
+            return;
+        }
+
         Dimension size = pnlBackgroundImage.getPreferredSize();
-        Image image = Toolkit.getDefaultToolkit().createImage(backgroundImage);
+        Image image = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(backgroundImage)));
+
+        if (image == null) {
+            lblBackgroundImage.setIcon(null);
+            return;
+        }
 
         if (backgroundMode.equals("stretch")) {
             image = image.getScaledInstance(size.width,
