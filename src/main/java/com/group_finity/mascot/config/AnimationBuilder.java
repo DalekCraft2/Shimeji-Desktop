@@ -112,8 +112,12 @@ public class AnimationBuilder {
         final String[] velocityCoordinates = velocityText.split(",");
         int dx = Integer.parseInt(velocityCoordinates[0]);
         int dy = Integer.parseInt(velocityCoordinates[1]);
-        dx = Math.abs(dx) > 0 && Math.abs(dx * scaling) < 1 ? dx > 0 ? 1 : -1 : (int) Math.round(dx * scaling);
-        dy = Math.abs(dy) > 0 && Math.abs(dy * scaling) < 1 ? dy > 0 ? 1 : -1 : (int) Math.round(dy * scaling);
+        int scaledDx = (int) Math.round(dx * scaling);
+        int scaledDy = (int) Math.round(dy * scaling);
+        /* If the scaling rounded a nonzero value to 0, set the value to +-1
+         to prevent the mascot from getting being unable to move */
+        scaledDx = dx != 0 && scaledDx == 0 ? dx < 0 ? -1 : 1 : scaledDx;
+        scaledDy = dy != 0 && scaledDy == 0 ? dy < 0 ? -1 : 1 : scaledDy;
 
         final int duration = Integer.parseInt(durationText);
 
@@ -137,7 +141,7 @@ public class AnimationBuilder {
             }
         }
 
-        final Pose pose = new Pose(imageKey, dx, dy, duration, soundKey);
+        final Pose pose = new Pose(imageKey, scaledDx, scaledDy, duration, soundKey);
 
         log.debug("Finished loading pose: {}", pose);
 
