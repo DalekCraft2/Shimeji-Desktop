@@ -50,7 +50,7 @@ public class Sounds {
      */
     public static String load(final String fileName, final float volume) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         String key = fileName + ":" + volume;
-        if (contains(key)) {
+        if (SOUNDS.containsKey(key)) {
             return key;
         }
 

@@ -32,8 +32,8 @@ public class Pose {
     public void next(final Mascot mascot) {
         mascot.setAnchor(new Point(mascot.getAnchor().x + (mascot.isLookRight() ? -dx : dx),
                 mascot.getAnchor().y + dy));
-        mascot.setImage(getImageKey() == null ? null :
-                ImagePairs.getImagePair(getImageKey()).getImage(mascot.isLookRight()));
+        mascot.setImage(imageKey == null || !ImagePairs.contains(imageKey) ? null :
+                ImagePairs.getImagePair(imageKey).getImage(mascot.isLookRight()));
         mascot.setSound(soundKey);
     }
 
