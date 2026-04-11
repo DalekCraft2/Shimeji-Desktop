@@ -16,16 +16,16 @@ import java.nio.file.Path;
  * @author Shimeji-ee Group
  * @since 1.0.2
  */
-public class ImageSetChooserPanel extends JPanel {
+public class ImageSetPanel extends JPanel {
 
     String imageSet;
 
-    public ImageSetChooserPanel() {
+    public ImageSetPanel() {
         initComponents();
     }
 
-    public ImageSetChooserPanel(String imageSet, String actions,
-                                String behaviors, Path imageLocation, String caption) {
+    public ImageSetPanel(String imageSet, String actions,
+                         String behaviors, Path imageLocation, String caption) {
         initComponents();
 
         this.imageSet = imageSet;

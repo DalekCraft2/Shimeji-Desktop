@@ -87,8 +87,8 @@
                 <Property name="layoutOrientation" type="int" value="2"/>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ShimejiList()"/>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ImageSetChooserPanel&gt;"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ImageSetPanelList()"/>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ImageSetPanel&gt;"/>
               </AuxValues>
             </Component>
           </SubComponents>

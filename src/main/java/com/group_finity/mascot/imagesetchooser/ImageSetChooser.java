@@ -49,7 +49,7 @@ public class ImageSetChooser extends JDialog {
 
         List<String> activeImageSets = readSettings();
 
-        List<ImageSetChooserPanel> listData = new ArrayList<>();
+        List<ImageSetPanel> listData = new ArrayList<>();
         Collection<Integer> selectedIndices = new ArrayList<>();
 
         // Get list of image sets (directories under img)
@@ -61,7 +61,7 @@ public class ImageSetChooser extends JDialog {
             return Files.isDirectory(entry);
         };
         try (DirectoryStream<Path> imageSetDirs = Files.newDirectoryStream(Main.IMAGE_DIRECTORY, filter)) {
-            // Create ImageSetChooserPanels for ShimejiList
+            // Create ImageSetPanels for ImageSetPanelList
             int index = 0;
             for (Path imageSetDir : imageSetDirs) {
                 String imageSet = imageSetDir.getFileName().toString();
@@ -98,7 +98,7 @@ public class ImageSetChooser extends JDialog {
                     caption = imageSet;
                 }
 
-                listData.add(new ImageSetChooserPanel(imageSet, actionsFile.toString(),
+                listData.add(new ImageSetPanel(imageSet, actionsFile.toString(),
                         behaviorsFile.toString(), imageFile, caption));
                 // Is this set initially selected?
                 if (activeImageSets.contains(imageSet) || selectAllSets) {
@@ -112,7 +112,7 @@ public class ImageSetChooser extends JDialog {
         }
 
         setUpList(lstImageSets);
-        lstImageSets.setListData(listData.toArray(new ImageSetChooserPanel[0]));
+        lstImageSets.setListData(listData.toArray(new ImageSetPanel[0]));
         lstImageSets.setSelectedIndices(convertIntegers(selectedIndices));
     }
 
@@ -154,7 +154,7 @@ public class ImageSetChooser extends JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         pnlList = new javax.swing.JPanel();
-        lstImageSets = new ShimejiList();
+        lstImageSets = new ImageSetPanelList();
         jLabel1 = new javax.swing.JLabel();
         pnlFooter = new javax.swing.JPanel();
         useSelectedButton = new javax.swing.JButton();
@@ -280,7 +280,7 @@ public class ImageSetChooser extends JDialog {
     private void useSelectedButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useSelectedButtonActionPerformed
         imageSets.clear();
 
-        for (ImageSetChooserPanel obj : lstImageSets.getSelectedValuesList()) {
+        for (ImageSetPanel obj : lstImageSets.getSelectedValuesList()) {
             if (obj != null) {
                 imageSets.add(obj.getImageSetName());
             }
@@ -352,7 +352,7 @@ public class ImageSetChooser extends JDialog {
     private javax.swing.JLabel clearAllLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList<ImageSetChooserPanel> lstImageSets;
+    private javax.swing.JList<ImageSetPanel> lstImageSets;
     private javax.swing.JPanel pnlFooter;
     private javax.swing.JPanel pnlLabels;
     private javax.swing.JPanel pnlList;

@@ -4,14 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * A {@link JList} that can be populated with {@link ImageSetChooserPanel} objects.
+ * A {@link JList} that can be populated with {@link ImageSetPanel} objects.
  *
  * @author Shimeji-ee Group
  * @since 1.0.2
  */
-public class ShimejiList extends JList<ImageSetChooserPanel> {
+public class ImageSetPanelList extends JList<ImageSetPanel> {
 
-    public ShimejiList() {
+    public ImageSetPanelList() {
         setCellRenderer(new CustomCellRenderer<>());
     }
 
@@ -19,8 +19,8 @@ public class ShimejiList extends JList<ImageSetChooserPanel> {
         @Override
         public Component getListCellRendererComponent(JList<? extends T> list, T value,
                                                       int index, boolean isSelected, boolean cellHasFocus) {
-            if (value instanceof ImageSetChooserPanel) {
-                ImageSetChooserPanel component = (ImageSetChooserPanel) value;
+            if (value instanceof ImageSetPanel) {
+                ImageSetPanel component = (ImageSetPanel) value;
                 component.setCheckbox(isSelected);
                 return component;
             } else {
