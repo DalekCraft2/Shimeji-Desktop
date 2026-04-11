@@ -59,40 +59,39 @@ public class AnimationBuilder {
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
         }
 
-        for (final Entry frameNode : animationNode.selectChildren(schema.getString("Pose"))) {
+        for (final Entry poseNode : animationNode.selectChildren(schema.getString("Pose"))) {
             try {
-                poses.add(loadPose(frameNode));
+                poses.add(loadPose(poseNode));
             } catch (IOException | RuntimeException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage"), frameNode.getAttributes()), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage"), poseNode.getAttributes()), e);
             }
         }
 
-        for (final Entry frameNode : animationNode.selectChildren(schema.getString("Hotspot"))) {
+        for (final Entry hotspotNode : animationNode.selectChildren(schema.getString("Hotspot"))) {
             try {
-                hotspots.add(loadHotspot(frameNode));
+                hotspots.add(loadHotspot(hotspotNode));
             } catch (RuntimeException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), frameNode.getAttributes()), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), hotspotNode.getAttributes()), e);
             }
         }
     }
 
-    private Pose loadPose(final Entry frameNode) throws IOException {
-        log.debug("Loading pose: {}", frameNode.getAttributes());
+    private Pose loadPose(final Entry poseNode) throws IOException {
+        log.debug("Loading pose: {}", poseNode.getAttributes());
 
         ResourceBundle schema = configuration.getSchema();
 
-        final Path imagePath = frameNode.getAttribute(schema.getString("Image")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("Image"))) : null;
-        final Path imageRightPath = frameNode.getAttribute(schema.getString("ImageRight")) != null ? Path.of(imageSet, frameNode.getAttribute(schema.getString("ImageRight"))) : null;
-        final String anchorText = frameNode.getAttribute(schema.getString("ImageAnchor"));
-        final String moveText = frameNode.getAttribute(schema.getString("Velocity"));
-        final String durationText = frameNode.getAttribute(schema.getString("Duration"));
-        final String soundText = frameNode.getAttribute(schema.getString("Sound"));
-        final String volumeText = frameNode.getAttribute(schema.getString("Volume")) != null ? frameNode.getAttribute(schema.getString("Volume")) : "0";
+        final Path imagePath = poseNode.getAttribute(schema.getString("Image")) != null ? Path.of(imageSet, poseNode.getAttribute(schema.getString("Image"))) : null;
+        final Path imageRightPath = poseNode.getAttribute(schema.getString("ImageRight")) != null ? Path.of(imageSet, poseNode.getAttribute(schema.getString("ImageRight"))) : null;
+        final String anchorText = poseNode.getAttribute(schema.getString("ImageAnchor"));
+        final String velocityText = poseNode.getAttribute(schema.getString("Velocity"));
+        final String durationText = poseNode.getAttribute(schema.getString("Duration"));
+        final String soundText = poseNode.getAttribute(schema.getString("Sound"));
+        final String volumeText = poseNode.getAttribute(schema.getString("Volume")) != null ? poseNode.getAttribute(schema.getString("Volume")) : "0";
 
         final double opacity = Main.getInstance().getSettings().opacity;
         final double scaling = Main.getInstance().getSettings().scaling;
-
-        Filter filter = Main.getInstance().getSettings().filter;
+        final Filter filter = Main.getInstance().getSettings().filter;
 
         String imageKey = null;
         if (imagePath != null) {
@@ -110,11 +109,11 @@ public class AnimationBuilder {
             }
         }
 
-        final String[] moveCoordinates = moveText.split(",");
-        int moveX = Integer.parseInt(moveCoordinates[0]);
-        int moveY = Integer.parseInt(moveCoordinates[1]);
-        moveX = Math.abs(moveX) > 0 && Math.abs(moveX * scaling) < 1 ? moveX > 0 ? 1 : -1 : (int) Math.round(moveX * scaling);
-        moveY = Math.abs(moveY) > 0 && Math.abs(moveY * scaling) < 1 ? moveY > 0 ? 1 : -1 : (int) Math.round(moveY * scaling);
+        final String[] velocityCoordinates = velocityText.split(",");
+        int dx = Integer.parseInt(velocityCoordinates[0]);
+        int dy = Integer.parseInt(velocityCoordinates[1]);
+        dx = Math.abs(dx) > 0 && Math.abs(dx * scaling) < 1 ? dx > 0 ? 1 : -1 : (int) Math.round(dx * scaling);
+        dy = Math.abs(dy) > 0 && Math.abs(dy * scaling) < 1 ? dy > 0 ? 1 : -1 : (int) Math.round(dy * scaling);
 
         final int duration = Integer.parseInt(durationText);
 
@@ -138,22 +137,23 @@ public class AnimationBuilder {
             }
         }
 
-        final Pose pose = new Pose(imageKey, moveX, moveY, duration, soundKey);
+        final Pose pose = new Pose(imageKey, dx, dy, duration, soundKey);
 
         log.debug("Finished loading pose: {}", pose);
 
         return pose;
     }
 
-    private Hotspot loadHotspot(final Entry frameNode) {
-        log.debug("Loading hotspot: {}", frameNode.getAttributes());
+    private Hotspot loadHotspot(final Entry hotspotNode) {
+        log.debug("Loading hotspot: {}", hotspotNode.getAttributes());
 
         ResourceBundle schema = configuration.getSchema();
 
-        final String shapeText = frameNode.getAttribute(schema.getString("Shape"));
-        final String originText = frameNode.getAttribute(schema.getString("Origin"));
-        final String sizeText = frameNode.getAttribute(schema.getString("Size"));
-        final String behaviourText = frameNode.getAttribute(schema.getString("Behaviour"));
+        final String shapeText = hotspotNode.getAttribute(schema.getString("Shape"));
+        final String originText = hotspotNode.getAttribute(schema.getString("Origin"));
+        final String sizeText = hotspotNode.getAttribute(schema.getString("Size"));
+        final String behaviourText = hotspotNode.getAttribute(schema.getString("Behaviour"));
+
         final double scaling = Main.getInstance().getSettings().scaling;
 
         final String[] originCoordinates = originText.split(",");
