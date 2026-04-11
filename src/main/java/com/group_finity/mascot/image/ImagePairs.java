@@ -69,7 +69,7 @@ public class ImagePairs {
             return;
         }
 
-        imagePairs.keySet().removeIf(key -> searchTerm.equals(Path.of(key).getParent().toString()));
+        imagePairs.keySet().removeIf(key -> searchTerm.equals(Path.of(key.split(":")[0]).getParent().toString()));
     }
 
     public static void clear() {
