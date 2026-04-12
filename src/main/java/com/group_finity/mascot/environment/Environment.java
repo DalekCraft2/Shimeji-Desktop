@@ -74,9 +74,9 @@ public abstract class Environment {
     }
 
     /**
-     * Gets the cursor coordinates.
+     * Gets the cursor position.
      *
-     * @return cursor coordinates
+     * @return cursor position
      */
     private static Point getCursorPos() {
         PointerInfo info = MouseInfo.getPointerInfo();
@@ -126,6 +126,11 @@ public abstract class Environment {
         return complexScreen;
     }
 
+    /**
+     * Gets the cursor position as of the start of the last tick.
+     *
+     * @return a {@link Location} containing the cursor position and velocity
+     */
     public Location getCursor() {
         return cursor;
     }
