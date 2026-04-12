@@ -12,22 +12,6 @@ import java.util.Map;
  * @author Shimeji-ee Group
  */
 public abstract class Environment {
-    protected abstract Area getWorkArea();
-
-    public abstract Area getActiveIE();
-
-    public abstract String getActiveIETitle();
-
-    public abstract long getActiveWindowId();
-
-    public abstract void moveActiveIE(final Point point);
-
-    public abstract void restoreIE();
-
-    public abstract void refreshCache();
-
-    public abstract void dispose();
-
     protected static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
 
     protected static Map<String, Rectangle> screenRects = new HashMap<>();
@@ -109,6 +93,8 @@ public abstract class Environment {
         cursor.set(getCursorPos());
     }
 
+    protected abstract Area getWorkArea();
+
     /**
      * Gets the area of the screen. This area includes everything from the top left to the bottom right of the display.
      *
@@ -124,15 +110,6 @@ public abstract class Environment {
 
     public ComplexArea getComplexScreen() {
         return complexScreen;
-    }
-
-    /**
-     * Gets the cursor position as of the start of the last tick.
-     *
-     * @return a {@link Location} containing the cursor position and velocity
-     */
-    public Location getCursor() {
-        return cursor;
     }
 
     public boolean isScreenTopBottom(final Point location) {
@@ -182,4 +159,27 @@ public abstract class Environment {
 
         return count == 1;
     }
+
+    public abstract Area getActiveIE();
+
+    public abstract String getActiveIETitle();
+
+    public abstract long getActiveWindowId();
+
+    public abstract void moveActiveIE(final Point point);
+
+    public abstract void restoreIE();
+
+    /**
+     * Gets the cursor position as of the start of the last tick.
+     *
+     * @return a {@link Location} containing the cursor position and velocity
+     */
+    public Location getCursor() {
+        return cursor;
+    }
+
+    public abstract void refreshCache();
+
+    public abstract void dispose();
 }

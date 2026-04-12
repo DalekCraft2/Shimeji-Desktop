@@ -250,6 +250,26 @@ class WindowsEnvironment extends Environment {
     }
 
     @Override
+    public Area getWorkArea() {
+        return workArea;
+    }
+
+    @Override
+    public Area getActiveIE() {
+        return activeIe;
+    }
+
+    @Override
+    public String getActiveIETitle() {
+        return WindowUtils.getWindowTitle(activeIeObject);
+    }
+
+    @Override
+    public long getActiveWindowId() {
+        return activeIeObject == null ? 0 : activeIeObject.hashCode();
+    }
+
+    @Override
     public void moveActiveIE(final Point point) {
         if (activeIeObject == null) {
             return;
@@ -313,26 +333,6 @@ class WindowsEnvironment extends Environment {
                 return true;
             }
         }, null);
-    }
-
-    @Override
-    public Area getWorkArea() {
-        return workArea;
-    }
-
-    @Override
-    public Area getActiveIE() {
-        return activeIe;
-    }
-
-    @Override
-    public String getActiveIETitle() {
-        return WindowUtils.getWindowTitle(activeIeObject);
-    }
-
-    @Override
-    public long getActiveWindowId() {
-        return activeIeObject == null ? 0 : activeIeObject.hashCode();
     }
 
     @Override

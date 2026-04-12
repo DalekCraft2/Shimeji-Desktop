@@ -312,6 +312,11 @@ class X11Environment extends Environment {
     }
 
     @Override
+    public Area getWorkArea() {
+        return workArea;
+    }
+
+    @Override
     public Area getActiveIE() {
         return activeIe;
     }
@@ -378,10 +383,5 @@ class X11Environment extends Environment {
 
     @Override
     public void dispose() {
-    }
-
-    @Override
-    public Area getWorkArea() {
-        return workArea;
     }
 }

@@ -11,7 +11,7 @@ import java.awt.*;
  * @author Shimeji-ee Group
  */
 public class MascotEnvironment {
-    private final Environment impl;
+    private final Environment impl = NativeFactory.getInstance().getEnvironment();
 
     private final Mascot mascot;
 
@@ -19,7 +19,6 @@ public class MascotEnvironment {
 
     public MascotEnvironment(Mascot mascot) {
         this.mascot = mascot;
-        impl = NativeFactory.getInstance().getEnvironment();
     }
 
     /**
@@ -79,22 +78,21 @@ public class MascotEnvironment {
         return currentWorkArea;
     }
 
-    public Area getActiveIE() {
-        Area activeIE = impl.getActiveIE();
-
-        if (currentWorkArea != null && !Main.getInstance().getSettings().multiscreen && !currentWorkArea.toRectangle().intersects(activeIE.toRectangle())) {
-            return new Area();
-        }
-
-        return activeIE;
+    public void refreshWorkArea() {
+        getWorkArea(true);
     }
 
-    public String getActiveIETitle() {
-        return impl.getActiveIETitle();
+    /**
+     * Gets the area of the screen. This area includes everything from the top left to the bottom right of the display.
+     *
+     * @return screen area
+     */
+    public Area getScreen() {
+        return impl.getScreen();
     }
 
-    public long getActiveWindowId() {
-        return impl.getActiveWindowId();
+    public ComplexArea getComplexScreen() {
+        return impl.getComplexScreen();
     }
 
     /**
@@ -132,19 +130,6 @@ public class MascotEnvironment {
         return NotOnBorder.INSTANCE;
     }
 
-    public ComplexArea getComplexScreen() {
-        return impl.getComplexScreen();
-    }
-
-    /**
-     * Gets the cursor position.
-     *
-     * @return a {@link Location} containing the cursor position and velocity
-     */
-    public Location getCursor() {
-        return impl.getCursor();
-    }
-
     /**
      * Gets the floor that this environment's {@link Mascot} is currently on.
      * This can be the floor of either the active window or the current work area.
@@ -178,15 +163,6 @@ public class MascotEnvironment {
             }
         }
         return NotOnBorder.INSTANCE;
-    }
-
-    /**
-     * Gets the area of the screen. This area includes everything from the top left to the bottom right of the display.
-     *
-     * @return screen area
-     */
-    public Area getScreen() {
-        return impl.getScreen();
     }
 
     /**
@@ -236,6 +212,24 @@ public class MascotEnvironment {
         return NotOnBorder.INSTANCE;
     }
 
+    public Area getActiveIE() {
+        Area activeIE = impl.getActiveIE();
+
+        if (currentWorkArea != null && !Main.getInstance().getSettings().multiscreen && !currentWorkArea.toRectangle().intersects(activeIE.toRectangle())) {
+            return new Area();
+        }
+
+        return activeIE;
+    }
+
+    public String getActiveIETitle() {
+        return impl.getActiveIETitle();
+    }
+
+    public long getActiveWindowId() {
+        return impl.getActiveWindowId();
+    }
+
     public void moveActiveIE(Point point) {
         impl.moveActiveIE(point);
     }
@@ -244,8 +238,13 @@ public class MascotEnvironment {
         impl.restoreIE();
     }
 
-    public void refreshWorkArea() {
-        getWorkArea(true);
+    /**
+     * Gets the cursor position.
+     *
+     * @return a {@link Location} containing the cursor position and velocity
+     */
+    public Location getCursor() {
+        return impl.getCursor();
     }
 
     /**

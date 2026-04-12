@@ -22,18 +22,6 @@ class GenericEnvironment extends Environment {
     }
 
     @Override
-    public void dispose() {
-    }
-
-    @Override
-    public void moveActiveIE(final Point point) {
-    }
-
-    @Override
-    public void restoreIE() {
-    }
-
-    @Override
     public Area getWorkArea() {
         return getScreen();
     }
@@ -54,7 +42,19 @@ class GenericEnvironment extends Environment {
     }
 
     @Override
+    public void moveActiveIE(final Point point) {
+    }
+
+    @Override
+    public void restoreIE() {
+    }
+
+    @Override
     public void refreshCache() {
         // I feel so refreshed
+    }
+
+    @Override
+    public void dispose() {
     }
 }

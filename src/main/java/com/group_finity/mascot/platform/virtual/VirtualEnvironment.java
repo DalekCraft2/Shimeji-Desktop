@@ -31,41 +31,6 @@ class VirtualEnvironment extends Environment {
     private boolean initialized = false;
 
     @Override
-    public Area getWorkArea() {
-        return getScreen();
-    }
-
-    @Override
-    public Area getActiveIE() {
-        return activeIE;
-    }
-
-    @Override
-    public String getActiveIETitle() {
-        return null;
-    }
-
-    @Override
-    public long getActiveWindowId() {
-        return 0;
-    }
-
-    @Override
-    public void moveActiveIE(final Point point) {
-    }
-
-    @Override
-    public void restoreIE() {
-    }
-
-    @Override
-    public void refreshCache() {
-        // I feel so refreshed
-
-        // good for you buddy
-    }
-
-    @Override
     public void init() {
         if (isInitializing || initialized) {
             return;
@@ -171,6 +136,41 @@ class VirtualEnvironment extends Environment {
         }
         getCursor().set(point);
         // });
+    }
+
+    @Override
+    public Area getWorkArea() {
+        return getScreen();
+    }
+
+    @Override
+    public Area getActiveIE() {
+        return activeIE;
+    }
+
+    @Override
+    public String getActiveIETitle() {
+        return null;
+    }
+
+    @Override
+    public long getActiveWindowId() {
+        return 0;
+    }
+
+    @Override
+    public void moveActiveIE(final Point point) {
+    }
+
+    @Override
+    public void restoreIE() {
+    }
+
+    @Override
+    public void refreshCache() {
+        // I feel so refreshed
+
+        // good for you buddy
     }
 
     @Override

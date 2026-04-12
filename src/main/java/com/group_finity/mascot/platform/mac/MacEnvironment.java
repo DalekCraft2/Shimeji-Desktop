@@ -320,6 +320,26 @@ class MacEnvironment extends Environment {
     }
 
     @Override
+    public Area getWorkArea() {
+        return getScreen();
+    }
+
+    @Override
+    public Area getActiveIE() {
+        return activeIE;
+    }
+
+    @Override
+    public String getActiveIETitle() {
+        return null;
+    }
+
+    @Override
+    public long getActiveWindowId() {
+        return currentPID;
+    }
+
+    @Override
     public void moveActiveIE(final Point point) {
         /*
          * As mentioned above, if you try to move completely off-screen, you will be pushed back,
@@ -355,26 +375,6 @@ class MacEnvironment extends Environment {
         final Rectangle visibleRect = getWindowVisibleArea();
         restoreWindowsNotIn(visibleRect);
         touchedProcesses.clear();
-    }
-
-    @Override
-    public Area getWorkArea() {
-        return getScreen();
-    }
-
-    @Override
-    public Area getActiveIE() {
-        return activeIE;
-    }
-
-    @Override
-    public String getActiveIETitle() {
-        return null;
-    }
-
-    @Override
-    public long getActiveWindowId() {
-        return currentPID;
     }
 
     @Override
