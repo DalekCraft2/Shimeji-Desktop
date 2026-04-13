@@ -90,6 +90,7 @@ public class Settings {
         showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
         alwaysShowShimejiChooser = Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"));
         alwaysShowInformationScreen = Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false"));
+        drawShimejiBounds = Boolean.parseBoolean(properties.getProperty("DrawShimejiBounds", "false"));
         String filterText = properties.getProperty("Filter", "false");
         if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
             filter = Filter.HQX;
