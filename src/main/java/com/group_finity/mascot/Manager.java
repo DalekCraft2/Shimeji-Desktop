@@ -358,6 +358,10 @@ public class Manager {
 
     public void togglePauseAll() {
         synchronized (mascots) {
+            if (mascots.isEmpty()) {
+                return;
+            }
+
             boolean isPaused = mascots.stream().allMatch(Mascot::isPaused);
 
             for (final Mascot mascot : mascots) {
