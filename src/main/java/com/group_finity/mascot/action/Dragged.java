@@ -42,7 +42,7 @@ public class Dragged extends ActionBase {
 
     private double footDx;
 
-    private int timeToRegist;
+    private int timeToResist;
 
     private double scaling;
 
@@ -57,12 +57,12 @@ public class Dragged extends ActionBase {
         scaling = Main.getInstance().getSettings().scaling;
 
         footX = getEnvironment().getCursor().getX() + (int) Math.round(getOffsetX() * scaling);
-        setTimeToRegist(250);
+        timeToResist = 250;
     }
 
     @Override
     public boolean hasNext() throws VariableException {
-        return super.hasNext() && getTime() < getTimeToRegist();
+        return super.hasNext() && getTime() < timeToResist;
     }
 
     @Override
@@ -100,8 +100,8 @@ public class Dragged extends ActionBase {
         getMascot().setAnchor(new Point(cursor.getX() + offsetX, cursor.getY() + offsetY));
 
         // recreates old lukewarm behaviour while keeping hasNext deterministic
-        if (getTime() == getTimeToRegist() - 1 && Math.random() >= 0.1) {
-            timeToRegist++;
+        if (getTime() == timeToResist - 1 && Math.random() >= 0.1) {
+            timeToResist++;
         }
     }
 
@@ -111,14 +111,6 @@ public class Dragged extends ActionBase {
             // action does not support hotspots
             getMascot().getHotspots().clear();
         }
-    }
-
-    private int getTimeToRegist() {
-        return timeToRegist;
-    }
-
-    public void setTimeToRegist(final int timeToRegist) {
-        this.timeToRegist = timeToRegist;
     }
 
     private int getOffsetX() throws VariableException {
