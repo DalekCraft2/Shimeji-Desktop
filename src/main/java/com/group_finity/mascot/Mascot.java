@@ -652,12 +652,12 @@ public class Mascot {
         return hotspots;
     }
 
-    public void setImageSet(final String set) {
-        imageSet = set;
-    }
-
     public String getImageSet() {
         return imageSet;
+    }
+
+    public void setImageSet(final String set) {
+        imageSet = set;
     }
 
     public String getSound() {
