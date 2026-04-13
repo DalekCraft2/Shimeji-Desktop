@@ -98,15 +98,15 @@ public class Jump extends ActionBase {
         }
     }
 
-    private double getVelocity() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_VELOCITY), Number.class, DEFAULT_VELOCITY).doubleValue();
-    }
-
     private int getTargetX() throws VariableException {
         return eval(getSchema().getString(PARAMETER_TARGETX), Number.class, DEFAULT_TARGETX).intValue();
     }
 
     private int getTargetY() throws VariableException {
         return eval(getSchema().getString(PARAMETER_TARGETY), Number.class, DEFAULT_TARGETY).intValue();
+    }
+
+    private double getVelocity() throws VariableException {
+        return eval(getSchema().getString(PARAMETER_VELOCITY), Number.class, DEFAULT_VELOCITY).doubleValue();
     }
 }

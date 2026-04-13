@@ -26,6 +26,14 @@ public class Turn extends BorderedAction {
     }
 
     @Override
+    public boolean hasNext() throws VariableException {
+        turning = turning || isLookRight() != getMascot().isLookRight();
+        final boolean inTime = getTime() < getAnimation().getDuration();
+
+        return super.hasNext() && inTime && turning;
+    }
+
+    @Override
     protected void tick() throws LostGroundException, VariableException {
         getMascot().setLookRight(isLookRight());
 
@@ -36,14 +44,6 @@ public class Turn extends BorderedAction {
         }
 
         getAnimation().next(getMascot(), getTime());
-    }
-
-    @Override
-    public boolean hasNext() throws VariableException {
-        turning = turning || isLookRight() != getMascot().isLookRight();
-        final boolean inTime = getTime() < getAnimation().getDuration();
-
-        return super.hasNext() && inTime && turning;
     }
 
     private boolean isLookRight() throws VariableException {

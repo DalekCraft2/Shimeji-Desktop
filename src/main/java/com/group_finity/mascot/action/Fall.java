@@ -159,15 +159,15 @@ public class Fall extends ActionBase {
         return eval(getSchema().getString(PARAMETER_INITIALVY), Number.class, DEFAULT_INITIALVY).intValue();
     }
 
-    private double getGravity() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_GRAVITY), Number.class, DEFAULT_GRAVITY).doubleValue();
-    }
-
     private double getResistanceX() throws VariableException {
         return eval(getSchema().getString(PARAMETER_RESISTANCEX), Number.class, DEFAULT_RESISTANCEX).doubleValue();
     }
 
     private double getResistanceY() throws VariableException {
         return eval(getSchema().getString(PARAMETER_RESISTANCEY), Number.class, DEFAULT_RESISTANCEY).doubleValue();
+    }
+
+    private double getGravity() throws VariableException {
+        return eval(getSchema().getString(PARAMETER_GRAVITY), Number.class, DEFAULT_GRAVITY).doubleValue();
     }
 }

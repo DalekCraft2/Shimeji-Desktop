@@ -37,9 +37,9 @@ public class ScanMove extends BorderedAction {
 
     private WeakReference<Mascot> target;
 
-    private boolean turning = false;
-
     private Boolean hasTurning = null;
+
+    private boolean turning = false;
 
     public ScanMove(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);

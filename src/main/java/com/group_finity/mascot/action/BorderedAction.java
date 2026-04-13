@@ -60,15 +60,15 @@ public abstract class BorderedAction extends ActionBase {
         }
     }
 
-    private String getBorderType() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_BORDERTYPE), String.class, DEFAULT_BORDERTYPE);
+    protected Border getBorder() {
+        return border;
     }
 
     private void setBorder(final Border border) {
         this.border = border;
     }
 
-    protected Border getBorder() {
-        return border;
+    private String getBorderType() throws VariableException {
+        return eval(getSchema().getString(PARAMETER_BORDERTYPE), String.class, DEFAULT_BORDERTYPE);
     }
 }

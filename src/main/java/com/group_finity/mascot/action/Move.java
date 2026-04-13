@@ -28,9 +28,9 @@ public class Move extends BorderedAction {
 
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
-    protected boolean turning = false;
-
     private Boolean hasTurning = null;
+
+    protected boolean turning = false;
 
     public Move(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);

@@ -38,11 +38,11 @@ public class Breed extends Animate {
         public static final String PARAMETER_BORNMASCOT = "BornMascot";
         private static final String DEFAULT_BORNMASCOT = "";
 
-        public static final String PARAMETER_BORNINTERVAL = "BornInterval";
-        private static final int DEFAULT_BORNINTERVAL = 1;
-
         public static final String PARAMETER_BORNTRANSIENT = "BornTransient";
         private static final boolean DEFAULT_BORNTRANSIENT = false;
+
+        public static final String PARAMETER_BORNINTERVAL = "BornInterval";
+        private static final int DEFAULT_BORNINTERVAL = 1;
 
         public static final String PARAMETER_BORNCOUNT = "BornCount";
         private static final int DEFAULT_BORNCOUNT = 1;

@@ -51,9 +51,9 @@ public class ComplexMove extends BorderedAction {
 
     private WeakReference<Mascot> target;
 
-    private boolean turning = false;
-
     private Boolean hasTurning = null;
+
+    private boolean turning = false;
 
     private boolean breedEnabled = false;
 

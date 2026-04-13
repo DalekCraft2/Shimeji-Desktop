@@ -41,11 +41,6 @@ public class ComplexJump extends ActionBase {
 
     private static final boolean DEFAULT_TARGETLOOK = false;
 
-    // A Pose attribute is already named "Velocity", so this is named "VelocityParam" instead
-    public static final String PARAMETER_VELOCITY = "VelocityParam";
-
-    private static final double DEFAULT_VELOCITY = 20.0;
-
     public static final String PARAMETER_TARGETX = "TargetX";
 
     private static final int DEFAULT_TARGETX = 0;
@@ -53,6 +48,11 @@ public class ComplexJump extends ActionBase {
     public static final String PARAMETER_TARGETY = "TargetY";
 
     private static final int DEFAULT_TARGETY = 0;
+
+    // A Pose attribute is already named "Velocity", so this is named "VelocityParam" instead
+    public static final String PARAMETER_VELOCITY = "VelocityParam";
+
+    private static final double DEFAULT_VELOCITY = 20.0;
 
     public static final String VARIABLE_VELOCITYX = "VelocityX";
 
@@ -212,15 +212,15 @@ public class ComplexJump extends ActionBase {
         return eval(getSchema().getString(PARAMETER_TARGETLOOK), Boolean.class, DEFAULT_TARGETLOOK);
     }
 
-    private double getVelocity() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_VELOCITY), Number.class, DEFAULT_VELOCITY).doubleValue();
-    }
-
     private int getTargetX() throws VariableException {
         return eval(getSchema().getString(PARAMETER_TARGETX), Number.class, DEFAULT_TARGETX).intValue();
     }
 
     private int getTargetY() throws VariableException {
         return eval(getSchema().getString(PARAMETER_TARGETY), Number.class, DEFAULT_TARGETY).intValue();
+    }
+
+    private double getVelocity() throws VariableException {
+        return eval(getSchema().getString(PARAMETER_VELOCITY), Number.class, DEFAULT_VELOCITY).doubleValue();
     }
 }

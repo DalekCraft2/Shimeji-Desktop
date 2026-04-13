@@ -24,6 +24,13 @@ public class Animate extends BorderedAction {
     }
 
     @Override
+    public boolean hasNext() throws VariableException {
+        final boolean inTime = getTime() < getAnimation().getDuration();
+
+        return super.hasNext() && inTime;
+    }
+
+    @Override
     protected void tick() throws LostGroundException, VariableException {
         super.tick();
 
@@ -34,12 +41,5 @@ public class Animate extends BorderedAction {
 
         // Animate
         getAnimation().next(getMascot(), getTime());
-    }
-
-    @Override
-    public boolean hasNext() throws VariableException {
-        final boolean inTime = getTime() < getAnimation().getDuration();
-
-        return super.hasNext() && inTime;
     }
 }

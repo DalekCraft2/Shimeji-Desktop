@@ -67,13 +67,16 @@ public abstract class ComplexAction extends ActionBase {
         }
     }
 
-    @Override
-    public boolean isDraggable() throws VariableException {
-        boolean draggable = true;
-        if (currentAction < actions.length && actions[currentAction] != null && actions[currentAction] instanceof ActionBase) {
-            return ((ActionBase) actions[currentAction]).isDraggable();
-        }
-        return draggable;
+    protected Action[] getActions() {
+        return actions;
+    }
+
+    protected Action getAction() {
+        return getActions()[getCurrentAction()];
+    }
+
+    protected int getCurrentAction() {
+        return currentAction;
     }
 
     protected void setCurrentAction(final int currentAction) throws VariableException {
@@ -85,15 +88,12 @@ public abstract class ComplexAction extends ActionBase {
         }
     }
 
-    protected int getCurrentAction() {
-        return currentAction;
-    }
-
-    protected Action[] getActions() {
-        return actions;
-    }
-
-    protected Action getAction() {
-        return getActions()[getCurrentAction()];
+    @Override
+    public boolean isDraggable() throws VariableException {
+        boolean draggable = true;
+        if (currentAction < actions.length && actions[currentAction] != null && actions[currentAction] instanceof ActionBase) {
+            return ((ActionBase) actions[currentAction]).isDraggable();
+        }
+        return draggable;
     }
 }

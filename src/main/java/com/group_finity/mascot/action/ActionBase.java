@@ -39,11 +39,11 @@ public abstract class ActionBase implements Action {
 
     private static final String DEFAULT_AFFORDANCE = "";
 
+    private final ResourceBundle schema;
+
     private final List<Animation> animations;
 
     private final VariableMap variables;
-
-    private final ResourceBundle schema;
 
     private Mascot mascot;
 
@@ -87,6 +87,18 @@ public abstract class ActionBase implements Action {
     }
 
     @Override
+    public boolean hasNext() throws VariableException {
+        if (getMascot() == null) {
+            return false;
+        }
+
+        final boolean effective = isEffective();
+        final boolean inTime = getTime() < getDuration();
+
+        return effective && inTime;
+    }
+
+    @Override
     public void next() throws LostGroundException, VariableException {
         if (getMascot() == null) {
             return;
@@ -118,23 +130,7 @@ public abstract class ActionBase implements Action {
         }
     }
 
-    protected List<Animation> getAnimations() {
-        return animations;
-    }
-
     protected abstract void tick() throws LostGroundException, VariableException;
-
-    @Override
-    public boolean hasNext() throws VariableException {
-        if (getMascot() == null) {
-            return false;
-        }
-
-        final boolean effective = isEffective();
-        final boolean inTime = getTime() < getDuration();
-
-        return effective && inTime;
-    }
 
     protected void refreshHotspots() {
         synchronized (getMascot().getHotspots()) {
@@ -150,40 +146,12 @@ public abstract class ActionBase implements Action {
         }
     }
 
-    public boolean isDraggable() throws VariableException {
-        return eval(schema.getString(PARAMETER_DRAGGABLE), Boolean.class, DEFAULT_DRAGGABLE);
+    protected ResourceBundle getSchema() {
+        return schema;
     }
 
-    private boolean isEffective() throws VariableException {
-        return eval(schema.getString(PARAMETER_CONDITION), Boolean.class, DEFAULT_CONDITION);
-    }
-
-    private int getDuration() throws VariableException {
-        return eval(schema.getString(PARAMETER_DURATION), Number.class, DEFAULT_DURATION).intValue();
-    }
-
-    protected String getAffordance() throws VariableException {
-        return eval(schema.getString(PARAMETER_AFFORDANCE), String.class, DEFAULT_AFFORDANCE);
-    }
-
-    private void setMascot(final Mascot mascot) {
-        this.mascot = mascot;
-    }
-
-    protected Mascot getMascot() {
-        return mascot;
-    }
-
-    protected int getTime() {
-        return getMascot().getTime() - startTime;
-    }
-
-    protected void setTime(final int time) {
-        startTime = getMascot().getTime() - time;
-    }
-
-    private String getName() throws VariableException {
-        return eval(schema.getString("Name"), String.class, null);
+    protected List<Animation> getAnimations() {
+        return animations;
     }
 
     protected Animation getAnimation() throws VariableException {
@@ -206,6 +174,46 @@ public abstract class ActionBase implements Action {
         }
     }
 
+    protected Mascot getMascot() {
+        return mascot;
+    }
+
+    private void setMascot(final Mascot mascot) {
+        this.mascot = mascot;
+    }
+
+    protected MascotEnvironment getEnvironment() {
+        return getMascot().getEnvironment();
+    }
+
+    protected int getTime() {
+        return getMascot().getTime() - startTime;
+    }
+
+    protected void setTime(final int time) {
+        startTime = getMascot().getTime() - time;
+    }
+
+    private String getName() throws VariableException {
+        return eval(schema.getString("Name"), String.class, null);
+    }
+
+    private int getDuration() throws VariableException {
+        return eval(schema.getString(PARAMETER_DURATION), Number.class, DEFAULT_DURATION).intValue();
+    }
+
+    private boolean isEffective() throws VariableException {
+        return eval(schema.getString(PARAMETER_CONDITION), Boolean.class, DEFAULT_CONDITION);
+    }
+
+    public boolean isDraggable() throws VariableException {
+        return eval(schema.getString(PARAMETER_DRAGGABLE), Boolean.class, DEFAULT_DRAGGABLE);
+    }
+
+    protected String getAffordance() throws VariableException {
+        return eval(schema.getString(PARAMETER_AFFORDANCE), String.class, DEFAULT_AFFORDANCE);
+    }
+
     protected <T> T eval(final String name, final Class<T> type, final T defaultValue) throws VariableException {
         synchronized (getVariables()) {
             final Variable variable = getVariables().getRawMap().get(name);
@@ -215,13 +223,5 @@ public abstract class ActionBase implements Action {
         }
 
         return defaultValue;
-    }
-
-    protected MascotEnvironment getEnvironment() {
-        return getMascot().getEnvironment();
-    }
-
-    protected ResourceBundle getSchema() {
-        return schema;
     }
 }

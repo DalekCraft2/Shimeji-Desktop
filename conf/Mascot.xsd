@@ -314,16 +314,6 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="BornInterval" type="tns:IntParameter" default="1">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the interval between each breeding, in ticks, when using the
-                    BreedJump or BreedMove actions. Works the same for the ComplexJump and ComplexMove actions
-                    if Breed features are enabled in the "Characteristics" attribute. Must be greater than 0.
-                    Defaults to 1.
-                </documentation>
-            </annotation>
-        </attribute>
         <attribute name="BornTransient" type="tns:BooleanParameter" default="false">
             <annotation>
                 <documentation>
@@ -331,6 +321,16 @@
                     the Breed, BreedJump, or BreedMove actions. Works the same for the ComplexJump and ComplexMove
                     actions if Breed features are enabled in the "Characteristics" attribute. Should be used when the
                     new mascot is intended to be temporary. Defaults to "false".
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="BornInterval" type="tns:IntParameter" default="1">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the interval between each breeding, in ticks, when using the
+                    BreedJump or BreedMove actions. Works the same for the ComplexJump and ComplexMove actions
+                    if Breed features are enabled in the "Characteristics" attribute. Must be greater than 0.
+                    Defaults to 1.
                 </documentation>
             </annotation>
         </attribute>
