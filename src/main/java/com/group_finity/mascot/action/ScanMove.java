@@ -148,11 +148,7 @@ public class ScanMove extends BorderedAction {
 
     protected boolean hasTurningAnimation() {
         if (hasTurning == null) {
-            hasTurning = false;
-            List<Animation> animations = getAnimations();
-            if (animations.stream().anyMatch(Animation::isTurn)) {
-                hasTurning = true;
-            }
+            hasTurning = getAnimations().stream().anyMatch(Animation::isTurn);
         }
         return hasTurning;
     }
