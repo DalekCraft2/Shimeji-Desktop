@@ -16,6 +16,7 @@ public class Animation {
     private final Pose[] poses;
     private final Hotspot[] hotspots;
     private final boolean turn;
+    private Integer duration = null;
 
     public Animation(final Variable condition, final Pose[] poses, final Hotspot[] hotspots, final boolean turn) {
         if (poses.length == 0) {
@@ -58,7 +59,9 @@ public class Animation {
     }
 
     public int getDuration() {
-        return Arrays.stream(poses).mapToInt(Pose::getDuration).sum();
+        if (duration == null)
+            duration = Arrays.stream(poses).mapToInt(Pose::getDuration).sum();
+        return duration;
     }
 
     public Hotspot[] getHotspots() {
