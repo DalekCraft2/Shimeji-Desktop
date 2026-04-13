@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  */
 public class Animate extends BorderedAction {
-
     private static final Logger log = LoggerFactory.getLogger(Animate.class);
 
     public Animate(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {

@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  */
 public class Stay extends BorderedAction {
-
     private static final Logger log = LoggerFactory.getLogger(Stay.class);
 
     public Stay(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {

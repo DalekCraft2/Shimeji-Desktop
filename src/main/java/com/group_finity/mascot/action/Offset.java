@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  */
 public class Offset extends InstantAction {
-
     private static final Logger log = LoggerFactory.getLogger(Offset.class);
 
     public static final String PARAMETER_OFFSETX = "X";

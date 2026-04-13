@@ -16,12 +16,10 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  */
 public abstract class InstantAction extends ActionBase {
-
     private static final Logger log = LoggerFactory.getLogger(InstantAction.class);
 
     public InstantAction(ResourceBundle schema, final VariableMap context) {
         super(schema, new ArrayList<>(), context);
-
     }
 
     @Override

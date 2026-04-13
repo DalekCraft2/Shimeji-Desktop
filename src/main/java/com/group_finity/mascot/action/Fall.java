@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  */
 public class Fall extends ActionBase {
-
     private static final Logger log = LoggerFactory.getLogger(Fall.class);
 
     public static final String PARAMETER_INITIALVX = "InitialVX";

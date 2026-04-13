@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  */
 public abstract class ComplexAction extends ActionBase {
-
     private static final Logger log = LoggerFactory.getLogger(ComplexAction.class);
 
     private final Action[] actions;

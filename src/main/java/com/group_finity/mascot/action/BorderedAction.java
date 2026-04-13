@@ -19,7 +19,6 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  */
 public abstract class BorderedAction extends ActionBase {
-
     private static final Logger log = LoggerFactory.getLogger(BorderedAction.class);
 
     public static final String PARAMETER_BORDERTYPE = "BorderType";
