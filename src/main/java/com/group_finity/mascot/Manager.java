@@ -86,12 +86,12 @@ public class Manager {
         };
     }
 
-    public void setExitOnLastRemoved(boolean exitOnLastRemoved) {
-        this.exitOnLastRemoved = exitOnLastRemoved;
-    }
-
     public boolean isExitOnLastRemoved() {
         return exitOnLastRemoved;
+    }
+
+    public void setExitOnLastRemoved(boolean exitOnLastRemoved) {
+        this.exitOnLastRemoved = exitOnLastRemoved;
     }
 
     /**
@@ -356,6 +356,15 @@ public class Manager {
         }
     }
 
+    public boolean isPaused() {
+        synchronized (mascots) {
+            if (mascots.isEmpty()) {
+                return false;
+            }
+            return mascots.stream().allMatch(Mascot::isPaused);
+        }
+    }
+
     public void togglePauseAll() {
         synchronized (mascots) {
             if (mascots.isEmpty()) {
@@ -367,15 +376,6 @@ public class Manager {
             for (final Mascot mascot : mascots) {
                 mascot.setPausedNoCallback(!isPaused);
             }
-        }
-    }
-
-    public boolean isPaused() {
-        synchronized (mascots) {
-            if (mascots.isEmpty()) {
-                return false;
-            }
-            return mascots.stream().allMatch(Mascot::isPaused);
         }
     }
 
