@@ -11,7 +11,8 @@ import java.util.ResourceBundle;
 /**
  * @author Kilkakon
  * @since 1.0.20
- * @deprecated As of 1.0.21, integrated into {@link ActionBase} and replaced by {@link Jump}
+ * @deprecated As of 1.0.21, broadcast functionality has been integrated into {@link ActionBase}.
+ * Use {@link Jump} instead.
  */
 @Deprecated
 public class BroadcastJump extends Jump {

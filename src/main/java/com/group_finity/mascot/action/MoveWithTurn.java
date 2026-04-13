@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 /**
  * @author Kilkakon
  * @since 1.0.8
- * @deprecated As of 1.0.21, integrated into {@link Move}
+ * @deprecated As of 1.0.21, turning functionality has been integrated into {@link Move}
  */
 @Deprecated
 public class MoveWithTurn extends Move {
