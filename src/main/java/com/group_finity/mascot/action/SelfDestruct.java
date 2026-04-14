@@ -25,7 +25,8 @@ public class SelfDestruct extends Animate {
     protected void tick() throws LostGroundException, VariableException {
         super.tick();
 
-        if (getTime() == getAnimation().getDuration() - 1 || getAnimation().getDuration() == 1) {
+        Animation animation = getAnimation();
+        if (getTime() == animation.getDuration() - 1 || animation.getDuration() == 1) {
             getMascot().dispose();
         }
     }

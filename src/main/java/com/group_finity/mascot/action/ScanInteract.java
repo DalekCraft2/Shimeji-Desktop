@@ -91,14 +91,17 @@ public class ScanInteract extends BorderedAction {
             }
 
             // Check whether turning animation has finished
-            if (turning && getTime() >= getAnimation().getDuration()) {
-                setTime(getTime() - getAnimation().getDuration());
+            Animation animation = getAnimation();
+            if (turning && getTime() >= animation.getDuration()) {
+                setTime(getTime() - animation.getDuration());
                 turning = false;
+                animation = getAnimation();
             }
 
-            getAnimation().next(getMascot(), getTime());
+            animation.next(getMascot(), getTime());
+            animation = getAnimation();
 
-            if (!turning && (getTime() == getAnimation().getDuration() - 1 || getAnimation().getDuration() == 1) && !getBehavior().trim().isEmpty()) {
+            if (!turning && (getTime() == animation.getDuration() - 1 || animation.getDuration() == 1) && !getBehavior().trim().isEmpty()) {
                 boolean setFirstBehavior = false;
                 try {
                     getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
@@ -123,8 +126,8 @@ public class ScanInteract extends BorderedAction {
     protected Animation getAnimation() throws VariableException {
         List<Animation> animations = getAnimations();
         for (Animation animation : animations) {
-            if (animation.isEffective(getVariables()) &&
-                    turning == animation.isTurn()) {
+            if (turning == animation.isTurn() &&
+                    animation.isEffective(getVariables())) {
                 return animation;
             }
         }

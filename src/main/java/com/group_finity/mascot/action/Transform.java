@@ -36,8 +36,11 @@ public class Transform extends Animate {
     protected void tick() throws LostGroundException, VariableException {
         super.tick();
 
-        if ((getTime() == getAnimation().getDuration() - 1 || getAnimation().getDuration() == 1) && Main.getInstance().getSettings().transformation) {
-            transform();
+        if (Main.getInstance().getSettings().transformation) {
+            Animation animation = getAnimation();
+            if (getTime() == animation.getDuration() - 1 || animation.getDuration() == 1) {
+                transform();
+            }
         }
     }
 

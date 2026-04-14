@@ -37,7 +37,8 @@ public class Interact extends Animate {
     protected void tick() throws LostGroundException, VariableException {
         super.tick();
 
-        if ((getTime() == getAnimation().getDuration() - 1 || getAnimation().getDuration() == 1) && !getBehavior().trim().isEmpty()) {
+        Animation animation = getAnimation();
+        if ((getTime() == animation.getDuration() - 1 || animation.getDuration() == 1) && !getBehavior().trim().isEmpty()) {
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
             } catch (final BehaviorInstantiationException | CantBeAliveException e) {

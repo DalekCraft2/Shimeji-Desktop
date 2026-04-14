@@ -97,11 +97,13 @@ public class ScanMove extends BorderedAction {
         boolean down = getMascot().getAnchor().y < targetY;
 
         // Check whether turning animation has finished
-        if (turning && getTime() >= getAnimation().getDuration()) {
+        Animation animation = getAnimation();
+        if (turning && getTime() >= animation.getDuration()) {
             turning = false;
+            animation = getAnimation();
         }
 
-        getAnimation().next(getMascot(), getTime());
+        animation.next(getMascot(), getTime());
 
         if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX ||
                 !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
@@ -137,8 +139,8 @@ public class ScanMove extends BorderedAction {
     protected Animation getAnimation() throws VariableException {
         List<Animation> animations = getAnimations();
         for (Animation animation : animations) {
-            if (animation.isEffective(getVariables()) &&
-                    turning == animation.isTurn()) {
+            if (turning == animation.isTurn() &&
+                    animation.isEffective(getVariables())) {
                 return animation;
             }
         }

@@ -75,12 +75,14 @@ public class Move extends BorderedAction {
         }
 
         // Check whether turning animation has finished
-        if (turning && getTime() >= getAnimation().getDuration()) {
+        Animation animation = getAnimation();
+        if (turning && getTime() >= animation.getDuration()) {
             turning = false;
+            animation = getAnimation();
         }
 
         // Animate
-        getAnimation().next(getMascot(), getTime());
+        animation.next(getMascot(), getTime());
 
         if (targetX != DEFAULT_TARGETX) {
             // If we went past the target, set ourselves to the target position
@@ -104,8 +106,8 @@ public class Move extends BorderedAction {
         // is there a better way?
         List<Animation> animations = getAnimations();
         for (Animation animation : animations) {
-            if (animation.isEffective(getVariables()) &&
-                    turning == animation.isTurn()) {
+            if (turning == animation.isTurn() &&
+                    animation.isEffective(getVariables())) {
                 return animation;
             }
         }
