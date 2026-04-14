@@ -574,6 +574,7 @@ public class Mascot {
     private void refreshCursor(boolean useHand) {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> refreshCursor(useHand));
+            return;
         }
         window.asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
     }
