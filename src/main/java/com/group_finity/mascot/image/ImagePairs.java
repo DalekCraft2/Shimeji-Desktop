@@ -41,12 +41,13 @@ public class ImagePairs {
 
         BufferedImage leftImage = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))));
         leftImage = ImageUtils.scale(ImageUtils.premultiply(leftImage, opacity), scaling, filter);
+
         BufferedImage rightImage;
         if (rightPath == null) {
             rightImage = ImageUtils.flip(leftImage);
         } else {
             rightImage = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))));
-            leftImage = ImageUtils.scale(ImageUtils.premultiply(rightImage, opacity), scaling, filter);
+            rightImage = ImageUtils.scale(ImageUtils.premultiply(rightImage, opacity), scaling, filter);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
