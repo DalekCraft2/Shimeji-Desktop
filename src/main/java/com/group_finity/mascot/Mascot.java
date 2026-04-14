@@ -592,9 +592,6 @@ public class Mascot {
     }
 
     public void setAnchor(Point anchor) {
-        // if (!this.anchor.equals(anchor)) {
-        //     needsRepaint = true;
-        // }
         this.anchor = anchor;
     }
 
