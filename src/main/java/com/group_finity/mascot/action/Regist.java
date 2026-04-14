@@ -75,9 +75,9 @@ public class Regist extends ActionBase {
 
     @Override
     protected void refreshHotspots() {
-        synchronized (getMascot().getHotspots()) {
+        synchronized (getMascot().getHotspotLock()) {
             // action does not support hotspots
-            getMascot().getHotspots().clear();
+            getMascot().clearHotspots();
         }
     }
 

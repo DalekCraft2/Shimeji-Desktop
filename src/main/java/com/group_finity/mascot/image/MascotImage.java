@@ -2,6 +2,7 @@ package com.group_finity.mascot.image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * @author Yuki Yamada
@@ -35,5 +36,19 @@ public class MascotImage {
 
     public Dimension getSize() {
         return size;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof MascotImage)) {
+            return false;
+        }
+
+        MascotImage mi = (MascotImage) o;
+        return image.equals(mi.image) && center.equals(mi.center) && size.equals(mi.size);
     }
 }

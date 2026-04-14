@@ -90,7 +90,7 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
 
     @Override
     public boolean contains(int x, int y) {
-        if (super.contains(x, y)) {
+        if (image != null && super.contains(x, y)) {
             try {
                 return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
             } catch (RuntimeException ex) {

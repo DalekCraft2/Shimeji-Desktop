@@ -25,9 +25,8 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -136,6 +135,8 @@ public class Mascot {
 
     private final List<String> affordances = new ArrayList<>(5);
 
+    private final Object hotspotLock = new Object();
+
     private final List<Hotspot> hotspots = new ArrayList<>(5);
 
     /**
@@ -146,11 +147,26 @@ public class Mascot {
     private Point cursor = null;
 
     /**
-     * Represents the last valid bounds this {@code Mascot} had.
+     * Represents the dimensions of the last non-null image this {@code Mascot} had.
      * Set by {@link Mascot#getBounds()} whenever the current image is not {@code null}.
-     * When the current image is {@code null}, this value is returned by {@link Mascot#getBounds()} instead.
+     * When the current image is {@code null}, this value is used by {@link Mascot#getBounds()} to calculate the bounds.
      */
-    private Rectangle prevBounds = new Rectangle();
+    private Dimension prevImageSize = new Dimension();
+
+    /**
+     * Represents the anchor of the last non-null image this {@code Mascot} had.
+     * Set by {@link Mascot#getBounds()} whenever the current image is not {@code null}.
+     * When the current image is {@code null}, this value is used by {@link Mascot#getBounds()} to calculate the bounds.
+     */
+    private Point prevImageAnchor = new Point();
+
+    private boolean needsRepaint = true;
+
+    /**
+     * The state of the "Draw Shimeji Bounds" setting as of the last tick.
+     * This is used to detect when the setting has changed, so we can set {@link Mascot#needsRepaint} to {@code true}.
+     */
+    private boolean prevDrawShimejiBounds = false;
 
     private VariableMap variables = null;
 
@@ -216,43 +232,39 @@ public class Mascot {
                     if (shouldBeEnabled) {
                         super.paintComponent(g);
 
-                        MascotImage image = getImage();
-                        if (image != null) {
-                            // Draw hotspots
-                            g.setColor(Color.BLUE);
-                            Dimension imageSize = image.getSize();
-                            synchronized (getHotspots()) {
-                                for (Hotspot hotspot : getHotspots()) {
-                                    Shape shape = hotspot.getShape();
-                                    if (shape instanceof Rectangle) {
-                                        Rectangle rectangle = (Rectangle) shape;
-                                        int x = lookRight ? imageSize.width - rectangle.x - rectangle.width : rectangle.x;
-                                        g.drawRect(x, rectangle.y, rectangle.width, rectangle.height);
-                                    } else if (shape instanceof Ellipse2D) {
-                                        Ellipse2D ellipse = (Ellipse2D) shape;
-                                        double x = lookRight ? imageSize.width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
-                                        g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
-                                    }
+                        Rectangle bounds = getBounds();
+
+                        // Draw hotspots
+                        g.setColor(Color.BLUE);
+                        synchronized (getHotspotLock()) {
+                            for (Hotspot hotspot : getHotspots()) {
+                                Shape shape = hotspot.getShape();
+                                if (shape instanceof Rectangle) {
+                                    Rectangle rectangle = (Rectangle) shape;
+                                    int x = lookRight ? bounds.width - rectangle.x - rectangle.width : rectangle.x;
+                                    g.drawRect(x, rectangle.y, rectangle.width - 1, rectangle.height - 1);
+                                } else if (shape instanceof Ellipse2D) {
+                                    Ellipse2D ellipse = (Ellipse2D) shape;
+                                    double x = lookRight ? bounds.width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
+                                    g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
                                 }
                             }
                         }
 
                         // Draw bounds
                         g.setColor(Color.RED);
-                        Rectangle bounds = getBounds();
                         g.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
 
-                        if (image != null) {
-                            // Draw image anchor
-                            g.setColor(Color.GREEN);
-                            Point imageAnchor = image.getCenter();
-                            // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
-                            g.drawOval(imageAnchor.x - 5, imageAnchor.y - 5, 10, 10);
-                            g.drawLine(imageAnchor.x - 10, imageAnchor.y, imageAnchor.x + 10, imageAnchor.y);
-                            g.drawLine(imageAnchor.x, imageAnchor.y - 10, imageAnchor.x, imageAnchor.y + 10);
-                            g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
-                            g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
-                        }
+                        // if (image != null) {
+                        // Draw image anchor
+                        g.setColor(Color.GREEN);
+                        Point imageAnchor = prevImageAnchor;
+                        // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
+                        g.drawOval(imageAnchor.x - 5, imageAnchor.y - 5, 10, 10);
+                        g.drawLine(imageAnchor.x - 10, imageAnchor.y, imageAnchor.x + 10, imageAnchor.y);
+                        g.drawLine(imageAnchor.x, imageAnchor.y - 10, imageAnchor.x, imageAnchor.y + 10);
+                        g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
+                        g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
                     }
                 }
             };
@@ -497,10 +509,26 @@ public class Mascot {
             return;
         }
 
+        // Make sure to repaint the mascot if the Draw Shimeji Bounds setting has changed since the last tick
+        boolean drawShimejiBounds = Main.getInstance().getSettings().drawShimejiBounds;
+        if (prevDrawShimejiBounds != drawShimejiBounds)
+            needsRepaint = true;
+        prevDrawShimejiBounds = drawShimejiBounds;
+
         SwingUtilities.invokeLater(() -> {
-            if (image != null) {
-                window.asComponent().setBounds(getBounds()); // Set the bounds of the window to the mascot's bounds
+            final Component windowComponent = window.asComponent();
+            Rectangle bounds = getBounds();
+            if (!windowComponent.getBounds().equals(bounds)) {
+                // Set the bounds of the window to the mascot's bounds
+                windowComponent.setBounds(bounds);
+            }
+            if (needsRepaint) {
+                // If Draw Shimeji Bounds is enabled, always keep the window visible so we can actually see the bounds
+                boolean shouldBeVisible = image != null || Main.getInstance().getSettings().drawShimejiBounds;
+                if (windowComponent.isVisible() != shouldBeVisible)
+                    windowComponent.setVisible(shouldBeVisible);
                 window.updateImage(); // Redraw
+                needsRepaint = false;
             }
         });
 
@@ -534,8 +562,10 @@ public class Mascot {
     }
 
     private void refreshCursor(Point position) {
-        synchronized (hotspots) {
-            boolean useHand = hotspots.stream().anyMatch(hotspot -> hotspot.contains(this, position) && Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
+        synchronized (hotspotLock) {
+            boolean useHand = hotspots.stream().anyMatch(hotspot ->
+                    hotspot.contains(this, position) &&
+                            Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
 
             refreshCursor(useHand);
         }
@@ -561,6 +591,9 @@ public class Mascot {
     }
 
     public void setAnchor(Point anchor) {
+        // if (!this.anchor.equals(anchor)) {
+        //     needsRepaint = true;
+        // }
         this.anchor = anchor;
     }
 
@@ -569,11 +602,7 @@ public class Mascot {
     }
 
     public void setImage(final MascotImage image) {
-        if (this.image == null && image == null) {
-            return;
-        }
-
-        if (this.image != null && image != null && this.image.getImage().equals(image.getImage())) {
+        if (Objects.equals(this.image, image)) {
             return;
         }
 
@@ -582,13 +611,10 @@ public class Mascot {
         SwingUtilities.invokeLater(() -> {
             if (image != null) {
                 window.setImage(image.getImage());
+            } else {
+                window.setImage(null);
             }
-
-            final Component windowComponent = window.asComponent();
-            boolean shouldBeVisible = image != null;
-            if (windowComponent.isVisible() != shouldBeVisible)
-                windowComponent.setVisible(shouldBeVisible);
-            window.updateImage();
+            needsRepaint = true;
         });
     }
 
@@ -602,13 +628,14 @@ public class Mascot {
 
     public Rectangle getBounds() {
         if (image != null) {
-            // Find the window area from the ground coordinates and image center coordinates. The center has already been adjusted for scaling.
-            final int top = anchor.y - image.getCenter().y;
-            final int left = anchor.x - image.getCenter().x;
-
-            prevBounds = new Rectangle(left, top, image.getSize().width, image.getSize().height);
+            prevImageAnchor = image.getCenter();
+            prevImageSize = image.getSize();
         }
-        return prevBounds;
+        // Find the window area from the ground coordinates and image anchor coordinates. The image anchor has already been adjusted for scaling.
+        final int top = anchor.y - prevImageAnchor.y;
+        final int left = anchor.x - prevImageAnchor.x;
+
+        return new Rectangle(left, top, prevImageSize.width, prevImageSize.height);
     }
 
     public int getTime() {
@@ -648,8 +675,33 @@ public class Mascot {
         return affordances;
     }
 
+    public Object getHotspotLock() {
+        return hotspotLock;
+    }
+
     public List<Hotspot> getHotspots() {
         return hotspots;
+    }
+
+    public void clearHotspots() {
+        if (hotspots.isEmpty()) {
+            return;
+        }
+        hotspots.clear();
+        if (Main.getInstance().getSettings().drawShimejiBounds) {
+            needsRepaint = true;
+        }
+    }
+
+    public void setHotspots(Hotspot[] hotspots) {
+        if (this.hotspots.isEmpty() && hotspots.length == 0) {
+            return;
+        }
+        this.hotspots.clear();
+        Collections.addAll(this.hotspots, hotspots);
+        if (Main.getInstance().getSettings().drawShimejiBounds) {
+            needsRepaint = true;
+        }
     }
 
     public String getImageSet() {

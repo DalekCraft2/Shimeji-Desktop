@@ -16,8 +16,6 @@ import java.awt.image.BufferedImage;
  */
 class MacTranslucentWindow implements TranslucentWindow {
     private final TranslucentWindow delegate;
-    private boolean imageChanged = false;
-    private BufferedImage oldImage = null;
 
     MacTranslucentWindow(NativeFactory factory) {
         delegate = factory.newTranslucentWindow();
@@ -42,17 +40,12 @@ class MacTranslucentWindow implements TranslucentWindow {
 
     @Override
     public void setImage(BufferedImage image) {
-        imageChanged = oldImage != null && image != oldImage;
-        oldImage = image;
         delegate.setImage(image);
     }
 
     @Override
     public void updateImage() {
-        if (imageChanged) {
-            delegate.updateImage();
-            imageChanged = false;
-        }
+        delegate.updateImage();
     }
 
     @Override
@@ -62,6 +55,6 @@ class MacTranslucentWindow implements TranslucentWindow {
 
     @Override
     public void setAlwaysOnTop(boolean onTop) {
-        ((JWindow) delegate.asComponent()).setAlwaysOnTop(onTop);
+        delegate.setAlwaysOnTop(onTop);
     }
 }

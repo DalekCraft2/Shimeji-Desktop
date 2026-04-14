@@ -2,7 +2,6 @@ package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
-import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.environment.MascotEnvironment;
 import com.group_finity.mascot.exception.LostGroundException;
 import com.group_finity.mascot.exception.VariableException;
@@ -133,15 +132,16 @@ public abstract class ActionBase implements Action {
     protected abstract void tick() throws LostGroundException, VariableException;
 
     protected void refreshHotspots() {
-        synchronized (getMascot().getHotspots()) {
-            getMascot().getHotspots().clear();
+        synchronized (getMascot().getHotspotLock()) {
             try {
-                if (getAnimation() != null) {
-                    for (final Hotspot hotspot : getAnimation().getHotspots())
-                        getMascot().getHotspots().add(hotspot);
+                Animation animation = getAnimation();
+                if (animation != null) {
+                    // This clears and sets the mascot's hotspots
+                    getMascot().setHotspots(animation.getHotspots());
                 }
-            } catch (VariableException ex) {
-                getMascot().getHotspots().clear();
+            } catch (VariableException ignored) {
+                // Clear the hotspots if we failed to get the animation
+                getMascot().clearHotspots();
             }
         }
     }
