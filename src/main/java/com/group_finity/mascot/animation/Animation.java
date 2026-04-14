@@ -29,16 +29,16 @@ public class Animation {
         this.turn = turn;
     }
 
-    public boolean isEffective(final VariableMap variables) throws VariableException {
-        return (Boolean) condition.get(variables);
-    }
-
     public void init() {
         condition.init();
     }
 
     public void initFrame() {
         condition.initFrame();
+    }
+
+    public boolean isEffective(final VariableMap variables) throws VariableException {
+        return (Boolean) condition.get(variables);
     }
 
     public void next(final Mascot mascot, final int time) {
