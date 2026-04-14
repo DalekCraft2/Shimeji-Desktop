@@ -21,8 +21,9 @@ public class ImageUtils {
 
     /**
      * Creates a copy of the given image that is optimized for the system's default graphics configuration.
+     * If the given image is already optimized, it is returned unchanged.
      *
-     * @param src the image to convert
+     * @param src the image to optimize
      * @return an image compatible with the default graphics configuration
      */
     public static BufferedImage toCompatibleImage(BufferedImage src) {
@@ -132,59 +133,45 @@ public class ImageUtils {
         // apply hqx if applicable
         double effectiveScaling = scaling;
         if (filter == Filter.HQX && scaling > 1) {
-            int[] buffer;
-            int[] rbgValues = source.getRGB(0, 0, width, height, null, 0, width);
+            int hqxType = 0;
+            if (effectiveScaling % 4 == 0)
+                hqxType = 4;
+            else if (effectiveScaling % 3 == 0)
+                hqxType = 3;
+            else if (effectiveScaling % 2 == 0)
+                hqxType = 2;
 
-            if (scaling == 4 || scaling == 8) {
-                width *= 4;
-                height *= 4;
-                buffer = new int[width * height];
-                Hqx_4x.hq4x_32_rb(rbgValues, buffer, width / 4, height / 4);
-                rbgValues = buffer;
-                effectiveScaling = scaling > 4 ? 2 : 1;
-            } else if (scaling == 3 || scaling == 6) {
-                width *= 3;
-                height *= 3;
-                buffer = new int[width * height];
-                Hqx_3x.hq3x_32_rb(rbgValues, buffer, width / 3, height / 3);
-                rbgValues = buffer;
-                effectiveScaling = scaling > 4 ? 2 : 1;
-            } else if (scaling == 2) {
-                width *= 2;
-                height *= 2;
-                buffer = new int[width * height];
-                Hqx_2x.hq2x_32_rb(rbgValues, buffer, width / 2, height / 2);
-                rbgValues = buffer;
-                effectiveScaling = 1;
-            } else {
+            if (hqxType == 0) {
                 filter = Filter.NEAREST_NEIGHBOUR;
-            }
-
-            // if hqx is still on then apply the changes
-            if (filter == Filter.HQX) {
-                workingImage = createCompatibleImage((int) Math.round(width * effectiveScaling), (int) Math.round(height * effectiveScaling), Transparency.TRANSLUCENT);
-                int srcColIndex = 0;
-                int srcRowIndex = 0;
-
-                for (int y = 0; y < workingImage.getHeight(); y++) {
-                    for (int x = 0; x < workingImage.getWidth(); x++) {
-                        workingImage.setRGB(x, y, rbgValues[srcColIndex / (int) effectiveScaling]);
-                        srcColIndex++;
-                    }
-
-                    // resets the srcColIndex to re-use the same indexes and stretch horizontally
-                    srcRowIndex++;
-                    if (srcRowIndex == effectiveScaling) {
-                        srcRowIndex = 0;
-                    } else {
-                        srcColIndex -= workingImage.getWidth();
-                    }
+            } else {
+                int[] srcBuffer = source.getRGB(0, 0, width, height, null, 0, width);
+                int newWidth = width * hqxType;
+                int newHeight = height * hqxType;
+                int[] dstBuffer = new int[newWidth * newHeight];
+                switch (hqxType) {
+                    case 4:
+                        Hqx_4x.hq4x_32_rb(srcBuffer, dstBuffer, width, height);
+                        break;
+                    case 3:
+                        Hqx_3x.hq3x_32_rb(srcBuffer, dstBuffer, width, height);
+                        break;
+                    case 2:
+                        Hqx_2x.hq2x_32_rb(srcBuffer, dstBuffer, width, height);
+                        break;
                 }
+
+                effectiveScaling = effectiveScaling / hqxType;
+                width = newWidth;
+                height = newHeight;
+                workingImage = createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+                workingImage.setRGB(0, 0, width, height, dstBuffer, 0, width);
             }
         }
 
-        width = (int) Math.round(width * effectiveScaling);
-        height = (int) Math.round(height * effectiveScaling);
+        if (effectiveScaling != 1) {
+            width = (int) Math.round(width * effectiveScaling);
+            height = (int) Math.round(height * effectiveScaling);
+        }
 
         final BufferedImage copy = createCompatibleImage(width, height, workingImage != null ? Transparency.TRANSLUCENT : source.getTransparency());
 
