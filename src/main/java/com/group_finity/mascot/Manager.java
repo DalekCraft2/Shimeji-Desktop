@@ -27,7 +27,7 @@ public class Manager {
     private static final Logger log = LoggerFactory.getLogger(Manager.class);
 
     /**
-     * The duration of each tick, in milliseconds.
+     * The interval between each tick, in milliseconds.
      */
     public static final int TICK_INTERVAL = 40;
 
@@ -162,15 +162,19 @@ public class Manager {
         NativeFactory.getInstance().getEnvironment().tick();
 
         synchronized (mascots) {
-            // Add the mascots which should be added
-            mascots.addAll(added);
-            added.clear();
+            synchronized (added) {
+                // Add the mascots that should be added
+                if (!added.isEmpty()) {
+                    mascots.addAll(added);
+                    added.clear();
+                }
 
-            // Remove the mascots which should be removed
-            for (final Mascot mascot : removed) {
-                mascots.remove(mascot);
+                // Remove the mascots that should be removed
+                if (!removed.isEmpty()) {
+                    mascots.removeAll(removed);
+                    removed.clear();
+                }
             }
-            removed.clear();
 
             // Advance the mascots' time
             for (final Mascot mascot : mascots) {
@@ -283,8 +287,9 @@ public class Manager {
         synchronized (mascots) {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i >= 0; i--) {
-                if (!mascots.get(i).equals(mascot)) {
-                    mascots.get(i).dispose();
+                Mascot m = mascots.get(i);
+                if (!m.equals(mascot)) {
+                    m.dispose();
                 }
             }
         }
