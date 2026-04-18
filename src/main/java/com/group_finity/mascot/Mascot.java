@@ -505,15 +505,15 @@ public class Mascot {
     }
 
     public void apply() {
-        if (!isAnimating()) {
-            return;
-        }
-
         // Make sure to repaint the mascot if the Draw Shimeji Bounds setting has changed since the last tick
         boolean drawShimejiBounds = Main.getInstance().getSettings().drawShimejiBounds;
         if (prevDrawShimejiBounds != drawShimejiBounds)
             needsRepaint = true;
         prevDrawShimejiBounds = drawShimejiBounds;
+
+        if (!isAnimating() && !needsRepaint) {
+            return;
+        }
 
         SwingUtilities.invokeLater(() -> {
             final Component windowComponent = window.asComponent();
@@ -525,9 +525,15 @@ public class Mascot {
             if (needsRepaint) {
                 // If Draw Shimeji Bounds is enabled, always keep the window visible so we can actually see the bounds
                 boolean shouldBeVisible = image != null || Main.getInstance().getSettings().drawShimejiBounds;
-                if (windowComponent.isVisible() != shouldBeVisible)
+                if (windowComponent.isVisible() != shouldBeVisible) {
+                    /*
+                    setVisible(true) repaints the window too, so there's no need to call
+                    window.updateImage() afterward if we call this first
+                     */
                     windowComponent.setVisible(shouldBeVisible);
-                window.updateImage(); // Redraw
+                } else {
+                    window.updateImage(); // Redraw
+                }
                 needsRepaint = false;
             }
         });
