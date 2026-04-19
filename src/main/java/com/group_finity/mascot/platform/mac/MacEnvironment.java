@@ -349,6 +349,9 @@ class MacEnvironment extends Environment {
                 visibleRect = getWindowVisibleArea(),
                 windowRect = getFrontmostAppRect();
 
+        if (windowRect == null)
+            return;
+
         final double
                 minX = visibleRect.getMinX() - windowRect.getWidth(), // Left direction wrap coordinate
                 maxX = visibleRect.getMaxX(), // Right direction wrap coordinate
