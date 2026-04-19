@@ -52,13 +52,13 @@ class MacEnvironment extends Environment {
     private static final Set<Integer> touchedProcesses = new HashSet<>();
 
     static final CFStringRef
-            kAXPosition = createCFString("AXPosition"),
-            kAXSize = createCFString("AXSize"),
-            kAXFocusedWindow = createCFString("AXFocusedWindow"),
-            kDock = createCFString("com.apple.Dock"),
-            kTileSize = createCFString("tilesize"),
-            kOrientation = createCFString("orientation"),
-            kAXChildren = createCFString("AXChildren");
+            kAXPosition = CFStringRef.createCFString("AXPosition"),
+            kAXSize = CFStringRef.createCFString("AXSize"),
+            kAXFocusedWindow = CFStringRef.createCFString("AXFocusedWindow"),
+            kDock = CFStringRef.createCFString("com.apple.Dock"),
+            kTileSize = CFStringRef.createCFString("tilesize"),
+            kOrientation = CFStringRef.createCFString("orientation"),
+            kAXChildren = CFStringRef.createCFString("AXChildren");
 
     private static Rectangle getFrontmostAppRect() {
         Rectangle ret;
@@ -187,10 +187,6 @@ class MacEnvironment extends Environment {
         AXValueRef axvalue = carbonEx.AXValueCreate(
                 CarbonExtra.kAXValueCGPointType, position.getPointer());
         carbonEx.AXUIElementSetAttributeValue(window, kAXPosition, axvalue);
-    }
-
-    private static CFStringRef createCFString(String s) {
-        return CFStringRef.createCFString(s);
     }
 
     /**
