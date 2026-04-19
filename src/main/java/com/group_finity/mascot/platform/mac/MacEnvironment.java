@@ -18,7 +18,6 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 import java.awt.*;
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,10 +45,7 @@ class MacEnvironment extends Environment {
 
     private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
 
-    // On Mac, ManagementFactory.getRuntimeMXBean().getName()
-    // returns the "PID@machine name" string
-    private static final int myPID =
-            Integer.parseInt(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
+    private static final int myPID = (int) ProcessHandle.current().pid();
 
     private static int currentPID = myPID;
 
