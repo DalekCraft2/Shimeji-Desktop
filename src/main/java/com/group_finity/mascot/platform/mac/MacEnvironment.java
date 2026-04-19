@@ -30,26 +30,21 @@ import java.util.Set;
  */
 class MacEnvironment extends Environment {
 
+    private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
+
     /**
      * On Mac, you can take the active window, so Shimeji will react to it.
      * <p>
      * Therefore, in this class, give {@code activeIE} an alias called {@link #frontmostWindow}.
      */
-    private static final Area activeIE = new Area();
-    private static final Area frontmostWindow = activeIE;
+    private final Area activeIE = new Area();
+    private final Area frontmostWindow = activeIE;
 
-    private static final int screenWidth =
-            (int) Math.round(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-    private static final int screenHeight =
-            (int) Math.round(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+    private final int myPID = (int) ProcessHandle.current().pid();
 
-    private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
+    private int currentPID = myPID;
 
-    private static final int myPID = (int) ProcessHandle.current().pid();
-
-    private static int currentPID = myPID;
-
-    private static final Set<Integer> touchedProcesses = new HashSet<>();
+    private final Set<Integer> touchedProcesses = new HashSet<>();
 
     static final CFStringRef
             kAXPosition = CFStringRef.createCFString("AXPosition"),
@@ -60,7 +55,7 @@ class MacEnvironment extends Environment {
             kOrientation = CFStringRef.createCFString("orientation"),
             kAXChildren = CFStringRef.createCFString("AXChildren");
 
-    private static Rectangle getFrontmostAppRect() {
+    private Rectangle getFrontmostAppRect() {
         Rectangle ret;
         int pid = getCurrentPID();
 
@@ -119,7 +114,7 @@ class MacEnvironment extends Environment {
         return size;
     }
 
-    private static void moveFrontmostWindow(final Point point) {
+    private void moveFrontmostWindow(final Point point) {
         AXUIElementRef application =
                 carbonEx.AXUIElementCreateApplication(currentPID);
 
@@ -135,7 +130,7 @@ class MacEnvironment extends Environment {
         application.release();
     }
 
-    private static void restoreWindowsNotIn(final Rectangle rect) {
+    private void restoreWindowsNotIn(final Rectangle rect) {
         for (int pid : touchedProcesses) {
             AXUIElementRef application =
                     carbonEx.AXUIElementCreateApplication(pid);
@@ -203,11 +198,11 @@ class MacEnvironment extends Environment {
      * On Mac, if you try to move the window completely off the screen,
      * the window gets pushed back into the screen.
      */
-    private static Rectangle getWindowVisibleArea() {
+    private Rectangle getWindowVisibleArea() {
         final int menuBarHeight = 22;
         int x = 1, y = menuBarHeight,
-                width = screenWidth - 2, // Because it's 0-origin
-                height = screenHeight - menuBarHeight;
+                width = getScreen().getWidth() - 2, // Because it's 0-origin
+                height = getScreen().getHeight() - menuBarHeight;
 
         refreshDockState();
         final String orientation = getDockOrientation();
@@ -273,11 +268,11 @@ class MacEnvironment extends Environment {
         carbonEx.CFPreferencesAppSynchronize(kDock);
     }
 
-    private static int getCurrentPID() {
+    private int getCurrentPID() {
         return currentPID;
     }
 
-    private static void setCurrentPID(int newPID) {
+    private void setCurrentPID(int newPID) {
         if (newPID != myPID) {
             currentPID = newPID;
             touchedProcesses.add(newPID);
@@ -298,7 +293,7 @@ class MacEnvironment extends Environment {
                 frontmostWindowRect == null ? new Rectangle(-1, -1, 0, 0) : frontmostWindowRect);
     }
 
-    private static void updateFrontmostApp() {
+    private void updateFrontmostApp() {
         int newPID = getFrontmostAppsPID();
         setCurrentPID(newPID);
     }
