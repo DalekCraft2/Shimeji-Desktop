@@ -23,13 +23,13 @@ import java.util.ResourceBundle;
 public class ScanMove extends BorderedAction {
     private static final Logger log = LoggerFactory.getLogger(ScanMove.class);
 
-    public static final String PARAMETER_BEHAVIOUR = "Behaviour";
+    public static final String PARAMETER_BEHAVIOR = "Behaviour";
 
-    private static final String DEFAULT_BEHAVIOUR = "";
+    private static final String DEFAULT_BEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETBEHAVIOUR = "TargetBehaviour";
+    public static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
 
-    private static final String DEFAULT_TARGETBEHAVIOUR = "";
+    private static final String DEFAULT_TARGETBEHAVIOR = "";
 
     public static final String PARAMETER_TARGETLOOK = "TargetLook";
 
@@ -160,11 +160,11 @@ public class ScanMove extends BorderedAction {
     }
 
     private String getBehavior() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_BEHAVIOUR), String.class, DEFAULT_BEHAVIOUR);
+        return eval(getSchema().getString(PARAMETER_BEHAVIOR), String.class, DEFAULT_BEHAVIOR);
     }
 
     private String getTargetBehavior() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_TARGETBEHAVIOUR), String.class, DEFAULT_TARGETBEHAVIOUR);
+        return eval(getSchema().getString(PARAMETER_TARGETBEHAVIOR), String.class, DEFAULT_TARGETBEHAVIOR);
     }
 
     private boolean isTargetLook() throws VariableException {

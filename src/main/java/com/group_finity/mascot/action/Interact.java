@@ -20,9 +20,9 @@ import java.util.ResourceBundle;
 public class Interact extends Animate {
     private static final Logger log = LoggerFactory.getLogger(Interact.class);
 
-    public static final String PARAMETER_BEHAVIOUR = "Behaviour";
+    public static final String PARAMETER_BEHAVIOR = "Behaviour";
 
-    private static final String DEFAULT_BEHAVIOUR = "";
+    private static final String DEFAULT_BEHAVIOR = "";
 
     public Interact(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
         super(schema, animations, context);
@@ -49,6 +49,6 @@ public class Interact extends Animate {
     }
 
     private String getBehavior() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_BEHAVIOUR), String.class, DEFAULT_BEHAVIOUR);
+        return eval(getSchema().getString(PARAMETER_BEHAVIOR), String.class, DEFAULT_BEHAVIOR);
     }
 }

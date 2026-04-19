@@ -28,11 +28,11 @@ import java.awt.event.MouseEvent;
 public class UserBehavior implements Behavior {
     private static final Logger log = LoggerFactory.getLogger(UserBehavior.class);
 
-    public static final String BEHAVIOURNAME_FALL = "Fall";
+    public static final String BEHAVIORNAME_FALL = "Fall";
 
-    public static final String BEHAVIOURNAME_DRAGGED = "Dragged";
+    public static final String BEHAVIORNAME_DRAGGED = "Dragged";
 
-    public static final String BEHAVIOURNAME_THROWN = "Thrown";
+    public static final String BEHAVIORNAME_THROWN = "Thrown";
 
     private enum HotspotState {
         INACTIVE,
@@ -136,7 +136,7 @@ public class UserBehavior implements Behavior {
                         mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
 
                         try {
-                            mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
+                            mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_FALL)));
                         } catch (final BehaviorInstantiationException e) {
                             throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
                         }
@@ -157,7 +157,7 @@ public class UserBehavior implements Behavior {
             try {
                 mascot.setCursorPosition(null);
                 mascot.setDragging(false);
-                mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_FALL)));
+                mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_FALL)));
             } catch (final BehaviorInstantiationException ex) {
                 throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), ex);
             }
@@ -214,7 +214,7 @@ public class UserBehavior implements Behavior {
             if (!handled) {
                 // Begin dragging
                 try {
-                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_DRAGGED)));
+                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_DRAGGED)));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDragActionInitialiseErrorMessage"), e);
                 }
@@ -245,7 +245,7 @@ public class UserBehavior implements Behavior {
                 try {
                     // Stop dragging
                     mascot.setDragging(false);
-                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIOURNAME_THROWN)));
+                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_THROWN)));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDropActionInitialiseErrorMessage"), e);
                 }

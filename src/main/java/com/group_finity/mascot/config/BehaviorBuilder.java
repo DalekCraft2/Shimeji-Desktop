@@ -67,9 +67,9 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         this.conditions.add(condition);
 
         // override of toggleable state for required fields
-        if (name.equals(UserBehavior.BEHAVIOURNAME_FALL) ||
-                name.equals(UserBehavior.BEHAVIOURNAME_THROWN) ||
-                name.equals(UserBehavior.BEHAVIOURNAME_DRAGGED)) {
+        if (name.equals(UserBehavior.BEHAVIORNAME_FALL) ||
+                name.equals(UserBehavior.BEHAVIORNAME_THROWN) ||
+                name.equals(UserBehavior.BEHAVIORNAME_DRAGGED)) {
             toggleable = false;
         } else {
             toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Toggleable")));

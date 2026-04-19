@@ -449,7 +449,7 @@
                                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="lblBackgroundImageCaption" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lblBackgroundColour" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblBackgroundColor" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -463,11 +463,11 @@
                                       <Component id="spnWindowHeight" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="txtBackgroundColour" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtBackgroundColor" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="pnlBackgroundPreviewContainer" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="btnBackgroundColourChange" max="32767" attributes="0"/>
+                                      <Component id="btnBackgroundColorChange" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="pnlBackgroundImage" min="-2" max="-2" attributes="0"/>
@@ -502,9 +502,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblBackgroundColour" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtBackgroundColour" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnBackgroundColourChange" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblBackgroundColor" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtBackgroundColor" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnBackgroundColorChange" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="pnlBackgroundPreviewContainer" alignment="0" min="-2" pref="24" max="-2" attributes="0"/>
                       </Group>
@@ -552,7 +552,7 @@
                 <Property name="text" type="java.lang.String" value="Background"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtBackgroundColour">
+            <Component class="javax.swing.JTextField" name="txtBackgroundColor">
               <Properties>
                 <Property name="text" type="java.lang.String" value="#00FF00"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -560,15 +560,15 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="txtBackgroundColour.getDocument().addDocumentListener(new DocumentListener() {&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        colourTextChanged(txtBackgroundColour);&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        colourTextChanged(txtBackgroundColour);&#xa;    }&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        colourTextChanged(txtBackgroundColour);&#xa;    }&#xa;});&#xa;((AbstractDocument) txtBackgroundColour.getDocument()).setDocumentFilter(new DocumentFilter() {&#xa;    @Override&#xa;    public void insertString(FilterBypass filterBypass, int offset, String text, AttributeSet attributes) throws BadLocationException {&#xa;        if (text != null &amp;&amp; text.matches(&quot;[#0-9a-fA-F]*&quot;) &amp;&amp; filterBypass.getDocument().getLength() + text.length() &lt;= 7) {&#xa;            super.insertString(filterBypass, offset, text, attributes);&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void replace(FilterBypass filterBypass, int offset, int length, String text, AttributeSet attributes) throws BadLocationException {&#xa;        if (text != null &amp;&amp; text.matches(&quot;[#0-9a-fA-F]*&quot;) &amp;&amp; filterBypass.getDocument().getLength() - length + text.length() &lt;= 7) {&#xa;            super.replace(filterBypass, offset, length, text, attributes);&#xa;        }&#xa;    }&#xa;});"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="txtBackgroundColor.getDocument().addDocumentListener(new DocumentListener() {&#xa;    @Override&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        colorTextChanged(txtBackgroundColor);&#xa;    }&#xa;&#xa;    @Override&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        colorTextChanged(txtBackgroundColor);&#xa;    }&#xa;&#xa;    @Override&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        colorTextChanged(txtBackgroundColor);&#xa;    }&#xa;});&#xa;((AbstractDocument) txtBackgroundColor.getDocument()).setDocumentFilter(new DocumentFilter() {&#xa;    @Override&#xa;    public void insertString(FilterBypass filterBypass, int offset, String text, AttributeSet attributes) throws BadLocationException {&#xa;        if (text != null &amp;&amp; text.matches(&quot;[#0-9a-fA-F]*&quot;) &amp;&amp; filterBypass.getDocument().getLength() + text.length() &lt;= 7) {&#xa;            super.insertString(filterBypass, offset, text, attributes);&#xa;        }&#xa;    }&#xa;&#xa;    @Override&#xa;    public void replace(FilterBypass filterBypass, int offset, int length, String text, AttributeSet attributes) throws BadLocationException {&#xa;        if (text != null &amp;&amp; text.matches(&quot;[#0-9a-fA-F]*&quot;) &amp;&amp; filterBypass.getDocument().getLength() - length + text.length() &lt;= 7) {&#xa;            super.replace(filterBypass, offset, length, text, attributes);&#xa;        }&#xa;    }&#xa;});"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="btnBackgroundColourChange">
+            <Component class="javax.swing.JButton" name="btnBackgroundColorChange">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Change"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackgroundColourChangeActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackgroundColorChangeActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JSpinner" name="spnWindowWidth">
@@ -600,7 +600,7 @@
                 <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spnWindowHeightStateChanged"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblBackgroundColour">
+            <Component class="javax.swing.JLabel" name="lblBackgroundColor">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Colour"/>
               </Properties>

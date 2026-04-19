@@ -156,7 +156,7 @@ public class AnimationBuilder {
         final String shapeText = hotspotNode.getAttribute(schema.getString("Shape"));
         final String originText = hotspotNode.getAttribute(schema.getString("Origin"));
         final String sizeText = hotspotNode.getAttribute(schema.getString("Size"));
-        final String behaviourText = hotspotNode.getAttribute(schema.getString("Behaviour"));
+        final String behaviorText = hotspotNode.getAttribute(schema.getString("Behaviour"));
 
         final double scaling = Main.getInstance().getSettings().scaling;
 
@@ -177,7 +177,7 @@ public class AnimationBuilder {
             throw new IllegalArgumentException(String.format(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage"), shapeText));
         }
 
-        final Hotspot hotspot = new Hotspot(behaviourText, shape);
+        final Hotspot hotspot = new Hotspot(behaviorText, shape);
 
         log.debug("Finished loading hotspot: {}", hotspot);
 

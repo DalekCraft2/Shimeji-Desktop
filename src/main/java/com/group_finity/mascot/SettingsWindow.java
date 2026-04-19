@@ -48,7 +48,7 @@ public class SettingsWindow extends JDialog {
     private double opacity = 1.0;
     private boolean windowedMode = false;
     private Dimension windowSize = new Dimension(600, 500);
-    private Color backgroundColour = new Color(0, 255, 0);
+    private Color backgroundColor = new Color(0, 255, 0);
     private String backgroundMode = "centre";
     private Path backgroundImage = null;
     private final String[] backgroundModes = {"centre", "fill", "fit", "stretch"};
@@ -92,7 +92,7 @@ public class SettingsWindow extends JDialog {
         scaling = settings.scaling;
         windowedMode = settings.windowedMode;
         windowSize = new Dimension(settings.windowSize);
-        backgroundColour = settings.backgroundColor;
+        backgroundColor = settings.backgroundColor;
         backgroundImage = settings.backgroundImage;
         backgroundMode = settings.backgroundMode;
         chkShowTrayIcon.setSelected(showTrayIcon);
@@ -122,16 +122,16 @@ public class SettingsWindow extends JDialog {
         lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
 
         chkWindowModeEnabled.setSelected(windowedMode);
-        spnWindowWidth.setBackground(txtBackgroundColour.getBackground());
-        spnWindowHeight.setBackground(txtBackgroundColour.getBackground());
+        spnWindowWidth.setBackground(txtBackgroundColor.getBackground());
+        spnWindowHeight.setBackground(txtBackgroundColor.getBackground());
         spnWindowWidth.setEnabled(windowedMode);
         spnWindowHeight.setEnabled(windowedMode);
         spnWindowWidth.setValue(windowSize.width);
         spnWindowHeight.setValue(windowSize.height);
-        txtBackgroundColour.setText(String.format("#%02X%02X%02X", backgroundColour.getRed(), backgroundColour.getGreen(), backgroundColour.getBlue()));
-        btnBackgroundColourChange.setEnabled(windowedMode);
+        txtBackgroundColor.setText(String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
+        btnBackgroundColorChange.setEnabled(windowedMode);
         btnBackgroundImageChange.setEnabled(windowedMode);
-        pnlBackgroundPreview.setBackground(backgroundColour);
+        pnlBackgroundPreview.setBackground(backgroundColor);
         if (backgroundImage != null) {
             try {
                 refreshBackgroundImage();
@@ -169,9 +169,9 @@ public class SettingsWindow extends JDialog {
         chkWindowModeEnabled.setText(language.getString("WindowedModeEnabled"));
         lblDimensions.setText(language.getString("Dimensions"));
         lblBackground.setText(language.getString("Background"));
-        lblBackgroundColour.setText(language.getString("Colour"));
+        lblBackgroundColor.setText(language.getString("Colour"));
         lblBackgroundImageCaption.setText(language.getString("Image"));
-        btnBackgroundColourChange.setText(language.getString("Change"));
+        btnBackgroundColorChange.setText(language.getString("Change"));
         btnBackgroundImageChange.setText(language.getString("Change"));
         cmbBackgroundImageMode.addItem(language.getString("BackgroundModeCentre"));
         cmbBackgroundImageMode.addItem(language.getString("BackgroundModeFill"));
@@ -269,11 +269,11 @@ public class SettingsWindow extends JDialog {
         lblDimensions = new javax.swing.JLabel();
         lblDimensionsX = new javax.swing.JLabel();
         lblBackground = new javax.swing.JLabel();
-        txtBackgroundColour = new javax.swing.JTextField();
-        btnBackgroundColourChange = new javax.swing.JButton();
+        txtBackgroundColor = new javax.swing.JTextField();
+        btnBackgroundColorChange = new javax.swing.JButton();
         spnWindowWidth = new javax.swing.JSpinner();
         spnWindowHeight = new javax.swing.JSpinner();
-        lblBackgroundColour = new javax.swing.JLabel();
+        lblBackgroundColor = new javax.swing.JLabel();
         pnlBackgroundPreviewContainer = new javax.swing.JPanel();
         glueBackground = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         pnlBackgroundPreview = new javax.swing.JPanel();
@@ -505,25 +505,25 @@ public class SettingsWindow extends JDialog {
 
         lblBackground.setText("Background");
 
-        txtBackgroundColour.setText("#00FF00");
-        txtBackgroundColour.setPreferredSize(new java.awt.Dimension(70, 24));
-        txtBackgroundColour.getDocument().addDocumentListener(new DocumentListener() {
+        txtBackgroundColor.setText("#00FF00");
+        txtBackgroundColor.setPreferredSize(new java.awt.Dimension(70, 24));
+        txtBackgroundColor.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                colourTextChanged(txtBackgroundColour);
+                colorTextChanged(txtBackgroundColor);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                colourTextChanged(txtBackgroundColour);
+                colorTextChanged(txtBackgroundColor);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                colourTextChanged(txtBackgroundColour);
+                colorTextChanged(txtBackgroundColor);
             }
         });
-        ((AbstractDocument) txtBackgroundColour.getDocument()).setDocumentFilter(new DocumentFilter() {
+        ((AbstractDocument) txtBackgroundColor.getDocument()).setDocumentFilter(new DocumentFilter() {
             @Override
             public void insertString(FilterBypass filterBypass, int offset, String text, AttributeSet attributes) throws BadLocationException {
                 if (text != null && text.matches("[#0-9a-fA-F]*") && filterBypass.getDocument().getLength() + text.length() <= 7) {
@@ -539,8 +539,8 @@ public class SettingsWindow extends JDialog {
             }
         });
 
-        btnBackgroundColourChange.setText("Change");
-        btnBackgroundColourChange.addActionListener(this::btnBackgroundColourChangeActionPerformed);
+        btnBackgroundColorChange.setText("Change");
+        btnBackgroundColorChange.addActionListener(this::btnBackgroundColorChangeActionPerformed);
 
         spnWindowWidth.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 1));
         spnWindowWidth.setPreferredSize(new java.awt.Dimension(60, 24));
@@ -551,7 +551,7 @@ public class SettingsWindow extends JDialog {
         spnWindowHeight.setPreferredSize(new java.awt.Dimension(60, 24));
         spnWindowHeight.addChangeListener(this::spnWindowHeightStateChanged);
 
-        lblBackgroundColour.setText("Colour");
+        lblBackgroundColor.setText("Colour");
 
         pnlBackgroundPreviewContainer.setLayout(new javax.swing.BoxLayout(pnlBackgroundPreviewContainer, javax.swing.BoxLayout.Y_AXIS));
         pnlBackgroundPreviewContainer.add(glueBackground);
@@ -608,7 +608,7 @@ public class SettingsWindow extends JDialog {
                                 .addGap(10, 10, 10)
                                 .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblBackgroundImageCaption)
-                                    .addComponent(lblBackgroundColour))))
+                                    .addComponent(lblBackgroundColor))))
                         .addGap(18, 18, 18)
                         .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(pnlWindowModeLayout.createSequentialGroup()
@@ -618,11 +618,11 @@ public class SettingsWindow extends JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(spnWindowHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlWindowModeLayout.createSequentialGroup()
-                                .addComponent(txtBackgroundColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtBackgroundColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(pnlBackgroundPreviewContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnBackgroundColourChange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btnBackgroundColorChange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(pnlWindowModeLayout.createSequentialGroup()
                                 .addComponent(pnlBackgroundImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -648,9 +648,9 @@ public class SettingsWindow extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblBackgroundColour)
-                        .addComponent(txtBackgroundColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnBackgroundColourChange))
+                        .addComponent(lblBackgroundColor)
+                        .addComponent(txtBackgroundColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBackgroundColorChange))
                     .addComponent(pnlBackgroundPreviewContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlWindowModeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -777,7 +777,7 @@ public class SettingsWindow extends JDialog {
 
         environmentReloadRequired = settings.windowedMode != windowedMode ||
                 !settings.windowSize.equals(windowSize) ||
-                !settings.backgroundColor.equals(backgroundColour) ||
+                !settings.backgroundColor.equals(backgroundColor) ||
                 !settings.backgroundMode.equals(backgroundMode) ||
                 !Objects.equals(settings.backgroundImage, backgroundImage);
         imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
@@ -797,7 +797,7 @@ public class SettingsWindow extends JDialog {
         settings.windowedMode = windowedMode;
         if (windowedMode) {
             settings.windowSize = new Dimension(windowSize);
-            settings.backgroundColor = backgroundColour;
+            settings.backgroundColor = backgroundColor;
             settings.backgroundMode = backgroundMode;
             settings.backgroundImage = backgroundImage;
         }
@@ -913,15 +913,15 @@ public class SettingsWindow extends JDialog {
         windowSize.width = ((SpinnerNumberModel) spnWindowWidth.getModel()).getNumber().intValue();
     }//GEN-LAST:event_spnWindowWidthStateChanged
 
-    private void btnBackgroundColourChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundColourChangeActionPerformed
-        backgroundColour = chooseColour(backgroundColour, txtBackgroundColour, pnlBackgroundPreview, "ChooseBackgroundColour");
-    }//GEN-LAST:event_btnBackgroundColourChangeActionPerformed
+    private void btnBackgroundColorChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundColorChangeActionPerformed
+        backgroundColor = chooseColor(backgroundColor, txtBackgroundColor, pnlBackgroundPreview, "ChooseBackgroundColour");
+    }//GEN-LAST:event_btnBackgroundColorChangeActionPerformed
 
     private void chkWindowModeEnabledItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkWindowModeEnabledItemStateChanged
         windowedMode = evt.getStateChange() == ItemEvent.SELECTED;
         spnWindowWidth.setEnabled(windowedMode);
         spnWindowHeight.setEnabled(windowedMode);
-        btnBackgroundColourChange.setEnabled(windowedMode);
+        btnBackgroundColorChange.setEnabled(windowedMode);
         btnBackgroundImageChange.setEnabled(windowedMode);
         cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
         btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
@@ -968,7 +968,7 @@ public class SettingsWindow extends JDialog {
         alwaysShowInformationScreen = evt.getStateChange() == ItemEvent.SELECTED;
     }//GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
 
-    private void colourTextChanged(JTextField field) {
+    private void colorTextChanged(JTextField field) {
         if (suppressTextChanged || !isVisible()) {
             return;
         }
@@ -981,26 +981,26 @@ public class SettingsWindow extends JDialog {
             return;
         }
 
-        Color newColour = Color.decode(text);
+        Color newColor = Color.decode(text);
 
-        if (field.equals(txtBackgroundColour)) {
-            if (!newColour.equals(backgroundColour)) {
-                backgroundColour = Color.decode(text);
-                pnlBackgroundPreview.setBackground(backgroundColour);
+        if (field.equals(txtBackgroundColor)) {
+            if (!newColor.equals(backgroundColor)) {
+                backgroundColor = Color.decode(text);
+                pnlBackgroundPreview.setBackground(backgroundColor);
             }
         }
     }
 
-    private Color chooseColour(Color colour, JTextField field, JPanel preview, String title) {
-        Color newColour = JColorChooser.showDialog(this, Main.getInstance().getLanguageBundle().getString(title), colour);
+    private Color chooseColor(Color color, JTextField field, JPanel preview, String title) {
+        Color newColor = JColorChooser.showDialog(this, Main.getInstance().getLanguageBundle().getString(title), color);
 
-        if (newColour != null) {
-            colour = newColour;
-            field.setText(String.format("#%02X%02X%02X", colour.getRed(), colour.getGreen(), colour.getBlue()));
-            preview.setBackground(colour);
+        if (newColor != null) {
+            color = newColor;
+            field.setText(String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue()));
+            preview.setBackground(color);
         }
 
-        return colour;
+        return color;
     }
 
     private void refreshBackgroundImage() throws IOException {
@@ -1040,7 +1040,7 @@ public class SettingsWindow extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddInteractiveWindow;
-    private javax.swing.JButton btnBackgroundColourChange;
+    private javax.swing.JButton btnBackgroundColorChange;
     private javax.swing.JButton btnBackgroundImageChange;
     private javax.swing.JButton btnBackgroundImageRemove;
     private javax.swing.JButton btnCancel;
@@ -1063,7 +1063,7 @@ public class SettingsWindow extends JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblBackground;
-    private javax.swing.JLabel lblBackgroundColour;
+    private javax.swing.JLabel lblBackgroundColor;
     private javax.swing.JLabel lblBackgroundImage;
     private javax.swing.JLabel lblBackgroundImageCaption;
     private javax.swing.JLabel lblDevelopedBy;
@@ -1103,6 +1103,6 @@ public class SettingsWindow extends JDialog {
     private javax.swing.JSlider sldScaling;
     private javax.swing.JSpinner spnWindowHeight;
     private javax.swing.JSpinner spnWindowWidth;
-    private javax.swing.JTextField txtBackgroundColour;
+    private javax.swing.JTextField txtBackgroundColor;
     // End of variables declaration//GEN-END:variables
 }

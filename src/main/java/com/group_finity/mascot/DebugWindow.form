@@ -28,7 +28,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="lblShimejiX" min="-2" max="-2" attributes="0"/>
                   <Component id="lblShimejiY" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblBehaviour" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblBehavior" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="lblWindowX" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="lblWindowY" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="lblWindowWidth" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -41,7 +41,7 @@
               </Group>
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblBehaviourValue" pref="165" max="32767" attributes="0"/>
+                  <Component id="lblBehaviorValue" pref="165" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lblShimejiYValue" min="-2" max="-2" attributes="0"/>
@@ -68,8 +68,8 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblBehaviour" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblBehaviourValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblBehavior" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblBehaviorValue" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -198,12 +198,12 @@
         <Property name="text" type="java.lang.String" value="N/A"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblBehaviour">
+    <Component class="javax.swing.JLabel" name="lblBehavior">
       <Properties>
         <Property name="text" type="java.lang.String" value="Behaviour"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblBehaviourValue">
+    <Component class="javax.swing.JLabel" name="lblBehaviorValue">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="N/A"/>

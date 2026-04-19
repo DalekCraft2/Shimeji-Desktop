@@ -31,8 +31,8 @@ public class DebugWindow extends JFrame {
         lblWindowYValue = new javax.swing.JLabel();
         lblWindowWidthValue = new javax.swing.JLabel();
         lblWindowHeightValue = new javax.swing.JLabel();
-        lblBehaviour = new javax.swing.JLabel();
-        lblBehaviourValue = new javax.swing.JLabel();
+        lblBehavior = new javax.swing.JLabel();
+        lblBehaviorValue = new javax.swing.JLabel();
         lblEnvironmentY = new javax.swing.JLabel();
         lblEnvironmentX = new javax.swing.JLabel();
         lblEnvironmentXValue = new javax.swing.JLabel();
@@ -76,10 +76,10 @@ public class DebugWindow extends JFrame {
         lblWindowHeightValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblWindowHeightValue.setText("N/A");
 
-        lblBehaviour.setText("Behaviour");
+        lblBehavior.setText("Behaviour");
 
-        lblBehaviourValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblBehaviourValue.setText("N/A");
+        lblBehaviorValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblBehaviorValue.setText("N/A");
 
         lblEnvironmentY.setText("Environment Y");
 
@@ -115,7 +115,7 @@ public class DebugWindow extends JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblShimejiX)
                     .addComponent(lblShimejiY)
-                    .addComponent(lblBehaviour)
+                    .addComponent(lblBehavior)
                     .addComponent(lblWindowX)
                     .addComponent(lblWindowY)
                     .addComponent(lblWindowWidth)
@@ -127,7 +127,7 @@ public class DebugWindow extends JFrame {
                     .addComponent(lblActiveIE))
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblBehaviourValue, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                    .addComponent(lblBehaviorValue, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblShimejiYValue)
@@ -149,8 +149,8 @@ public class DebugWindow extends JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBehaviour)
-                    .addComponent(lblBehaviourValue))
+                    .addComponent(lblBehavior)
+                    .addComponent(lblBehaviorValue))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblShimejiX)
@@ -201,8 +201,8 @@ public class DebugWindow extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    void setBehaviour(String text) {
-        lblBehaviourValue.setText(text);
+    void setBehavior(String text) {
+        lblBehaviorValue.setText(text);
     }
 
     void setShimejiX(int x) {
@@ -252,7 +252,7 @@ public class DebugWindow extends JFrame {
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            lblBehaviour.setText(Main.getInstance().getLanguageBundle().getString("Behaviour"));
+            lblBehavior.setText(Main.getInstance().getLanguageBundle().getString("Behaviour"));
             lblShimejiX.setText(Main.getInstance().getLanguageBundle().getString("ShimejiX"));
             lblShimejiY.setText(Main.getInstance().getLanguageBundle().getString("ShimejiY"));
             lblActiveIE.setText(Main.getInstance().getLanguageBundle().getString("ActiveIE"));
@@ -271,8 +271,8 @@ public class DebugWindow extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lblActiveIE;
     private javax.swing.JLabel lblActiveIEValue;
-    private javax.swing.JLabel lblBehaviour;
-    private javax.swing.JLabel lblBehaviourValue;
+    private javax.swing.JLabel lblBehavior;
+    private javax.swing.JLabel lblBehaviorValue;
     private javax.swing.JLabel lblEnvironmentHeight;
     private javax.swing.JLabel lblEnvironmentHeightValue;
     private javax.swing.JLabel lblEnvironmentWidth;

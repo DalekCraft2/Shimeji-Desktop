@@ -102,19 +102,19 @@ public class ImageUtils {
         }
 
         final BufferedImage returnImage = createCompatibleImage(source.getWidth(), source.getHeight(), opacity == 1 ? source.getTransparency() : Transparency.TRANSLUCENT);
-        Color colour;
+        Color color;
         float[] components;
 
         for (int y = 0; y < returnImage.getHeight(); y++) {
             for (int x = 0; x < returnImage.getWidth(); x++) {
-                colour = new Color(source.getRGB(x, y), true);
-                components = colour.getComponents(null);
+                color = new Color(source.getRGB(x, y), true);
+                components = color.getComponents(null);
                 components[3] *= (float) opacity;
                 components[0] = components[3] * components[0];
                 components[1] = components[3] * components[1];
                 components[2] = components[3] * components[2];
-                colour = new Color(components[0], components[1], components[2], components[3]);
-                returnImage.setRGB(x, y, colour.getRGB());
+                color = new Color(components[0], components[1], components[2], components[3]);
+                returnImage.setRGB(x, y, color.getRGB());
             }
         }
 

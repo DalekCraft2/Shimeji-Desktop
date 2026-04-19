@@ -20,9 +20,9 @@ import java.util.ResourceBundle;
 public class Transform extends Animate {
     private static final Logger log = LoggerFactory.getLogger(Transform.class);
 
-    public static final String PARAMETER_TRANSFORMBEHAVIOUR = "TransformBehaviour";
+    public static final String PARAMETER_TRANSFORMBEHAVIOR = "TransformBehaviour";
 
-    private static final String DEFAULT_TRANSFORMBEHAVIOUR = "";
+    private static final String DEFAULT_TRANSFORMBEHAVIOR = "";
 
     public static final String PARAMETER_TRANSFORMMASCOT = "TransformMascot";
 
@@ -57,7 +57,7 @@ public class Transform extends Animate {
     }
 
     private String getTransformBehavior() throws VariableException {
-        return eval(getSchema().getString(PARAMETER_TRANSFORMBEHAVIOUR), String.class, DEFAULT_TRANSFORMBEHAVIOUR);
+        return eval(getSchema().getString(PARAMETER_TRANSFORMBEHAVIOR), String.class, DEFAULT_TRANSFORMBEHAVIOR);
     }
 
     private String getTransformMascot() throws VariableException {

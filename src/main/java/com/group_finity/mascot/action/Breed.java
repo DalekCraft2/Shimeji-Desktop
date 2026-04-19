@@ -32,8 +32,8 @@ public class Breed extends Animate {
         public static final String PARAMETER_BORNY = "BornY";
         private static final int DEFAULT_BORNY = 0;
 
-        public static final String PARAMETER_BORNBEHAVIOUR = "BornBehaviour";
-        private static final String DEFAULT_BORNBEHAVIOUR = "";
+        public static final String PARAMETER_BORNBEHAVIOR = "BornBehaviour";
+        private static final String DEFAULT_BORNBEHAVIOR = "";
 
         public static final String PARAMETER_BORNMASCOT = "BornMascot";
         private static final String DEFAULT_BORNMASCOT = "";
@@ -92,10 +92,10 @@ public class Breed extends Animate {
                 mascot.setLookRight(action.getMascot().isLookRight());
 
                 try {
-                    mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehaviour(), action.getMascot()));
+                    mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehavior(), action.getMascot()));
                     action.getMascot().getManager().add(mascot);
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                    log.error("Failed to create mascot \"{}\" with behavior \"{}\"", mascot, getBornBehaviour(), e);
+                    log.error("Failed to create mascot \"{}\" with behavior \"{}\"", mascot, getBornBehavior(), e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage"), e);
                     mascot.dispose();
                 }
@@ -122,8 +122,8 @@ public class Breed extends Animate {
             return action.eval(action.getSchema().getString(PARAMETER_BORNY), Number.class, DEFAULT_BORNY).intValue();
         }
 
-        private String getBornBehaviour() throws VariableException {
-            return action.eval(action.getSchema().getString(PARAMETER_BORNBEHAVIOUR), String.class, DEFAULT_BORNBEHAVIOUR);
+        private String getBornBehavior() throws VariableException {
+            return action.eval(action.getSchema().getString(PARAMETER_BORNBEHAVIOR), String.class, DEFAULT_BORNBEHAVIOR);
         }
 
         private String getBornMascot() throws VariableException {

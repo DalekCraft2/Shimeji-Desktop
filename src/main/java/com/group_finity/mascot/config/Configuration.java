@@ -218,7 +218,7 @@ public class Configuration {
                     ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
             // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
             mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
-            return buildBehavior(schema.getString(UserBehavior.BEHAVIOURNAME_FALL));
+            return buildBehavior(schema.getString(UserBehavior.BEHAVIORNAME_FALL));
         }
 
         double random = Math.random() * totalFrequency;
@@ -242,7 +242,7 @@ public class Configuration {
                         ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
                 // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
                 mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
-                return buildBehavior(schema.getString(UserBehavior.BEHAVIOURNAME_FALL));
+                return buildBehavior(schema.getString(UserBehavior.BEHAVIORNAME_FALL));
             }
         } else {
             throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name), name);
@@ -259,7 +259,7 @@ public class Configuration {
 
     public boolean isBehaviorEnabled(final BehaviorBuilder builder, final Mascot mascot) {
         if (builder.isToggleable() && Main.getInstance().getSettings().disabledBehaviors.containsKey(mascot.getImageSet())) {
-            return Main.getInstance().getSettings().disabledBehaviors.get(mascot.getImageSet()).stream().noneMatch(behaviour -> behaviour.equals(builder.getName()));
+            return Main.getInstance().getSettings().disabledBehaviors.get(mascot.getImageSet()).stream().noneMatch(behavior -> behavior.equals(builder.getName()));
         }
         return true;
     }
