@@ -1,6 +1,5 @@
 module com.group_finity.mascot {
     requires java.desktop;
-    requires java.management;
     requires java.logging;
     requires java.scripting;
     requires com.sun.jna;
