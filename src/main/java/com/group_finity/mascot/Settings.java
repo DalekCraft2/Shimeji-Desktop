@@ -28,7 +28,7 @@ public class Settings {
     public List<String> activeImageSets = new ArrayList<>();
     public List<String> informationDismissed = new ArrayList<>();
 
-    public Locale language = Locale.UK;
+    public Locale language = Locale.getDefault();
     public Map<String, List<String>> disabledBehaviors = new HashMap<>();
     public boolean breeding = true;
     public boolean transients = true;
@@ -69,7 +69,7 @@ public class Settings {
         informationDismissed = Arrays.stream(properties.getProperty("InformationDismissed", "").split("/")).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
 
         // Settings in tray menu and mascot popup menu
-        language = Locale.forLanguageTag(properties.getProperty("Language", Locale.UK.toLanguageTag()));
+        language = Locale.forLanguageTag(properties.getProperty("Language", Locale.getDefault().toLanguageTag()));
         disabledBehaviors.clear();
         for (String key : properties.stringPropertyNames()) {
             if (key.startsWith("DisabledBehaviours.")) {
