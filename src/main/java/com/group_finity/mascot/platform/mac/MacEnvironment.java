@@ -250,14 +250,13 @@ class MacEnvironment extends Environment {
         // Cast the property to a string ref
         CFStringRef orientationStringRef = new CFStringRef(orientationRef.getPointer());
 
-        final int bufsize = 64;
-        Memory buf = new Memory(64);
-        CoreFoundation.INSTANCE.CFStringGetCString(
-                orientationStringRef, buf, new CFIndex(bufsize), carbonEx.CFStringGetSystemEncoding());
-        orientationStringRef.release();
-        String ret = buf.getString(0);
-        buf.clear();
-        return ret;
+        final int bufSize = 64;
+        try (Memory buf = new Memory(bufSize)) {
+            CoreFoundation.INSTANCE.CFStringGetCString(
+                    orientationStringRef, buf, new CFIndex(bufSize), carbonEx.CFStringGetSystemEncoding());
+            orientationStringRef.release();
+            return buf.getString(0);
+        }
     }
 
     private static int getDockTileSize() {
