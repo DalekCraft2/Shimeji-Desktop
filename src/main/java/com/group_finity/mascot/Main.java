@@ -280,8 +280,10 @@ public class Main {
 
             log.info("Reading action file \"{}\" for image set \"{}\"", actionsFile, imageSet);
 
-            final Document actions = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
-                    Files.newInputStream(actionsFile));
+            final Document actions;
+            try (InputStream input = Files.newInputStream(actionsFile)) {
+                actions = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+            }
 
             Configuration configuration = new Configuration();
 
@@ -294,8 +296,10 @@ public class Main {
 
             log.info("Reading behavior file \"{}\" for image set \"{}\"", behaviorsFile, imageSet);
 
-            final Document behaviors = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
-                    Files.newInputStream(behaviorsFile));
+            final Document behaviors;
+            try (InputStream input = Files.newInputStream(behaviorsFile)) {
+                behaviors = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+            }
 
             configuration.load(new Entry(behaviors.getDocumentElement()), imageSet);
 
@@ -304,7 +308,10 @@ public class Main {
             if (Files.isRegularFile(infoFile)) {
                 log.info("Reading information file \"{}\" for image set \"{}\"", infoFile, imageSet);
 
-                final Document information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Files.newInputStream(infoFile));
+                final Document information;
+                try (InputStream input = Files.newInputStream(infoFile)) {
+                    information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                }
 
                 configuration.load(new Entry(information.getDocumentElement()), imageSet);
             }
@@ -991,8 +998,8 @@ public class Main {
         }
 
         if (Files.isRegularFile(ICON_FILE)) {
-            try {
-                icon = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(ICON_FILE)));
+            try (InputStream input = Files.newInputStream(ICON_FILE)) {
+                icon = ImageUtils.toCompatibleImage(ImageIO.read(input));
                 return icon;
             } catch (final IOException e) {
                 log.warn("Failed to load custom icon file", e);

@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -81,12 +82,12 @@ class VirtualEnvironment extends Environment {
             display.setTitle(title);
 
             BufferedImage image = null;
-            try {
-                Path backgroundImage = Main.getInstance().getSettings().backgroundImage;
-                if (backgroundImage != null) {
-                    image = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(backgroundImage)));
+            Path backgroundImage = Main.getInstance().getSettings().backgroundImage;
+            if (backgroundImage != null) {
+                try (InputStream input = Files.newInputStream(backgroundImage)) {
+                    image = ImageUtils.toCompatibleImage(ImageIO.read(input));
+                } catch (IOException ignored) {
                 }
-            } catch (IOException ignored) {
             }
             display.setContentPane(new VirtualContentPanel(new Dimension(Main.getInstance().getSettings().windowSize),
                     Main.getInstance().getSettings().backgroundColor, image, Main.getInstance().getSettings().backgroundMode));

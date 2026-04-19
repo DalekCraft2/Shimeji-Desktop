@@ -23,6 +23,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -1009,7 +1010,10 @@ public class SettingsWindow extends JDialog {
         }
 
         Dimension size = pnlBackgroundImage.getPreferredSize();
-        Image image = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(backgroundImage)));
+        Image image;
+        try (InputStream input = Files.newInputStream(backgroundImage)) {
+            image = ImageUtils.toCompatibleImage(ImageIO.read(input));
+        }
 
         if (image == null) {
             lblBackgroundImage.setIcon(null);

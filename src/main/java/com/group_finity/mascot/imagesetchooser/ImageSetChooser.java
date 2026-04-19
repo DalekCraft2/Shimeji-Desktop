@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -81,7 +82,10 @@ public class ImageSetChooser extends JDialog {
                     if (Files.isRegularFile(infoFile)) {
                         Configuration configuration = new Configuration();
 
-                        final Document information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(Files.newInputStream(infoFile));
+                        final Document information;
+                        try (InputStream input = Files.newInputStream(infoFile)) {
+                            information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                        }
 
                         configuration.load(new Entry(information.getDocumentElement()), imageSet);
 

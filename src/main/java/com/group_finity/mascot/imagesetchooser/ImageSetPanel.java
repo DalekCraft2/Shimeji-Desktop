@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -32,8 +33,8 @@ public class ImageSetPanel extends JPanel {
         this.caption.setText(caption);
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
-        try {
-            BufferedImage img = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(imageLocation)));
+        try (InputStream input = Files.newInputStream(imageLocation)) {
+            BufferedImage img = ImageUtils.toCompatibleImage(ImageIO.read(input));
             image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
         } catch (IOException e) {
             // Doesn't matter, the image just won't show

@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -39,14 +40,19 @@ public class ImagePairs {
             return key;
         }
 
-        BufferedImage leftImage = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))));
+        BufferedImage leftImage;
+        try (InputStream input = Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))) {
+            leftImage = ImageUtils.toCompatibleImage(ImageIO.read(input));
+        }
         leftImage = ImageUtils.scale(ImageUtils.premultiply(leftImage, opacity), scaling, filter);
 
         BufferedImage rightImage;
         if (rightPath == null) {
             rightImage = ImageUtils.flip(leftImage);
         } else {
-            rightImage = ImageUtils.toCompatibleImage(ImageIO.read(Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))));
+            try (InputStream input = Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))) {
+                rightImage = ImageUtils.toCompatibleImage(ImageIO.read(input));
+            }
             rightImage = ImageUtils.scale(ImageUtils.premultiply(rightImage, opacity), scaling, filter);
         }
 
