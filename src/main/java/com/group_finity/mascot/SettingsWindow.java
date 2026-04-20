@@ -208,7 +208,7 @@ public class SettingsWindow extends JDialog {
                 }
                 JOptionPane.showMessageDialog(this, String.format(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (IOException | UnsupportedOperationException | URISyntaxException e) {
+        } catch (UnsupportedOperationException | URISyntaxException | IOException e) {
             log.error("Failed to open URL \"{}\"", url, e);
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }

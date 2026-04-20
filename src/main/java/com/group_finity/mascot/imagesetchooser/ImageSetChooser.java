@@ -97,7 +97,8 @@ public class ImageSetChooser extends JDialog {
                         }
                     }
 
-                } catch (ConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
+                } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
+                         RuntimeException ex) {
                     imageFile = imageSetDir.resolve("shime1.png");
                     caption = imageSet;
                 }

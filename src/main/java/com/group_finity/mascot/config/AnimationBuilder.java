@@ -100,7 +100,7 @@ public class AnimationBuilder {
 
             try {
                 imageKey = ImagePairs.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
-            } catch (IOException | NumberFormatException e) {
+            } catch (NumberFormatException | IOException e) {
                 String imagePairString = imagePath.toString();
                 if (imageRightPath != null) {
                     imagePairString += ", " + imageRightPath;
@@ -136,7 +136,7 @@ public class AnimationBuilder {
                 float volume = Float.parseFloat(volumeText);
                 soundKey = Sounds.load(soundPath.toString(), volume);
                 Sounds.addUsage(soundKey, imageSet);
-            } catch (IOException | NumberFormatException | UnsupportedAudioFileException | LineUnavailableException e) {
+            } catch (NumberFormatException | IOException | UnsupportedAudioFileException | LineUnavailableException e) {
                 throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage"), soundText), e);
             }
         }

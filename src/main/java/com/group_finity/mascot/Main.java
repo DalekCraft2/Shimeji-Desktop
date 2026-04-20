@@ -75,7 +75,7 @@ public class Main {
     static {
         try (InputStream input = Files.newInputStream(LOGGING_FILE)) {
             LogManager.getLogManager().readConfiguration(input);
-        } catch (final SecurityException | IOException e) {
+        } catch (final IOException | SecurityException e) {
             log.error("Failed to load log properties", e);
         }
     }
@@ -349,7 +349,7 @@ public class Main {
             childImageSets.put(imageSet, childMascots);
 
             return true;
-        } catch (ConfigurationException | IOException | ParserConfigurationException | SAXException |
+        } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
                  RuntimeException e) {
             log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
             showError(String.format(languageBundle.getString("FailedLoadConfigErrorMessage"), imageSet), e);
@@ -953,7 +953,7 @@ public class Main {
             if (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
                 log.warn("The executor service did not terminate in the allotted time.");
             }
-        } catch (final InterruptedException | SecurityException e) {
+        } catch (final SecurityException | InterruptedException e) {
             log.error("Failed to shutdown the executor service.", e);
         }
         manager.disposeAll();

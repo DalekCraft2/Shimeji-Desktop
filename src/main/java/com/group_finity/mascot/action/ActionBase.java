@@ -139,7 +139,7 @@ public abstract class ActionBase implements Action {
                     // This clears and sets the mascot's hotspots
                     getMascot().setHotspots(animation.getHotspots());
                 }
-            } catch (VariableException ignored) {
+            } catch (VariableException e) {
                 // Clear the hotspots if we failed to get the animation
                 getMascot().clearHotspots();
             }

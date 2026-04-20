@@ -149,7 +149,7 @@ public class InformationWindow extends JFrame {
                                 }
                                 JOptionPane.showMessageDialog(this, String.format(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
                             }
-                        } catch (IOException | UnsupportedOperationException | URISyntaxException ex) {
+                        } catch (UnsupportedOperationException | URISyntaxException | IOException ex) {
                             log.error("Failed to open URL \"{}\"", url, ex);
                             JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
