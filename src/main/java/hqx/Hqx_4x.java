@@ -45,7 +45,7 @@ public class Hqx_4x extends Hqx {
 
     /**
      * This and the next caseXXX methods were used to reduce the code size of the main
-     * #hq4x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean) method because of the Java 65K bytecode limit.
+     * {@link #hq4x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean)} method because of the Java 65K bytecode limit.
      * Only the necessary methods were created, to leave the maximum code on the original one to avoid excessive calling.
      * However, this is a very bad design (too much code in the same method)
      */

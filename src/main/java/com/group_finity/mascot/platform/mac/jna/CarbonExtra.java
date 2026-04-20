@@ -165,8 +165,8 @@ public interface CarbonExtra extends Library {
      * @param key Preferences key for the value to obtain.
      * @param applicationID The ID of the application whose preferences are searched.
      * Takes the form of a Java package name, such as {@code com.foosoft}.
-     * @param userName {@link CarbonExtra#kCFPreferencesCurrentUser} if to search the current-user domain, otherwise {@code kCFPreferencesAnyUser} to search the any-user domain.
-     * @param hostName {@code kCFPreferencesCurrentHost} if to search the current-host domain, otherwise {@link CarbonExtra#kCFPreferencesAnyHost} to search the any-host domain.
+     * @param userName {@link #kCFPreferencesCurrentUser} if to search the current-user domain, otherwise {@code kCFPreferencesAnyUser} to search the any-user domain.
+     * @param hostName {@code kCFPreferencesCurrentHost} if to search the current-host domain, otherwise {@link #kCFPreferencesAnyHost} to search the any-host domain.
      * @return The preference data for the specified domain. If no value was located, returns {@code NULL}. Ownership follows
      * the <a href="https://developer.apple.com/library/archive/documentation/CoreFoundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html#//apple_ref/doc/uid/20001148-103029">The Create Rule</a>.
      */

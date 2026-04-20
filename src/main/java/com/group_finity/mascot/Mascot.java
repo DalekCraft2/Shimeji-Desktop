@@ -148,15 +148,15 @@ public class Mascot {
 
     /**
      * Represents the dimensions of the last non-null image this {@code Mascot} had.
-     * Set by {@link Mascot#getBounds()} whenever the current image is not {@code null}.
-     * When the current image is {@code null}, this value is used by {@link Mascot#getBounds()} to calculate the bounds.
+     * Set by {@link #getBounds()} whenever the current image is not {@code null}.
+     * When the current image is {@code null}, this value is used by {@link #getBounds()} to calculate the bounds.
      */
     private Dimension prevImageSize = new Dimension();
 
     /**
      * Represents the anchor of the last non-null image this {@code Mascot} had.
-     * Set by {@link Mascot#getBounds()} whenever the current image is not {@code null}.
-     * When the current image is {@code null}, this value is used by {@link Mascot#getBounds()} to calculate the bounds.
+     * Set by {@link #getBounds()} whenever the current image is not {@code null}.
+     * When the current image is {@code null}, this value is used by {@link #getBounds()} to calculate the bounds.
      */
     private Point prevImageAnchor = new Point();
 
@@ -164,7 +164,7 @@ public class Mascot {
 
     /**
      * The state of the "Draw Shimeji Bounds" setting as of the last tick.
-     * This is used to detect when the setting has changed, so we can set {@link Mascot#needsRepaint} to {@code true}.
+     * This is used to detect when the setting has changed, so we can set {@link #needsRepaint} to {@code true}.
      */
     private boolean prevDrawShimejiBounds = false;
 
