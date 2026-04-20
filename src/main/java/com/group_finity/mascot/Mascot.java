@@ -730,7 +730,7 @@ public class Mascot {
 
     public void setPaused(final boolean paused) {
         this.paused = paused;
-        Main.getInstance().refreshTrayMenuPauseText();
+        Main.getInstance().getTrayMenu().refreshPauseText();
     }
 
     void setPausedNoCallback(final boolean paused) {

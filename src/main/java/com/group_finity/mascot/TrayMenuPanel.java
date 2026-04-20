@@ -596,7 +596,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         dialog.display();
 
         if (dialog.isTrayMenuReloadRequired()) {
-            Main.getInstance().createTrayIcon();
+            Main.getInstance().getTrayMenu().createTrayIcon();
         }
 
         boolean windowedMode = Main.getInstance().getSettings().windowedMode;
