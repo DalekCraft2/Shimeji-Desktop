@@ -231,8 +231,8 @@ public class Manager {
     public void setBehaviorAll(final String name) {
         synchronized (mascots) {
             for (final Mascot mascot : mascots) {
+                Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
                 try {
-                    Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);

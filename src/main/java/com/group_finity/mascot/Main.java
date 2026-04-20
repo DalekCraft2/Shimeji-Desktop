@@ -509,81 +509,82 @@ public class Main {
         // get the tray icon image
         BufferedImage image = getIcon();
 
-        try {
-            // Create the tray icon
-            String tooltip = settings.shimejiEeNameOverride;
-            if (tooltip.isEmpty()) {
-                tooltip = languageBundle.getString("ShimejiEE");
-            }
-            trayIcon = new TrayIcon(image, tooltip);
-            trayIcon.setImageAutoSize(true);
+        // Create the tray icon
+        String tooltip = settings.shimejiEeNameOverride;
+        if (tooltip.isEmpty()) {
+            tooltip = languageBundle.getString("ShimejiEE");
+        }
+        trayIcon = new TrayIcon(image, tooltip);
+        trayIcon.setImageAutoSize(true);
 
-            // attach menu
-            trayIcon.addMouseListener(new MouseListener() {
-                boolean debouncing = false;
-                final Timer debounceTimer = new Timer(1000, event -> debouncing = false);
+        // attach menu
+        trayIcon.addMouseListener(new MouseListener() {
+            boolean debouncing = false;
+            // TODO: Call stop() on this whenever the tray icon is removed.
+            final Timer debounceTimer = new Timer(1000, event -> debouncing = false);
 
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (debouncing) {
-                        return;
-                    }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (debouncing) {
+                    return;
+                }
 
-                    debouncing = true;
-                    debounceTimer.setRepeats(false);
-                    debounceTimer.restart();
+                debouncing = true;
+                debounceTimer.setRepeats(false);
+                debounceTimer.restart();
 
-                    if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
-                        // Create a mascot when the icon is left-clicked
-                        createMascot();
-                    } else if (SwingUtilities.isMiddleMouseButton(e) && e.getClickCount() == 2) {
-                        // When the icon is double-middle-clicked, dispose of all mascots, but do not close the program
-                        /* BUG: On Windows 11, Java seems to think the middle mouse button is the left mouse button, so this code never gets executed.
-                        This is a JDK bug: https://bugs.openjdk.org/browse/JDK-8341173 */
-                        if (manager.isExitOnLastRemoved()) {
-                            manager.setExitOnLastRemoved(false);
-                            manager.disposeAll();
-                        } else {
-                            // If the mascots are already gone, recreate one mascot for each active image set
-                            for (String imageSet : imageSets) {
-                                createMascot(imageSet);
-                                manager.setExitOnLastRemoved(true);
-                            }
+                if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
+                    // Create a mascot when the icon is left-clicked
+                    createMascot();
+                } else if (SwingUtilities.isMiddleMouseButton(e) && e.getClickCount() == 2) {
+                    // When the icon is double-middle-clicked, dispose of all mascots, but do not close the program
+                    /* BUG: On Windows 11, Java seems to think the middle mouse button is the left mouse button, so this code never gets executed.
+                    This is a JDK bug: https://bugs.openjdk.org/browse/JDK-8341173 */
+                    if (manager.isExitOnLastRemoved()) {
+                        manager.setExitOnLastRemoved(false);
+                        manager.disposeAll();
+                    } else {
+                        // If the mascots are already gone, recreate one mascot for each active image set
+                        for (String imageSet : imageSets) {
+                            createMascot(imageSet);
+                            manager.setExitOnLastRemoved(true);
                         }
                     }
                 }
+            }
 
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    // Check for popup triggers in both mousePressed and mouseReleased
-                    // because it works differently on different systems
-                    if (e.isPopupTrigger()) {
-                        onPopupTrigger(e);
-                    }
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // Check for popup triggers in both mousePressed and mouseReleased
+                // because it works differently on different systems
+                if (e.isPopupTrigger()) {
+                    onPopupTrigger(e);
                 }
+            }
 
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    // Check for popup triggers in both mousePressed and mouseReleased
-                    // because it works differently on different systems
-                    if (e.isPopupTrigger()) {
-                        onPopupTrigger(e);
-                    }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // Check for popup triggers in both mousePressed and mouseReleased
+                // because it works differently on different systems
+                if (e.isPopupTrigger()) {
+                    onPopupTrigger(e);
                 }
+            }
 
-                private void onPopupTrigger(MouseEvent event) {
-                    createTrayMenu(true, event);
-                }
+            private void onPopupTrigger(MouseEvent event) {
+                createTrayMenu(true, event);
+            }
 
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
 
-                @Override
-                public void mouseExited(MouseEvent e) {
-                }
-            });
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
 
+        try {
             // Show tray icon
             SystemTray.getSystemTray().add(trayIcon);
         } catch (final AWTException e) {

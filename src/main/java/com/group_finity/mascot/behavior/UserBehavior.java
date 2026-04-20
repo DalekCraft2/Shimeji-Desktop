@@ -103,13 +103,13 @@ public class UserBehavior implements Behavior {
                             // activate hotspot
                             hotspotState = HotspotState.ACTIVE_NULL;
                             // no need to set cursor position, it's already set
-                            try {
-                                if (hotspot.getBehaviour() != null) {
-                                    hotspotState = HotspotState.ACTIVE;
+                            if (hotspot.getBehaviour() != null) {
+                                hotspotState = HotspotState.ACTIVE;
+                                try {
                                     mascot.setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
+                                } catch (final BehaviorInstantiationException e) {
+                                    throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
                                 }
-                            } catch (final BehaviorInstantiationException e) {
-                                throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
                             }
                             break;
                         }
@@ -154,9 +154,9 @@ public class UserBehavior implements Behavior {
         } catch (final LostGroundException e) {
             log.info("Lost ground ({}, {})", mascot, this);
 
+            mascot.setCursorPosition(null);
+            mascot.setDragging(false);
             try {
-                mascot.setCursorPosition(null);
-                mascot.setDragging(false);
                 mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_FALL)));
             } catch (final BehaviorInstantiationException ex) {
                 throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), ex);
@@ -190,12 +190,12 @@ public class UserBehavior implements Behavior {
                         // activate hotspot
                         handled = true;
                         mascot.setCursorPosition(event.getPoint());
-                        try {
-                            if (hotspot.getBehaviour() != null) {
+                        if (hotspot.getBehaviour() != null) {
+                            try {
                                 mascot.setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
+                            } catch (final BehaviorInstantiationException e) {
+                                throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), hotspot.getBehaviour()), e);
                             }
-                        } catch (final BehaviorInstantiationException e) {
-                            throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), hotspot.getBehaviour()), e);
                         }
                         break;
                     }
@@ -242,9 +242,9 @@ public class UserBehavior implements Behavior {
 
             // check if we are in the middle of a drag, otherwise we do nothing
             if (mascot.isDragging()) {
+                // Stop dragging
+                mascot.setDragging(false);
                 try {
-                    // Stop dragging
-                    mascot.setDragging(false);
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_THROWN)));
                 } catch (final BehaviorInstantiationException e) {
                     throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDropActionInitialiseErrorMessage"), e);

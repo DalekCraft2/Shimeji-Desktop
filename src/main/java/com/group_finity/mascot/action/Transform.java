@@ -47,8 +47,8 @@ public class Transform extends Animate {
     private void transform() throws VariableException {
         String childType = Main.getInstance().getConfiguration(getTransformMascot()) != null ? getTransformMascot() : getMascot().getImageSet();
 
+        getMascot().setImageSet(childType);
         try {
-            getMascot().setImageSet(childType);
             getMascot().setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getTransformBehavior(), getMascot()));
         } catch (final BehaviorInstantiationException | CantBeAliveException e) {
             log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", getTransformBehavior(), getMascot(), e);
