@@ -1006,8 +1006,8 @@ public class Main {
             }
         }
 
-        try {
-            icon = ImageUtils.toCompatibleImage(ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/icon.png"))));
+        try (InputStream input = Objects.requireNonNull(Main.class.getResourceAsStream("/icon.png"))) {
+            icon = ImageUtils.toCompatibleImage(ImageIO.read(input));
             return icon;
         } catch (final IOException e) {
             log.warn("Failed to load default icon file", e);
