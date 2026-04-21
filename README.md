@@ -44,12 +44,14 @@ Shimeji by Kilkakon and other members of the community.
 
 ## Requirements
 
-* Windows Vista or newer / macOS / Linux
+* Windows Vista or newer / macOS / Linux (X11)
 * Java 11 or newer
 
 ## How to Start
 
-1. Open the Shimeji-ee JAR file (`Shimeji-ee.jar`). On Windows, opening `Shimeji-ee.exe` will also work.
+1. Open the Shimeji-ee JAR file (`Shimeji-ee.jar`).
+    * On Windows, you can alternatively open `Shimeji-ee.exe`.
+    * On Linux/Mac, you can alternatively open `Shimeji-ee`.
 2. Right-click the tray icon for general options.
 3. Right-click a Shimeji for options relating to it.
 
