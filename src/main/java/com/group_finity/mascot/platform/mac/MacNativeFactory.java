@@ -13,7 +13,6 @@ import com.group_finity.mascot.platform.generic.GenericNativeFactory;
  * @author nonowarn
  */
 public class MacNativeFactory extends NativeFactory {
-    private final NativeFactory delegate = new GenericNativeFactory();
     private final Environment environment = new MacEnvironment();
 
     @Override
@@ -23,6 +22,6 @@ public class MacNativeFactory extends NativeFactory {
 
     @Override
     public TranslucentWindow newTranslucentWindow() {
-        return new MacTranslucentWindow(delegate);
+        return new MacTranslucentWindow();
     }
 }

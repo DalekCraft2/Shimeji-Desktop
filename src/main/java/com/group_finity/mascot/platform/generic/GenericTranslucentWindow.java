@@ -44,11 +44,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
             return;
         }
 
-        if (b && OS.isFamilyMac()) {
-            // See https://developer.apple.com/library/archive/technotes/tn2007/tn2196.html#APPLE_AWT_DRAGGABLEWINDOWBACKGROUND
-            WindowUtils.setWindowTransparent(this, true);
-        }
-
         super.setVisible(b);
     }
 
