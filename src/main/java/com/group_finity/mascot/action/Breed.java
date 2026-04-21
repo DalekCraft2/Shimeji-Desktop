@@ -77,27 +77,27 @@ public class Breed extends Animate {
 
             for (int index = 0; index < getBornCount(); index++) {
                 // Create a mascot
-                final Mascot mascot = new Mascot(childType);
+                final Mascot newMascot = new Mascot(childType);
 
-                log.info("Breed Mascot ({},{},{})", action.getMascot(), action, mascot);
+                log.info("Breed Mascot ({},{},{})", action.getMascot(), action, newMascot);
 
                 // Start outside the range
                 if (action.getMascot().isLookRight()) {
-                    mascot.setAnchor(new Point(action.getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
-                            action.getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
+                    newMascot.getAnchor().setLocation(action.getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
+                            action.getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling));
                 } else {
-                    mascot.setAnchor(new Point(action.getMascot().getAnchor().x + (int) Math.round(getBornX() * scaling),
-                            action.getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling)));
+                    newMascot.getAnchor().setLocation(action.getMascot().getAnchor().x + (int) Math.round(getBornX() * scaling),
+                            action.getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling));
                 }
-                mascot.setLookRight(action.getMascot().isLookRight());
+                newMascot.setLookRight(action.getMascot().isLookRight());
 
                 try {
-                    mascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehavior(), action.getMascot()));
-                    action.getMascot().getManager().add(mascot);
+                    newMascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehavior(), action.getMascot()));
+                    action.getMascot().getManager().add(newMascot);
                 } catch (final BehaviorInstantiationException | CantBeAliveException e) {
-                    log.error("Failed to create mascot \"{}\" with behavior \"{}\"", mascot, getBornBehavior(), e);
+                    log.error("Failed to create mascot \"{}\" with behavior \"{}\"", newMascot, getBornBehavior(), e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage"), e);
-                    mascot.dispose();
+                    newMascot.dispose();
                 }
             }
         }

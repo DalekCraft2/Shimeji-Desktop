@@ -97,7 +97,7 @@ public class Dragged extends ActionBase {
         getAnimation().next(getMascot(), getTime());
 
         // Align the mascot position to the mouse cursor
-        getMascot().setAnchor(new Point(cursor.getX() + offsetX, cursor.getY() + offsetY));
+        getMascot().getAnchor().setLocation(cursor.getX() + offsetX, cursor.getY() + offsetY);
 
         // recreates old lukewarm behaviour while keeping hasNext deterministic
         if (getTime() == timeToResist - 1 && Math.random() >= 0.1) {

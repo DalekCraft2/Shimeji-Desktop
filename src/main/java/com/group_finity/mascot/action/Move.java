@@ -88,14 +88,14 @@ public class Move extends BorderedAction {
             // If we went past the target, set ourselves to the target position
             if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX
                     || !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
-                getMascot().setAnchor(new Point(targetX, getMascot().getAnchor().y));
+                getMascot().getAnchor().x = targetX;
             }
         }
         if (targetY != DEFAULT_TARGETY) {
             // If we went past the target, set ourselves to the target position
             if (down && getMascot().getAnchor().y >= targetY ||
                     !down && getMascot().getAnchor().y <= targetY) {
-                getMascot().setAnchor(new Point(getMascot().getAnchor().x, targetY));
+                getMascot().getAnchor().y = targetY;
             }
         }
     }

@@ -107,11 +107,11 @@ public class ScanMove extends BorderedAction {
 
         if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX ||
                 !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
-            getMascot().setAnchor(new Point(targetX, getMascot().getAnchor().y));
+            getMascot().getAnchor().x = targetX;
         }
         if (down && getMascot().getAnchor().y >= targetY ||
                 !down && getMascot().getAnchor().y <= targetY) {
-            getMascot().setAnchor(new Point(getMascot().getAnchor().x, targetY));
+            getMascot().getAnchor().y = targetY;
         }
 
         boolean noMoveX = getMascot().getAnchor().x == targetX;

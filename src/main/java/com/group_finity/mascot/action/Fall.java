@@ -93,7 +93,7 @@ public class Fall extends ActionBase {
     public boolean hasNext() throws VariableException {
         Point pos = getMascot().getAnchor();
         // Check that the velocity is at least 0 so that, if a mascot starts an action with negative initial Y velocity,
-        // the action is not cancelled immediately.
+        // the action is not canceled immediately.
         boolean onBorder = getEnvironment().getFloor().isOn(pos) && velocityY >= 0 || getEnvironment().getWall().isOn(pos);
         return super.hasNext() && !onBorder;
     }
@@ -123,7 +123,7 @@ public class Fall extends ActionBase {
 
         int dev = Math.max(1, Math.max(Math.abs(dx), Math.abs(dy)));
 
-        final Point anchor = mascot.getAnchor();
+        final Point anchor = new Point(mascot.getAnchor());
         final MascotEnvironment environment = getEnvironment();
 
         OUTER:
@@ -132,11 +132,11 @@ public class Fall extends ActionBase {
             int y = anchor.y + dy * i / dev;
 
             // Move mascot
-            mascot.setAnchor(new Point(x, y));
+            mascot.getAnchor().setLocation(x, y);
             if (dy > 0) {
                 // HACK: Windows may be moved, so check them often.
                 for (int j = -80; j <= 0; j++) {
-                    mascot.setAnchor(new Point(x, y + j));
+                    mascot.getAnchor().setLocation(x, y + j);
                     if (environment.getFloor(true).isOn(mascot.getAnchor())) {
                         break OUTER;
                     }

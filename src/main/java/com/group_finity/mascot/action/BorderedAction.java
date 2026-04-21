@@ -56,7 +56,7 @@ public abstract class BorderedAction extends ActionBase {
     protected void tick() throws LostGroundException, VariableException {
         if (getBorder() != null) {
             // The frame may be moving
-            getMascot().setAnchor(getBorder().move(getMascot().getAnchor()));
+            getMascot().getAnchor().setLocation(getBorder().move(getMascot().getAnchor()));
         }
     }
 

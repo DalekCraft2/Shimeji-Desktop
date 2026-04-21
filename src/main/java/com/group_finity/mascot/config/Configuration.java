@@ -217,7 +217,7 @@ public class Configuration {
             Area area = Main.getInstance().getSettings().multiscreen
                     ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
             // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
-            mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
+            mascot.getAnchor().setLocation((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256);
             return buildBehavior(schema.getString(UserBehavior.BEHAVIORNAME_FALL));
         }
 
@@ -241,7 +241,7 @@ public class Configuration {
                 Area area = Main.getInstance().getSettings().multiscreen
                         ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
                 // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
-                mascot.setAnchor(new Point((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256));
+                mascot.getAnchor().setLocation((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256);
                 return buildBehavior(schema.getString(UserBehavior.BEHAVIORNAME_FALL));
             }
         } else {

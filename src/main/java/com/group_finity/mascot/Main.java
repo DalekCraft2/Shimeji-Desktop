@@ -482,7 +482,7 @@ public class Main {
         final Mascot mascot = new Mascot(imageSet);
 
         // Create it outside the bounds of the screen
-        mascot.setAnchor(new Point(-4000, -4000));
+        mascot.getAnchor().setLocation(-4000, -4000);
 
         // Randomize the initial orientation
         mascot.setLookRight(Math.random() < 0.5);
