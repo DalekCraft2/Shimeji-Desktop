@@ -14,7 +14,7 @@ import javax.script.ScriptException;
  */
 public class Script extends Variable {
 
-    private static final NashornScriptEngine ENGINE = (NashornScriptEngine) new NashornScriptEngineFactory().getScriptEngine(new ScriptFilter());
+    private static final NashornScriptEngine ENGINE = (NashornScriptEngine) new NashornScriptEngineFactory().getScriptEngine(className -> false);
 
     private final String source;
 
