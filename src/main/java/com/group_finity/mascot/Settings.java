@@ -68,32 +68,33 @@ public class Settings {
 
         // Miscellaneous settings
         shimejiEeNameOverride = properties.getProperty("ShimejiEENameOverride", "").trim();
-        activeImageSets = Arrays.stream(properties.getProperty("ActiveShimeji", "").split("/")).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
-        informationDismissed = Arrays.stream(properties.getProperty("InformationDismissed", "").split("/")).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
+        activeImageSets = getStringListProperty(properties, "ActiveShimeji", "/", new ArrayList<>());
+        informationDismissed = getStringListProperty(properties, "InformationDismissed", "/", new ArrayList<>());
 
         // Settings in tray menu and mascot popup menu
         language = Locale.forLanguageTag(properties.getProperty("Language", Locale.getDefault().toLanguageTag()));
         disabledBehaviors.clear();
         for (String key : properties.stringPropertyNames()) {
-            if (key.startsWith("DisabledBehaviours.")) {
+            // Make sure the key's length is longer than "DisabledBehaviours." to prevent an IndexOutOfBoundsException
+            if (key.startsWith("DisabledBehaviours.") && key.length() > "DisabledBehaviours.".length()) {
                 String imageSet = key.substring(key.indexOf('.') + 1);
-                List<String> list = Arrays.stream(properties.getProperty(key, "").split("/")).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
+                List<String> list = getStringListProperty(properties, key, "/");
                 if (!list.isEmpty())
                     disabledBehaviors.put(imageSet, list);
             }
         }
-        breeding = Boolean.parseBoolean(properties.getProperty("Breeding", "true"));
-        transients = Boolean.parseBoolean(properties.getProperty("Transients", "true"));
-        transformation = Boolean.parseBoolean(properties.getProperty("Transformation", "true"));
-        throwing = Boolean.parseBoolean(properties.getProperty("Throwing", "true"));
-        sounds = Boolean.parseBoolean(properties.getProperty("Sounds", "true"));
-        multiscreen = Boolean.parseBoolean(properties.getProperty("Multiscreen", "true"));
+        breeding = getBooleanProperty(properties, "Breeding", true);
+        transients = getBooleanProperty(properties, "Transients", true);
+        transformation = getBooleanProperty(properties, "Transformation", true);
+        throwing = getBooleanProperty(properties, "Throwing", true);
+        sounds = getBooleanProperty(properties, "Sounds", true);
+        multiscreen = getBooleanProperty(properties, "Multiscreen", true);
 
         // General settings
-        showTrayIcon = Boolean.parseBoolean(properties.getProperty("ShowTrayIcon", "true"));
-        alwaysShowShimejiChooser = Boolean.parseBoolean(properties.getProperty("AlwaysShowShimejiChooser", "false"));
-        alwaysShowInformationScreen = Boolean.parseBoolean(properties.getProperty("AlwaysShowInformationScreen", "false"));
-        drawShimejiBounds = Boolean.parseBoolean(properties.getProperty("DrawShimejiBounds", "false"));
+        showTrayIcon = getBooleanProperty(properties, "ShowTrayIcon", true);
+        alwaysShowShimejiChooser = getBooleanProperty(properties, "AlwaysShowShimejiChooser", false);
+        alwaysShowInformationScreen = getBooleanProperty(properties, "AlwaysShowInformationScreen", false);
+        drawShimejiBounds = getBooleanProperty(properties, "DrawShimejiBounds", false);
         String filterText = properties.getProperty("Filter", "false");
         if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
             filter = Filter.HQX;
@@ -102,29 +103,78 @@ public class Settings {
         } else {
             filter = Filter.NEAREST_NEIGHBOUR;
         }
-        opacity = Double.parseDouble(properties.getProperty("Opacity", "1.0"));
-        scaling = Double.parseDouble(properties.getProperty("Scaling", "1.0"));
+        opacity = getDoubleProperty(properties, "Opacity", 1.0);
+        scaling = getDoubleProperty(properties, "Scaling", 1.0);
 
         // Interactive window settings
-        interactiveWindows = Arrays.stream(properties.getProperty("InteractiveWindows", "").split("/")).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
-        interactiveWindowsBlacklist = Arrays.stream(properties.getProperty("InteractiveWindowsBlacklist", "").split("/")).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
+        interactiveWindows = getStringListProperty(properties, "InteractiveWindows", "/", new ArrayList<>());
+        interactiveWindowsBlacklist = getStringListProperty(properties, "InteractiveWindowsBlacklist", "/", new ArrayList<>());
 
         // Window mode settings
         windowedMode = properties.getProperty("Environment", "generic").equals("virtual");
-        String[] windowArray = properties.getProperty("WindowSize", "600x500").split("x");
-        windowSize = new Dimension(Integer.parseInt(windowArray[0]), Integer.parseInt(windowArray[1]));
-        backgroundColor = Color.decode(properties.getProperty("Background", "#00FF00"));
+        try {
+            String[] windowSizeArray = properties.getProperty("WindowSize", "600x500").split("x");
+            if (windowSizeArray.length >= 2)
+                windowSize = new Dimension(Integer.parseInt(windowSizeArray[0]), Integer.parseInt(windowSizeArray[1]));
+            else
+                windowSize = new Dimension(600, 500);
+        } catch (NumberFormatException e) {
+            windowSize = new Dimension(600, 500);
+        }
+        backgroundColor = new Color(getIntProperty(properties, "Background", 0x00FF00));
         String backgroundImageString = properties.getProperty("BackgroundImage");
         backgroundImage = backgroundImageString == null || backgroundImageString.isEmpty() ? null : Path.of(properties.getProperty("BackgroundImage"));
         backgroundMode = properties.getProperty("BackgroundMode", "centre");
     }
 
-    private void saveImpl(Path path) {
-        try (OutputStream output = Files.newOutputStream(path)) {
-            properties.store(output, "Shimeji-ee Configuration Options");
-        } catch (IOException e) {
-            log.error("Failed to save settings", e);
+    private boolean getBooleanProperty(Properties properties, String key, boolean defaultValue) {
+        if (properties.containsKey(key)) {
+            return Boolean.parseBoolean(properties.getProperty(key));
+        } else {
+            return defaultValue;
         }
+    }
+
+    private int getIntProperty(Properties properties, String key, int defaultValue) {
+        if (properties.containsKey(key)) {
+            try {
+                return Integer.parseInt(properties.getProperty(key));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return defaultValue;
+    }
+
+    private double getDoubleProperty(Properties properties, String key, double defaultValue) {
+        if (properties.containsKey(key)) {
+            try {
+                return Double.parseDouble(properties.getProperty(key));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return defaultValue;
+    }
+
+    private int[] getIntArrayProperty(Properties properties, String key, String separator, int[] defaultValue) {
+        if (properties.containsKey(key)) {
+            try {
+                String[] splitArray = properties.getProperty(key).split(separator);
+                return Arrays.stream(splitArray).mapToInt(Integer::parseInt).toArray();
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return defaultValue;
+    }
+
+    private List<String> getStringListProperty(Properties properties, String key, String separator) {
+        return Arrays.stream(properties.getProperty(key).split(separator)).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
+    }
+
+    private List<String> getStringListProperty(Properties properties, String key, String separator, List<String> defaultValue) {
+        if (properties.containsKey(key)) {
+            return Arrays.stream(properties.getProperty(key).split(separator)).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
+        }
+        return defaultValue;
     }
 
     /**
@@ -138,14 +188,7 @@ public class Settings {
         properties.setProperty("ActiveShimeji", String.join("/", activeImageSets));
         properties.setProperty("InformationDismissed", String.join("/", informationDismissed));
 
-        savePopupSettingsImpl();
-
-        saveUserSettingsImpl();
-
-        saveImpl(path);
-    }
-
-    private void savePopupSettingsImpl() {
+        // Settings in tray menu and mascot popup menu
         properties.setProperty("Language", language.toLanguageTag());
         for (Map.Entry<String, List<String>> entry : disabledBehaviors.entrySet()) {
             properties.setProperty("DisabledBehaviours." + entry.getKey(), String.join("/", entry.getValue()));
@@ -161,9 +204,7 @@ public class Settings {
         properties.setProperty("Throwing", String.valueOf(throwing));
         properties.setProperty("Sounds", String.valueOf(sounds));
         properties.setProperty("Multiscreen", String.valueOf(multiscreen));
-    }
 
-    private void saveUserSettingsImpl() {
         // General settings
         properties.setProperty("ShowTrayIcon", String.valueOf(showTrayIcon));
         properties.setProperty("AlwaysShowShimejiChooser", String.valueOf(alwaysShowShimejiChooser));
@@ -193,5 +234,11 @@ public class Settings {
         properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
         properties.setProperty("BackgroundMode", backgroundMode);
         properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage.toString());
+
+        try (OutputStream output = Files.newOutputStream(path)) {
+            properties.store(output, "Shimeji-ee Configuration Options");
+        } catch (IOException e) {
+            log.error("Failed to save settings", e);
+        }
     }
 }
