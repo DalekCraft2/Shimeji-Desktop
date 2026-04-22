@@ -22,16 +22,13 @@ import java.util.ResourceBundle;
 public class Dragged extends ActionBase {
     private static final Logger log = LoggerFactory.getLogger(Dragged.class);
 
-    public static final String PARAMETER_OFFSETX = "OffsetX";
-
+    private static final String PARAMETER_OFFSETX = "OffsetX";
     private static final int DEFAULT_OFFSETX = 0;
 
-    public static final String PARAMETER_OFFSETY = "OffsetY";
-
+    private static final String PARAMETER_OFFSETY = "OffsetY";
     private static final int DEFAULT_OFFSETY = 120;
 
-    public static final String PARAMETER_OFFSETTYPE = "OffsetType";
-
+    private static final String PARAMETER_OFFSETTYPE = "OffsetType";
     private static final String DEFAULT_OFFSETTYPE = "ImageAnchor";
 
     private static final String VARIABLE_FOOTX = "FootX";

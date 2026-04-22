@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 public class Turn extends BorderedAction {
     private static final Logger log = LoggerFactory.getLogger(Turn.class);
 
-    public static final String PARAMETER_LOOKRIGHT = "LookRight";
+    private static final String PARAMETER_LOOKRIGHT = "LookRight";
 
     private boolean turning = false;
 

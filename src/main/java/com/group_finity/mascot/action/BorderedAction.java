@@ -21,15 +21,12 @@ import java.util.ResourceBundle;
 public abstract class BorderedAction extends ActionBase {
     private static final Logger log = LoggerFactory.getLogger(BorderedAction.class);
 
-    public static final String PARAMETER_BORDERTYPE = "BorderType";
-
+    private static final String PARAMETER_BORDERTYPE = "BorderType";
     private static final String DEFAULT_BORDERTYPE = null;
 
-    public static final String BORDERTYPE_CEILING = "Ceiling";
-
-    public static final String BORDERTYPE_WALL = "Wall";
-
-    public static final String BORDERTYPE_FLOOR = "Floor";
+    private static final String BORDERTYPE_CEILING = "Ceiling";
+    private static final String BORDERTYPE_WALL = "Wall";
+    private static final String BORDERTYPE_FLOOR = "Floor";
 
     private Border border;
 

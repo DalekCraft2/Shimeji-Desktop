@@ -26,25 +26,25 @@ public class Breed extends Animate {
 
     // thanks to LavenderSnek for the idea for this delegate, cleans up the breeding code nicely
     static class Delegate {
-        public static final String PARAMETER_BORNX = "BornX";
+        private static final String PARAMETER_BORNX = "BornX";
         private static final int DEFAULT_BORNX = 0;
 
-        public static final String PARAMETER_BORNY = "BornY";
+        private static final String PARAMETER_BORNY = "BornY";
         private static final int DEFAULT_BORNY = 0;
 
-        public static final String PARAMETER_BORNBEHAVIOR = "BornBehaviour";
+        private static final String PARAMETER_BORNBEHAVIOR = "BornBehaviour";
         private static final String DEFAULT_BORNBEHAVIOR = "";
 
-        public static final String PARAMETER_BORNMASCOT = "BornMascot";
+        private static final String PARAMETER_BORNMASCOT = "BornMascot";
         private static final String DEFAULT_BORNMASCOT = "";
 
-        public static final String PARAMETER_BORNTRANSIENT = "BornTransient";
+        private static final String PARAMETER_BORNTRANSIENT = "BornTransient";
         private static final boolean DEFAULT_BORNTRANSIENT = false;
 
-        public static final String PARAMETER_BORNINTERVAL = "BornInterval";
+        private static final String PARAMETER_BORNINTERVAL = "BornInterval";
         private static final int DEFAULT_BORNINTERVAL = 1;
 
-        public static final String PARAMETER_BORNCOUNT = "BornCount";
+        private static final String PARAMETER_BORNCOUNT = "BornCount";
         private static final int DEFAULT_BORNCOUNT = 1;
 
         private final ActionBase action;

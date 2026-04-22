@@ -20,12 +20,10 @@ import java.util.ResourceBundle;
 public class Move extends BorderedAction {
     private static final Logger log = LoggerFactory.getLogger(Move.class);
 
-    public static final String PARAMETER_TARGETX = "TargetX";
-
+    private static final String PARAMETER_TARGETX = "TargetX";
     private static final int DEFAULT_TARGETX = Integer.MAX_VALUE;
 
-    public static final String PARAMETER_TARGETY = "TargetY";
-
+    private static final String PARAMETER_TARGETY = "TargetY";
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
     private Boolean hasTurning = null;

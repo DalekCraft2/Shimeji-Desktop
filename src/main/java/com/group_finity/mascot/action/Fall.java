@@ -23,29 +23,24 @@ import java.util.ResourceBundle;
 public class Fall extends ActionBase {
     private static final Logger log = LoggerFactory.getLogger(Fall.class);
 
-    public static final String PARAMETER_INITIALVX = "InitialVX";
-
+    private static final String PARAMETER_INITIALVX = "InitialVX";
     private static final int DEFAULT_INITIALVX = 0;
 
-    public static final String PARAMETER_INITIALVY = "InitialVY";
-
+    private static final String PARAMETER_INITIALVY = "InitialVY";
     private static final int DEFAULT_INITIALVY = 0;
 
-    public static final String PARAMETER_RESISTANCEX = "ResistanceX";
-
+    private static final String PARAMETER_RESISTANCEX = "ResistanceX";
     private static final double DEFAULT_RESISTANCEX = 0.05;
 
-    public static final String PARAMETER_RESISTANCEY = "ResistanceY";
-
+    private static final String PARAMETER_RESISTANCEY = "ResistanceY";
     private static final double DEFAULT_RESISTANCEY = 0.1;
 
-    public static final String PARAMETER_GRAVITY = "Gravity";
-
+    private static final String PARAMETER_GRAVITY = "Gravity";
     private static final double DEFAULT_GRAVITY = 2;
 
-    public static final String VARIABLE_VELOCITYX = "VelocityX";
+    private static final String VARIABLE_VELOCITYX = "VelocityX";
 
-    public static final String VARIABLE_VELOCITYY = "VelocityY";
+    private static final String VARIABLE_VELOCITYY = "VelocityY";
 
     private double velocityX;
 

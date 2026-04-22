@@ -18,8 +18,7 @@ import java.util.ResourceBundle;
 public class Mute extends InstantAction {
     private static final Logger log = LoggerFactory.getLogger(Mute.class);
 
-    public static final String PARAMETER_SOUND = "Sound";
-
+    private static final String PARAMETER_SOUND = "Sound";
     private static final String DEFAULT_SOUND = null;
 
     public Mute(ResourceBundle schema, final VariableMap context) {

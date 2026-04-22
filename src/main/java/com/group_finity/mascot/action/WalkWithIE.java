@@ -22,12 +22,10 @@ import java.util.ResourceBundle;
 public class WalkWithIE extends Move {
     private static final Logger log = LoggerFactory.getLogger(WalkWithIE.class);
 
-    public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
-
+    private static final String PARAMETER_IEOFFSETX = "IeOffsetX";
     private static final int DEFAULT_IEOFFSETX = 0;
 
-    public static final String PARAMETER_IEOFFSETY = "IeOffsetY";
-
+    private static final String PARAMETER_IEOFFSETY = "IeOffsetY";
     private static final int DEFAULT_IEOFFSETY = 0;
 
     // private double scaling;

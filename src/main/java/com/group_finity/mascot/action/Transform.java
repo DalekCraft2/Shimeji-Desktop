@@ -20,12 +20,10 @@ import java.util.ResourceBundle;
 public class Transform extends Animate {
     private static final Logger log = LoggerFactory.getLogger(Transform.class);
 
-    public static final String PARAMETER_TRANSFORMBEHAVIOR = "TransformBehaviour";
-
+    private static final String PARAMETER_TRANSFORMBEHAVIOR = "TransformBehaviour";
     private static final String DEFAULT_TRANSFORMBEHAVIOR = "";
 
-    public static final String PARAMETER_TRANSFORMMASCOT = "TransformMascot";
-
+    private static final String PARAMETER_TRANSFORMMASCOT = "TransformMascot";
     private static final String DEFAULT_TRANSFORMMASCOT = "";
 
     public Transform(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {

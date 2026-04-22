@@ -17,12 +17,10 @@ import java.util.ResourceBundle;
 public class Offset extends InstantAction {
     private static final Logger log = LoggerFactory.getLogger(Offset.class);
 
-    public static final String PARAMETER_OFFSETX = "X";
-
+    private static final String PARAMETER_OFFSETX = "X";
     private static final int DEFAULT_OFFSETX = 0;
 
-    public static final String PARAMETER_OFFSETY = "Y";
-
+    private static final String PARAMETER_OFFSETY = "Y";
     private static final int DEFAULT_OFFSETY = 0;
 
     // private double scaling;

@@ -22,20 +22,16 @@ import java.util.ResourceBundle;
 public abstract class ActionBase implements Action {
     private static final Logger log = LoggerFactory.getLogger(ActionBase.class);
 
-    public static final String PARAMETER_DURATION = "Duration";
-
+    private static final String PARAMETER_DURATION = "Duration";
     private static final int DEFAULT_DURATION = Integer.MAX_VALUE;
 
-    public static final String PARAMETER_CONDITION = "Condition";
-
+    private static final String PARAMETER_CONDITION = "Condition";
     private static final boolean DEFAULT_CONDITION = true;
 
-    public static final String PARAMETER_DRAGGABLE = "Draggable";
-
+    private static final String PARAMETER_DRAGGABLE = "Draggable";
     private static final boolean DEFAULT_DRAGGABLE = true;
 
-    public static final String PARAMETER_AFFORDANCE = "Affordance";
-
+    private static final String PARAMETER_AFFORDANCE = "Affordance";
     private static final String DEFAULT_AFFORDANCE = "";
 
     private final ResourceBundle schema;

@@ -23,16 +23,13 @@ import java.util.ResourceBundle;
 public class ScanMove extends BorderedAction {
     private static final Logger log = LoggerFactory.getLogger(ScanMove.class);
 
-    public static final String PARAMETER_BEHAVIOR = "Behaviour";
-
+    private static final String PARAMETER_BEHAVIOR = "Behaviour";
     private static final String DEFAULT_BEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
-
+    private static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
     private static final String DEFAULT_TARGETBEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETLOOK = "TargetLook";
-
+    private static final String PARAMETER_TARGETLOOK = "TargetLook";
     private static final boolean DEFAULT_TARGETLOOK = false;
 
     private WeakReference<Mascot> target;

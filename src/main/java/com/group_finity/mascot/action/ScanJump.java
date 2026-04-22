@@ -22,26 +22,22 @@ import java.util.ResourceBundle;
 public class ScanJump extends ActionBase {
     private static final Logger log = LoggerFactory.getLogger(ScanJump.class);
 
-    public static final String PARAMETER_BEHAVIOR = "Behaviour";
-
+    private static final String PARAMETER_BEHAVIOR = "Behaviour";
     private static final String DEFAULT_BEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
-
+    private static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
     private static final String DEFAULT_TARGETBEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETLOOK = "TargetLook";
-
+    private static final String PARAMETER_TARGETLOOK = "TargetLook";
     private static final boolean DEFAULT_TARGETLOOK = false;
 
     // A Pose attribute is already named "Velocity", so this is named "VelocityParam" instead
-    public static final String PARAMETER_VELOCITY = "VelocityParam";
-
+    private static final String PARAMETER_VELOCITY = "VelocityParam";
     private static final double DEFAULT_VELOCITY = 20.0;
 
-    public static final String VARIABLE_VELOCITYX = "VelocityX";
+    private static final String VARIABLE_VELOCITYX = "VelocityX";
 
-    public static final String VARIABLE_VELOCITYY = "VelocityY";
+    private static final String VARIABLE_VELOCITYY = "VelocityY";
 
     private WeakReference<Mascot> target;
 

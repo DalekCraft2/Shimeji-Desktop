@@ -25,28 +25,22 @@ public class ComplexMove extends BorderedAction {
 
     private final Breed.Delegate delegate = new Breed.Delegate(this);
 
-    public static final String PARAMETER_CHARACTERISTICS = "Characteristics";
-
+    private static final String PARAMETER_CHARACTERISTICS = "Characteristics";
     private static final String DEFAULT_CHARACTERISTICS = "";
 
-    public static final String PARAMETER_BEHAVIOR = "Behaviour";
-
+    private static final String PARAMETER_BEHAVIOR = "Behaviour";
     private static final String DEFAULT_BEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
-
+    private static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
     private static final String DEFAULT_TARGETBEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETLOOK = "TargetLook";
-
+    private static final String PARAMETER_TARGETLOOK = "TargetLook";
     private static final boolean DEFAULT_TARGETLOOK = false;
 
-    public static final String PARAMETER_TARGETX = "TargetX";
-
+    private static final String PARAMETER_TARGETX = "TargetX";
     private static final int DEFAULT_TARGETX = Integer.MAX_VALUE;
 
-    public static final String PARAMETER_TARGETY = "TargetY";
-
+    private static final String PARAMETER_TARGETY = "TargetY";
     private static final int DEFAULT_TARGETY = Integer.MAX_VALUE;
 
     private WeakReference<Mascot> target;

@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 public class Look extends InstantAction {
     private static final Logger log = LoggerFactory.getLogger(Look.class);
 
-    public static final String PARAMETER_LOOKRIGHT = "LookRight";
+    private static final String PARAMETER_LOOKRIGHT = "LookRight";
 
     public Look(ResourceBundle schema, final VariableMap context) {
         super(schema, context);

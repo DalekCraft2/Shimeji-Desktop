@@ -16,8 +16,7 @@ import java.util.ResourceBundle;
 public class Sequence extends ComplexAction {
     private static final Logger log = LoggerFactory.getLogger(Sequence.class);
 
-    public static final String PARAMETER_LOOP = "Loop";
-
+    private static final String PARAMETER_LOOP = "Loop";
     private static final boolean DEFAULT_LOOP = false;
 
     public Sequence(ResourceBundle schema, final VariableMap context, final Action... actions) {

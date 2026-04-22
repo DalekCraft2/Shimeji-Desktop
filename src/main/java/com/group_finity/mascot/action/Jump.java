@@ -22,22 +22,19 @@ import java.util.ResourceBundle;
 public class Jump extends ActionBase {
     private static final Logger log = LoggerFactory.getLogger(Jump.class);
 
-    public static final String PARAMETER_TARGETX = "TargetX";
-
+    private static final String PARAMETER_TARGETX = "TargetX";
     private static final int DEFAULT_TARGETX = 0;
 
-    public static final String PARAMETER_TARGETY = "TargetY";
-
+    private static final String PARAMETER_TARGETY = "TargetY";
     private static final int DEFAULT_TARGETY = 0;
 
     // A Pose attribute is already named "Velocity", so this is named "VelocityParam" instead
-    public static final String PARAMETER_VELOCITY = "VelocityParam";
-
+    private static final String PARAMETER_VELOCITY = "VelocityParam";
     private static final double DEFAULT_VELOCITY = 20.0;
 
-    public static final String VARIABLE_VELOCITYX = "VelocityX";
+    private static final String VARIABLE_VELOCITYX = "VelocityX";
 
-    public static final String VARIABLE_VELOCITYY = "VelocityY";
+    private static final String VARIABLE_VELOCITYY = "VelocityY";
 
     private double scaling;
 

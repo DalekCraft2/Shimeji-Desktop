@@ -23,12 +23,10 @@ import java.util.ResourceBundle;
 public class FallWithIE extends Fall {
     private static final Logger log = LoggerFactory.getLogger(FallWithIE.class);
 
-    public static final String PARAMETER_IEOFFSETX = "IeOffsetX";
-
+    private static final String PARAMETER_IEOFFSETX = "IeOffsetX";
     private static final int DEFAULT_IEOFFSETX = 0;
 
-    public static final String PARAMETER_IEOFFSETY = "IeOffsetY";
-
+    private static final String PARAMETER_IEOFFSETY = "IeOffsetY";
     private static final int DEFAULT_IEOFFSETY = 0;
 
     public FallWithIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {

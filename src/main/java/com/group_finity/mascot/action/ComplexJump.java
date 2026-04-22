@@ -25,38 +25,31 @@ public class ComplexJump extends ActionBase {
 
     private final Breed.Delegate delegate = new Breed.Delegate(this);
 
-    public static final String PARAMETER_CHARACTERISTICS = "Characteristics";
-
+    private static final String PARAMETER_CHARACTERISTICS = "Characteristics";
     private static final String DEFAULT_CHARACTERISTICS = "";
 
-    public static final String PARAMETER_BEHAVIOR = "Behaviour";
-
+    private static final String PARAMETER_BEHAVIOR = "Behaviour";
     private static final String DEFAULT_BEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
-
+    private static final String PARAMETER_TARGETBEHAVIOR = "TargetBehaviour";
     private static final String DEFAULT_TARGETBEHAVIOR = "";
 
-    public static final String PARAMETER_TARGETLOOK = "TargetLook";
-
+    private static final String PARAMETER_TARGETLOOK = "TargetLook";
     private static final boolean DEFAULT_TARGETLOOK = false;
 
-    public static final String PARAMETER_TARGETX = "TargetX";
-
+    private static final String PARAMETER_TARGETX = "TargetX";
     private static final int DEFAULT_TARGETX = 0;
 
-    public static final String PARAMETER_TARGETY = "TargetY";
-
+    private static final String PARAMETER_TARGETY = "TargetY";
     private static final int DEFAULT_TARGETY = 0;
 
     // A Pose attribute is already named "Velocity", so this is named "VelocityParam" instead
-    public static final String PARAMETER_VELOCITY = "VelocityParam";
-
+    private static final String PARAMETER_VELOCITY = "VelocityParam";
     private static final double DEFAULT_VELOCITY = 20.0;
 
-    public static final String VARIABLE_VELOCITYX = "VelocityX";
+    private static final String VARIABLE_VELOCITYX = "VelocityX";
 
-    public static final String VARIABLE_VELOCITYY = "VelocityY";
+    private static final String VARIABLE_VELOCITYY = "VelocityY";
 
     private WeakReference<Mascot> target;
 

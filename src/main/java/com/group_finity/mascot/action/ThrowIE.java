@@ -23,16 +23,13 @@ import java.util.ResourceBundle;
 public class ThrowIE extends Animate {
     private static final Logger log = LoggerFactory.getLogger(ThrowIE.class);
 
-    public static final String PARAMETER_INITIALVX = "InitialVX";
-
+    private static final String PARAMETER_INITIALVX = "InitialVX";
     private static final int DEFAULT_INITIALVX = 32;
 
-    public static final String PARAMETER_INITIALVY = "InitialVY";
-
+    private static final String PARAMETER_INITIALVY = "InitialVY";
     private static final int DEFAULT_INITIALVY = -10;
 
-    public static final String PARAMETER_GRAVITY = "Gravity";
-
+    private static final String PARAMETER_GRAVITY = "Gravity";
     private static final double DEFAULT_GRAVITY = 0.5;
 
     private double scaling;
