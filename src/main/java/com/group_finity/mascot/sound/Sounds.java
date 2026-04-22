@@ -44,25 +44,29 @@ public class Sounds {
      * @param fileName file path of the sound to load
      * @param volume the volume of the sound
      * @return a key to access the loaded sound
-     * @throws IOException if an error occurs when reading the sound file or when creating an {@code AudioInputStream}
-     * @throws UnsupportedAudioFileException if the sound file uses a format that is not recognized by the system
      * @throws LineUnavailableException if there is no {@link Clip} object available to use to load the sound
+     * @throws UnsupportedAudioFileException if the sound file uses a format that is not recognized by the system
+     * @throws IOException if an error occurs when creating an {@code AudioInputStream} or when reading the sound file
      */
-    public static String load(final String fileName, final float volume) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+    public static String load(final String fileName, final float volume) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String key = fileName + ":" + volume;
         if (SOUNDS.containsKey(key)) {
             return key;
         }
 
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(fileName));
         final Clip clip = AudioSystem.getClip();
-        clip.open(audioInputStream);
-        ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
-        clip.addLineListener(event -> {
-            if (event.getType() == LineEvent.Type.STOP) {
-                ((Clip) event.getLine()).stop();
-            }
-        });
+        try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(fileName))) {
+            clip.open(audioInputStream);
+            ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
+            clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    ((Clip) event.getLine()).stop();
+                }
+            });
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | RuntimeException e) {
+            clip.close();
+            throw e;
+        }
 
         SOUNDS.put(key, clip);
         FILE_NAME_MAP.putIfAbsent(fileName, new ArrayList<>(4));
@@ -138,9 +142,7 @@ public class Sounds {
     }
 
     public static void clear() {
-        for (Clip clip : SOUNDS.values()) {
-            clip.close();
-        }
+        SOUNDS.values().forEach(Clip::close);
         SOUNDS.clear();
         FILE_NAME_MAP.clear();
         SOUNDS_TO_IMAGESETS.clear();
@@ -153,8 +155,6 @@ public class Sounds {
 
     public static void stopAll() {
         // mute everything
-        for (Clip clip : SOUNDS.values()) {
-            clip.stop();
-        }
+        SOUNDS.values().forEach(Clip::stop);
     }
 }
