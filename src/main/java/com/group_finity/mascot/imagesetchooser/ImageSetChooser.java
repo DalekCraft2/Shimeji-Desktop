@@ -145,7 +145,6 @@ public class ImageSetChooser extends JDialog {
 
     private void saveSettings() {
         Main.getInstance().getSettings().activeImageSets = imageSets;
-        Main.getInstance().getSettings().saveActiveImageSets();
     }
 
     /**

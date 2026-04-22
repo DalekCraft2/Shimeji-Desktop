@@ -58,7 +58,6 @@ public class TrayMenu {
                 log.warn("System tray not supported; creating persistent menu window instead");
                 // Change the setting to false so the warning doesn't happen on every startup after this
                 settings.showTrayIcon = false;
-                settings.saveUserSettings();
             } else
                 log.info("Creating persistent menu window");
             createTrayMenuWindow(false, null);

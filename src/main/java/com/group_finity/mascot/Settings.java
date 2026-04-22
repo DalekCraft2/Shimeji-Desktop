@@ -14,8 +14,6 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.group_finity.mascot.Main.SETTINGS_FILE;
-
 /**
  * @author DalekCraft
  */
@@ -54,9 +52,14 @@ public class Settings {
     public Path backgroundImage = null;
     public String backgroundMode = "centre";
 
-    public void load() {
-        if (Files.isRegularFile(SETTINGS_FILE)) {
-            try (InputStream input = Files.newInputStream(SETTINGS_FILE)) {
+    /**
+     * Reads settings from the given path.
+     *
+     * @param path the path from which to load the settings
+     */
+    public void load(Path path) {
+        if (Files.isRegularFile(path)) {
+            try (InputStream input = Files.newInputStream(path)) {
                 properties.load(input);
             } catch (IOException e) {
                 log.error("Failed to load settings", e);
@@ -116,8 +119,8 @@ public class Settings {
         backgroundMode = properties.getProperty("BackgroundMode", "centre");
     }
 
-    private void saveImpl() {
-        try (OutputStream output = Files.newOutputStream(SETTINGS_FILE)) {
+    private void saveImpl(Path path) {
+        try (OutputStream output = Files.newOutputStream(path)) {
             properties.store(output, "Shimeji-ee Configuration Options");
         } catch (IOException e) {
             log.error("Failed to save settings", e);
@@ -125,9 +128,11 @@ public class Settings {
     }
 
     /**
-     * Saves all settings.
+     * Writes settings to the given path.
+     *
+     * @param path the path to which to write the settings
      */
-    public void save() {
+    public void save(Path path) {
         // Miscellaneous settings
         properties.setProperty("ShimejiEENameOverride", shimejiEeNameOverride.trim());
         properties.setProperty("ActiveShimeji", String.join("/", activeImageSets));
@@ -137,27 +142,7 @@ public class Settings {
 
         saveUserSettingsImpl();
 
-        saveImpl();
-    }
-
-    public void saveActiveImageSets() {
-        properties.setProperty("ActiveShimeji", String.join("/", activeImageSets));
-
-        saveImpl();
-    }
-
-    public void saveInformationDismissed() {
-        properties.setProperty("InformationDismissed", String.join("/", informationDismissed));
-
-        saveImpl();
-    }
-
-    /**
-     * Saves the settings that are accessible through the tray icon menu and mascot popup menu.
-     */
-    public void savePopupSettings() {
-        savePopupSettingsImpl();
-        saveImpl();
+        saveImpl(path);
     }
 
     private void savePopupSettingsImpl() {
@@ -176,15 +161,6 @@ public class Settings {
         properties.setProperty("Throwing", String.valueOf(throwing));
         properties.setProperty("Sounds", String.valueOf(sounds));
         properties.setProperty("Multiscreen", String.valueOf(multiscreen));
-    }
-
-    /**
-     * Saves the settings that are accessible through the settings window.
-     * (I would have named this "saveSettingsSettings" if that didn't sound terrible.)
-     */
-    public void saveUserSettings() {
-        saveUserSettingsImpl();
-        saveImpl();
     }
 
     private void saveUserSettingsImpl() {

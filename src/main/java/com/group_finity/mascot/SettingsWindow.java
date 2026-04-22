@@ -802,8 +802,6 @@ public class SettingsWindow extends JDialog {
             settings.backgroundImage = backgroundImage;
         }
 
-        settings.saveUserSettings();
-
         dispose();
     }//GEN-LAST:event_btnDoneActionPerformed
 

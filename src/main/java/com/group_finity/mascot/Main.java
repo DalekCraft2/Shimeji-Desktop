@@ -29,7 +29,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +38,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -102,6 +100,7 @@ public class Main {
 
     private final TrayMenu trayMenu = new TrayMenu();
 
+    // TODO: Refactor this away entirely.
     public static Main getInstance() {
         return INSTANCE;
     }
@@ -162,7 +161,10 @@ public class Main {
 
     public void run() {
         // Load settings
-        settings.load();
+        settings.load(SETTINGS_FILE);
+
+        // Add hook to save settings when the program shuts down
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> settings.save(SETTINGS_FILE)));
 
         // Load language
         loadLanguage(settings.language);
@@ -205,7 +207,6 @@ public class Main {
                     info.display();
                 });
                 setMascotInformationDismissed(imageSet);
-                settings.saveInformationDismissed();
             }
             createMascot(imageSet);
         }
@@ -537,8 +538,6 @@ public class Main {
         } else {
             settings.disabledBehaviors.put(mascot.getImageSet(), list);
         }
-
-        settings.savePopupSettings();
     }
 
     void reloadAllImageSets() {
@@ -685,7 +684,6 @@ public class Main {
                     info.init(imageSet, configurations.get(imageSet));
                     info.display();
                     setMascotInformationDismissed(imageSet);
-                    settings.saveInformationDismissed();
                 }
                 createMascot(imageSet);
             }

@@ -522,46 +522,38 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     private void chkBreedingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkBreedingItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
         Main.getInstance().getSettings().breeding = selected;
-        Main.getExecutorService().submit(() -> Main.getInstance().getSettings().savePopupSettings());
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkBreedingItemStateChanged
 
     private void chkTransientItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransientItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
         Main.getInstance().getSettings().transients = selected;
-        Main.getInstance().getSettings().savePopupSettings();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransientItemStateChanged
 
     private void chkTransformationItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransformationItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
         Main.getInstance().getSettings().transformation = selected;
-        Main.getExecutorService().submit(() -> Main.getInstance().getSettings().savePopupSettings());
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransformationItemStateChanged
 
     private void chkThrowingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkThrowingItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
         Main.getInstance().getSettings().throwing = selected;
-        Main.getExecutorService().submit(() -> Main.getInstance().getSettings().savePopupSettings());
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkThrowingItemStateChanged
 
     private void chkSoundsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSoundsItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
         Main.getInstance().getSettings().sounds = selected;
-        Main.getExecutorService().submit(() -> {
-            if (!selected)
-                Sounds.stopAll();
-            Main.getInstance().getSettings().savePopupSettings();
-        });
+        if (!selected)
+            Sounds.stopAll();
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkSoundsItemStateChanged
 
     private void chkMultiscreenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkMultiscreenItemStateChanged
         boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
         Main.getInstance().getSettings().multiscreen = selected;
-        Main.getExecutorService().submit(() -> Main.getInstance().getSettings().savePopupSettings());
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkMultiscreenItemStateChanged
 
@@ -767,7 +759,6 @@ public class TrayMenuPanel extends javax.swing.JPanel {
                 repackWindow();
             }
         }
-        Main.getExecutorService().submit(settings::savePopupSettings);
     }
 
     private void updateLanguage(String languageTag) {
@@ -783,7 +774,6 @@ public class TrayMenuPanel extends javax.swing.JPanel {
                 repackWindow();
             }
         }
-        Main.getExecutorService().submit(settings::savePopupSettings);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
