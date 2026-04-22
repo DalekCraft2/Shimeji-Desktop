@@ -3,8 +3,6 @@ package com.group_finity.mascot.animation;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.image.ImagePairs;
 
-import java.awt.*;
-
 /**
  * @author Yuki Yamada
  * @author Shimeji-ee Group

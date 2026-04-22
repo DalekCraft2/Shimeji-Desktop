@@ -15,9 +15,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 /**
  * An object that represents all data contained within a mascot's configuration files
