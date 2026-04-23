@@ -78,13 +78,13 @@ public class Jump extends ActionBase {
         final double velocity = getVelocity() * scaling;
 
         if (distance != 0) {
-            final int velocityX = (int) Math.round(velocity * distanceX / distance);
-            final int velocityY = (int) Math.round(velocity * distanceY / distance);
+            final double velocityX = velocity * distanceX / distance;
+            final double velocityY = velocity * distanceY / distance;
 
-            putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocity * distanceX / distance);
-            putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocity * distanceY / distance);
+            putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocityX);
+            putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
 
-            getMascot().getAnchor().translate(velocityX, velocityY);
+            getMascot().getAnchor().translate((int) Math.round(velocityX), (int) Math.round(velocityY));
             getAnimation().next(getMascot(), getTime());
         }
 
