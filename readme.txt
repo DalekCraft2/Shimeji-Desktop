@@ -2,9 +2,9 @@ Shimeji-ee: Shimeji English Enhanced
 
 Shimeji-ee is a desktop mascot for Windows, macOS, and Linux that freely wanders and plays around the screen. The mascot
 is very configurable; its actions are defined through XML and its animations/images can be (painstakingly) customized.
-Shimeji was originally created by Yuki Yamada of Group Finity (http://www.group-finity.com/Shimeji/). This branch of the
-original Shimeji project not only translates the program/source to English, but adds additional enhancements to Shimeji
-by Kilkakon and other members of the community.
+Shimeji was originally created by Yuki Yamada of Group Finity. This branch of the original Shimeji project not only
+translates the program/source to English, but adds additional enhancements to Shimeji by Kilkakon and other members of
+the community.
 
 ==== Contents ====
 
@@ -22,6 +22,9 @@ by Kilkakon and other members of the community.
 
 * DalekCraft's Shimeji repository: https://github.com/DalekCraft2/Shimeji-Desktop
 * Kilkakon's Shimeji homepage: https://kilkakon.com/shimeji/
+* linux-shimeji repository: https://github.com/asdfman/linux-shimeji
+* shimeji4mac repository: https://github.com/nonowarn/shimeji4mac
+* ShimejiEE-cross-platform repository: https://github.com/LavenderSnek/ShimejiEE-cross-platform
 * Shimeji-ee homepage: https://code.google.com/archive/p/shimeji-ee/
 * Shimeji homepage (archive): https://web.archive.org/web/20160901003054/http://www.group-finity.com/Shimeji/
 * Shimeji mirror download: https://www.vector.co.jp/soft/winnt/amuse/se476479.html
@@ -35,7 +38,7 @@ by Kilkakon and other members of the community.
 
 1. Open the Shimeji-ee JAR file ("Shimeji-ee.jar").
     * On Windows, you can alternatively open "Shimeji-ee.exe".
-    * On Linux/Mac, you can alternatively open "Shimeji-ee".
+    * On macOS/Linux, you can alternatively open "Shimeji-ee".
 2. Right-click the tray icon for general options.
 3. Right-click a Shimeji for options relating to it.
 

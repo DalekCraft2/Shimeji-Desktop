@@ -1,17 +1,25 @@
 # Fork notes
 
-Formerly, this was an attempt to port Kilkakon's fork of Shimeji-ee from JRE 6 to JDK 21. I switched to porting to JDK
-11 to maintain the most compatibility possible, though it is still compatible with JDK 21.
+This is a fork of [Kilkakon's fork](https://kilkakon.com/shimeji/) of
+[Shimeji-ee](https://code.google.com/archive/p/shimeji-ee/) that updates the runtime from JRE 6 to JDK 11.
+It also contains:
 
-This fork also contains bug fixes, log message changes, fixes in the default mascot action/behavior XML files,
-more documentation (including comments and documentation from the original Shimeji, now translated through a better
-Google Translate than before), updated dependencies, formatting fixes, and probably more. Notably, I have also switched
-the project from Ant to Maven, and ported the `launch4j.xml` file from the original Shimeji to the Launch4j Maven
-Plugin.
+* Bug fixes
+* More detailed log messages
+* Fixes in the default mascot action/behavior XML files
+* More documentation (including comments and documentation from the original Shimeji, now translated through a better
+  Google Translate than before)
+* Updated dependencies
+* Formatting fixes
+* Proper DPI scaling
+* and a lot more that I don't have the energy to list.
 
-(It also has WIP Linux support, though it was just copied and modified from
-[asdfman's fork](https://github.com/asdfman/linux-shimeji) and doesn't entirely work yet. I can only test it by using a
-VM, so that doesn't help.)
+I have also switched the project from Ant to Maven, and ported the `launch4j.xml` file from the original Shimeji to the
+Launch4j Maven Plugin.
+
+It also contains Linux support based on code from [asdfman's linux-shimeji](https://github.com/asdfman/linux-shimeji),
+macOS support based on code from [nonowarn's shimeji4mac](https://github.com/nonowarn/shimeji4mac), and some inspiration
+from [LavenderSnek's ShimejiEE-cross-platform](https://github.com/LavenderSnek/ShimejiEE-cross-platform).
 
 The rest of this file is the original README, albeit ported to Markdown and with slightly more up-to-date information.
 
@@ -19,8 +27,9 @@ The rest of this file is the original README, albeit ported to Markdown and with
 
 Shimeji-ee is a desktop mascot for Windows, macOS, and Linux that freely wanders and plays around the screen. The mascot
 is very configurable; its actions are defined through XML and its animations/images can be (painstakingly) customized.
-Shimeji was originally created by Yuki Yamada of [Group Finity](http://www.group-finity.com/Shimeji/). This branch of
-the original Shimeji project not only translates the program/source to English, but adds additional enhancements to
+Shimeji was originally created by Yuki Yamada of
+[Group Finity](https://web.archive.org/web/20160901003054/http://www.group-finity.com/Shimeji/). This branch of the
+original Shimeji project not only translates the program/source to English, but adds additional enhancements to
 Shimeji by Kilkakon and other members of the community.
 
 ## Contents
@@ -38,6 +47,9 @@ Shimeji by Kilkakon and other members of the community.
 ## Links
 
 * [Kilkakon's Shimeji homepage](https://kilkakon.com/shimeji/)
+* [linux-shimeji repository](https://github.com/asdfman/linux-shimeji)
+* [shimeji4mac repository](https://github.com/nonowarn/shimeji4mac)
+* [ShimejiEE-cross-platform repository](https://github.com/LavenderSnek/ShimejiEE-cross-platform)
 * [Shimeji-ee homepage](https://code.google.com/archive/p/shimeji-ee/)
 * [Shimeji homepage (archive)](https://web.archive.org/web/20160901003054/http://www.group-finity.com/Shimeji/)
 * [Shimeji mirror download](https://www.vector.co.jp/soft/winnt/amuse/se476479.html)
@@ -51,7 +63,7 @@ Shimeji by Kilkakon and other members of the community.
 
 1. Open the Shimeji-ee JAR file (`Shimeji-ee.jar`).
     * On Windows, you can alternatively open `Shimeji-ee.exe`.
-    * On Linux/Mac, you can alternatively open `Shimeji-ee`.
+    * On macOS/Linux, you can alternatively open `Shimeji-ee`.
 2. Right-click the tray icon for general options.
 3. Right-click a Shimeji for options relating to it.
 
