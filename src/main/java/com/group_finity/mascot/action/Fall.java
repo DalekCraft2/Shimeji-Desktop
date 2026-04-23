@@ -70,14 +70,14 @@ public class Fall extends ActionBase {
          * This is a hotfix that does not use scaling if the initial velocities equal the dX or dY of the cursor.
          */
         /* if (getInitialVx() == getEnvironment().getCursor().getDx()) {
-            setVelocityX(getInitialVx());
+            velocityX = getInitialVx();
         } else {
-            setVelocityX(getInitialVx() * scaling);
+            velocityX = getInitialVx() * scaling;
         }
         if (getInitialVy() == getEnvironment().getCursor().getDy()) {
-            setVelocityY(getInitialVy());
+            velocityY = getInitialVy();
         } else {
-            setVelocityY(getInitialVy() * scaling);
+            velocityY = getInitialVy() * scaling;
         } */
 
         velocityX = getInitialVx() * scaling;
@@ -100,8 +100,8 @@ public class Fall extends ActionBase {
             mascot.setLookRight(velocityX > 0);
         }
 
-        velocityX = (velocityX / scaling - velocityX * getResistanceX() / scaling) * scaling;
-        velocityY = (velocityY / scaling - velocityY * getResistanceY() / scaling + getGravity()) * scaling;
+        velocityX = velocityX - velocityX * getResistanceX();
+        velocityY = velocityY - velocityY * getResistanceY() + getGravity() * scaling;
 
         putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocityX);
         putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
@@ -127,7 +127,6 @@ public class Fall extends ActionBase {
             int y = anchor.y + dy * i / dev;
 
             // Move mascot
-            mascot.getAnchor().setLocation(x, y);
             if (dy > 0) {
                 // HACK: Windows may be moved, so check them often.
                 for (int j = -80; j <= 0; j++) {
@@ -136,6 +135,8 @@ public class Fall extends ActionBase {
                         break OUTER;
                     }
                 }
+            } else {
+                mascot.getAnchor().setLocation(x, y);
             }
             if (environment.getWall(true).isOn(mascot.getAnchor())) {
                 break;
