@@ -872,7 +872,6 @@ public class X {
          */
         public byte[] getNullTerminatedProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] bytesOrig = getProperty(xaPropType, xaPropName);
-            byte[] bytesDest;
 
             if (bytesOrig == null) {
                 return null;
@@ -885,6 +884,8 @@ public class X {
                     break;
                 }
             }
+
+            byte[] bytesDest;
 
             if (i < bytesOrig.length - 1) {
                 bytesDest = new byte[i + 1];
@@ -1138,10 +1139,9 @@ public class X {
         }
 
         public int clientMsg(String msg, NativeLong data0, NativeLong data1, NativeLong data2, NativeLong data3, NativeLong data4) throws X11Exception {
-            X11.XClientMessageEvent event;
             NativeLong mask = new NativeLong(X11.SubstructureRedirectMask | X11.SubstructureNotifyMask);
 
-            event = new X11.XClientMessageEvent();
+            X11.XClientMessageEvent event = new X11.XClientMessageEvent();
             event.type = X11.ClientMessage;
             event.serial = new NativeLong(0);
             event.send_event = 1;
@@ -1240,7 +1240,7 @@ public class X {
                 list.add(new Window(display, window));
 
                 // X11.XTextProperty name = new X11.XTextProperty();
-                // x11.XGetWMName(display, window, name);
+                // x11.XGetWMName(display.x11Display, window, name);
                 //
                 // System.out.println(String.join("", Collections.nCopies(depth, "  ")) + name.value);
                 // x11.XFree(name.getPointer());

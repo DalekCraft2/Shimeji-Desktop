@@ -13,7 +13,7 @@ import java.awt.event.ComponentListener;
  */
 class VirtualContentPanel extends JPanel {
     private Image resizedImage;
-    private String mode;
+    private final String mode;
 
     private static final String CENTRE = "centre";
     private static final String FIT = "fit";
@@ -25,10 +25,11 @@ class VirtualContentPanel extends JPanel {
         setPreferredSize(preferredSize);
         setBackground(background);
         resizedImage = image;
-        this.mode = mode;
 
         if (!(mode.equals(CENTRE) || mode.equals(FIT) || mode.equals(STRETCH) || mode.equals(FILL))) {
             this.mode = CENTRE;
+        } else {
+            this.mode = mode;
         }
 
         addComponentListener(new ComponentListener() {
@@ -72,8 +73,12 @@ class VirtualContentPanel extends JPanel {
                 g.drawImage(resizedImage, 0, 0, null);
             } else if (mode.equals(CENTRE)) {
                 g.drawImage(resizedImage,
-                        resizedImage.getWidth(null) > getWidth() ? (resizedImage.getWidth(null) - getWidth()) / -2 : (getWidth() - resizedImage.getWidth(null)) / 2,
-                        resizedImage.getHeight(null) > getHeight() ? (resizedImage.getHeight(null) - getHeight()) / -2 : (getHeight() - resizedImage.getHeight(null)) / 2,
+                        resizedImage.getWidth(null) > getWidth() ?
+                                (resizedImage.getWidth(null) - getWidth()) / -2 :
+                                (getWidth() - resizedImage.getWidth(null)) / 2,
+                        resizedImage.getHeight(null) > getHeight() ?
+                                (resizedImage.getHeight(null) - getHeight()) / -2 :
+                                (getHeight() - resizedImage.getHeight(null)) / 2,
                         null);
             } else {
                 g.drawImage(resizedImage,

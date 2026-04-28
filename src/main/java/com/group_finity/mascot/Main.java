@@ -523,9 +523,12 @@ public class Main {
     }
 
     public void setMascotBehaviorEnabled(final String name, final Mascot mascot, boolean enabled) {
-        List<String> list = new ArrayList<>();
-        if (settings.disabledBehaviors.containsKey(mascot.getImageSet()))
+        List<String> list;
+        if (settings.disabledBehaviors.containsKey(mascot.getImageSet())) {
             list = settings.disabledBehaviors.get(mascot.getImageSet());
+        } else {
+            list = new ArrayList<>();
+        }
 
         if (list.contains(name) && enabled) {
             list.remove(name);

@@ -169,25 +169,16 @@ class X11Environment extends Environment {
             type = Arrays.asList(window.getType());
         } catch (X11Exception e) {
             /*
-            BUG: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
-            not focused, this method returns IeStatus.IGNORED for most windows other than the currently focused one.
+            NOTE: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
+            not focused, this method has to return IeStatus.IGNORED for most windows other than the currently focused one.
 
             I don't think I can do anything about that. Sorry!
              */
             return IeStatus.IGNORED;
         }
         boolean badDesktop = desktop != curDesktop && desktop != -1;
-        // System.out.println("ID: " + window.getID() + "; Title: " + getWindowTitle(window) + "; State: " + state + " (" + X11.INSTANCE.XGetAtomName(display.getX11Display(), new X11.Atom(state)) + ")" + "; Type: " + type);
+        // System.out.println("ID: " + window.getID() + "; Title: " + getWindowTitle(window) + "; State: " + state + "; Type: " + type);
         if (!badDesktop && !checkState(state) && !checkType(type)) {
-            // metro apps can be closed or minimised and still be considered "visible" by User32
-            // have to consider the new cloaked variable instead
-            // LongByReference flagsRef = new LongByReference();
-            // WinNT.HRESULT result = Dwmapi.INSTANCE.DwmGetWindowAttribute(window, Dwmapi.DWMWA_CLOAKED, flagsRef.getPointer(), 8);
-            // if (result.equals(WinError.S_OK) && flagsRef.getValue() != 0) // unsupported on 7 so skip the check
-            // {
-            //     return IeStatus.IGNORED;
-            // }
-
             if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
                 // Aborted because a maximized window was found
                 return IeStatus.INVALID;
