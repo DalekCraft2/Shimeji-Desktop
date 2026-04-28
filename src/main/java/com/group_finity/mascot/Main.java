@@ -361,14 +361,8 @@ public class Main {
         Path filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
         if (Files.isRegularFile(filePath.resolve("actions.xml"))) {
             return filePath.resolve("actions.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u52D5\u4F5C.xml"))) {
-            return filePath.resolve("\u52D5\u4F5C.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
-            return filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00A6-\u00BA@.xml"))) {
-            return filePath.resolve("\u00A6-\u00BA@.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
-            return filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml");
+        } else if (Files.isRegularFile(filePath.resolve("動作.xml"))) {
+            return filePath.resolve("動作.xml");
         } else if (Files.isRegularFile(filePath.resolve("one.xml"))) {
             return filePath.resolve("one.xml");
         } else if (Files.isRegularFile(filePath.resolve("1.xml"))) {
@@ -378,14 +372,8 @@ public class Main {
         filePath = CONFIG_DIRECTORY.resolve(imageSet);
         if (Files.isRegularFile(filePath.resolve("actions.xml"))) {
             return filePath.resolve("actions.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u52D5\u4F5C.xml"))) {
-            return filePath.resolve("\u52D5\u4F5C.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml"))) {
-            return filePath.resolve("\u00D5\u00EF\u00F2\u00F5\u00A2\u00A3.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00A6-\u00BA@.xml"))) {
-            return filePath.resolve("\u00A6-\u00BA@.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml"))) {
-            return filePath.resolve("\u00F4\u00AB\u00EC\u00FD.xml");
+        } else if (Files.isRegularFile(filePath.resolve("動作.xml"))) {
+            return filePath.resolve("動作.xml");
         } else if (Files.isRegularFile(filePath.resolve("one.xml"))) {
             return filePath.resolve("one.xml");
         } else if (Files.isRegularFile(filePath.resolve("1.xml"))) {
@@ -393,8 +381,8 @@ public class Main {
         }
 
         filePath = CONFIG_DIRECTORY;
-        if (Files.isRegularFile(filePath.resolve("\u52D5\u4F5C.xml"))) {
-            return filePath.resolve("\u52D5\u4F5C.xml");
+        if (Files.isRegularFile(filePath.resolve("動作.xml"))) {
+            return filePath.resolve("動作.xml");
         }
 
         return filePath.resolve("actions.xml");
@@ -406,14 +394,8 @@ public class Main {
             return filePath.resolve("behaviors.xml");
         } else if (Files.isRegularFile(filePath.resolve("behavior.xml"))) {
             return filePath.resolve("behavior.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u884C\u52D5.xml"))) {
-            return filePath.resolve("\u884C\u52D5.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
-            return filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
-            return filePath.resolve("\u00AA\u00B5\u00A6-.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
-            return filePath.resolve("\u00ECs\u00F4\u00AB.xml");
+        } else if (Files.isRegularFile(filePath.resolve("行動.xml"))) {
+            return filePath.resolve("行動.xml");
         } else if (Files.isRegularFile(filePath.resolve("two.xml"))) {
             return filePath.resolve("two.xml");
         } else if (Files.isRegularFile(filePath.resolve("2.xml"))) {
@@ -425,14 +407,8 @@ public class Main {
             return filePath.resolve("behaviors.xml");
         } else if (Files.isRegularFile(filePath.resolve("behavior.xml"))) {
             return filePath.resolve("behavior.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u884C\u52D5.xml"))) {
-            return filePath.resolve("\u884C\u52D5.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml"))) {
-            return filePath.resolve("\u00DE\u00ED\u00EE\u00D5\u00EF\u00F2.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00AA\u00B5\u00A6-.xml"))) {
-            return filePath.resolve("\u00AA\u00B5\u00A6-.xml");
-        } else if (Files.isRegularFile(filePath.resolve("\u00ECs\u00F4\u00AB.xml"))) {
-            return filePath.resolve("\u00ECs\u00F4\u00AB.xml");
+        } else if (Files.isRegularFile(filePath.resolve("行動.xml"))) {
+            return filePath.resolve("行動.xml");
         } else if (Files.isRegularFile(filePath.resolve("two.xml"))) {
             return filePath.resolve("two.xml");
         } else if (Files.isRegularFile(filePath.resolve("2.xml"))) {
@@ -440,8 +416,8 @@ public class Main {
         }
 
         filePath = CONFIG_DIRECTORY;
-        if (Files.isRegularFile(filePath.resolve("\u884C\u52D5.xml"))) {
-            return filePath.resolve("\u884C\u52D5.xml");
+        if (Files.isRegularFile(filePath.resolve("行動.xml"))) {
+            return filePath.resolve("行動.xml");
         }
 
         return filePath.resolve("behaviors.xml");
