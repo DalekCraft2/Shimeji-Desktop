@@ -182,8 +182,10 @@ public class Mascot {
             // Always show on top
             window.setAlwaysOnTop(true);
 
+            Component windowComponent = window.asComponent();
+
             // Register the mouse handler
-            window.asComponent().addMouseListener(new MouseAdapter() {
+            windowComponent.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(final MouseEvent e) {
                     Mascot.this.mousePressed(e);
@@ -194,7 +196,7 @@ public class Mascot {
                     Mascot.this.mouseReleased(e);
                 }
             });
-            window.asComponent().addMouseMotionListener(new MouseMotionListener() {
+            windowComponent.addMouseMotionListener(new MouseMotionListener() {
                 @Override
                 public void mouseMoved(final MouseEvent e) {
                     if (paused) {
@@ -270,15 +272,15 @@ public class Mascot {
             };
             debugComp.setBackground(new Color(0, 0, 0, 0));
             debugComp.setOpaque(false);
-            debugComp.setPreferredSize(window.asComponent().getPreferredSize());
-            window.asComponent().addComponentListener(new ComponentAdapter() {
+            debugComp.setPreferredSize(windowComponent.getPreferredSize());
+            windowComponent.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     super.componentResized(e);
                     debugComp.setPreferredSize(e.getComponent().getPreferredSize());
                 }
             });
-            ((Container) window.asComponent()).add(debugComp);
+            ((Container) windowComponent).add(debugComp);
         };
 
         if (SwingUtilities.isEventDispatchThread()) {
@@ -454,13 +456,15 @@ public class Mascot {
         popup.add(onlyOneMenu);
         popup.add(closeMenu);
 
+        final Component windowComponent = window.asComponent();
+
         // TODO: Get the popup to close when clicking outside of it
-        window.asComponent().requestFocus();
+        windowComponent.requestFocus();
 
         // Lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window's boundary.
         // As the shimeji window can't support this, we need to set them to heavyweight.
         popup.setLightWeightPopupEnabled(false);
-        popup.show(window.asComponent(), x, y);
+        popup.show(windowComponent, x, y);
     }
 
     synchronized void tick() {
@@ -582,7 +586,11 @@ public class Mascot {
             SwingUtilities.invokeLater(() -> refreshCursor(useHand));
             return;
         }
-        window.asComponent().setCursor(Cursor.getPredefinedCursor(useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
+        int newType = useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR;
+        Component windowComponent = window.asComponent();
+        if (windowComponent.getCursor().getType() != newType) {
+            windowComponent.setCursor(Cursor.getPredefinedCursor(newType));
+        }
     }
 
     public Manager getManager() {
@@ -753,13 +761,17 @@ public class Mascot {
         return cursor;
     }
 
-    public void setCursorPosition(final Point point) {
-        cursor = point;
+    public void setCursorPosition(final Point cursor) {
+        if (this.cursor == null && cursor == null) {
+            return;
+        }
 
-        if (point == null) {
+        this.cursor = cursor;
+
+        if (this.cursor == null) {
             refreshCursor(false);
         } else {
-            refreshCursor(point);
+            refreshCursor(cursor);
         }
     }
 
