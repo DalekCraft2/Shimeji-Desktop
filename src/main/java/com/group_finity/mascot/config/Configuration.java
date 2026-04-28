@@ -185,7 +185,7 @@ public class Configuration {
             previousBehaviorFactory = null;
         }
 
-        if (previousName == null || previousBehaviorFactory.isNextAdditive()) {
+        if (previousBehaviorFactory == null || previousBehaviorFactory.isNextAdditive()) {
             for (final BehaviorBuilder behaviorFactory : behaviorBuilders.values()) {
                 try {
                     if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
@@ -193,12 +193,12 @@ public class Configuration {
                         totalFrequency += behaviorFactory.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.warn("Failed to calculate frequency for behavior: {}", behaviorFactory, e);
+                    log.warn("Failed to evaluate condition for behavior: {}", behaviorFactory, e);
                 }
             }
         }
 
-        if (previousName != null) {
+        if (previousBehaviorFactory != null) {
             for (final BehaviorRef behaviorFactory : previousBehaviorFactory.getNextBehaviorBuilders()) {
                 try {
                     if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory.getName(), mascot)) {
@@ -206,7 +206,7 @@ public class Configuration {
                         totalFrequency += behaviorFactory.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.warn("Failed to calculate frequency for behavior: {}", behaviorFactory, e);
+                    log.warn("Failed to evaluate condition for behavior: {}", behaviorFactory, e);
                 }
             }
         }
