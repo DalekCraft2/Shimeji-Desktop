@@ -257,7 +257,7 @@ public class Configuration {
 
     public boolean isBehaviorEnabled(final BehaviorBuilder builder, final Mascot mascot) {
         if (builder.isToggleable() && Main.getInstance().getSettings().disabledBehaviors.containsKey(mascot.getImageSet())) {
-            return Main.getInstance().getSettings().disabledBehaviors.get(mascot.getImageSet()).stream().noneMatch(behavior -> behavior.equals(builder.getName()));
+            return !Main.getInstance().getSettings().disabledBehaviors.get(mascot.getImageSet()).contains(builder.getName());
         }
         return true;
     }
