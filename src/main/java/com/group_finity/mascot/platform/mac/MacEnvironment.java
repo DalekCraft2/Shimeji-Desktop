@@ -67,8 +67,7 @@ class MacEnvironment extends Environment {
         // XXX: Is error checking necessary other than here?
         if (carbonEx.AXUIElementCopyAttributeValue(
                 application, kAXFocusedWindow, windowp) == CarbonExtra.kAXErrorSuccess) {
-            AXUIElementRef window = new AXUIElementRef();
-            window.setPointer(windowp.getValue());
+            AXUIElementRef window = new AXUIElementRef(windowp.getValue());
             ret = getRectOfWindow(window);
         } else {
             ret = null;
@@ -89,12 +88,11 @@ class MacEnvironment extends Environment {
     }
 
     private static CGPoint getPositionOfWindow(AXUIElementRef window) {
-        CGPoint position = new CGPoint();
-        AXValueRef axvalue = new AXValueRef();
         PointerByReference valuep = new PointerByReference();
-
         carbonEx.AXUIElementCopyAttributeValue(window, kAXPosition, valuep);
-        axvalue.setPointer(valuep.getValue());
+
+        AXValueRef axvalue = new AXValueRef(valuep.getValue());
+        CGPoint position = new CGPoint();
         carbonEx.AXValueGetValue(axvalue, CarbonExtra.kAXValueCGPointType, position.getPointer());
         position.read();
 
@@ -102,12 +100,11 @@ class MacEnvironment extends Environment {
     }
 
     private static CGSize getSizeOfWindow(AXUIElementRef window) {
-        CGSize size = new CGSize();
-        AXValueRef axvalue = new AXValueRef();
         PointerByReference valuep = new PointerByReference();
-
         carbonEx.AXUIElementCopyAttributeValue(window, kAXSize, valuep);
-        axvalue.setPointer(valuep.getValue());
+
+        AXValueRef axvalue = new AXValueRef(valuep.getValue());
+        CGSize size = new CGSize();
         carbonEx.AXValueGetValue(axvalue, CarbonExtra.kAXValueCGSizeType, size.getPointer());
         size.read();
 
@@ -122,8 +119,7 @@ class MacEnvironment extends Environment {
 
         if (carbonEx.AXUIElementCopyAttributeValue(
                 application, kAXFocusedWindow, windowp) == CarbonExtra.kAXErrorSuccess) {
-            AXUIElementRef window = new AXUIElementRef();
-            window.setPointer(windowp.getValue());
+            AXUIElementRef window = new AXUIElementRef(windowp.getValue());
             moveWindow(window, point.x, point.y);
         }
 
@@ -162,8 +158,7 @@ class MacEnvironment extends Environment {
 
         for (int i = 0, count = cfWindows.getCount(); i < count; i++) {
             Pointer p = cfWindows.getValueAtIndex(i);
-            AXUIElementRef el = new AXUIElementRef();
-            el.setPointer(p);
+            AXUIElementRef el = new AXUIElementRef(p);
             ret.add(el);
         }
 
