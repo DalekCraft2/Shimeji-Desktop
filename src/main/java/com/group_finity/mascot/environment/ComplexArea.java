@@ -48,14 +48,10 @@ public class ComplexArea {
         FloorCeiling ret = null;
 
         for (Area area : areas.values()) {
-            if (area.getBottomBorder().isOn(location)) {
-                ret = area.getBottomBorder();
-            }
-        }
-
-        for (Area area : areas.values()) {
             if (area.getTopBorder().isOn(location)) {
-                ret = null;
+                return null;
+            } else if (area.getBottomBorder().isOn(location)) {
+                ret = area.getBottomBorder();
             }
         }
 
@@ -66,14 +62,10 @@ public class ComplexArea {
         FloorCeiling ret = null;
 
         for (Area area : areas.values()) {
-            if (area.getTopBorder().isOn(location)) {
-                ret = area.getTopBorder();
-            }
-        }
-
-        for (Area area : areas.values()) {
             if (area.getBottomBorder().isOn(location)) {
-                ret = null;
+                return null;
+            } else if (area.getTopBorder().isOn(location)) {
+                ret = area.getTopBorder();
             }
         }
 
@@ -84,15 +76,13 @@ public class ComplexArea {
         Wall ret = null;
 
         for (Area area : areas.values()) {
-            if (area.getLeftBorder().isOn(location)) {
+            if (area.getRightBorder().isOn(location)) {
+                return null;
+            } else if (area.getLeftBorder().isOn(location)) {
                 ret = area.getRightBorder();
             }
         }
-        for (Area area : areas.values()) {
-            if (area.getRightBorder().isOn(location)) {
-                ret = null;
-            }
-        }
+
         return ret;
     }
 
@@ -100,15 +90,13 @@ public class ComplexArea {
         Wall ret = null;
 
         for (Area area : areas.values()) {
-            if (area.getRightBorder().isOn(location)) {
+            if (area.getLeftBorder().isOn(location)) {
+                return null;
+            } else if (area.getRightBorder().isOn(location)) {
                 ret = area.getRightBorder();
             }
         }
-        for (Area area : areas.values()) {
-            if (area.getLeftBorder().isOn(location)) {
-                ret = null;
-            }
-        }
+
         return ret;
     }
 
