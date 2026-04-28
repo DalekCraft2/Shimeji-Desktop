@@ -89,7 +89,7 @@ public class Entry {
         final NodeList childNodes = element.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
             final Node childNode = childNodes.item(i);
-            if (childNode instanceof Element) {
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
                 children.add(new Entry((Element) childNode));
             }
         }
