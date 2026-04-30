@@ -86,8 +86,7 @@ class WindowsEnvironment extends Environment {
         final String ieTitle = WindowUtils.getWindowTitle(hWnd);
 
         // optimisation to remove empty windows from consideration without the loop.
-        // Program Manager hard coded exception as there's issues if we mess with it
-        if (ieTitle.isEmpty() || ieTitle.equals("Program Manager")) {
+        if (ieTitle.isEmpty()) {
             ieCache.put(hWnd, false);
             return false;
         }
