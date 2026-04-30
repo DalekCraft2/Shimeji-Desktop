@@ -108,11 +108,12 @@ public class Manager {
 
             // Previous time
             long prev = System.nanoTime() / 1000000;
+            // Current time
+            long cur;
             try {
                 while (true) {
-                    // Current time
                     // Loop until TICK_INTERVAL has passed.
-                    final long cur = System.nanoTime() / 1000000;
+                    cur = System.nanoTime() / 1000000;
                     if (cur - prev >= TICK_INTERVAL) {
                         if (cur <= prev + TICK_INTERVAL * 2) {
                             prev += TICK_INTERVAL;
