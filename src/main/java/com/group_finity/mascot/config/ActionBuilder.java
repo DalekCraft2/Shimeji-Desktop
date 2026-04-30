@@ -86,6 +86,10 @@ public class ActionBuilder implements IActionBuilder {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
         }
 
+        if (cls != null && cls.isAnnotationPresent(Deprecated.class)) {
+            log.warn("Image set \"{}\" uses deprecated action class: {}", imageSet, cls.getName());
+        }
+
         // Verify that all parameters can be parsed
         for (final Map.Entry<String, String> param : params.entrySet()) {
             try {
