@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
  * @deprecated As of 1.0.21, broadcast functionality has been integrated into {@link ActionBase}.
  * Use {@link Animate} instead.
  */
-@Deprecated
+@Deprecated(since = "1.0.21")
 public class Broadcast extends Animate {
     private static final Logger log = LoggerFactory.getLogger(Broadcast.class);
 

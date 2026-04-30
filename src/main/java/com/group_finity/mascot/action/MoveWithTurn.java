@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
  * @since 1.0.8
  * @deprecated As of 1.0.21, turning functionality has been integrated into {@link Move}
  */
-@Deprecated
+@Deprecated(since = "1.0.21")
 public class MoveWithTurn extends Move {
     private static final Logger log = LoggerFactory.getLogger(MoveWithTurn.class);
 

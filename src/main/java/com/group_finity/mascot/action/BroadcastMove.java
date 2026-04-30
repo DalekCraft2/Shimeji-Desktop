@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
  * @deprecated As of 1.0.21, broadcast functionality has been integrated into {@link ActionBase}.
  * Use {@link Move} instead.
  */
-@Deprecated
+@Deprecated(since = "1.0.21")
 public class BroadcastMove extends Move {
     private static final Logger log = LoggerFactory.getLogger(BroadcastMove.class);
 
