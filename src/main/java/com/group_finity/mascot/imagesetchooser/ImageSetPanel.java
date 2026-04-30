@@ -19,7 +19,7 @@ import java.nio.file.Path;
  */
 public class ImageSetPanel extends JPanel {
 
-    String imageSet;
+    private String imageSet;
 
     public ImageSetPanel() {
         initComponents();
@@ -35,7 +35,7 @@ public class ImageSetPanel extends JPanel {
         behaviorsFile.setText(behaviors);
         try (InputStream input = Files.newInputStream(imageLocation)) {
             BufferedImage img = ImageUtils.toCompatibleImage(ImageIO.read(input));
-            image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_DEFAULT)));
+            image.setIcon(new ImageIcon(img.getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         } catch (IOException e) {
             // Doesn't matter, the image just won't show
         }

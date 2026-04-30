@@ -78,7 +78,7 @@ public class SettingsWindow extends JDialog {
         sldScaling.setLabelTable(labelTable);
 
         if (!getIconImages().isEmpty()) {
-            lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_DEFAULT)));
+            lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_SMOOTH)));
         }
 
         // load existing settings
