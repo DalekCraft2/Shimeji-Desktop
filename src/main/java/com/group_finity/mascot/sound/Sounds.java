@@ -69,7 +69,9 @@ public class Sounds {
         }
 
         SOUNDS.put(key, clip);
-        FILE_NAME_MAP.putIfAbsent(fileName, new ArrayList<>(4));
+        if (!FILE_NAME_MAP.containsKey(fileName)) {
+            FILE_NAME_MAP.put(fileName, new ArrayList<>(4));
+        }
         FILE_NAME_MAP.get(fileName).add(key);
 
         return key;
@@ -94,8 +96,12 @@ public class Sounds {
      * @param imageSet the name of the image set that uses the sound
      */
     public static void addUsage(String sound, String imageSet) {
-        SOUNDS_TO_IMAGESETS.putIfAbsent(sound, new ArrayList<>(4));
-        IMAGESETS_TO_SOUNDS.putIfAbsent(imageSet, new ArrayList<>(4));
+        if (!SOUNDS_TO_IMAGESETS.containsKey(sound)) {
+            SOUNDS_TO_IMAGESETS.put(sound, new ArrayList<>(4));
+        }
+        if (!IMAGESETS_TO_SOUNDS.containsKey(imageSet)) {
+            IMAGESETS_TO_SOUNDS.put(imageSet, new ArrayList<>(4));
+        }
         if (!SOUNDS_TO_IMAGESETS.get(sound).contains(imageSet)) {
             SOUNDS_TO_IMAGESETS.get(sound).add(imageSet);
             IMAGESETS_TO_SOUNDS.get(imageSet).add(sound);
@@ -142,7 +148,9 @@ public class Sounds {
     }
 
     public static void clear() {
-        SOUNDS.values().forEach(Clip::close);
+        for (Clip clip : SOUNDS.values()) {
+            clip.close();
+        }
         SOUNDS.clear();
         FILE_NAME_MAP.clear();
         SOUNDS_TO_IMAGESETS.clear();
@@ -155,6 +163,8 @@ public class Sounds {
 
     public static void stopAll() {
         // mute everything
-        SOUNDS.values().forEach(Clip::stop);
+        for (Clip clip : SOUNDS.values()) {
+            clip.stop();
+        }
     }
 }

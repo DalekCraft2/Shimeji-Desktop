@@ -51,8 +51,8 @@ class X11Environment extends Environment {
     /**
      * Storage for values of certain state/type atoms on the current display.
      */
-    private final Collection<Number> badStateList = new ArrayList<>();
-    private final Collection<Number> badTypeList = new ArrayList<>();
+    private final Collection<Number> badStateList;
+    private final Collection<Number> badTypeList;
     private final int maximizedVertValue;
     private final int maximizedHorzValue;
     private final int minimizedValue;
@@ -78,16 +78,18 @@ class X11Environment extends Environment {
         maximizedHorzValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_HORZ").intValue();
         minimizedValue = display.getAtom("_NET_WM_STATE_HIDDEN").intValue();
         fullscreenValue = display.getAtom("_NET_WM_STATE_FULLSCREEN").intValue();
-        badStateList.add(minimizedValue);
-        badStateList.add(display.getAtom("_NET_WM_STATE_MODAL").intValue());
-        badStateList.add(display.getAtom("_NET_WM_STATE_ABOVE").intValue());
+        badStateList = List.of(
+                minimizedValue,
+                display.getAtom("_NET_WM_STATE_MODAL").intValue(),
+                display.getAtom("_NET_WM_STATE_ABOVE").intValue());
 
         dockValue = display.getAtom("_NET_WM_WINDOW_TYPE_DOCK").intValue();
-        badTypeList.add(dockValue);
-        badTypeList.add(display.getAtom("_NET_WM_WINDOW_TYPE_DESKTOP").intValue());
-        badTypeList.add(display.getAtom("_NET_WM_WINDOW_TYPE_MENU").intValue());
-        badTypeList.add(display.getAtom("_NET_WM_WINDOW_TYPE_SPLASH").intValue());
-        badTypeList.add(display.getAtom("_NET_WM_WINDOW_TYPE_DIALOG").intValue());
+        badTypeList = List.of(
+                dockValue,
+                display.getAtom("_NET_WM_WINDOW_TYPE_DESKTOP").intValue(),
+                display.getAtom("_NET_WM_WINDOW_TYPE_MENU").intValue(),
+                display.getAtom("_NET_WM_WINDOW_TYPE_SPLASH").intValue(),
+                display.getAtom("_NET_WM_WINDOW_TYPE_DIALOG").intValue());
     }
 
     @Override

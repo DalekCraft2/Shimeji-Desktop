@@ -10,7 +10,6 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class BehaviorRef implements IBehaviorBuilder {
 
     private final List<String> conditions;
 
-    private final Map<String, String> params = new LinkedHashMap<>();
+    private final Map<String, String> params;
 
     public BehaviorRef(final Configuration configuration, final Entry refNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
@@ -41,23 +40,40 @@ public class BehaviorRef implements IBehaviorBuilder {
 
         log.debug("Loading behavior reference: {}", this);
 
-        String condition = refNode.getAttribute(configuration.getSchema().getString("Condition"));
-        try {
-            // Verify that the condition can be parsed
-            Variable.parse(condition);
-        } catch (final VariableException e) {
-            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
-        }
-        this.conditions = new ArrayList<>(conditions);
-        this.conditions.add(condition);
+        if (refNode.hasAttribute(configuration.getSchema().getString("Condition"))) {
+            String condition = refNode.getAttribute(configuration.getSchema().getString("Condition"));
+            try {
+                // Verify that the condition can be parsed
+                Variable.parse(condition);
+            } catch (final VariableException e) {
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+            }
 
-        params.putAll(refNode.getAttributes());
-        params.remove(configuration.getSchema().getString("Name"));
-        params.remove(configuration.getSchema().getString("Action"));
-        params.remove(configuration.getSchema().getString("Frequency"));
-        params.remove(configuration.getSchema().getString("Hidden"));
-        params.remove(configuration.getSchema().getString("Condition"));
-        params.remove(configuration.getSchema().getString("Toggleable"));
+            if (conditions.isEmpty()) {
+                this.conditions = List.of(condition);
+            } else {
+                String[] conditionArray = conditions.toArray(new String[conditions.size() + 1]);
+                conditionArray[conditionArray.length - 1] = condition;
+                this.conditions = List.of(conditionArray);
+            }
+        } else {
+            this.conditions = List.copyOf(conditions);
+        }
+
+        Map<String, String> tempParams = new LinkedHashMap<>(refNode.getAttributes());
+        tempParams.remove(configuration.getSchema().getString("Name"));
+        tempParams.remove(configuration.getSchema().getString("Action"));
+        tempParams.remove(configuration.getSchema().getString("Frequency"));
+        tempParams.remove(configuration.getSchema().getString("Hidden"));
+        tempParams.remove(configuration.getSchema().getString("Condition"));
+        tempParams.remove(configuration.getSchema().getString("Toggleable"));
+        if (tempParams.isEmpty()) {
+            // Use the same one empty map instance to save memory
+            params = Map.of();
+        } else {
+            // Don't use Map.copyOf() so LinkedHashMap behavior is preserved
+            params = tempParams;
+        }
 
         // Verify that all parameters can be parsed
         for (final Map.Entry<String, String> param : params.entrySet()) {
@@ -88,8 +104,7 @@ public class BehaviorRef implements IBehaviorBuilder {
 
     @Override
     public Behavior buildBehavior() throws BehaviorInstantiationException {
-        final Map<String, String> newParams = new LinkedHashMap<>(params);
-        return configuration.getBehaviorBuilders().get(name).buildBehavior(newParams);
+        return configuration.getBehaviorBuilders().get(name).buildBehavior(params);
     }
 
     public boolean isEffective(final VariableMap context) throws VariableException {

@@ -18,10 +18,11 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Uses the Accessibility API to obtain environment information that is difficult to obtain using Java.
@@ -146,23 +147,16 @@ class MacEnvironment extends Environment {
 
     private static Iterable<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
         PointerByReference axWindowsp = new PointerByReference();
-        Collection<AXUIElementRef> ret = new ArrayList<>();
 
         carbonEx.AXUIElementCopyAttributeValue(application, kAXChildren, axWindowsp);
 
         if (axWindowsp.getValue() == Pointer.NULL) {
-            return ret;
+            return List.of();
         }
 
         CFArrayRef cfWindows = new CFArrayRef(axWindowsp.getValue());
 
-        for (int i = 0, count = cfWindows.getCount(); i < count; i++) {
-            Pointer p = cfWindows.getValueAtIndex(i);
-            AXUIElementRef el = new AXUIElementRef(p);
-            ret.add(el);
-        }
-
-        return ret;
+        return IntStream.range(0, cfWindows.getCount()).mapToObj(cfWindows::getValueAtIndex).map(AXUIElementRef::new).collect(Collectors.toList());
     }
 
     private static Rectangle getRectOfWindow(AXUIElementRef window) {

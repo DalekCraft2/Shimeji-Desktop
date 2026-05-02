@@ -707,12 +707,12 @@ public class Mascot {
         }
     }
 
-    public void setHotspots(Hotspot[] hotspots) {
-        if (this.hotspots.isEmpty() && hotspots.length == 0) {
+    public void setHotspots(Collection<Hotspot> hotspots) {
+        if (this.hotspots.isEmpty() && hotspots.isEmpty()) {
             return;
         }
         this.hotspots.clear();
-        Collections.addAll(this.hotspots, hotspots);
+        this.hotspots.addAll(hotspots);
         if (Main.getInstance().getSettings().drawShimejiBounds) {
             needsRepaint = true;
         }

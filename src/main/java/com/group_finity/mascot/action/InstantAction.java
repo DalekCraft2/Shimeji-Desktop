@@ -6,7 +6,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -19,7 +19,7 @@ public abstract class InstantAction extends ActionBase {
     private static final Logger log = LoggerFactory.getLogger(InstantAction.class);
 
     public InstantAction(ResourceBundle schema, final VariableMap context) {
-        super(schema, new ArrayList<>(), context);
+        super(schema, List.of(), context);
     }
 
     @Override

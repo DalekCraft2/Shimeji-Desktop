@@ -5,7 +5,7 @@ import com.group_finity.mascot.exception.VariableException;
 import com.group_finity.mascot.script.Variable;
 import com.group_finity.mascot.script.VariableMap;
 
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Yuki Yamada
@@ -13,14 +13,14 @@ import java.util.Arrays;
  */
 public class Animation {
     private final Variable condition;
-    private final Pose[] poses;
-    private final Hotspot[] hotspots;
+    private final List<Pose> poses;
+    private final List<Hotspot> hotspots;
     private final boolean turn;
     private Integer duration = null;
 
-    public Animation(final Variable condition, final Pose[] poses, final Hotspot[] hotspots, final boolean turn) {
-        if (poses.length == 0) {
-            throw new IllegalArgumentException("poses.length==0");
+    public Animation(final Variable condition, final List<Pose> poses, final List<Hotspot> hotspots, final boolean turn) {
+        if (poses.isEmpty()) {
+            throw new IllegalArgumentException("poses.size==0");
         }
 
         this.condition = condition;
@@ -60,11 +60,11 @@ public class Animation {
 
     public int getDuration() {
         if (duration == null)
-            duration = Arrays.stream(poses).mapToInt(Pose::getDuration).sum();
+            duration = poses.stream().mapToInt(Pose::getDuration).sum();
         return duration;
     }
 
-    public Hotspot[] getHotspots() {
+    public List<Hotspot> getHotspots() {
         return hotspots;
     }
 

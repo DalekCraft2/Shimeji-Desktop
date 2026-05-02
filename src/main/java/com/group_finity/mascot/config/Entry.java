@@ -41,11 +41,15 @@ public class Entry {
             return attributes;
         }
 
-        attributes = new LinkedHashMap<>();
-        final NamedNodeMap attrs = element.getAttributes();
-        for (int i = 0; i < attrs.getLength(); i++) {
-            final Attr attr = (Attr) attrs.item(i);
-            attributes.put(attr.getName(), attr.getValue());
+        if (element.hasAttributes()) {
+            final NamedNodeMap attrs = element.getAttributes();
+            attributes = new LinkedHashMap<>(attrs.getLength());
+            for (int i = 0; i < attrs.getLength(); i++) {
+                final Attr attr = (Attr) attrs.item(i);
+                attributes.put(attr.getName(), attr.getValue());
+            }
+        } else {
+            attributes = Map.of();
         }
 
         return attributes;
@@ -68,11 +72,16 @@ public class Entry {
         if (children != null) {
             return children;
         }
-        children = new ArrayList<>();
-        for (final Entry child : getChildren()) {
-            if (child.getName().equals(tagName)) {
-                children.add(child);
+
+        if (element.hasChildNodes()) {
+            children = new ArrayList<>();
+            for (final Entry child : getChildren()) {
+                if (child.getName().equals(tagName)) {
+                    children.add(child);
+                }
             }
+        } else {
+            children = List.of();
         }
 
         selected.put(tagName, children);
@@ -85,13 +94,17 @@ public class Entry {
             return children;
         }
 
-        children = new ArrayList<>();
-        final NodeList childNodes = element.getChildNodes();
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            final Node childNode = childNodes.item(i);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                children.add(new Entry((Element) childNode));
+        if (element.hasChildNodes()) {
+            final NodeList childNodes = element.getChildNodes();
+            children = new ArrayList<>(childNodes.getLength());
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                final Node childNode = childNodes.item(i);
+                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                    children.add(new Entry((Element) childNode));
+                }
             }
+        } else {
+            children = List.of();
         }
 
         return children;

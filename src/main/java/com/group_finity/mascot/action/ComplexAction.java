@@ -7,7 +7,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -24,7 +24,7 @@ public abstract class ComplexAction extends ActionBase {
     private int currentAction;
 
     public ComplexAction(ResourceBundle schema, final VariableMap context, final Action... actions) {
-        super(schema, new ArrayList<>(), context);
+        super(schema, List.of(), context);
         if (actions.length == 0) {
             throw new IllegalArgumentException("actions.length==0");
         }

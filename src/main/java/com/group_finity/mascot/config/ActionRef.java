@@ -26,15 +26,23 @@ public class ActionRef implements IActionBuilder {
 
     private final String name;
 
-    private final Map<String, String> params = new LinkedHashMap<>();
+    private final Map<String, String> params;
 
     public ActionRef(final Configuration configuration, final Entry refNode) throws ConfigurationException {
         this.configuration = configuration;
 
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
-        params.putAll(refNode.getAttributes());
 
         log.debug("Loading action reference: {}", this);
+
+        Map<String, String> attributes = refNode.getAttributes();
+        if (attributes.isEmpty()) {
+            // Use the same one empty map instance to save memory
+            params = Map.of();
+        } else {
+            // Use new LinkedHashMap() instead of Map.copyOf() to preserve LinkedHashMap behavior
+            params = new LinkedHashMap<>(attributes);
+        }
 
         // Verify that all parameters can be parsed
         for (final Map.Entry<String, String> param : params.entrySet()) {
@@ -60,8 +68,17 @@ public class ActionRef implements IActionBuilder {
 
     @Override
     public Action buildAction(final Map<String, String> params) throws ActionInstantiationException {
-        final Map<String, String> newParams = new LinkedHashMap<>(params);
-        newParams.putAll(this.params);
+        final Map<String, String> newParams;
+        if (this.params.isEmpty() && params.isEmpty()) {
+            newParams = Map.of();
+        } else if (this.params.isEmpty()) {
+            newParams = params;
+        } else if (params.isEmpty()) {
+            newParams = this.params;
+        } else {
+            newParams = new LinkedHashMap<>(params);
+            newParams.putAll(this.params);
+        }
         return configuration.buildAction(name, newParams);
     }
 }

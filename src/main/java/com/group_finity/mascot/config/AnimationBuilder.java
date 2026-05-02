@@ -21,7 +21,6 @@ import java.awt.geom.Ellipse2D;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -35,8 +34,8 @@ public class AnimationBuilder {
     private static final Logger log = LoggerFactory.getLogger(AnimationBuilder.class);
     private final String condition;
     private final String imageSet;
-    private final List<Pose> poses = new ArrayList<>();
-    private final List<Hotspot> hotspots = new ArrayList<>();
+    private final List<Pose> poses;
+    private final List<Hotspot> hotspots;
     private final Configuration configuration;
     private final boolean turn;
 
@@ -56,21 +55,29 @@ public class AnimationBuilder {
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
         }
 
-        for (final Entry poseNode : animationNode.selectChildren(schema.getString("Pose"))) {
+        List<Entry> poseNodes = animationNode.selectChildren(schema.getString("Pose"));
+        Pose[] poseArray = new Pose[poseNodes.size()];
+        for (int i = 0; i < poseNodes.size(); i++) {
+            Entry poseNode = poseNodes.get(i);
             try {
-                poses.add(loadPose(poseNode));
+                poseArray[i] = loadPose(poseNode);
             } catch (IOException | RuntimeException e) {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage"), poseNode.getAttributes()), e);
             }
         }
+        poses = List.of(poseArray);
 
-        for (final Entry hotspotNode : animationNode.selectChildren(schema.getString("Hotspot"))) {
+        List<Entry> hotspotNodes = animationNode.selectChildren(schema.getString("Hotspot"));
+        Hotspot[] hotspotArray = new Hotspot[hotspotNodes.size()];
+        for (int i = 0; i < hotspotNodes.size(); i++) {
+            Entry hotspotNode = hotspotNodes.get(i);
             try {
-                hotspots.add(loadHotspot(hotspotNode));
+                hotspotArray[i] = loadHotspot(hotspotNode);
             } catch (RuntimeException e) {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), hotspotNode.getAttributes()), e);
             }
         }
+        hotspots = List.of(hotspotArray);
     }
 
     private Pose loadPose(final Entry poseNode) throws IOException {
@@ -192,7 +199,7 @@ public class AnimationBuilder {
 
     public Animation buildAnimation() throws AnimationInstantiationException {
         try {
-            return new Animation(Variable.parse(condition), poses.toArray(new Pose[0]), hotspots.toArray(new Hotspot[0]), turn);
+            return new Animation(Variable.parse(condition), poses, hotspots, turn);
         } catch (final VariableException e) {
             throw new AnimationInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
         }

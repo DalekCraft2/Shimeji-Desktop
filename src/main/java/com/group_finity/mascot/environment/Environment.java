@@ -38,12 +38,11 @@ public abstract class Environment {
     private final Location cursor = new Location();
 
     private static void updateScreenRect() {
-        Rectangle virtualBounds = new Rectangle();
-
-        Map<String, Rectangle> screenRects = new HashMap<>();
-
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final GraphicsDevice[] gs = ge.getScreenDevices();
+
+        Rectangle virtualBounds = new Rectangle();
+        Map<String, Rectangle> screenRects = new HashMap<>(gs.length);
 
         for (final GraphicsDevice gd : gs) {
             Rectangle bounds = gd.getDefaultConfiguration().getBounds();

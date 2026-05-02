@@ -34,9 +34,9 @@ public class ActionBuilder implements IActionBuilder {
     private final String name;
     private final String className;
     private Class<? extends Action> cls;
-    private final Map<String, String> params = new LinkedHashMap<>();
-    private final List<AnimationBuilder> animationBuilders = new ArrayList<>();
-    private final List<IActionBuilder> actionRefs = new ArrayList<>();
+    private final Map<String, String> params;
+    private final List<AnimationBuilder> animationBuilders;
+    private final List<IActionBuilder> actionRefs;
     private final ResourceBundle schema;
 
     public ActionBuilder(final Configuration configuration, final Entry actionNode, final String imageSet) throws ConfigurationException {
@@ -47,31 +47,51 @@ public class ActionBuilder implements IActionBuilder {
 
         log.debug("Loading action: {}", this);
 
-        params.putAll(actionNode.getAttributes());
-        List<Entry> selectChildren = actionNode.selectChildren(schema.getString("Animation"));
-        for (Entry node : selectChildren) {
+        Map<String, String> attributes = actionNode.getAttributes();
+        if (attributes.isEmpty()) {
+            // Use the same one empty map instance to save memory
+            params = Map.of();
+        } else {
+            // Use new LinkedHashMap() instead of Map.copyOf() to preserve LinkedHashMap behavior
+            params = new LinkedHashMap<>(attributes);
+        }
+
+        List<Entry> animationNodes = actionNode.selectChildren(schema.getString("Animation"));
+        AnimationBuilder[] animationBuilderArray = new AnimationBuilder[animationNodes.size()];
+        for (int i = 0; i < animationNodes.size(); i++) {
+            Entry node = animationNodes.get(i);
             try {
-                animationBuilders.add(new AnimationBuilder(configuration, node, imageSet));
+                animationBuilderArray[i] = new AnimationBuilder(configuration, node, imageSet);
             } catch (ConfigurationException e) {
                 throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadAnimationErrorMessage"), e);
             }
         }
+        animationBuilders = List.of(animationBuilderArray);
 
+        /*
+        To estimate the number of ActionReference and Action tags combined, we subtract the number of Animation tags
+        from the total number of children. We could alternatively call selectChildren() for both ActionReference and
+        Action and then add the sizes of the returned lists to get a more accurate answer, but that might slow things
+        down if this action has a lot of children.
+         */
+        List<IActionBuilder> tempActionRefs = new ArrayList<>(actionNode.getChildren().size() - animationNodes.size());
         for (final Entry node : actionNode.getChildren()) {
             if (node.getName().equals(schema.getString("ActionReference"))) {
                 try {
-                    actionRefs.add(new ActionRef(configuration, node));
+                    tempActionRefs.add(new ActionRef(configuration, node));
                 } catch (ConfigurationException e) {
                     throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionReferenceErrorMessage"), node.getAttributes()), e);
                 }
             } else if (node.getName().equals(schema.getString("Action"))) {
                 try {
-                    actionRefs.add(new ActionBuilder(configuration, node, imageSet));
+                    tempActionRefs.add(new ActionBuilder(configuration, node, imageSet));
                 } catch (ConfigurationException e) {
                     throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
                 }
             }
         }
+        // Make list immutable
+        actionRefs = List.copyOf(tempActionRefs);
 
         if (type.equals(schema.getString("Embedded"))) {
             // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
@@ -139,7 +159,7 @@ public class ActionBuilder implements IActionBuilder {
         }
 
         // Create Child Actions
-        final List<Action> actions = createActions();
+        final Action[] actions = createActions();
 
         if (type.equals(schema.getString("Embedded"))) {
             try {
@@ -176,28 +196,36 @@ public class ActionBuilder implements IActionBuilder {
         } else if (type.equals(schema.getString("Animate"))) {
             return new Animate(schema, animations, variables);
         } else if (type.equals(schema.getString("Sequence"))) {
-            return new Sequence(schema, variables, actions.toArray(new Action[0]));
+            return new Sequence(schema, variables, actions);
         } else if (type.equals(schema.getString("Select"))) {
-            return new Select(schema, variables, actions.toArray(new Action[0]));
+            return new Select(schema, variables, actions);
         } else {
             throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
         }
     }
 
-    private List<Action> createActions() throws ActionInstantiationException {
-        final List<Action> actions = new ArrayList<>();
-        for (final IActionBuilder ref : actionRefs) {
-            actions.add(ref.buildAction(new HashMap<>()));
+    private Action[] createActions() throws ActionInstantiationException {
+        if (actionRefs.isEmpty()) {
+            return new Action[0];
+        }
+
+        final Action[] actions = new Action[actionRefs.size()];
+        for (int i = 0; i < actionRefs.size(); i++) {
+            actions[i] = actionRefs.get(i).buildAction(Map.of());
         }
         return actions;
     }
 
     private List<Animation> createAnimations() throws AnimationInstantiationException {
-        final List<Animation> animations = new ArrayList<>();
-        for (final AnimationBuilder animationFactory : animationBuilders) {
-            animations.add(animationFactory.buildAnimation());
+        if (animationBuilders.isEmpty()) {
+            return List.of();
         }
-        return animations;
+
+        final Animation[] animations = new Animation[animationBuilders.size()];
+        for (int i = 0; i < animationBuilders.size(); i++) {
+            animations[i] = animationBuilders.get(i).buildAnimation();
+        }
+        return List.of(animations);
     }
 
     private VariableMap createVariables(final Map<String, String> params) throws ActionInstantiationException {
