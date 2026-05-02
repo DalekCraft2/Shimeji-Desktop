@@ -19,10 +19,12 @@ import java.nio.file.Path;
  */
 public class ImageSetPanel extends JPanel {
 
-    private String imageSet;
+    private final String imageSet;
 
     public ImageSetPanel() {
         initComponents();
+
+        imageSet = "";
     }
 
     public ImageSetPanel(String imageSet, String actions,
