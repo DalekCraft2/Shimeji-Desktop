@@ -34,17 +34,14 @@ import java.util.ResourceBundle;
 public class AnimationBuilder {
     private static final Logger log = LoggerFactory.getLogger(AnimationBuilder.class);
     private final String condition;
-    private String imageSet = "";
+    private final String imageSet;
     private final List<Pose> poses = new ArrayList<>();
     private final List<Hotspot> hotspots = new ArrayList<>();
     private final Configuration configuration;
     private final boolean turn;
 
     public AnimationBuilder(final Configuration configuration, final Entry animationNode, final String imageSet) throws ConfigurationException {
-        if (!imageSet.isEmpty()) {
-            this.imageSet = imageSet;
-        }
-
+        this.imageSet = imageSet;
         this.configuration = configuration;
         ResourceBundle schema = configuration.getSchema();
         condition = animationNode.hasAttribute(schema.getString("Condition")) ? animationNode.getAttribute(schema.getString("Condition")) : "true";
