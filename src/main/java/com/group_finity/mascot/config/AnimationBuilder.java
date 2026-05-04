@@ -57,6 +57,9 @@ public class AnimationBuilder {
         }
 
         List<Entry> poseNodes = animationNode.selectChildren(schema.getString("Pose"));
+        if (poseNodes.isEmpty()) {
+            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoPosesInAnimationErrorMessage"));
+        }
         Pose[] poseArray = new Pose[poseNodes.size()];
         for (int i = 0; i < poseNodes.size(); i++) {
             Entry poseNode = poseNodes.get(i);
