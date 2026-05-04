@@ -106,6 +106,13 @@ public class ActionBuilder implements IActionBuilder {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
         }
 
+        boolean isComplexAction = type.equals(schema.getString("Sequence")) || type.equals(schema.getString("Select"));
+        if (isComplexAction && actionRefs.isEmpty()) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), type));
+        } else if (!isComplexAction && !actionRefs.isEmpty()) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
+        }
+
         if (cls != null && cls.isAnnotationPresent(Deprecated.class)) {
             log.warn("Image set \"{}\" uses deprecated action class: {}", imageSet, cls.getName());
         }
