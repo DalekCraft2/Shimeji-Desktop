@@ -107,7 +107,7 @@
     <complexType name="ActionList">
         <annotation>
             <documentation>
-                A list of actions which can be performed by the mascot.
+                A list of actions that can be performed by the mascot.
                 Should be defined in "conf/actions.xml", "conf/[image_set]/actions.xml", or
                 "img/[image_set]/conf/actions.xml". Can be defined more than once in one file.
             </documentation>
@@ -494,7 +494,7 @@
 
     <complexType name="Action">
         <annotation>
-            <documentation>Defines an action which can be performed by the mascot.</documentation>
+            <documentation>Defines an action that can be performed by the mascot.</documentation>
         </annotation>
         <complexContent>
             <extension base="tns:ActionArguments">
@@ -602,7 +602,7 @@
 
     <complexType name="TopAction">
         <annotation>
-            <documentation>Defines a named, top-level action which can be performed by the mascot.</documentation>
+            <documentation>Defines a named, top-level action that can be performed by the mascot.</documentation>
         </annotation>
         <complexContent>
             <extension base="tns:Action">
@@ -618,7 +618,7 @@
     <complexType name="LowerAction">
         <annotation>
             <documentation>
-                Defines an anonymous child action which can be performed by the mascot.
+                Defines an anonymous child action that can be performed by the mascot.
                 Anonymous actions are defined as children of "Sequence" or "Select" actions.
                 They can not be referenced with ActionReference tags.
             </documentation>
@@ -631,7 +631,7 @@
     <complexType name="Animation">
         <annotation>
             <documentation>
-                An animation which the mascot will perform, represented by poses with varying durations, and by
+                An animation that the mascot will perform, represented by poses with varying durations, and by
                 hotspots.
             </documentation>
         </annotation>
@@ -743,7 +743,7 @@
 
     <complexType name="Hotspot">
         <annotation>
-            <documentation>Defines an area on the mascot which triggers a behavior when clicked.</documentation>
+            <documentation>Defines an area on the mascot that triggers a behavior when clicked.</documentation>
         </annotation>
         <attribute name="Shape" use="required">
             <annotation>
@@ -770,7 +770,7 @@
                     A point in the format "x,y", representing the upper-left corner of the clickable region when the
                     mascot is facing left. The origin ("0,0") refers to the top-left corner of the left-facing image.
                     When "Shape" is "Rectangle", it represents the upper-left corner of the rectangle; when "Shape" is
-                    "Ellipse", it represents the upper-left corner of the rectangle which bounds the ellipse.
+                    "Ellipse", it represents the upper-left corner of the rectangle that bounds the ellipse.
                 </documentation>
             </annotation>
         </attribute>
@@ -795,8 +795,8 @@
     <complexType name="ActionReference">
         <annotation>
             <documentation>
-                References an already defined action which can be performed by the mascot.
-                ActionReference tags can be placed before or after the Action tag which they reference.
+                References an already defined action that can be performed by the mascot.
+                ActionReference tags can be placed before or after the Action tag that they reference.
             </documentation>
         </annotation>
         <complexContent>
@@ -816,7 +816,7 @@
     <complexType name="BehaviorList">
         <annotation>
             <documentation>
-                A list of behaviors which can be performed by the mascot.
+                A list of behaviors that can be performed by the mascot.
                 Should be defined in "conf/behaviors.xml", "conf/[image_set]/behaviors.xml", or
                 "img/[image_set]/conf/behaviors.xml". Can be defined more than once in one file.
             </documentation>
@@ -831,7 +831,7 @@
 
     <complexType name="Behavior">
         <annotation>
-            <documentation>Defines a top-level behavior which can be performed by the mascot.</documentation>
+            <documentation>Defines a top-level behavior that can be performed by the mascot.</documentation>
         </annotation>
         <sequence>
             <choice minOccurs="0" maxOccurs="1">
@@ -849,7 +849,7 @@
         <attribute name="Action" type="string">
             <annotation>
                 <documentation>
-                    The name of the action which will be triggered by this behavior.
+                    The name of the action that will be triggered by this behavior.
                     An Action tag with this name must exist somewhere in the actions XML.
                     If absent, defaults to the name of the behavior.
                 </documentation>
@@ -893,7 +893,7 @@
     <complexType name="BehaviorCondition">
         <annotation>
             <documentation>
-                A list of behaviors which can only be performed if the specified condition evaluates to true.
+                A list of behaviors that can only be performed if the specified condition evaluates to true.
             </documentation>
         </annotation>
         <complexContent>
@@ -932,8 +932,8 @@
     <complexType name="BehaviorReference">
         <annotation>
             <documentation>
-                References an already defined behavior which can be performed by the mascot.
-                BehaviorReference tags can safely be placed before or after the Behavior tag which they reference.
+                References an already defined behavior that can be performed by the mascot.
+                BehaviorReference tags can safely be placed before or after the Behavior tag that they reference.
             </documentation>
         </annotation>
         <attribute name="Name" type="string" use="required">
@@ -968,7 +968,7 @@
     <complexType name="BehaviorReferenceCondition">
         <annotation>
             <documentation>
-                A list of references to behaviors which can only be performed if the specified condition evaluates to
+                A list of references to behaviors that can only be performed if the specified condition evaluates to
                 true.
             </documentation>
         </annotation>

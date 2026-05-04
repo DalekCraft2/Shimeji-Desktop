@@ -317,7 +317,7 @@ public class Manager {
     }
 
     /**
-     * Dismisses mascots which use the specified image set until only the specified mascot remains.
+     * Dismisses mascots that use the specified image set until only the specified mascot remains.
      *
      * @param imageSet the image set for which to check
      * @param mascot the mascot to not dismiss
@@ -335,7 +335,7 @@ public class Manager {
     }
 
     /**
-     * Dismisses all mascots which use the specified image set.
+     * Dismisses all mascots that use the specified image set.
      *
      * @param imageSet the image set for which to check
      */
