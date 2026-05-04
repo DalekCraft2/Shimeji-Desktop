@@ -16,9 +16,9 @@ public class Animation {
     private final List<Pose> poses;
     private final List<Hotspot> hotspots;
     private final boolean turn;
-    private Integer duration = null;
+    private final int duration;
 
-    public Animation(final Variable condition, final List<Pose> poses, final List<Hotspot> hotspots, final boolean turn) {
+    public Animation(final Variable condition, final List<Pose> poses, final List<Hotspot> hotspots, final boolean turn, final int duration) {
         if (poses.isEmpty()) {
             throw new IllegalArgumentException("poses.size==0");
         }
@@ -27,6 +27,7 @@ public class Animation {
         this.poses = poses;
         this.hotspots = hotspots;
         this.turn = turn;
+        this.duration = duration;
     }
 
     public void init() {
@@ -46,7 +47,7 @@ public class Animation {
     }
 
     public Pose getPoseAt(int time) {
-        time %= getDuration();
+        time %= duration;
 
         for (final Pose pose : poses) {
             time -= pose.getDuration();
@@ -59,8 +60,6 @@ public class Animation {
     }
 
     public int getDuration() {
-        if (duration == null)
-            duration = poses.stream().mapToInt(Pose::getDuration).sum();
         return duration;
     }
 

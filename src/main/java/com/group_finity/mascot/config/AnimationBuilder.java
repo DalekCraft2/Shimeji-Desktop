@@ -38,6 +38,7 @@ public class AnimationBuilder {
     private final List<Hotspot> hotspots;
     private final Configuration configuration;
     private final boolean turn;
+    private final int duration;
 
     public AnimationBuilder(final Configuration configuration, final Entry animationNode, final String imageSet) throws ConfigurationException {
         this.imageSet = imageSet;
@@ -66,6 +67,7 @@ public class AnimationBuilder {
             }
         }
         poses = List.of(poseArray);
+        duration = poses.stream().mapToInt(Pose::getDuration).sum();
 
         List<Entry> hotspotNodes = animationNode.selectChildren(schema.getString("Hotspot"));
         Hotspot[] hotspotArray = new Hotspot[hotspotNodes.size()];
@@ -199,7 +201,7 @@ public class AnimationBuilder {
 
     public Animation buildAnimation() throws AnimationInstantiationException {
         try {
-            return new Animation(Variable.parse(condition), poses, hotspots, turn);
+            return new Animation(Variable.parse(condition), poses, hotspots, turn, duration);
         } catch (final VariableException e) {
             throw new AnimationInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
         }
