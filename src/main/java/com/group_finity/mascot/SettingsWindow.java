@@ -81,6 +81,47 @@ public class SettingsWindow extends JDialog {
             lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_SMOOTH)));
         }
 
+        // localisation
+        ResourceBundle language = Main.getInstance().getLanguageBundle();
+        setTitle(language.getString("Settings"));
+        pnlTabs.setTitleAt(0, language.getString("General"));
+        pnlTabs.setTitleAt(1, language.getString("InteractiveWindows"));
+        pnlTabs.setTitleAt(2, language.getString("WindowMode"));
+        pnlTabs.setTitleAt(3, language.getString("About"));
+        lblShimejiEE.setText(language.getString("ShimejiEE"));
+        lblDevelopedBy.setText(language.getString("DevelopedBy"));
+        chkShowTrayIcon.setText(language.getString("ShowTrayIcon"));
+        chkAlwaysShowShimejiChooser.setText(language.getString("AlwaysShowShimejiChooser"));
+        chkAlwaysShowInformationScreen.setText(language.getString("AlwaysShowInformationScreen"));
+        chkDrawShimejiBounds.setText(language.getString("DrawShimejiBounds"));
+        lblOpacity.setText(language.getString("Opacity"));
+        lblScaling.setText(language.getString("Scaling"));
+        lblFilter.setText(language.getString("FilterOptions"));
+        radFilterNearest.setText(language.getString("NearestNeighbour"));
+        radFilterHqx.setText(language.getString("Filter"));
+        radFilterBicubic.setText(language.getString("BicubicFilter"));
+        pnlInteractiveTabs.setTitleAt(0, language.getString("Whitelist"));
+        pnlInteractiveTabs.setTitleAt(1, language.getString("Blacklist"));
+        btnAddInteractiveWindow.setText(language.getString("Add"));
+        btnRemoveInteractiveWindow.setText(language.getString("Remove"));
+        chkWindowModeEnabled.setText(language.getString("WindowedModeEnabled"));
+        lblDimensions.setText(language.getString("Dimensions"));
+        lblBackground.setText(language.getString("Background"));
+        lblBackgroundColor.setText(language.getString("Colour"));
+        lblBackgroundImageCaption.setText(language.getString("Image"));
+        btnBackgroundColorChange.setText(language.getString("Change"));
+        btnBackgroundImageChange.setText(language.getString("Change"));
+        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeCentre"));
+        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeFill"));
+        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeFit"));
+        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeStretch"));
+        btnBackgroundImageRemove.setText(language.getString("Remove"));
+        lblShimejiEE.setText(language.getString("ShimejiEE"));
+        lblDevelopedBy.setText(language.getString("DevelopedBy"));
+        btnWebsite.setText(language.getString("Website"));
+        btnDone.setText(language.getString("Done"));
+        btnCancel.setText(language.getString("Cancel"));
+
         // load existing settings
         Settings settings = Main.getInstance().getSettings();
         showTrayIcon = settings.showTrayIcon;
@@ -141,51 +182,8 @@ public class SettingsWindow extends JDialog {
             }
         }
         cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
-        btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
-
-        // localisation
-        ResourceBundle language = Main.getInstance().getLanguageBundle();
-        setTitle(language.getString("Settings"));
-        pnlTabs.setTitleAt(0, language.getString("General"));
-        pnlTabs.setTitleAt(1, language.getString("InteractiveWindows"));
-        pnlTabs.setTitleAt(2, language.getString("WindowMode"));
-        pnlTabs.setTitleAt(3, language.getString("About"));
-        lblShimejiEE.setText(language.getString("ShimejiEE"));
-        lblDevelopedBy.setText(language.getString("DevelopedBy"));
-        chkShowTrayIcon.setText(language.getString("ShowTrayIcon"));
-        chkAlwaysShowShimejiChooser.setText(language.getString("AlwaysShowShimejiChooser"));
-        chkAlwaysShowInformationScreen.setText(language.getString("AlwaysShowInformationScreen"));
-        chkDrawShimejiBounds.setText(language.getString("DrawShimejiBounds"));
-        lblOpacity.setText(language.getString("Opacity"));
-        lblScaling.setText(language.getString("Scaling"));
-        lblFilter.setText(language.getString("FilterOptions"));
-        radFilterNearest.setText(language.getString("NearestNeighbour"));
-        radFilterHqx.setText(language.getString("Filter"));
-        radFilterBicubic.setText(language.getString("BicubicFilter"));
-        pnlInteractiveTabs.setTitleAt(0, language.getString("Whitelist"));
-        pnlInteractiveTabs.setTitleAt(1, language.getString("Blacklist"));
-        btnAddInteractiveWindow.setText(language.getString("Add"));
-        btnRemoveInteractiveWindow.setText(language.getString("Remove"));
-        chkWindowModeEnabled.setText(language.getString("WindowedModeEnabled"));
-        lblDimensions.setText(language.getString("Dimensions"));
-        lblBackground.setText(language.getString("Background"));
-        lblBackgroundColor.setText(language.getString("Colour"));
-        lblBackgroundImageCaption.setText(language.getString("Image"));
-        btnBackgroundColorChange.setText(language.getString("Change"));
-        btnBackgroundImageChange.setText(language.getString("Change"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeCentre"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeFill"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeFit"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeStretch"));
-        btnBackgroundImageRemove.setText(language.getString("Remove"));
-        lblShimejiEE.setText(language.getString("ShimejiEE"));
-        lblDevelopedBy.setText(language.getString("DevelopedBy"));
-        btnWebsite.setText(language.getString("Website"));
-        btnDone.setText(language.getString("Done"));
-        btnCancel.setText(language.getString("Cancel"));
-
-        // come back around to this one now that the dropdown is populated
         IntStream.range(0, backgroundModes.length).filter(index -> backgroundMode.equals(backgroundModes[index])).findFirst().ifPresent(index -> cmbBackgroundImageMode.setSelectedIndex(index));
+        btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
     }
 
     public void display() {
@@ -283,7 +281,7 @@ public class SettingsWindow extends JDialog {
         lblBackgroundImage = new javax.swing.JLabel();
         btnBackgroundImageChange = new javax.swing.JButton();
         btnBackgroundImageRemove = new javax.swing.JButton();
-        cmbBackgroundImageMode = new javax.swing.JComboBox<String>();
+        cmbBackgroundImageMode = new javax.swing.JComboBox<>();
         pnlAbout = new javax.swing.JPanel();
         glue1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         lblIcon = new javax.swing.JLabel();
@@ -589,7 +587,6 @@ public class SettingsWindow extends JDialog {
         btnBackgroundImageRemove.setText("Remove");
         btnBackgroundImageRemove.addActionListener(this::btnBackgroundImageRemoveActionPerformed);
 
-        cmbBackgroundImageMode.setModel(new javax.swing.DefaultComboBoxModel<String>());
         cmbBackgroundImageMode.addActionListener(this::cmbBackgroundImageModeActionPerformed);
 
         javax.swing.GroupLayout pnlWindowModeLayout = new javax.swing.GroupLayout(pnlWindowMode);
