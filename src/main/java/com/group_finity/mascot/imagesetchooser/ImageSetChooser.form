@@ -162,8 +162,10 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="clearAllLabel">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="1"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+              <FontInfo relative="true">
+                <Font bold="true" component="clearAllLabel" property="font" relativeSize="true" size="0"/>
+              </FontInfo>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="eb" green="c3" id="Button.default.focusColor" palette="3" red="98" type="palette"/>
@@ -184,8 +186,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="selectAllLabel">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="1"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+              <FontInfo relative="true">
+                <Font bold="true" component="selectAllLabel" property="font" relativeSize="true" size="0"/>
+              </FontInfo>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="eb" green="c3" id="Button.default.focusColor" palette="3" red="98" type="palette"/>

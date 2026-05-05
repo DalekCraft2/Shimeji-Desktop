@@ -216,7 +216,7 @@ public class ImageSetChooser extends JDialog {
 
         pnlLabels.setLayout(new javax.swing.BoxLayout(pnlLabels, javax.swing.BoxLayout.LINE_AXIS));
 
-        clearAllLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        clearAllLabel.setFont(clearAllLabel.getFont().deriveFont(clearAllLabel.getFont().getStyle() | java.awt.Font.BOLD));
         clearAllLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
         clearAllLabel.setText("Clear All");
         clearAllLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -230,7 +230,7 @@ public class ImageSetChooser extends JDialog {
         slashLabel.setText(" / ");
         pnlLabels.add(slashLabel);
 
-        selectAllLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        selectAllLabel.setFont(selectAllLabel.getFont().deriveFont(selectAllLabel.getFont().getStyle() | java.awt.Font.BOLD));
         selectAllLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
         selectAllLabel.setText("Select All");
         selectAllLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

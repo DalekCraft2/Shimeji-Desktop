@@ -89,7 +89,7 @@ public class ImageSetPanel extends JPanel {
         pnlLabels.setOpaque(false);
         pnlLabels.setLayout(new javax.swing.BoxLayout(pnlLabels, javax.swing.BoxLayout.Y_AXIS));
 
-        caption.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        caption.setFont(caption.getFont().deriveFont(caption.getFont().getStyle() | java.awt.Font.BOLD));
         caption.setText("Builder");
         pnlLabels.add(caption);
 
