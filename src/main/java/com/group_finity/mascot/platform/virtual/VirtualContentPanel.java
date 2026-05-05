@@ -11,42 +11,63 @@ import java.awt.event.ComponentListener;
  * @author Kilkakon
  * @since 1.0.21
  */
-class VirtualContentPanel extends JPanel {
+public class VirtualContentPanel extends JPanel {
     private Image resizedImage;
-    private final String mode;
+    private final ResizeMode mode;
 
-    private static final String CENTRE = "centre";
-    private static final String FIT = "fit";
-    private static final String STRETCH = "stretch";
-    private static final String FILL = "fill";
+    /**
+     * Enumeration of the type of behavior to use when scaling the content panel's background image.
+     */
+    public enum ResizeMode {
+        /**
+         * Positions the background image in the center of the content pane.
+         * Does not scale the image.
+         */
+        CENTRE,
+        /**
+         * Scales the background image to fill the content pane whilst also maintaining the image's aspect ratio.
+         * Scales the image past the bounds of the content pane if necessary.
+         */
+        FILL,
+        /**
+         * Scales the background image to fit the content pane whilst also maintaining the image's aspect ratio.
+         * Keeps the image within the bounds of the content pane.
+         */
+        FIT,
+        /**
+         * Stretches the background image to the size of the panel. Does not maintain the image's aspect ratio.
+         */
+        STRETCH
+    }
 
-    VirtualContentPanel(Dimension preferredSize, Color background, final Image image, final String mode) {
+    VirtualContentPanel(Dimension preferredSize, Color background, final Image image, final ResizeMode mode) {
         setLayout(null);
         setPreferredSize(preferredSize);
         setBackground(background);
         resizedImage = image;
-
-        if (!(mode.equals(CENTRE) || mode.equals(FIT) || mode.equals(STRETCH) || mode.equals(FILL))) {
-            this.mode = CENTRE;
-        } else {
-            this.mode = mode;
-        }
+        this.mode = mode;
 
         addComponentListener(new ComponentListener() {
             @Override
             public void componentResized(ComponentEvent e) {
                 if (image != null) {
-                    if (mode.equals(STRETCH)) {
-                        resizedImage = image.getScaledInstance(getWidth(),
-                                getHeight(),
-                                Image.SCALE_SMOOTH);
-                    } else if (!mode.equals(CENTRE)) {
-                        double factor = mode.equals(FIT) ?
-                                Math.min(getWidth() / (double) image.getWidth(null), getHeight() / (double) image.getHeight(null)) :
-                                Math.max(getWidth() / (double) image.getWidth(null), getHeight() / (double) image.getHeight(null));
-                        resizedImage = image.getScaledInstance((int) (factor * image.getWidth(null)),
-                                (int) (factor * image.getHeight(null)),
-                                Image.SCALE_SMOOTH);
+                    switch (mode) {
+                        case CENTRE:
+                            break;
+                        case FILL:
+                        case FIT:
+                            double widthRatio = getWidth() / (double) image.getWidth(null);
+                            double heightRatio = getHeight() / (double) image.getHeight(null);
+                            double factor = mode == VirtualContentPanel.ResizeMode.FIT ?
+                                    Math.min(widthRatio, heightRatio) :
+                                    Math.max(widthRatio, heightRatio);
+
+                            resizedImage = image.getScaledInstance((int) (factor * image.getWidth(null)),
+                                    (int) (factor * image.getHeight(null)),
+                                    Image.SCALE_SMOOTH);
+                            break;
+                        case STRETCH:
+                            resizedImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
                     }
                 }
             }
@@ -69,22 +90,27 @@ class VirtualContentPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (resizedImage != null) {
-            if (mode.equals(STRETCH)) {
-                g.drawImage(resizedImage, 0, 0, null);
-            } else if (mode.equals(CENTRE)) {
-                g.drawImage(resizedImage,
-                        resizedImage.getWidth(null) > getWidth() ?
-                                (resizedImage.getWidth(null) - getWidth()) / -2 :
-                                (getWidth() - resizedImage.getWidth(null)) / 2,
-                        resizedImage.getHeight(null) > getHeight() ?
-                                (resizedImage.getHeight(null) - getHeight()) / -2 :
-                                (getHeight() - resizedImage.getHeight(null)) / 2,
-                        null);
-            } else {
-                g.drawImage(resizedImage,
-                        (getWidth() - resizedImage.getWidth(null)) / 2,
-                        (getHeight() - resizedImage.getHeight(null)) / 2,
-                        null);
+            switch (mode) {
+                case CENTRE:
+                    g.drawImage(resizedImage,
+                            resizedImage.getWidth(null) > getWidth() ?
+                                    (resizedImage.getWidth(null) - getWidth()) / -2 :
+                                    (getWidth() - resizedImage.getWidth(null)) / 2,
+                            resizedImage.getHeight(null) > getHeight() ?
+                                    (resizedImage.getHeight(null) - getHeight()) / -2 :
+                                    (getHeight() - resizedImage.getHeight(null)) / 2,
+                            null);
+                    break;
+                case FILL:
+                case FIT:
+                    g.drawImage(resizedImage,
+                            (getWidth() - resizedImage.getWidth(null)) / 2,
+                            (getHeight() - resizedImage.getHeight(null)) / 2,
+                            null);
+                    break;
+                case STRETCH:
+                    g.drawImage(resizedImage, 0, 0, null);
+                    break;
             }
         }
     }

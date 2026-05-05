@@ -7,6 +7,7 @@ package com.group_finity.mascot;
 
 import com.group_finity.mascot.image.Filter;
 import com.group_finity.mascot.image.ImageUtils;
+import com.group_finity.mascot.platform.virtual.VirtualContentPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,9 +50,9 @@ public class SettingsWindow extends JDialog {
     private boolean windowedMode = false;
     private Dimension windowSize = new Dimension(600, 500);
     private Color backgroundColor = new Color(0, 255, 0);
-    private String backgroundMode = "centre";
+    private VirtualContentPanel.ResizeMode backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
     private Path backgroundImage = null;
-    private final String[] backgroundModes = {"centre", "fill", "fit", "stretch"};
+    private final VirtualContentPanel.ResizeMode[] backgroundModes = VirtualContentPanel.ResizeMode.values();
 
     private boolean suppressTextChanged = true;
     private boolean environmentReloadRequired = false;
@@ -140,7 +141,7 @@ public class SettingsWindow extends JDialog {
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
         chkDrawShimejiBounds.setSelected(drawShimejiBounds);
-        radFilterHqx.setEnabled(scaling == 2 || scaling == 3 || scaling == 4 || scaling == 6 || scaling == 8);
+        radFilterHqx.setEnabled(scaling % 2 == 0 || scaling % 3 == 0);
         if (filter == Filter.BICUBIC) {
             radFilterBicubic.setSelected(true);
         } else if (filter == Filter.HQX && radFilterHqx.isEnabled()) {
@@ -182,7 +183,7 @@ public class SettingsWindow extends JDialog {
             }
         }
         cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
-        IntStream.range(0, backgroundModes.length).filter(index -> backgroundMode.equals(backgroundModes[index])).findFirst().ifPresent(index -> cmbBackgroundImageMode.setSelectedIndex(index));
+        IntStream.range(0, backgroundModes.length).filter(i -> backgroundMode == backgroundModes[i]).findFirst().ifPresent(i -> cmbBackgroundImageMode.setSelectedIndex(i));
         btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
     }
 
@@ -775,7 +776,7 @@ public class SettingsWindow extends JDialog {
         environmentReloadRequired = settings.windowedMode != windowedMode ||
                 !settings.windowSize.equals(windowSize) ||
                 !settings.backgroundColor.equals(backgroundColor) ||
-                !settings.backgroundMode.equals(backgroundMode) ||
+                settings.backgroundMode != backgroundMode ||
                 !Objects.equals(settings.backgroundImage, backgroundImage);
         imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
         interactiveWindowReloadRequired = !settings.interactiveWindows.equals(listData) ||
@@ -866,7 +867,7 @@ public class SettingsWindow extends JDialog {
                 sldScaling.setValue(5);
             } else {
                 scaling = sldScaling.getValue() / 10.0;
-                if (scaling == 2 || scaling == 3 || scaling == 4 || scaling == 6 || scaling == 8) {
+                if (scaling % 2 == 0 || scaling % 3 == 0) {
                     radFilterHqx.setEnabled(true);
                 } else {
                     radFilterHqx.setEnabled(false);
@@ -1015,18 +1016,25 @@ public class SettingsWindow extends JDialog {
             return;
         }
 
-        if (backgroundMode.equals("stretch")) {
-            image = image.getScaledInstance(size.width,
-                    size.height,
-                    Image.SCALE_SMOOTH);
+        switch (backgroundMode) {
+            case CENTRE:
+                break;
+            case FILL:
+            case FIT:
+                double widthRatio = size.width / (double) image.getWidth(null);
+                double heightRatio = size.height / (double) image.getHeight(null);
+                double factor = backgroundMode == VirtualContentPanel.ResizeMode.FIT ?
+                        Math.min(widthRatio, heightRatio) :
+                        Math.max(widthRatio, heightRatio);
 
-        } else if (!backgroundMode.equals("centre")) {
-            double factor = backgroundMode.equals("fit") ?
-                    Math.min(size.width / (double) image.getWidth(null), size.height / (double) image.getHeight(null)) :
-                    Math.max(size.width / (double) image.getWidth(null), size.height / (double) image.getHeight(null));
-            image = image.getScaledInstance((int) (factor * image.getWidth(null)),
-                    (int) (factor * image.getHeight(null)),
-                    Image.SCALE_SMOOTH);
+                image = image.getScaledInstance((int) (factor * image.getWidth(null)),
+                        (int) (factor * image.getHeight(null)),
+                        Image.SCALE_SMOOTH);
+                break;
+            case STRETCH:
+                image = image.getScaledInstance(size.width,
+                        size.height,
+                        Image.SCALE_SMOOTH);
         }
 
         lblBackgroundImage.setIcon(new ImageIcon(image));

@@ -1,6 +1,7 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.image.Filter;
+import com.group_finity.mascot.platform.virtual.VirtualContentPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class Settings {
     public Dimension windowSize = new Dimension(600, 500);
     public Color backgroundColor = Color.GREEN;
     public Path backgroundImage = null;
-    public String backgroundMode = "centre";
+    public VirtualContentPanel.ResizeMode backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
 
     /**
      * Reads settings from the given path.
@@ -122,9 +123,23 @@ public class Settings {
             windowSize = new Dimension(600, 500);
         }
         backgroundColor = new Color(getIntProperty(properties, "Background", 0x00FF00));
-        String backgroundImageString = properties.getProperty("BackgroundImage");
-        backgroundImage = backgroundImageString == null || backgroundImageString.isEmpty() ? null : Path.of(properties.getProperty("BackgroundImage"));
-        backgroundMode = properties.getProperty("BackgroundMode", "centre");
+        String backgroundImageText = properties.getProperty("BackgroundImage");
+        backgroundImage = backgroundImageText == null || backgroundImageText.isEmpty() ? null : Path.of(properties.getProperty("BackgroundImage"));
+        String backgroundModeText = properties.getProperty("BackgroundMode", "centre");
+        switch (backgroundModeText) {
+            case "fill":
+                backgroundMode = VirtualContentPanel.ResizeMode.FILL;
+                break;
+            case "fit":
+                backgroundMode = VirtualContentPanel.ResizeMode.FIT;
+                break;
+            case "stretch":
+                backgroundMode = VirtualContentPanel.ResizeMode.STRETCH;
+                break;
+            default:
+                backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
+                break;
+        }
     }
 
     private boolean getBooleanProperty(Properties properties, String key, boolean defaultValue) {
@@ -232,7 +247,20 @@ public class Settings {
         properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
         properties.setProperty("WindowSize", windowSize.width + "x" + windowSize.height);
         properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
-        properties.setProperty("BackgroundMode", backgroundMode);
+        switch (backgroundMode) {
+            case CENTRE:
+                properties.setProperty("BackgroundMode", "centre");
+                break;
+            case FILL:
+                properties.setProperty("BackgroundMode", "fill");
+                break;
+            case FIT:
+                properties.setProperty("BackgroundMode", "fit");
+                break;
+            case STRETCH:
+                properties.setProperty("BackgroundMode", "stretch");
+                break;
+        }
         properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage.toString());
 
         try (OutputStream output = Files.newOutputStream(path)) {
