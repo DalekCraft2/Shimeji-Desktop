@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.HierarchyEvent;
 
 /**
  * Virtual desktop content pane.
@@ -47,29 +48,16 @@ public class VirtualContentPanel extends JPanel {
         resizedImage = image;
         this.mode = mode;
 
+        addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
+                resizeImage(image);
+            }
+        });
+
         addComponentListener(new ComponentListener() {
             @Override
             public void componentResized(ComponentEvent e) {
-                if (image != null) {
-                    switch (mode) {
-                        case CENTRE:
-                            break;
-                        case FILL:
-                        case FIT:
-                            double widthRatio = getWidth() / (double) image.getWidth(null);
-                            double heightRatio = getHeight() / (double) image.getHeight(null);
-                            double factor = mode == VirtualContentPanel.ResizeMode.FIT ?
-                                    Math.min(widthRatio, heightRatio) :
-                                    Math.max(widthRatio, heightRatio);
-
-                            resizedImage = image.getScaledInstance((int) (factor * image.getWidth(null)),
-                                    (int) (factor * image.getHeight(null)),
-                                    Image.SCALE_SMOOTH);
-                            break;
-                        case STRETCH:
-                            resizedImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
-                    }
-                }
+                resizeImage(image);
             }
 
             @Override
@@ -84,6 +72,29 @@ public class VirtualContentPanel extends JPanel {
             public void componentHidden(ComponentEvent e) {
             }
         });
+    }
+
+    private void resizeImage(Image image) {
+        if (image != null) {
+            switch (mode) {
+                case CENTRE:
+                    break;
+                case FILL:
+                case FIT:
+                    double widthRatio = getWidth() / (double) image.getWidth(null);
+                    double heightRatio = getHeight() / (double) image.getHeight(null);
+                    double factor = mode == VirtualContentPanel.ResizeMode.FIT ?
+                            Math.min(widthRatio, heightRatio) :
+                            Math.max(widthRatio, heightRatio);
+
+                    resizedImage = image.getScaledInstance((int) (factor * image.getWidth(null)),
+                            (int) (factor * image.getHeight(null)),
+                            Image.SCALE_SMOOTH);
+                    break;
+                case STRETCH:
+                    resizedImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+            }
+        }
     }
 
     @Override
