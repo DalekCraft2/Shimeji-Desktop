@@ -38,7 +38,7 @@ final class Interpolation {
     //   2. line: red and blue
     //   3. line: alpha
 
-    static int Mix3To1(final int c1, final int c2) {
+    static int mix3To1(final int c1, final int c2) {
         // return (c1*3+c2) >> 2;
         if (c1 == c2) {
             return c1;
@@ -48,14 +48,14 @@ final class Interpolation {
                 ((c1 & MASK_ALPHA) >>> 2) * 3 + ((c2 & MASK_ALPHA) >>> 2) & MASK_ALPHA;
     }
 
-    static int Mix2To1To1(final int c1, final int c2, final int c3) {
+    static int mix2To1To1(final int c1, final int c2, final int c3) {
         // return (c1*2+c2+c3) >> 2;
         return (c1 & MASK_2) * 2 + (c2 & MASK_2) + (c3 & MASK_2) >>> 2 & MASK_2 |
                 (c1 & MASK_13) * 2 + (c2 & MASK_13) + (c3 & MASK_13) >>> 2 & MASK_13 |
                 ((c1 & MASK_ALPHA) >>> 2) * 2 + ((c2 & MASK_ALPHA) >>> 2) + ((c3 & MASK_ALPHA) >>> 2) & MASK_ALPHA;
     }
 
-    static int Mix7To1(final int c1, final int c2) {
+    static int mix7To1(final int c1, final int c2) {
         // return (c1*7+c2)/8;
         if (c1 == c2) {
             return c1;
@@ -65,14 +65,14 @@ final class Interpolation {
                 ((c1 & MASK_ALPHA) >>> 3) * 7 + ((c2 & MASK_ALPHA) >>> 3) & MASK_ALPHA;
     }
 
-    static int Mix2To7To7(final int c1, final int c2, final int c3) {
+    static int mix2To7To7(final int c1, final int c2, final int c3) {
         // return (c1*2+(c2+c3)*7)/16;
         return (c1 & MASK_2) * 2 + (c2 & MASK_2) * 7 + (c3 & MASK_2) * 7 >>> 4 & MASK_2 |
                 (c1 & MASK_13) * 2 + (c2 & MASK_13) * 7 + (c3 & MASK_13) * 7 >>> 4 & MASK_13 |
                 ((c1 & MASK_ALPHA) >>> 4) * 2 + ((c2 & MASK_ALPHA) >>> 4) * 7 + ((c3 & MASK_ALPHA) >>> 4) * 7 & MASK_ALPHA;
     }
 
-    static int MixEven(final int c1, final int c2) {
+    static int mixEven(final int c1, final int c2) {
         // return (c1+c2) >> 1;
         if (c1 == c2) {
             return c1;
@@ -82,21 +82,21 @@ final class Interpolation {
                 ((c1 & MASK_ALPHA) >>> 1) + ((c2 & MASK_ALPHA) >>> 1) & MASK_ALPHA;
     }
 
-    static int Mix4To2To1(final int c1, final int c2, final int c3) {
+    static int mix4To2To1(final int c1, final int c2, final int c3) {
         // return (c1*5+c2*2+c3)/8;
         return (c1 & MASK_2) * 5 + (c2 & MASK_2) * 2 + (c3 & MASK_2) >>> 3 & MASK_2 |
                 (c1 & MASK_13) * 5 + (c2 & MASK_13) * 2 + (c3 & MASK_13) >>> 3 & MASK_13 |
                 ((c1 & MASK_ALPHA) >>> 3) * 5 + ((c2 & MASK_ALPHA) >>> 3) * 2 + ((c3 & MASK_ALPHA) >>> 3) & MASK_ALPHA;
     }
 
-    static int Mix6To1To1(final int c1, final int c2, final int c3) {
+    static int mix6To1To1(final int c1, final int c2, final int c3) {
         // return (c1*6+c2+c3)/8;
         return (c1 & MASK_2) * 6 + (c2 & MASK_2) + (c3 & MASK_2) >>> 3 & MASK_2 |
                 (c1 & MASK_13) * 6 + (c2 & MASK_13) + (c3 & MASK_13) >>> 3 & MASK_13 |
                 ((c1 & MASK_ALPHA) >>> 3) * 6 + ((c2 & MASK_ALPHA) >>> 3) + ((c3 & MASK_ALPHA) >>> 3) & MASK_ALPHA;
     }
 
-    static int Mix5To3(final int c1, final int c2) {
+    static int mix5To3(final int c1, final int c2) {
         // return (c1*5+c2*3)/8;
         if (c1 == c2) {
             return c1;
@@ -106,14 +106,14 @@ final class Interpolation {
                 ((c1 & MASK_ALPHA) >>> 3) * 5 + ((c2 & MASK_ALPHA) >>> 3) * 3 & MASK_ALPHA;
     }
 
-    static int Mix2To3To3(final int c1, final int c2, final int c3) {
+    static int mix2To3To3(final int c1, final int c2, final int c3) {
         // return (c1*2+(c2+c3)*3)/8;
         return (c1 & MASK_2) * 2 + (c2 & MASK_2) * 3 + (c3 & MASK_2) * 3 >>> 3 & MASK_2 |
                 (c1 & MASK_13) * 2 + (c2 & MASK_13) * 3 + (c3 & MASK_13) * 3 >>> 3 & MASK_13 |
                 ((c1 & MASK_ALPHA) >>> 3) * 2 + ((c2 & MASK_ALPHA) >>> 3) * 3 + ((c3 & MASK_ALPHA) >>> 3) * 3 & MASK_ALPHA;
     }
 
-    static int Mix14To1To1(final int c1, final int c2, final int c3) {
+    static int mix14To1To1(final int c1, final int c2, final int c3) {
         // return (c1*14+c2+c3)/16;
         return (c1 & MASK_2) * 14 + (c2 & MASK_2) + (c3 & MASK_2) >>> 4 & MASK_2 |
                 (c1 & MASK_13) * 14 + (c2 & MASK_13) + (c3 & MASK_13) >>> 4 & MASK_13 |
