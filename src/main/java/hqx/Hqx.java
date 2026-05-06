@@ -45,9 +45,10 @@ abstract class Hqx {
         final int yuv1 = RgbYuv.getYuv(c1);
         final int yuv2 = RgbYuv.getYuv(c2);
 
-        return Math.abs((yuv1 & MASK_Y) - (yuv2 & MASK_Y)) > trY ||
-                Math.abs((yuv1 & MASK_U) - (yuv2 & MASK_U)) > trU ||
-                Math.abs((yuv1 & MASK_V) - (yuv2 & MASK_V)) > trV ||
-                Math.abs((c1 >> 24) - (c2 >> 24)) > trA;
+        // Use unsigned comparisons because the YUV components are unsigned
+        return Integer.compareUnsigned(Math.abs((yuv1 & MASK_Y) - (yuv2 & MASK_Y)), trY) > 0 ||
+                Integer.compareUnsigned(Math.abs((yuv1 & MASK_U) - (yuv2 & MASK_U)), trU) > 0 ||
+                Integer.compareUnsigned(Math.abs((yuv1 & MASK_V) - (yuv2 & MASK_V)), trV) > 0 ||
+                Integer.compareUnsigned(Math.abs((c1 >>> 24) - (c2 >>> 24)), trA) > 0;
     }
 }

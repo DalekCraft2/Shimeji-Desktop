@@ -48,8 +48,8 @@ public final class RgbYuv {
             rgbToYuv = new int[0x1000000];
         int r, g, b, y, u, v;
         for (int c = 0; c < rgbToYuv.length; c++) {
-            r = (c & 0xFF0000) >> 16;
-            g = (c & 0x00FF00) >> 8;
+            r = (c & 0xFF0000) >>> 16;
+            g = (c & 0x00FF00) >>> 8;
             b = c & 0x0000FF;
             y = (int) (+0.299d * r + 0.587d * g + 0.114d * b);
             u = (int) (-0.169d * r - 0.331d * g + 0.500d * b) + 128;
