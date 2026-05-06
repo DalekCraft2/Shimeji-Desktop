@@ -33,14 +33,14 @@ public class Hqx_2x extends Hqx {
      *
      * @param sp   the source image data array in ARGB format
      * @param dp   the destination image data array in ARGB format
-     * @param Xres the horizontal resolution of the source image
-     * @param Yres the vertical resolution of the source image
+     * @param xRes the horizontal resolution of the source image
+     * @param yRes the vertical resolution of the source image
      * @see #hq2x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean)
      */
     public static void hq2x_32_rb(
             final int[] sp, final int[] dp,
-            final int Xres, final int Yres) {
-        hq2x_32_rb(sp, dp, Xres, Yres, 48, 7, 6, 0, false, false);
+            final int xRes, final int yRes) {
+        hq2x_32_rb(sp, dp, xRes, yRes, 48, 7, 6, 0, false, false);
     }
 
     /**
@@ -49,8 +49,8 @@ public class Hqx_2x extends Hqx {
      *
      * @param sp    the source image data array in ARGB format
      * @param dp    the destination image data array in ARGB format
-     * @param Xres  the horizontal resolution of the source image
-     * @param Yres  the vertical resolution of the source image
+     * @param xRes  the horizontal resolution of the source image
+     * @param yRes  the vertical resolution of the source image
      * @param trY   the Y (luminance) threshold
      * @param trU   the U (chrominance) threshold
      * @param trV   the V (chrominance) threshold
@@ -60,43 +60,51 @@ public class Hqx_2x extends Hqx {
      */
     public static void hq2x_32_rb(
             final int[] sp, final int[] dp,
-            final int Xres, final int Yres,
+            final int xRes, final int yRes,
             int trY, int trU, final int trV, final int trA,
             final boolean wrapX, final boolean wrapY) {
         int spIdx = 0, dpIdx = 0;
         // Don't shift trA, as it uses shift right instead of a mask for comparisons.
-        trY <<= 2 * 8;
-        trU <<= 1 * 8;
-        final int dpL = Xres * 2;
+        trY <<= 16;
+        trU <<= 8;
+        final int dpL = xRes * 2;
 
-        int prevline, nextline;
+        int prevLine, nextLine;
         final int[] w = new int[9];
 
-        for (int j = 0; j < Yres; j++) {
-            prevline = j > 0
-                    ? -Xres
+        //   +----+----+----+
+        //   | w0 | w1 | w2 |
+        //   +----+----+----+
+        //   | w3 | w4 | w5 |
+        //   +----+----+----+
+        //   | w6 | w7 | w8 |
+        //   +----+----+----+
+
+        for (int j = 0; j < yRes; j++) {
+            prevLine = j > 0
+                    ? -xRes
                     : wrapY
-                    ? Xres * (Yres - 1)
-                    : 0;
-            nextline = j < Yres - 1
-                    ? Xres
+                      ? xRes * (yRes - 1)
+                      : 0;
+            nextLine = j < yRes - 1
+                    ? xRes
                     : wrapY
-                    ? -(Xres * (Yres - 1))
-                    : 0;
-            for (int i = 0; i < Xres; i++) {
-                w[1] = sp[spIdx + prevline];
+                      ? -(xRes * (yRes - 1))
+                      : 0;
+            for (int i = 0; i < xRes; i++) {
+                w[1] = sp[spIdx + prevLine];
                 w[4] = sp[spIdx];
-                w[7] = sp[spIdx + nextline];
+                w[7] = sp[spIdx + nextLine];
 
                 if (i > 0) {
-                    w[0] = sp[spIdx + prevline - 1];
+                    w[0] = sp[spIdx + prevLine - 1];
                     w[3] = sp[spIdx - 1];
-                    w[6] = sp[spIdx + nextline - 1];
+                    w[6] = sp[spIdx + nextLine - 1];
                 } else {
                     if (wrapX) {
-                        w[0] = sp[spIdx + prevline + Xres - 1];
-                        w[3] = sp[spIdx + Xres - 1];
-                        w[6] = sp[spIdx + nextline + Xres - 1];
+                        w[0] = sp[spIdx + prevLine + xRes - 1];
+                        w[3] = sp[spIdx + xRes - 1];
+                        w[6] = sp[spIdx + nextLine + xRes - 1];
                     } else {
                         w[0] = w[1];
                         w[3] = w[4];
@@ -104,15 +112,15 @@ public class Hqx_2x extends Hqx {
                     }
                 }
 
-                if (i < Xres - 1) {
-                    w[2] = sp[spIdx + prevline + 1];
+                if (i < xRes - 1) {
+                    w[2] = sp[spIdx + prevLine + 1];
                     w[5] = sp[spIdx + 1];
-                    w[8] = sp[spIdx + nextline + 1];
+                    w[8] = sp[spIdx + nextLine + 1];
                 } else {
                     if (wrapX) {
-                        w[2] = sp[spIdx + prevline - Xres + 1];
-                        w[5] = sp[spIdx - Xres + 1];
-                        w[8] = sp[spIdx + nextline - Xres + 1];
+                        w[2] = sp[spIdx + prevLine - xRes + 1];
+                        w[5] = sp[spIdx - xRes + 1];
+                        w[8] = sp[spIdx + nextLine - xRes + 1];
                     } else {
                         w[2] = w[1];
                         w[5] = w[4];
@@ -123,7 +131,7 @@ public class Hqx_2x extends Hqx {
                 int pattern = 0;
                 int flag = 1;
 
-                for (int k = 0; k < 9; k++) {
+                for (int k = 0; k < w.length; k++) {
                     if (k == 4) {
                         continue;
                     }
@@ -140,18 +148,18 @@ public class Hqx_2x extends Hqx {
                     case 0:
                     case 1:
                     case 4:
-                    case 32:
-                    case 128:
                     case 5:
-                    case 132:
-                    case 160:
+                    case 32:
                     case 33:
-                    case 129:
                     case 36:
-                    case 133:
-                    case 164:
-                    case 161:
                     case 37:
+                    case 128:
+                    case 129:
+                    case 132:
+                    case 133:
+                    case 160:
+                    case 161:
+                    case 164:
                     case 165: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
@@ -343,7 +351,8 @@ public class Hqx_2x extends Hqx {
                     }
                     case 7:
                     case 39:
-                    case 135: {
+                    case 135:
+                    case 167: {
                         dp[dpIdx] = Interpolation.Mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[5]);
                         dp[dpIdx + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
@@ -352,7 +361,8 @@ public class Hqx_2x extends Hqx {
                     }
                     case 148:
                     case 149:
-                    case 180: {
+                    case 180:
+                    case 181: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[1]);
                         dp[dpIdx + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
@@ -360,8 +370,9 @@ public class Hqx_2x extends Hqx {
                         break;
                     }
                     case 224:
+                    case 225:
                     case 228:
-                    case 225: {
+                    case 229: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
                         dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[3]);
@@ -369,8 +380,9 @@ public class Hqx_2x extends Hqx {
                         break;
                     }
                     case 41:
+                    case 45:
                     case 169:
-                    case 45: {
+                    case 173: {
                         dp[dpIdx] = Interpolation.Mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
                         dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[7]);
@@ -964,8 +976,8 @@ public class Hqx_2x extends Hqx {
                         }
                         break;
                     }
-                    case 55:
-                    case 23: {
+                    case 23:
+                    case 55: {
                         if (diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx] = Interpolation.Mix3To1(w[4], w[3]);
                             dp[dpIdx + 1] = w[4];
@@ -977,8 +989,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix2To1To1(w[4], w[8], w[7]);
                         break;
                     }
-                    case 182:
-                    case 150: {
+                    case 150:
+                    case 182: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[0], w[3]);
                         if (diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -990,8 +1002,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
                         break;
                     }
-                    case 213:
-                    case 212: {
+                    case 212:
+                    case 213: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
                         if (diff(w[5], w[7], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[1]);
@@ -1003,8 +1015,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL] = Interpolation.Mix2To1To1(w[4], w[6], w[3]);
                         break;
                     }
-                    case 241:
-                    case 240: {
+                    case 240:
+                    case 241: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[2], w[1]);
                         if (diff(w[5], w[7], trY, trU, trV, trA)) {
@@ -1016,8 +1028,8 @@ public class Hqx_2x extends Hqx {
                         }
                         break;
                     }
-                    case 236:
-                    case 232: {
+                    case 232:
+                    case 236: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[0], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
                         if (diff(w[7], w[3], trY, trU, trV, trA)) {
@@ -1029,8 +1041,8 @@ public class Hqx_2x extends Hqx {
                         }
                         break;
                     }
-                    case 109:
-                    case 105: {
+                    case 105:
+                    case 109: {
                         if (diff(w[7], w[3], trY, trU, trV, trA)) {
                             dp[dpIdx] = Interpolation.Mix3To1(w[4], w[1]);
                             dp[dpIdx + dpL] = w[4];
@@ -1042,8 +1054,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix2To1To1(w[4], w[8], w[5]);
                         break;
                     }
-                    case 171:
-                    case 43: {
+                    case 43:
+                    case 171: {
                         if (diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[7]);
@@ -1055,8 +1067,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix2To1To1(w[4], w[5], w[7]);
                         break;
                     }
-                    case 143:
-                    case 15: {
+                    case 15:
+                    case 143: {
                         if (diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[5]);
@@ -1424,34 +1436,6 @@ public class Hqx_2x extends Hqx {
                         }
                         break;
                     }
-                    case 229: {
-                        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
-                        dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-                        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[3]);
-                        dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[5]);
-                        break;
-                    }
-                    case 167: {
-                        dp[dpIdx] = Interpolation.Mix3To1(w[4], w[3]);
-                        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[5]);
-                        dp[dpIdx + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-                        dp[dpIdx + dpL + 1] = Interpolation.Mix2To1To1(w[4], w[5], w[7]);
-                        break;
-                    }
-                    case 173: {
-                        dp[dpIdx] = Interpolation.Mix3To1(w[4], w[1]);
-                        dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-                        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[7]);
-                        dp[dpIdx + dpL + 1] = Interpolation.Mix2To1To1(w[4], w[5], w[7]);
-                        break;
-                    }
-                    case 181: {
-                        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
-                        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[1]);
-                        dp[dpIdx + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-                        dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[7]);
-                        break;
-                    }
                     case 186: {
                         if (diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Interpolation.Mix3To1(w[4], w[0]);
@@ -1512,8 +1496,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[5]);
                         break;
                     }
-                    case 205:
-                    case 201: {
+                    case 201:
+                    case 205: {
                         dp[dpIdx] = Interpolation.Mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
                         if (diff(w[7], w[3], trY, trU, trV, trA)) {
@@ -1524,8 +1508,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[5]);
                         break;
                     }
-                    case 174:
-                    case 46: {
+                    case 46:
+                    case 174: {
                         if (diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Interpolation.Mix3To1(w[4], w[0]);
                         } else {
@@ -1536,8 +1520,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix2To1To1(w[4], w[5], w[7]);
                         break;
                     }
-                    case 179:
-                    case 147: {
+                    case 147:
+                    case 179: {
                         dp[dpIdx] = Interpolation.Mix3To1(w[4], w[3]);
                         if (diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[2]);
@@ -1548,8 +1532,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[7]);
                         break;
                     }
-                    case 117:
-                    case 116: {
+                    case 116:
+                    case 117: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[1]);
                         dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[3]);
@@ -1700,8 +1684,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[8]);
                         break;
                     }
-                    case 237:
-                    case 233: {
+                    case 233:
+                    case 237: {
                         dp[dpIdx] = Interpolation.Mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
                         if (diff(w[7], w[3], trY, trU, trV, trA)) {
@@ -1712,8 +1696,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[5]);
                         break;
                     }
-                    case 175:
-                    case 47: {
+                    case 47:
+                    case 175: {
                         if (diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                         } else {
@@ -1724,8 +1708,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix2To1To1(w[4], w[5], w[7]);
                         break;
                     }
-                    case 183:
-                    case 151: {
+                    case 151:
+                    case 183: {
                         dp[dpIdx] = Interpolation.Mix3To1(w[4], w[3]);
                         if (diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -1736,8 +1720,8 @@ public class Hqx_2x extends Hqx {
                         dp[dpIdx + dpL + 1] = Interpolation.Mix3To1(w[4], w[7]);
                         break;
                     }
-                    case 245:
-                    case 244: {
+                    case 244:
+                    case 245: {
                         dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[1]);
                         dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[3]);
