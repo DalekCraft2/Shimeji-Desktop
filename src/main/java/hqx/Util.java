@@ -25,18 +25,70 @@
 
 package hqx;
 
-/**
- * Helper class to interpolate colors. Nothing to see here, move along...
- */
-final class Interpolation {
+final class Util {
     private static final int MASK_2 = 0x0000FF00;
     private static final int MASK_13 = 0x00FF00FF;
+    private static final int MASK_RGB = 0x00FFFFFF;
     private static final int MASK_ALPHA = 0xFF000000;
 
-    // return statements:
-    //   1. line: green
-    //   2. line: red and blue
-    //   3. line: alpha
+    private static final int MASK_Y = 0x00FF0000;
+    private static final int MASK_U = 0x0000FF00;
+    private static final int MASK_V = 0x000000FF;
+
+    private static final int[] RGB_TO_YUV = new int[0x1000000];
+
+    static {
+        /* Initialize RGB-to-YUV lookup table */
+        int r, g, b, y, u, v;
+        for (int c = 0; c < RGB_TO_YUV.length; c++) {
+            r = (c & 0xFF0000) >>> 16;
+            g = (c & 0x00FF00) >>> 8;
+            b = c & 0x0000FF;
+            y = (int) (+0.299d * r + 0.587d * g + 0.114d * b);
+            u = (int) (-0.169d * r - 0.331d * g + 0.500d * b) + 128;
+            v = (int) (+0.500d * r - 0.419d * g - 0.081d * b) + 128;
+            RGB_TO_YUV[c] = y << 16 | u << 8 | v;
+        }
+    }
+
+    /**
+     * Returns the 24bit YUV equivalent of the provided 24bit RGB color. <b>Any alpha component is dropped.</b>
+     *
+     * @param rgb a 24bit rgb color
+     * @return the corresponding 24bit YUV color
+     */
+    static int rgbToYuv(final int rgb) {
+        return RGB_TO_YUV[rgb & MASK_RGB];
+    }
+
+    /**
+     * Compares two ARGB colors according to the provided Y, U, V and A thresholds.
+     *
+     * @param c1  an ARGB color
+     * @param c2  a second ARGB color
+     * @param trY the Y (luminance) threshold
+     * @param trU the U (chrominance) threshold
+     * @param trV the V (chrominance) threshold
+     * @param trA the A (transparency) threshold
+     * @return true if colors differ more than the thresholds permit, false otherwise
+     */
+    static boolean diff(final int c1, final int c2, final int trY, final int trU, final int trV, final int trA) {
+        final int yuv1 = rgbToYuv(c1);
+        final int yuv2 = rgbToYuv(c2);
+
+        // Use unsigned comparisons because the YUV components are unsigned
+        return Integer.compareUnsigned(Math.abs((yuv1 & MASK_Y) - (yuv2 & MASK_Y)), trY) > 0 ||
+                Integer.compareUnsigned(Math.abs((yuv1 & MASK_U) - (yuv2 & MASK_U)), trU) > 0 ||
+                Integer.compareUnsigned(Math.abs((yuv1 & MASK_V) - (yuv2 & MASK_V)), trV) > 0 ||
+                Integer.compareUnsigned(Math.abs((c1 >>> 24) - (c2 >>> 24)), trA) > 0;
+    }
+
+    /* Interpolation methods */
+
+    // Return statements:
+    //   Line 1: green
+    //   Line 2: red and blue
+    //   Line 3: alpha
 
     static int mix3To1(final int c1, final int c2) {
         // return (c1*3+c2) >> 2;
