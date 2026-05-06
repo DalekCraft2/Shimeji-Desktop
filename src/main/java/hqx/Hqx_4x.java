@@ -44,525 +44,6 @@ public class Hqx_4x extends Hqx {
     }
 
     /**
-     * This and the next caseXXX methods were used to reduce the code size of the main
-     * {@link #hq4x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean)} method because of the Java 65K bytecode limit.
-     * Only the necessary methods were created, to leave the maximum code on the original one to avoid excessive calling.
-     * However, this is a very bad design (too much code in the same method)
-     */
-    private static void case0(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case2(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case16(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case64(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case8(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case3(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case6(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case20(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case144(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
-    }
-
-    private static void case192(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-    }
-
-    private static void case96(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case40(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case9(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case66(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case24(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case7(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case148(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
-    }
-
-    private static void case224(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-    }
-
-    private static void case41(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
-    }
-
-    private static void case67(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case70(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case28(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case152(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
-    }
-
-    private static void case194(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
-    }
-
-    private static void case98(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case56(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
-        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix5To3(w[4], w[7]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    private static void case25(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
-        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
-        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
-        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
-        dp[dpIdx + dpL] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[1]);
-        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
-        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
-        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
-        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
-        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
-        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
-    }
-
-    /**
      * This is the extended Java port of the hq4x algorithm.
      * <b>The destination image must be exactly 4 times as large in both dimensions as the source image</b>
      *
@@ -4475,5 +3956,524 @@ public class Hqx_4x extends Hqx {
             }
             dpIdx += dpL * 3;
         }
+    }
+
+    /**
+     * This and the next caseXXX methods were used to reduce the code size of the main
+     * {@link #hq4x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean)} method because of the Java 65K bytecode limit.
+     * Only the necessary methods were created, to leave the maximum code on the original one to avoid excessive calling.
+     * However, this is a very bad design (too much code in the same method)
+     */
+    private static void case0(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case2(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case16(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case64(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case8(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case3(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case6(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case20(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case144(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
+    }
+
+    private static void case192(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+    }
+
+    private static void case96(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case40(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case9(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case66(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case24(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case7(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case148(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix2To1To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
+    }
+
+    private static void case224(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix2To1To1(w[4], w[1], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix6To1To1(w[4], w[3], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+    }
+
+    private static void case41(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix2To1To1(w[4], w[1], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix6To1To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix2To1To1(w[4], w[7], w[5]);
+    }
+
+    private static void case67(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case70(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case28(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case152(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[7]);
+    }
+
+    private static void case194(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[5]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[5]);
+    }
+
+    private static void case98(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix4To2To1(w[4], w[3], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix4To2To1(w[4], w[5], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[3]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case56(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[0]);
+        dp[dpIdx + 1] = Interpolation.Mix4To2To1(w[4], w[1], w[0]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix3To1(w[4], w[0]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[0]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix5To3(w[4], w[7]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
+    }
+
+    private static void case25(final int[] dp, final int dpIdx, final int dpL, final int[] w) {
+        dp[dpIdx] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 1] = Interpolation.Mix5To3(w[4], w[1]);
+        dp[dpIdx + 2] = Interpolation.Mix4To2To1(w[4], w[1], w[2]);
+        dp[dpIdx + 3] = Interpolation.Mix5To3(w[4], w[2]);
+        dp[dpIdx + dpL] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 1] = Interpolation.Mix7To1(w[4], w[1]);
+        dp[dpIdx + dpL + 2] = Interpolation.Mix7To1(w[4], w[2]);
+        dp[dpIdx + dpL + 3] = Interpolation.Mix3To1(w[4], w[2]);
+        dp[dpIdx + dpL + dpL] = Interpolation.Mix3To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 1] = Interpolation.Mix7To1(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + 2] = Interpolation.Mix7To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + 3] = Interpolation.Mix3To1(w[4], w[8]);
+        dp[dpIdx + dpL + dpL + dpL] = Interpolation.Mix5To3(w[4], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 1] = Interpolation.Mix4To2To1(w[4], w[7], w[6]);
+        dp[dpIdx + dpL + dpL + dpL + 2] = Interpolation.Mix4To2To1(w[4], w[7], w[8]);
+        dp[dpIdx + dpL + dpL + dpL + 3] = Interpolation.Mix5To3(w[4], w[8]);
     }
 }
