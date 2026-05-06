@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Kilkakon
  * @since 1.0.9
  */
-public class Sounds {
+public final class Sounds {
     /**
      * A map of strings (in the format "fileName:volume") and sound clips.
      */
@@ -37,6 +37,10 @@ public class Sounds {
      * A map that stores which sounds are used by the given image set.
      */
     private static final Map<String, List<String>> IMAGESETS_TO_SOUNDS = new ConcurrentHashMap<>();
+
+    private Sounds() {
+        throw new UnsupportedOperationException("Sounds is a static class and cannot be instantiated");
+    }
 
     /**
      * Loads a sound.

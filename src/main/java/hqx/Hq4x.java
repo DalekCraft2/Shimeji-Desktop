@@ -25,7 +25,11 @@
 
 package hqx;
 
-public class Hq4x {
+public final class Hq4x {
+    private Hq4x() {
+        throw new UnsupportedOperationException("Hq4x is a static class and cannot be instantiated");
+    }
+
     /**
      * This is the extended Java port of the hq4x algorithm.
      * <b>The destination image must be exactly 4 times as large in both dimensions as the source image</b>

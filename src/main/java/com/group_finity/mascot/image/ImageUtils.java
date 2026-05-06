@@ -14,9 +14,9 @@ import java.awt.image.BufferedImage;
  * @author Shimeji-ee Group
  * @author DalekCraft
  */
-public class ImageUtils {
+public final class ImageUtils {
     private ImageUtils() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("ImageUtils is a static class and cannot be instantiated");
     }
 
     /**

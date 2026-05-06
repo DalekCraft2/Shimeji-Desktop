@@ -25,7 +25,11 @@
 
 package hqx;
 
-public class Hq3x {
+public final class Hq3x {
+    private Hq3x() {
+        throw new UnsupportedOperationException("Hq3x is a static class and cannot be instantiated");
+    }
+
     /**
      * This is the extended Java port of the hq3x algorithm.
      * <b>The destination image must be exactly 3 times as large in both dimensions as the source image</b>

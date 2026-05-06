@@ -18,8 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-public class ImagePairs {
+public final class ImagePairs {
     private static final Map<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
+
+    private ImagePairs() {
+        throw new UnsupportedOperationException("ImagePairs is a static class and cannot be instantiated");
+    }
 
     /**
      * Loads an image pair.

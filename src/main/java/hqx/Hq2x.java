@@ -25,7 +25,11 @@
 
 package hqx;
 
-public class Hq2x {
+public final class Hq2x {
+    private Hq2x() {
+        throw new UnsupportedOperationException("Hq2x is a static class and cannot be instantiated");
+    }
+
     /**
      * This is the extended Java port of the hq2x algorithm.
      * <b>The destination image must be exactly twice as large in both dimensions as the source image</b>

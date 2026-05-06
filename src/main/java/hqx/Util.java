@@ -51,6 +51,10 @@ final class Util {
         }
     }
 
+    private Util() {
+        throw new UnsupportedOperationException("Util is a static class and cannot be instantiated");
+    }
+
     /**
      * Returns the 24bit YUV equivalent of the provided 24bit RGB color. <b>Any alpha component is dropped.</b>
      *
