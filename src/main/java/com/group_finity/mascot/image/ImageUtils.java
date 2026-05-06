@@ -1,8 +1,8 @@
 package com.group_finity.mascot.image;
 
-import hqx.Hqx_2x;
-import hqx.Hqx_3x;
-import hqx.Hqx_4x;
+import hqx.Hq2x;
+import hqx.Hq3x;
+import hqx.Hq4x;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -150,13 +150,13 @@ public class ImageUtils {
                 int[] dstBuffer = new int[newWidth * newHeight];
                 switch (hqxType) {
                     case 4:
-                        Hqx_4x.hq4x_32_rb(srcBuffer, dstBuffer, width, height);
+                        Hq4x.scale4(srcBuffer, dstBuffer, width, height);
                         break;
                     case 3:
-                        Hqx_3x.hq3x_32_rb(srcBuffer, dstBuffer, width, height);
+                        Hq3x.scale3(srcBuffer, dstBuffer, width, height);
                         break;
                     case 2:
-                        Hqx_2x.hq2x_32_rb(srcBuffer, dstBuffer, width, height);
+                        Hq2x.scale2(srcBuffer, dstBuffer, width, height);
                         break;
                 }
 

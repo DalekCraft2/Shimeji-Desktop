@@ -25,7 +25,7 @@
 
 package hqx;
 
-public class Hqx_3x extends Hqx {
+public class Hq3x extends Hqx {
     /**
      * This is the extended Java port of the hq3x algorithm.
      * <b>The destination image must be exactly 3 times as large in both dimensions as the source image</b>
@@ -35,12 +35,12 @@ public class Hqx_3x extends Hqx {
      * @param dp   the destination image data array in ARGB format
      * @param xRes the horizontal resolution of the source image
      * @param yRes the vertical resolution of the source image
-     * @see #hq3x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean)
+     * @see #scale3(int[], int[], int, int, int, int, int, int, boolean, boolean)
      */
-    public static void hq3x_32_rb(
+    public static void scale3(
             final int[] sp, final int[] dp,
             final int xRes, final int yRes) {
-        hq3x_32_rb(sp, dp, xRes, yRes, 48, 7, 6, 0, false, false);
+        scale3(sp, dp, xRes, yRes, 48, 7, 6, 0, false, false);
     }
 
     /**
@@ -58,7 +58,7 @@ public class Hqx_3x extends Hqx {
      * @param wrapX used for images that can be seamlessly repeated horizontally
      * @param wrapY used for images that can be seamlessly repeated vertically
      */
-    public static void hq3x_32_rb(
+    public static void scale3(
             final int[] sp, final int[] dp,
             final int xRes, final int yRes,
             int trY, int trU, final int trV, final int trA,

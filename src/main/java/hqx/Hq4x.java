@@ -25,7 +25,7 @@
 
 package hqx;
 
-public class Hqx_4x extends Hqx {
+public class Hq4x extends Hqx {
     /**
      * This is the extended Java port of the hq4x algorithm.
      * <b>The destination image must be exactly 4 times as large in both dimensions as the source image</b>
@@ -35,12 +35,12 @@ public class Hqx_4x extends Hqx {
      * @param dp   the destination image data array in ARGB format
      * @param xRes the horizontal resolution of the source image
      * @param yRes the vertical resolution of the source image
-     * @see #hq4x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean)
+     * @see #scale4(int[], int[], int, int, int, int, int, int, boolean, boolean)
      */
-    public static void hq4x_32_rb(
+    public static void scale4(
             final int[] sp, final int[] dp,
             final int xRes, final int yRes) {
-        hq4x_32_rb(sp, dp, xRes, yRes, 48, 7, 6, 0, false, false);
+        scale4(sp, dp, xRes, yRes, 48, 7, 6, 0, false, false);
     }
 
     /**
@@ -58,7 +58,7 @@ public class Hqx_4x extends Hqx {
      * @param wrapX used for images that can be seamlessly repeated horizontally
      * @param wrapY used for images that can be seamlessly repeated vertically
      */
-    public static void hq4x_32_rb(
+    public static void scale4(
             final int[] sp, final int[] dp,
             final int xRes, final int yRes,
             int trY, int trU, final int trV, final int trA,
@@ -3960,7 +3960,7 @@ public class Hqx_4x extends Hqx {
 
     /**
      * This and the next caseXXX methods were used to reduce the code size of the main
-     * {@link #hq4x_32_rb(int[], int[], int, int, int, int, int, int, boolean, boolean)} method because of the Java 65K bytecode limit.
+     * {@link #scale4(int[], int[], int, int, int, int, int, int, boolean, boolean)} method because of the Java 65K bytecode limit.
      * Only the necessary methods were created, to leave the maximum code on the original one to avoid excessive calling.
      * However, this is a very bad design (too much code in the same method)
      */
