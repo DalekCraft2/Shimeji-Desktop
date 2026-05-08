@@ -48,7 +48,8 @@ public final class ImagePairs {
         try (InputStream input = Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))) {
             leftImage = ImageUtils.toCompatibleImage(ImageIO.read(input));
         }
-        leftImage = ImageUtils.scale(ImageUtils.premultiply(leftImage, opacity), scaling, filter);
+        // Premultiply after scaling to prevent artifacts when using the hqx filter with an opacity less than 1.0
+        leftImage = ImageUtils.premultiply(ImageUtils.scale(leftImage, scaling, filter), opacity);
 
         BufferedImage rightImage;
         if (rightPath == null) {
@@ -57,7 +58,7 @@ public final class ImagePairs {
             try (InputStream input = Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))) {
                 rightImage = ImageUtils.toCompatibleImage(ImageIO.read(input));
             }
-            rightImage = ImageUtils.scale(ImageUtils.premultiply(rightImage, opacity), scaling, filter);
+            rightImage = ImageUtils.premultiply(ImageUtils.scale(rightImage, scaling, filter), opacity);
         }
 
         ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
