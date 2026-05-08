@@ -24,7 +24,8 @@ public final class ImageUtils {
      * If the given image is already optimized, it is returned unchanged.
      *
      * @param src the image to optimize
-     * @return an image compatible with the default graphics configuration
+     * @return a copy of the original image that is compatible with the default graphics configuration, or {@code src}
+     * if the image was already optimized
      */
     public static BufferedImage toCompatibleImage(BufferedImage src) {
         if (src == null) {
@@ -76,10 +77,10 @@ public final class ImageUtils {
     }
 
     /**
-     * Flips the image horizontally.
+     * Flips the given image horizontally.
      *
      * @param src the image to flip horizontally
-     * @return horizontally flipped image
+     * @return a horizontally flipped copy of the original image
      */
     public static BufferedImage flip(final BufferedImage src) {
         if (src == null) {
@@ -96,6 +97,14 @@ public final class ImageUtils {
         return copy;
     }
 
+    /**
+     * Premultiplies the given image using the specified opacity.
+     * If the specified opacity is 1.0, the image is returned unchanged.
+     *
+     * @param source the image to premultiply
+     * @param opacity the opacity factor by which to premultiply the image
+     * @return a premultiplied copy of the original image, or {@code source} if {@code opacity} is 1.0
+     */
     public static BufferedImage premultiply(final BufferedImage source, final double opacity) {
         if (source == null) {
             return null;
@@ -129,6 +138,14 @@ public final class ImageUtils {
         return returnImage;
     }
 
+    /**
+     * Scales the given image using the specified scale factor and filter.
+     *
+     * @param source the image to premultiply
+     * @param scaling the factor by which to scale the image
+     * @param filter the filter to use when scaling the image
+     * @return a scaled copy of the original image
+     */
     public static BufferedImage scale(final BufferedImage source, final double scaling, Filter filter) {
         if (source == null) {
             return null;
