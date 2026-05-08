@@ -44,6 +44,11 @@ final class Util {
             r = (c & 0xFF0000) >>> 16;
             g = (c & 0x00FF00) >>> 8;
             b = c & 0x0000FF;
+            /*
+            NOTE: This actually converts to YCbCr rather than YUV.
+            The conversion formula matches with the one found here:
+            https://en.wikipedia.org/wiki/YCbCr#JPEG_conversion
+             */
             y = (int) (+0.299d * r + 0.587d * g + 0.114d * b);
             u = (int) (-0.169d * r - 0.331d * g + 0.500d * b) + 128;
             v = (int) (+0.500d * r - 0.419d * g - 0.081d * b) + 128;
@@ -56,25 +61,26 @@ final class Util {
     }
 
     /**
-     * Returns the 24bit YUV equivalent of the provided 24bit RGB color. <b>Any alpha component is dropped.</b>
+     * Returns the 24-bit YUV equivalent of the provided 24-bit RGB color. <b>Any alpha component is dropped.</b>
      *
-     * @param rgb a 24bit rgb color
-     * @return the corresponding 24bit YUV color
+     * @param rgb the 24-bit RGB color to convert to YUV
+     * @return the corresponding 24-bit YUV color
      */
     static int rgbToYuv(final int rgb) {
         return RGB_TO_YUV[rgb & MASK_RGB];
     }
 
     /**
-     * Compares two ARGB colors according to the provided Y, U, V and A thresholds.
+     * Compares two ARGB colors according to the provided Y, U, V, and A thresholds.
+     * The Y and U thresholds must be shifted left by 16 bits and 8 bits respectively.
      *
-     * @param c1  an ARGB color
-     * @param c2  a second ARGB color
-     * @param trY the Y (luminance) threshold
-     * @param trU the U (chrominance) threshold
+     * @param c1  the first ARGB color to compare
+     * @param c2  the second ARGB color to compare
+     * @param trY the Y (luminance) threshold, shifted left by 16 bits
+     * @param trU the U (chrominance) threshold, shifted left by 8 bits
      * @param trV the V (chrominance) threshold
      * @param trA the A (transparency) threshold
-     * @return true if colors differ more than the thresholds permit, false otherwise
+     * @return {@code true} if the colors differ more than the thresholds permit
      */
     static boolean diff(final int c1, final int c2, final int trY, final int trU, final int trV, final int trA) {
         final int yuv1 = rgbToYuv(c1);
@@ -89,10 +95,10 @@ final class Util {
 
     /* Interpolation methods */
 
-    // Return statements:
-    //   Line 1: green
-    //   Line 2: red and blue
-    //   Line 3: alpha
+    // Return statement format:
+    //   Line 1: Green
+    //   Line 2: Red and blue
+    //   Line 3: Alpha
 
     static int mix3To1(final int c1, final int c2) {
         // return (c1*3+c2) >> 2;

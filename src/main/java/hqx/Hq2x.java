@@ -31,9 +31,9 @@ public final class Hq2x {
     }
 
     /**
-     * This is the extended Java port of the hq2x algorithm.
-     * <b>The destination image must be exactly twice as large in both dimensions as the source image</b>
-     * The Y, U, V, A parameters will be set as 48, 7, 6 and 0, respectively. Also, wrapping will be false.
+     * Upscales the provided image data by a factor of 2 using the hq2x algorithm.
+     * <b>The destination image must be exactly twice as large in both dimensions as the source image.</b>
+     * The Y, U, V, and A thresholds are defaulted to 48, 7, 6, and 0, respectively. Wrapping is defaulted to false.
      *
      * @param sp   the source image data array in ARGB format
      * @param dp   the destination image data array in ARGB format
@@ -48,8 +48,8 @@ public final class Hq2x {
     }
 
     /**
-     * This is the extended Java port of the hq2x algorithm.
-     * <b>The destination image must be exactly twice as large in both dimensions as the source image</b>
+     * Upscales the provided image data by a factor of 2 using the hq2x algorithm.
+     * <b>The destination image must be exactly twice as large in both dimensions as the source image.</b>
      *
      * @param sp    the source image data array in ARGB format
      * @param dp    the destination image data array in ARGB format
@@ -59,8 +59,8 @@ public final class Hq2x {
      * @param trU   the U (chrominance) threshold
      * @param trV   the V (chrominance) threshold
      * @param trA   the A (transparency) threshold
-     * @param wrapX used for images that can be seamlessly repeated horizontally
-     * @param wrapY used for images that can be seamlessly repeated vertically
+     * @param wrapX whether the source image can be seamlessly repeated horizontally
+     * @param wrapY whether the source image can be seamlessly repeated vertically
      */
     public static void scale2(
             final int[] sp, final int[] dp,
