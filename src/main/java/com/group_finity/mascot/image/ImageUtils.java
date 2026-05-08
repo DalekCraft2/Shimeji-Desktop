@@ -100,8 +100,12 @@ public final class ImageUtils {
         if (source == null) {
             return null;
         }
+        if (opacity == 1.0) {
+            return source;
+        }
 
-        final BufferedImage returnImage = createCompatibleImage(source.getWidth(), source.getHeight(), opacity == 1 ? source.getTransparency() : Transparency.TRANSLUCENT);
+        // Opacity is guaranteed to not be 1, so set transparency mode of new image to translucent
+        final BufferedImage returnImage = createCompatibleImage(source.getWidth(), source.getHeight(), Transparency.TRANSLUCENT);
         int rgb;
         int a;
         double opacityFactor;
