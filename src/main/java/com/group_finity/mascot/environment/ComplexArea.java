@@ -79,7 +79,7 @@ public class ComplexArea {
             if (area.getRightBorder().isOn(location)) {
                 return null;
             } else if (area.getLeftBorder().isOn(location)) {
-                ret = area.getRightBorder();
+                ret = area.getLeftBorder();
             }
         }
 
