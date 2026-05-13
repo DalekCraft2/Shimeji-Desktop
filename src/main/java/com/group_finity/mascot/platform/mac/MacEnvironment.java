@@ -278,8 +278,11 @@ class MacEnvironment extends Environment {
                         && frontmostWindowRect.intersects(windowVisibleArea)
                         && !frontmostWindowRect.contains(windowVisibleArea) // Exclude desktop
         );
-        frontmostWindow.set(
-                frontmostWindowRect == null ? new Rectangle(-1, -1, 0, 0) : frontmostWindowRect);
+        if (frontmostWindowRect == null) {
+            frontmostWindow.setRect(-1, -1, 0, 0);
+        } else {
+            frontmostWindow.set(frontmostWindowRect);
+        }
     }
 
     private void updateFrontmostApp() {

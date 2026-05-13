@@ -45,7 +45,7 @@ public class MascotEnvironment {
                 // NOTE For Windows multi-monitor support: The Windows work area is smaller than the main screen.
                 // If the current screen includes a work area and the mascot is included in the work area, give priority to the work area.
                 implWorkArea = impl.getWorkArea();
-                if (currentWorkArea != implWorkArea && currentWorkArea.toRectangle().contains(implWorkArea.toRectangle())) {
+                if (currentWorkArea != implWorkArea && currentWorkArea.contains(implWorkArea)) {
                     if (implWorkArea.contains(mascot.getAnchor())) {
                         currentWorkArea = implWorkArea;
                         return currentWorkArea;
@@ -232,7 +232,7 @@ public class MascotEnvironment {
     public Area getActiveIE() {
         Area activeIE = impl.getActiveIE();
 
-        if (currentWorkArea != null && !Main.getInstance().getSettings().multiscreen && !currentWorkArea.toRectangle().intersects(activeIE.toRectangle())) {
+        if (currentWorkArea != null && !Main.getInstance().getSettings().multiscreen && !currentWorkArea.intersects(activeIE)) {
             return new Area();
         }
 

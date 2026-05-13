@@ -111,7 +111,8 @@ class VirtualEnvironment extends Environment {
             SwingUtilities.invokeLater(runnable);
         }
 
-        activeIE.set(new Rectangle(-500, -500, 0, 0));
+        activeIE.setVisible(false);
+        activeIE.setRect(-500, -500, 0, 0);
     }
 
     @Override

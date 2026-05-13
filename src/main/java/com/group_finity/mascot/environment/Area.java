@@ -131,15 +131,23 @@ public class Area {
     }
 
     public void set(final Rectangle value) {
-        dleft = value.x - left;
-        dtop = value.y - top;
-        dright = value.x + value.width - right;
-        dbottom = value.y + value.height - bottom;
+        setRect(value.x, value.y, value.width, value.height);
+    }
 
-        left = value.x;
-        top = value.y;
-        right = value.x + value.width;
-        bottom = value.y + value.height;
+    public void setRect(final int x, final int y, final int width, final int height) {
+        set(x, y, x + width, y + height);
+    }
+
+    public void set(final int left, final int top, final int right, final int bottom) {
+        dleft = left - this.left;
+        dtop = top - this.top;
+        dright = right - this.right;
+        dbottom = bottom - this.bottom;
+
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
     }
 
     public boolean contains(final Point point) {
@@ -147,7 +155,90 @@ public class Area {
     }
 
     public boolean contains(final int x, final int y) {
+        if ((right - left | bottom - top) < 0) {
+            // At least one of the dimensions is negative
+            return false;
+        }
+
         return left <= x && x <= right && top <= y && y <= bottom;
+    }
+
+    public boolean contains(Area a) {
+        return contains(a.left, a.top, a.right, a.bottom);
+    }
+
+    // Adapted from Rectangle.contains(int, int, int, int)
+    public boolean contains(int left, int top, int right, int bottom) {
+        if ((this.right - this.left | this.bottom - this.top | right - left | bottom - top) < 0) {
+            // At least one of the dimensions is negative
+            return false;
+        }
+
+        // Note: If either dimension is zero, tests below must return false
+        if (left < this.left || top < this.top) {
+            return false;
+        }
+
+        if (right <= left) {
+            if (this.right >= this.left || right > this.right) return false;
+        } else {
+            if (this.right >= this.left && right > this.right) return false;
+        }
+
+        if (bottom <= top) {
+            if (this.bottom >= this.top || bottom > this.bottom) return false;
+        } else {
+            if (this.bottom >= this.top && bottom > this.bottom) return false;
+        }
+        return true;
+    }
+
+    // Adapted from Rectangle.intersects(Rectangle)
+    public boolean intersects(Rectangle r) {
+        int tw = right - left;
+        int th = bottom - top;
+        int rw = r.width;
+        int rh = r.height;
+        if (rw <= 0 || rh <= 0 || tw <= 0 || th <= 0) {
+            return false;
+        }
+        int tx = left;
+        int ty = top;
+        int rx = r.x;
+        int ry = r.y;
+        tw = right;
+        th = bottom;
+        rw += rx;
+        rh += ry;
+        //      overflow || intersect
+        return (rw < rx || rw > tx) &&
+                (rh < ry || rh > ty) &&
+                (tw < tx || tw > rx) &&
+                (th < ty || th > ry);
+    }
+
+    // Adapted from Rectangle.intersects(Rectangle)
+    public boolean intersects(Area a) {
+        int tw = right - left;
+        int th = bottom - top;
+        int aw = a.right - a.left;
+        int ah = a.bottom - a.top;
+        if (aw <= 0 || ah <= 0 || tw <= 0 || th <= 0) {
+            return false;
+        }
+        int tx = left;
+        int ty = top;
+        int ax = a.left;
+        int ay = a.top;
+        tw = right;
+        th = bottom;
+        aw = a.right;
+        ah = a.bottom;
+        //      overflow || intersect
+        return (aw < ax || aw > tx) &&
+                (ah < ay || ah > ty) &&
+                (tw < tx || tw > ax) &&
+                (th < ty || th > ay);
     }
 
     public Rectangle toRectangle() {
