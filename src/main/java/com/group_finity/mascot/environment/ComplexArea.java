@@ -41,7 +41,7 @@ public class ComplexArea {
     }
 
     public void retain(Collection<String> deviceNames) {
-        areas.keySet().removeIf(key -> !deviceNames.contains(key));
+        areas.keySet().retainAll(deviceNames);
     }
 
     public FloorCeiling getBottomBorder(Point location) {
