@@ -981,7 +981,7 @@ public class SettingsWindow extends JDialog {
 
         if (field.equals(txtBackgroundColor)) {
             if (!newColor.equals(backgroundColor)) {
-                backgroundColor = Color.decode(text);
+                backgroundColor = newColor;
                 pnlBackgroundPreview.setBackground(backgroundColor);
             }
         }

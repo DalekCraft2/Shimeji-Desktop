@@ -134,21 +134,22 @@ public class Configuration {
 
     private void loadInformation(final Entry list) {
         for (final Entry node : list.getChildren()) {
-            if (node.getName().equals(schema.getString("Name")) ||
-                    node.getName().equals(schema.getString("PreviewImage")) ||
-                    node.getName().equals(schema.getString("SplashImage"))) {
-                information.put(node.getName(), node.getText());
-            } else if (node.getName().equals(schema.getString("Artist")) ||
-                    node.getName().equals(schema.getString("Scripter")) ||
-                    node.getName().equals(schema.getString("Commissioner")) ||
-                    node.getName().equals(schema.getString("Support"))) {
+            String nodeName = node.getName();
+            if (nodeName.equals(schema.getString("Name")) ||
+                    nodeName.equals(schema.getString("PreviewImage")) ||
+                    nodeName.equals(schema.getString("SplashImage"))) {
+                information.put(nodeName, node.getText());
+            } else if (nodeName.equals(schema.getString("Artist")) ||
+                    nodeName.equals(schema.getString("Scripter")) ||
+                    nodeName.equals(schema.getString("Commissioner")) ||
+                    nodeName.equals(schema.getString("Support"))) {
                 String nameText = node.hasAttribute(schema.getString("Name")) ? node.getAttribute(schema.getString("Name")) : null;
                 String linkText = node.hasAttribute(schema.getString("URL")) ? node.getAttribute(schema.getString("URL")) : null;
 
                 if (nameText != null) {
-                    information.put(node.getName() + schema.getString("Name"), nameText);
+                    information.put(nodeName + schema.getString("Name"), nameText);
                     if (linkText != null) {
-                        information.put(node.getName() + schema.getString("URL"), linkText);
+                        information.put(nodeName + schema.getString("URL"), linkText);
                     }
                 }
             }

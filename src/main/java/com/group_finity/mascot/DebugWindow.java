@@ -1,6 +1,7 @@
 package com.group_finity.mascot;
 
 import javax.swing.*;
+import java.util.ResourceBundle;
 
 /**
  * @author Kilkakon
@@ -252,18 +253,19 @@ public class DebugWindow extends JFrame {
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            lblBehavior.setText(Main.getInstance().getLanguageBundle().getString("Behaviour"));
-            lblShimejiX.setText(Main.getInstance().getLanguageBundle().getString("ShimejiX"));
-            lblShimejiY.setText(Main.getInstance().getLanguageBundle().getString("ShimejiY"));
-            lblActiveIE.setText(Main.getInstance().getLanguageBundle().getString("ActiveIE"));
-            lblWindowX.setText(Main.getInstance().getLanguageBundle().getString("WindowX"));
-            lblWindowY.setText(Main.getInstance().getLanguageBundle().getString("WindowY"));
-            lblWindowWidth.setText(Main.getInstance().getLanguageBundle().getString("WindowWidth"));
-            lblWindowHeight.setText(Main.getInstance().getLanguageBundle().getString("WindowHeight"));
-            lblEnvironmentX.setText(Main.getInstance().getLanguageBundle().getString("EnvironmentX"));
-            lblEnvironmentY.setText(Main.getInstance().getLanguageBundle().getString("EnvironmentY"));
-            lblEnvironmentWidth.setText(Main.getInstance().getLanguageBundle().getString("EnvironmentWidth"));
-            lblEnvironmentHeight.setText(Main.getInstance().getLanguageBundle().getString("EnvironmentHeight"));
+            ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
+            lblBehavior.setText(languageBundle.getString("Behaviour"));
+            lblShimejiX.setText(languageBundle.getString("ShimejiX"));
+            lblShimejiY.setText(languageBundle.getString("ShimejiY"));
+            lblActiveIE.setText(languageBundle.getString("ActiveIE"));
+            lblWindowX.setText(languageBundle.getString("WindowX"));
+            lblWindowY.setText(languageBundle.getString("WindowY"));
+            lblWindowWidth.setText(languageBundle.getString("WindowWidth"));
+            lblWindowHeight.setText(languageBundle.getString("WindowHeight"));
+            lblEnvironmentX.setText(languageBundle.getString("EnvironmentX"));
+            lblEnvironmentY.setText(languageBundle.getString("EnvironmentY"));
+            lblEnvironmentWidth.setText(languageBundle.getString("EnvironmentWidth"));
+            lblEnvironmentHeight.setText(languageBundle.getString("EnvironmentHeight"));
         }
         super.setVisible(b);
     }

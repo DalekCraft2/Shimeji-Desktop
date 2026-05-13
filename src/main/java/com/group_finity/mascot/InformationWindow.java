@@ -147,7 +147,7 @@ public class InformationWindow extends JFrame {
                                 } else {
                                     log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
                                 }
-                                JOptionPane.showMessageDialog(this, String.format(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this, String.format(language.getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } catch (UnsupportedOperationException | URISyntaxException | IOException ex) {
                             log.error("Failed to open URL \"{}\"", url, ex);

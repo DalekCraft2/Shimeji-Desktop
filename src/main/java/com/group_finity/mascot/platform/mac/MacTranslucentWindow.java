@@ -39,11 +39,13 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
 
         setLayout(new BorderLayout());
 
+        JRootPane rootPane = getRootPane();
+
         // The shadow of the window will shift, so avoid drawing the shadow.
-        getRootPane().putClientProperty("Window.shadow", Boolean.FALSE);
+        rootPane.putClientProperty("Window.shadow", Boolean.FALSE);
 
         // Eliminate warnings at runtime
-        getRootPane().putClientProperty("apple.awt.draggableWindowBackground", Boolean.TRUE);
+        rootPane.putClientProperty("apple.awt.draggableWindowBackground", Boolean.TRUE);
     }
 
     @Override

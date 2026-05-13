@@ -39,13 +39,15 @@ public class MascotEnvironment {
      * @return the work area containing this environment's {@link Mascot}
      */
     public Area getWorkArea(boolean forceRefresh) {
+        Area implWorkArea = null;
         if (currentWorkArea != null) {
             if (forceRefresh || Main.getInstance().getSettings().multiscreen) {
                 // NOTE For Windows multi-monitor support: The Windows work area is smaller than the main screen.
                 // If the current screen includes a work area and the mascot is included in the work area, give priority to the work area.
-                if (currentWorkArea != impl.getWorkArea() && currentWorkArea.toRectangle().contains(impl.getWorkArea().toRectangle())) {
-                    if (impl.getWorkArea().contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
-                        currentWorkArea = impl.getWorkArea();
+                implWorkArea = impl.getWorkArea();
+                if (currentWorkArea != implWorkArea && currentWorkArea.toRectangle().contains(implWorkArea.toRectangle())) {
+                    if (implWorkArea.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
+                        currentWorkArea = implWorkArea;
                         return currentWorkArea;
                     }
                 }
@@ -60,9 +62,13 @@ public class MascotEnvironment {
             }
         }
 
+        if (implWorkArea == null) {
+            implWorkArea = impl.getWorkArea();
+        }
+
         // First check whether the mascot is included in the work area
-        if (impl.getWorkArea().contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
-            currentWorkArea = impl.getWorkArea();
+        if (implWorkArea.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
+            currentWorkArea = implWorkArea;
             return currentWorkArea;
         }
 
@@ -74,7 +80,7 @@ public class MascotEnvironment {
             }
         }
 
-        currentWorkArea = impl.getWorkArea();
+        currentWorkArea = implWorkArea;
         return currentWorkArea;
     }
 
@@ -119,14 +125,18 @@ public class MascotEnvironment {
      * if the {@link Mascot} is not on any ceiling
      */
     public Border getCeiling(boolean ignoreSeparator) {
-        if (getActiveIE().getBottomBorder().isOn(mascot.getAnchor())) {
-            return getActiveIE().getBottomBorder();
+        Area activeIe = getActiveIE();
+        if (activeIe.getBottomBorder().isOn(mascot.getAnchor())) {
+            return activeIe.getBottomBorder();
         }
-        if (getWorkArea().getTopBorder().isOn(mascot.getAnchor())) {
+
+        Area workArea = getWorkArea();
+        if (workArea.getTopBorder().isOn(mascot.getAnchor())) {
             if (!ignoreSeparator || isScreenTopBottom()) {
-                return getWorkArea().getTopBorder();
+                return workArea.getTopBorder();
             }
         }
+
         return NotOnBorder.INSTANCE;
     }
 
@@ -154,14 +164,18 @@ public class MascotEnvironment {
      * if the {@link Mascot} is not on any floor
      */
     public Border getFloor(boolean ignoreSeparator) {
-        if (getActiveIE().getTopBorder().isOn(mascot.getAnchor())) {
-            return getActiveIE().getTopBorder();
+        Area activeIe = getActiveIE();
+        if (activeIe.getTopBorder().isOn(mascot.getAnchor())) {
+            return activeIe.getTopBorder();
         }
-        if (getWorkArea().getBottomBorder().isOn(mascot.getAnchor())) {
+
+        Area workArea = getWorkArea();
+        if (workArea.getBottomBorder().isOn(mascot.getAnchor())) {
             if (!ignoreSeparator || isScreenTopBottom()) {
-                return getWorkArea().getBottomBorder();
+                return workArea.getBottomBorder();
             }
         }
+
         return NotOnBorder.INSTANCE;
     }
 
@@ -187,24 +201,27 @@ public class MascotEnvironment {
      * if the {@link Mascot} is not on any wall
      */
     public Border getWall(boolean ignoreSeparator) {
+        Area activeIe = getActiveIE();
         if (mascot.isLookRight()) {
-            if (getActiveIE().getLeftBorder().isOn(mascot.getAnchor())) {
-                return getActiveIE().getLeftBorder();
+            if (activeIe.getLeftBorder().isOn(mascot.getAnchor())) {
+                return activeIe.getLeftBorder();
             }
 
-            if (getWorkArea().getRightBorder().isOn(mascot.getAnchor())) {
+            Area workArea = getWorkArea();
+            if (workArea.getRightBorder().isOn(mascot.getAnchor())) {
                 if (!ignoreSeparator || isScreenLeftRight()) {
-                    return getWorkArea().getRightBorder();
+                    return workArea.getRightBorder();
                 }
             }
         } else {
-            if (getActiveIE().getRightBorder().isOn(mascot.getAnchor())) {
-                return getActiveIE().getRightBorder();
+            if (activeIe.getRightBorder().isOn(mascot.getAnchor())) {
+                return activeIe.getRightBorder();
             }
 
-            if (getWorkArea().getLeftBorder().isOn(mascot.getAnchor())) {
+            Area workArea = getWorkArea();
+            if (workArea.getLeftBorder().isOn(mascot.getAnchor())) {
                 if (!ignoreSeparator || isScreenLeftRight()) {
-                    return getWorkArea().getLeftBorder();
+                    return workArea.getLeftBorder();
                 }
             }
         }

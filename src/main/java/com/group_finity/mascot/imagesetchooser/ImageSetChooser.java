@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Chooser used to select the Shimeji image sets in use.
@@ -122,13 +123,14 @@ public class ImageSetChooser extends JDialog {
     }
 
     public List<String> display() {
-        setTitle(Main.getInstance().getLanguageBundle().getString("ShimejiImageSetChooser"));
-        jLabel1.setText(Main.getInstance().getLanguageBundle().getString("SelectImageSetsToUse"));
-        useSelectedButton.setText(Main.getInstance().getLanguageBundle().getString("UseSelected"));
-        useAllButton.setText(Main.getInstance().getLanguageBundle().getString("UseAll"));
-        cancelButton.setText(Main.getInstance().getLanguageBundle().getString("Cancel"));
-        clearAllLabel.setText(Main.getInstance().getLanguageBundle().getString("ClearAll"));
-        selectAllLabel.setText(Main.getInstance().getLanguageBundle().getString("SelectAll"));
+        ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
+        setTitle(languageBundle.getString("ShimejiImageSetChooser"));
+        jLabel1.setText(languageBundle.getString("SelectImageSetsToUse"));
+        useSelectedButton.setText(languageBundle.getString("UseSelected"));
+        useAllButton.setText(languageBundle.getString("UseAll"));
+        cancelButton.setText(languageBundle.getString("Cancel"));
+        clearAllLabel.setText(languageBundle.getString("ClearAll"));
+        selectAllLabel.setText(languageBundle.getString("SelectAll"));
         setLocationRelativeTo(null);
         setVisible(true);
         if (closeProgram) {

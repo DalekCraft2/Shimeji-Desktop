@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
@@ -122,15 +123,17 @@ public class UserBehavior implements Behavior {
 
             if (hotspotState != HotspotState.ACTIVE) {
                 if (action.hasNext()) {
+                    Rectangle mascotBounds = mascot.getBounds();
+                    Area screen = getEnvironment().getScreen();
                     // If it goes off-screen
-                    if (mascot.getBounds().getX() + mascot.getBounds().getWidth()
-                            <= getEnvironment().getScreen().getLeft()
-                            || getEnvironment().getScreen().getRight() <= mascot.getBounds().getX()
-                            || getEnvironment().getScreen().getBottom() <= mascot.getBounds().getY()) {
+                    if (mascotBounds.getX() + mascotBounds.getWidth()
+                            <= screen.getLeft()
+                            || screen.getRight() <= mascotBounds.getX()
+                            || screen.getBottom() <= mascotBounds.getY()) {
                         log.info("Out of the screen bounds ({}, {})", mascot, this);
 
                         Area area = Main.getInstance().getSettings().multiscreen
-                                ? getEnvironment().getScreen() : getEnvironment().getWorkArea();
+                                ? screen : getEnvironment().getWorkArea();
                         // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
                         mascot.getAnchor().setLocation((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256);
 

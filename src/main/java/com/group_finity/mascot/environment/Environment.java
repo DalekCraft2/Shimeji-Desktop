@@ -124,10 +124,11 @@ public abstract class Environment {
         }
 
         if (count == 0) {
-            if (getWorkArea().getTopBorder().isOn(location)) {
+            Area workArea = getWorkArea();
+            if (workArea.getTopBorder().isOn(location)) {
                 return true;
             }
-            if (getWorkArea().getBottomBorder().isOn(location)) {
+            if (workArea.getBottomBorder().isOn(location)) {
                 return true;
             }
         }
@@ -148,10 +149,11 @@ public abstract class Environment {
         }
 
         if (count == 0) {
-            if (getWorkArea().getLeftBorder().isOn(location)) {
+            Area workArea = getWorkArea();
+            if (workArea.getLeftBorder().isOn(location)) {
                 return true;
             }
-            if (getWorkArea().getRightBorder().isOn(location)) {
+            if (workArea.getRightBorder().isOn(location)) {
                 return true;
             }
         }

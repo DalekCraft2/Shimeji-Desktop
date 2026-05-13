@@ -500,11 +500,12 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnRestoreWindowsActionPerformed
 
     private void behaviorPopupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_behaviorPopupPopupMenuWillBecomeInvisible
-        if (getMousePosition() != null) {
-            btnAllowedBehaviors.setEnabled(!(getMousePosition().x > btnAllowedBehaviors.getX() &&
-                    getMousePosition().x < btnAllowedBehaviors.getX() + btnAllowedBehaviors.getWidth() &&
-                    getMousePosition().y > btnAllowedBehaviors.getY() &&
-                    getMousePosition().y < btnAllowedBehaviors.getY() + btnAllowedBehaviors.getHeight()));
+        Point mousePosition = getMousePosition();
+        if (mousePosition != null) {
+            btnAllowedBehaviors.setEnabled(!(mousePosition.x > btnAllowedBehaviors.getX() &&
+                    mousePosition.x < btnAllowedBehaviors.getX() + btnAllowedBehaviors.getWidth() &&
+                    mousePosition.y > btnAllowedBehaviors.getY() &&
+                    mousePosition.y < btnAllowedBehaviors.getY() + btnAllowedBehaviors.getHeight()));
         } else {
             btnAllowedBehaviors.setEnabled(true);
         }
@@ -614,6 +615,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
                 NativeFactory.resetInstance();
                 NativeFactory.getInstance().getEnvironment().init();
             }
+            // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
             if (dialog.isEnvironmentReloadRequired() || dialog.isImageReloadRequired()) {
                 // need to reload the shimeji as the images have rescaled
                 Main.getInstance().reloadAllImageSets();
@@ -627,11 +629,12 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSettingsActionPerformed
 
     private void languagePopupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_languagePopupPopupMenuWillBecomeInvisible
-        if (getMousePosition() != null) {
-            btnLanguage.setEnabled(!(getMousePosition().x > btnLanguage.getX() &&
-                    getMousePosition().x < btnLanguage.getX() + btnLanguage.getWidth() &&
-                    getMousePosition().y > btnLanguage.getY() &&
-                    getMousePosition().y < btnLanguage.getY() + btnLanguage.getHeight()));
+        Point mousePosition = getMousePosition();
+        if (mousePosition != null) {
+            btnLanguage.setEnabled(!(mousePosition.x > btnLanguage.getX() &&
+                    mousePosition.x < btnLanguage.getX() + btnLanguage.getWidth() &&
+                    mousePosition.y > btnLanguage.getY() &&
+                    mousePosition.y < btnLanguage.getY() + btnLanguage.getHeight()));
         } else {
             btnLanguage.setEnabled(true);
         }

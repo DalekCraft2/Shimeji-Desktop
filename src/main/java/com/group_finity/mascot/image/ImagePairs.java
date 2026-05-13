@@ -61,8 +61,10 @@ public final class ImagePairs {
             rightImage = ImageUtils.premultiply(ImageUtils.scale(rightImage, scaling, filter), opacity);
         }
 
-        ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point((int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))),
-                new MascotImage(rightImage, new Point(rightImage.getWidth() - (int) Math.round(center.x * scaling), (int) Math.round(center.y * scaling))));
+        int scaledCenterX = (int) Math.round(center.x * scaling);
+        int scaledCenterY = (int) Math.round(center.y * scaling);
+        ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point(scaledCenterX, scaledCenterY)),
+                new MascotImage(rightImage, new Point(rightImage.getWidth() - scaledCenterX, scaledCenterY)));
         imagePairs.put(key, ip);
 
         return key;

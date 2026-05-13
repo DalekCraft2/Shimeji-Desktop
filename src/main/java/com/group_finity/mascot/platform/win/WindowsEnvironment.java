@@ -61,9 +61,11 @@ class WindowsEnvironment extends Environment {
     public void tick() {
         super.tick();
         workArea.set(getWorkAreaRect(true));
-        final Rectangle ieRectDpiUnaware = getIERect(findActiveIE(), false);
+        // Get DPI-unaware window rectangle
+        final Rectangle ieRect = getIERect(findActiveIE(), false);
+        activeIeDpiUnaware.set(ieRect);
+
         // Calculate the DPI-aware rectangle here to avoid calling getIERect() a second time
-        final Rectangle ieRect = new Rectangle(ieRectDpiUnaware);
         double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
         if (dpiScaleInverse != 1) {
             ieRect.x = (int) Math.round(ieRect.x * dpiScaleInverse);
@@ -73,7 +75,6 @@ class WindowsEnvironment extends Environment {
         }
         activeIe.setVisible(ieRect.intersects(getScreen().toRectangle()));
         activeIe.set(ieRect);
-        activeIeDpiUnaware.set(ieRectDpiUnaware);
     }
 
     private boolean isIE(final HWND hWnd) {
