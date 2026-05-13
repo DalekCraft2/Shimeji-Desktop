@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
  */
 public final class Sounds {
     /**
-     * A map of strings (in the format "fileName:volume") and sound clips.
+     * A map of keys and sound clips.
+     * A sound clip's key is returned by {@link #load} when that sound clip is loaded.
      */
     private static final Map<String, Clip> SOUNDS = new ConcurrentHashMap<>();
 
@@ -96,7 +97,7 @@ public final class Sounds {
     /**
      * Marks a sound as being used by the given image set.
      *
-     * @param sound the key of a sound clip, in the format "fileName:volume"
+     * @param sound the key of a sound clip
      * @param imageSet the name of the image set that uses the sound
      */
     public static void addUsage(String sound, String imageSet) {
@@ -116,7 +117,7 @@ public final class Sounds {
      * Marks a sound as not being used by the given image set.
      * If the given sound is no longer used by any image sets after the operation, it is unloaded.
      *
-     * @param sound the key of the sound clip, in the format "fileName:volume"
+     * @param sound the key of the sound clip
      * @param imageSet the name of the image set that no longer uses the sound
      */
     public static void removeUsage(String sound, String imageSet) {

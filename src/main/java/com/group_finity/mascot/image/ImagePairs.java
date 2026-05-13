@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,7 +21,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Shimeji-ee Group
  */
 public final class ImagePairs {
+    /**
+     * A map of keys and image pairs.
+     * An image pair's key is returned by {@link #load} when that image pair is loaded.
+     */
     private static final Map<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
+
+    /**
+     * A map that stores which image pairs are used by the given image set.
+     */
+    private static final Map<String, List<String>> IMAGESETS_TO_IMAGEPAIRS = new ConcurrentHashMap<>();
 
     private ImagePairs() {
         throw new UnsupportedOperationException("ImagePairs is a static class and cannot be instantiated");
@@ -78,12 +89,31 @@ public final class ImagePairs {
         return key == null ? null : imagePairs.get(key);
     }
 
+    /**
+     * Marks an image pair as being used by the given image set.
+     *
+     * @param imagePair the key of an image pair
+     * @param imageSet the name of the image set that uses the image pair
+     */
+    public static void addUsage(String imagePair, String imageSet) {
+        if (!IMAGESETS_TO_IMAGEPAIRS.containsKey(imageSet)) {
+            IMAGESETS_TO_IMAGEPAIRS.put(imageSet, new ArrayList<>());
+        }
+        if (!IMAGESETS_TO_IMAGEPAIRS.get(imageSet).contains(imagePair)) {
+            IMAGESETS_TO_IMAGEPAIRS.get(imageSet).add(imagePair);
+        }
+    }
+
     public static void removeAll(String imageSet) {
-        if (imagePairs.isEmpty()) {
+        if (!IMAGESETS_TO_IMAGEPAIRS.containsKey(imageSet)) {
             return;
         }
 
-        imagePairs.keySet().removeIf(key -> imageSet.equals(Path.of(key.split(":")[1]).getParent().toString()));
+        for (String imagePair : IMAGESETS_TO_IMAGEPAIRS.get(imageSet)) {
+            imagePairs.remove(imagePair);
+        }
+
+        IMAGESETS_TO_IMAGEPAIRS.remove(imageSet);
     }
 
     public static void clear() {

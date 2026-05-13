@@ -109,6 +109,7 @@ public class AnimationBuilder {
 
             try {
                 imageKey = ImagePairs.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
+                ImagePairs.addUsage(imageKey, imageSet);
             } catch (NumberFormatException | IOException e) {
                 String imagePairString = imagePath.toString();
                 if (imageRightPath != null) {
