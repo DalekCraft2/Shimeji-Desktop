@@ -142,6 +142,10 @@ public class Area {
         bottom = value.y + value.height;
     }
 
+    public boolean contains(final Point point) {
+        return contains(point.x, point.y);
+    }
+
     public boolean contains(final int x, final int y) {
         return left <= x && x <= right && top <= y && y <= bottom;
     }

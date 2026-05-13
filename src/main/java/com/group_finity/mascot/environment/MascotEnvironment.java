@@ -46,7 +46,7 @@ public class MascotEnvironment {
                 // If the current screen includes a work area and the mascot is included in the work area, give priority to the work area.
                 implWorkArea = impl.getWorkArea();
                 if (currentWorkArea != implWorkArea && currentWorkArea.toRectangle().contains(implWorkArea.toRectangle())) {
-                    if (implWorkArea.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
+                    if (implWorkArea.contains(mascot.getAnchor())) {
                         currentWorkArea = implWorkArea;
                         return currentWorkArea;
                     }
@@ -54,7 +54,7 @@ public class MascotEnvironment {
 
                 // NOTE For Windows multi-monitor support: The mascot may be included on multiple monitors at the same time,
                 // in which case the current monitor takes priority.
-                if (currentWorkArea.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
+                if (currentWorkArea.contains(mascot.getAnchor())) {
                     return currentWorkArea;
                 }
             } else {
@@ -67,14 +67,14 @@ public class MascotEnvironment {
         }
 
         // First check whether the mascot is included in the work area
-        if (implWorkArea.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
+        if (implWorkArea.contains(mascot.getAnchor())) {
             currentWorkArea = implWorkArea;
             return currentWorkArea;
         }
 
         // Check whether any monitor contains the mascot
         for (Area area : impl.getScreens()) {
-            if (area.contains(mascot.getAnchor().x, mascot.getAnchor().y)) {
+            if (area.contains(mascot.getAnchor())) {
                 currentWorkArea = area;
                 return currentWorkArea;
             }
