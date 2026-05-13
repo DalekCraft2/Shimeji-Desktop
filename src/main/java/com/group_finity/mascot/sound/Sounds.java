@@ -134,8 +134,8 @@ public final class Sounds {
         }
     }
 
-    public static void removeAll(String searchTerm) {
-        if (!IMAGESETS_TO_SOUNDS.containsKey(searchTerm)) {
+    public static void removeAll(String imageSet) {
+        if (!IMAGESETS_TO_SOUNDS.containsKey(imageSet)) {
             return;
         }
 
@@ -144,11 +144,11 @@ public final class Sounds {
          * ImagePairs.removeAll() does with image pairs; instead, we have to mark each sound as no longer being used by
          * the image set, and then unload them only if no other image sets are using them.
          */
-        for (String sound : IMAGESETS_TO_SOUNDS.get(searchTerm)) {
-            removeUsage(sound, searchTerm);
+        for (String sound : IMAGESETS_TO_SOUNDS.get(imageSet)) {
+            removeUsage(sound, imageSet);
         }
 
-        IMAGESETS_TO_SOUNDS.remove(searchTerm);
+        IMAGESETS_TO_SOUNDS.remove(imageSet);
     }
 
     public static void clear() {

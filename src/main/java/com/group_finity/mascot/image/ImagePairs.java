@@ -78,12 +78,12 @@ public final class ImagePairs {
         return key == null ? null : imagePairs.get(key);
     }
 
-    public static void removeAll(String searchTerm) {
+    public static void removeAll(String imageSet) {
         if (imagePairs.isEmpty()) {
             return;
         }
 
-        imagePairs.keySet().removeIf(key -> searchTerm.equals(Path.of(key.split(":")[1]).getParent().toString()));
+        imagePairs.keySet().removeIf(key -> imageSet.equals(Path.of(key.split(":")[1]).getParent().toString()));
     }
 
     public static void clear() {
