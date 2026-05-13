@@ -91,4 +91,14 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
         validate();
         repaint();
     }
+
+    @Override
+    public boolean contains(int x, int y) {
+        if (image != null && super.contains(x, y) &&
+                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+            // Check whether the pixel at the given position of the image has an alpha greater than 0
+            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
+        }
+        return false;
+    }
 }

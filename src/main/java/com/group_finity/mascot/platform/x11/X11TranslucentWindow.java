@@ -45,6 +45,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         setLayout(new BorderLayout());
 
         // Fix for JDK-8016530 (https://bugs.openjdk.org/browse/JDK-8016530), from https://stackoverflow.com/a/75807264
+        // TODO: Test whether the above bug is present in JDK 25, because the linked issue says it was fixed in JDK 22
         AtomicBoolean updating = new AtomicBoolean();
         addPropertyChangeListener("graphicsConfiguration", evt -> {
             if (updating.compareAndSet(false, true)) {
@@ -120,5 +121,15 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     public void updateImage() {
         validate();
         repaint();
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        if (image != null && super.contains(x, y) &&
+                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+            // Check whether the pixel at the given position of the image has an alpha greater than 0
+            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
+        }
+        return false;
     }
 }
