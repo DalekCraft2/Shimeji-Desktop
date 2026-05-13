@@ -47,10 +47,14 @@ public class Location {
     }
 
     public void set(final Point value) {
-        dx = (dx + value.x - x) / 2;
-        dy = (dy + value.y - y) / 2;
+        set(value.x, value.y);
+    }
 
-        x = value.x;
-        y = value.y;
+    public void set(final int x, final int y) {
+        dx = (dx + x - this.x) / 2;
+        dy = (dy + y - this.y) / 2;
+
+        this.x = x;
+        this.y = y;
     }
 }

@@ -57,16 +57,6 @@ public abstract class Environment {
     }
 
     /**
-     * Gets the cursor position.
-     *
-     * @return cursor position
-     */
-    private static Point getCursorPos() {
-        PointerInfo info = MouseInfo.getPointerInfo();
-        return info != null ? info.getLocation() : new Point(0, 0);
-    }
-
-    /**
      * Called when this environment is created.
      */
     public void init() {
@@ -89,7 +79,12 @@ public abstract class Environment {
             screen.set(screenRect);
             complexScreen.set(screenRects);
         }
-        cursor.set(getCursorPos());
+        PointerInfo info = MouseInfo.getPointerInfo();
+        if (info != null) {
+            cursor.set(info.getLocation());
+        } else {
+            cursor.set(0, 0);
+        }
     }
 
     protected abstract Area getWorkArea();

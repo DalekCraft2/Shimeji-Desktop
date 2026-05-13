@@ -130,12 +130,13 @@ class VirtualEnvironment extends Environment {
         getScreen().set(screenRect);
 
         PointerInfo info = MouseInfo.getPointerInfo();
-        Point point = new Point(0, 0);
         if (info != null) {
-            point = info.getLocation();
+            Point point = info.getLocation();
             SwingUtilities.convertPointFromScreen(point, display.getContentPane());
+            getCursor().set(point);
+        } else {
+            getCursor().set(0, 0);
         }
-        getCursor().set(point);
         // });
     }
 
