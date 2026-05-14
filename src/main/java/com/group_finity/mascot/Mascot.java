@@ -489,6 +489,8 @@ public class Mascot {
 
                     if (behavior instanceof UserBehavior) {
                         debugWindow.setBehavior(((UserBehavior) behavior).getName().replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
+                    } else {
+                        debugWindow.setBehavior("");
                     }
                     debugWindow.setShimejiX(anchor.x);
                     debugWindow.setShimejiY(anchor.y);
