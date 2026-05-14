@@ -38,6 +38,10 @@ public class Configuration {
     private ResourceBundle schema;
 
     public void load(final Entry configurationNode, final String imageSet) throws ConfigurationException {
+        load(configurationNode, imageSet, false);
+    }
+
+    public void load(final Entry configurationNode, final String imageSet, boolean onlyLoadInfo) throws ConfigurationException {
         log.debug("Reading configuration file...");
 
         // check for Japanese XML tag and adapt locale accordingly
@@ -51,34 +55,36 @@ public class Configuration {
         }
         log.debug("Using {} schema", schema.getLocale().toLanguageTag());
 
-        for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
-            constants.put(constant.getAttribute(schema.getString("Name")),
-                    constant.getAttribute(schema.getString("Value")));
-        }
-
-        for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
-            log.debug("Reading an action list...");
-
-            for (final Entry node : list.selectChildren(schema.getString("Action"))) {
-                final ActionBuilder action;
-                try {
-                    action = new ActionBuilder(this, node, imageSet);
-                } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
-                }
-
-                if (actionBuilders.containsKey(action.getName())) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage"), action.getName()));
-                }
-
-                actionBuilders.put(action.getName(), action);
+        if (!onlyLoadInfo) {
+            for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
+                constants.put(constant.getAttribute(schema.getString("Name")),
+                        constant.getAttribute(schema.getString("Value")));
             }
-        }
 
-        for (final Entry list : configurationNode.selectChildren(schema.getString("BehaviourList"))) {
-            log.debug("Reading a behavior list...");
+            for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
+                log.debug("Reading an action list...");
 
-            loadBehaviors(list, List.of());
+                for (final Entry node : list.selectChildren(schema.getString("Action"))) {
+                    final ActionBuilder action;
+                    try {
+                        action = new ActionBuilder(this, node, imageSet);
+                    } catch (ConfigurationException e) {
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
+                    }
+
+                    if (actionBuilders.containsKey(action.getName())) {
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage"), action.getName()));
+                    }
+
+                    actionBuilders.put(action.getName(), action);
+                }
+            }
+
+            for (final Entry list : configurationNode.selectChildren(schema.getString("BehaviourList"))) {
+                log.debug("Reading a behavior list...");
+
+                loadBehaviors(list, List.of());
+            }
         }
 
         for (final Entry list : configurationNode.selectChildren(schema.getString("Information"))) {

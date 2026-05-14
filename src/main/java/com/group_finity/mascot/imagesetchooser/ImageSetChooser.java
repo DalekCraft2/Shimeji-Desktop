@@ -88,7 +88,7 @@ public class ImageSetChooser extends JDialog {
                             information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
                         }
 
-                        configuration.load(new Entry(information.getDocumentElement()), imageSet);
+                        configuration.load(new Entry(information.getDocumentElement()), imageSet, true);
 
                         if (configuration.containsInformationKey(configuration.getSchema().getString("Name"))) {
                             caption = configuration.getInformation(configuration.getSchema().getString("Name"));
