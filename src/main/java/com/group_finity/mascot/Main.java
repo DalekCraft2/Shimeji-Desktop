@@ -28,6 +28,7 @@ import javax.swing.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -57,6 +58,14 @@ public class Main {
     public static final Path SETTINGS_FILE = CONFIG_DIRECTORY.resolve("settings.properties");
     public static final Path LOGGING_FILE = CONFIG_DIRECTORY.resolve("logging.properties");
     public static final Path ICON_FILE = IMAGE_DIRECTORY.resolve("icon.png");
+
+    private static final String[] ACTIONS_FILENAMES = {
+            "actions.xml", "動作.xml", "one.xml", "1.xml"
+    };
+
+    private static final String[] BEHAVIORS_FILENAMES = {
+            "behaviors.xml", "behavior.xml", "行動.xml", "two.xml", "2.xml"
+    };
 
     /**
      * Action that matches the "Gather Around Mouse!" context menu command
@@ -258,7 +267,6 @@ public class Main {
             return false;
         }
         try {
-            // try to load in the correct XML files
             Path actionsFile = getActionsFile(imageSet);
 
             log.info("Reading action file \"{}\" for image set \"{}\"", actionsFile, imageSet);
@@ -286,9 +294,9 @@ public class Main {
 
             configuration.load(new Entry(behaviors.getDocumentElement()), imageSet);
 
-            Path infoFile = getInfoFile(imageSet);
+            try {
+                Path infoFile = getInfoFile(imageSet);
 
-            if (Files.isRegularFile(infoFile)) {
                 log.info("Reading information file \"{}\" for image set \"{}\"", infoFile, imageSet);
 
                 final Document information;
@@ -297,6 +305,8 @@ public class Main {
                 }
 
                 configuration.load(new Entry(information.getDocumentElement()), imageSet);
+            } catch (FileNotFoundException ignored) {
+                // Information file is optional, so ignore if it's missing
             }
 
             configuration.validate();
@@ -305,7 +315,7 @@ public class Main {
 
             List<String> childMascots = new ArrayList<>();
 
-            // born mascot bit goes here...
+            // Determine the child image sets for this image set
             for (final Entry list : new Entry(actions.getDocumentElement()).selectChildren(actionsSchema.getString("ActionList"))) {
                 for (final Entry node : list.selectChildren(actionsSchema.getString("Action"))) {
                     if (node.hasAttribute(actionsSchema.getString("BornMascot"))) {
@@ -346,85 +356,59 @@ public class Main {
         return false;
     }
 
-    public static Path getActionsFile(String imageSet) {
-        Path filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
-        if (Files.isRegularFile(filePath.resolve("actions.xml"))) {
-            return filePath.resolve("actions.xml");
-        } else if (Files.isRegularFile(filePath.resolve("動作.xml"))) {
-            return filePath.resolve("動作.xml");
-        } else if (Files.isRegularFile(filePath.resolve("one.xml"))) {
-            return filePath.resolve("one.xml");
-        } else if (Files.isRegularFile(filePath.resolve("1.xml"))) {
-            return filePath.resolve("1.xml");
+    public static Path getActionsFile(String imageSet) throws FileNotFoundException {
+        Path[] configDirs = {
+                IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
+                CONFIG_DIRECTORY.resolve(imageSet),
+                CONFIG_DIRECTORY
+        };
+
+        for (Path dir : configDirs) {
+            for (String name : ACTIONS_FILENAMES) {
+                Path filePath = dir.resolve(name);
+                if (Files.isRegularFile(filePath)) {
+                    return filePath;
+                }
+            }
         }
 
-        filePath = CONFIG_DIRECTORY.resolve(imageSet);
-        if (Files.isRegularFile(filePath.resolve("actions.xml"))) {
-            return filePath.resolve("actions.xml");
-        } else if (Files.isRegularFile(filePath.resolve("動作.xml"))) {
-            return filePath.resolve("動作.xml");
-        } else if (Files.isRegularFile(filePath.resolve("one.xml"))) {
-            return filePath.resolve("one.xml");
-        } else if (Files.isRegularFile(filePath.resolve("1.xml"))) {
-            return filePath.resolve("1.xml");
-        }
-
-        filePath = CONFIG_DIRECTORY;
-        if (Files.isRegularFile(filePath.resolve("動作.xml"))) {
-            return filePath.resolve("動作.xml");
-        }
-
-        return filePath.resolve("actions.xml");
+        throw new FileNotFoundException("Could not find action file for image set: " + imageSet);
     }
 
-    public static Path getBehaviorsFile(String imageSet) {
-        Path filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
-        if (Files.isRegularFile(filePath.resolve("behaviors.xml"))) {
-            return filePath.resolve("behaviors.xml");
-        } else if (Files.isRegularFile(filePath.resolve("behavior.xml"))) {
-            return filePath.resolve("behavior.xml");
-        } else if (Files.isRegularFile(filePath.resolve("行動.xml"))) {
-            return filePath.resolve("行動.xml");
-        } else if (Files.isRegularFile(filePath.resolve("two.xml"))) {
-            return filePath.resolve("two.xml");
-        } else if (Files.isRegularFile(filePath.resolve("2.xml"))) {
-            return filePath.resolve("2.xml");
+    public static Path getBehaviorsFile(String imageSet) throws FileNotFoundException {
+        Path[] configDirs = {
+                IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
+                CONFIG_DIRECTORY.resolve(imageSet),
+                CONFIG_DIRECTORY
+        };
+
+        for (Path dir : configDirs) {
+            for (String name : BEHAVIORS_FILENAMES) {
+                Path filePath = dir.resolve(name);
+                if (Files.isRegularFile(filePath)) {
+                    return filePath;
+                }
+            }
         }
 
-        filePath = CONFIG_DIRECTORY.resolve(imageSet);
-        if (Files.isRegularFile(filePath.resolve("behaviors.xml"))) {
-            return filePath.resolve("behaviors.xml");
-        } else if (Files.isRegularFile(filePath.resolve("behavior.xml"))) {
-            return filePath.resolve("behavior.xml");
-        } else if (Files.isRegularFile(filePath.resolve("行動.xml"))) {
-            return filePath.resolve("行動.xml");
-        } else if (Files.isRegularFile(filePath.resolve("two.xml"))) {
-            return filePath.resolve("two.xml");
-        } else if (Files.isRegularFile(filePath.resolve("2.xml"))) {
-            return filePath.resolve("2.xml");
-        }
-
-        filePath = CONFIG_DIRECTORY;
-        if (Files.isRegularFile(filePath.resolve("行動.xml"))) {
-            return filePath.resolve("行動.xml");
-        }
-
-        return filePath.resolve("behaviors.xml");
+        throw new FileNotFoundException("Could not find behavior file for image set: " + imageSet);
     }
 
-    public static Path getInfoFile(String imageSet) {
-        Path filePath = IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY);
-        if (Files.isRegularFile(filePath.resolve("info.xml"))) {
-            return filePath.resolve("info.xml");
+    public static Path getInfoFile(String imageSet) throws FileNotFoundException {
+        Path[] configDirs = {
+                IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
+                CONFIG_DIRECTORY.resolve(imageSet),
+                CONFIG_DIRECTORY
+        };
+
+        for (Path dir : configDirs) {
+            Path filePath = dir.resolve("info.xml");
+            if (Files.isRegularFile(filePath)) {
+                return filePath;
+            }
         }
 
-        filePath = CONFIG_DIRECTORY.resolve(imageSet);
-        if (Files.isRegularFile(filePath.resolve("info.xml"))) {
-            return filePath.resolve("info.xml");
-        }
-
-        filePath = CONFIG_DIRECTORY;
-        return filePath.resolve("info.xml");
+        throw new FileNotFoundException("Could not find information file for image set: " + imageSet);
     }
 
     /**

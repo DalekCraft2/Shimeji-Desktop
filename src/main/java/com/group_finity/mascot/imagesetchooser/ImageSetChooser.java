@@ -74,28 +74,26 @@ public class ImageSetChooser extends JDialog {
                 // Determine behaviours file
                 Path behaviorsFile = Main.getBehaviorsFile(imageSet);
 
-                // Determine information file
-                Path infoFile = Main.getInfoFile(imageSet);
-
                 Path imageFile = imageSetDir.resolve("shime1.png");
                 String caption = imageSet;
                 try {
-                    if (Files.isRegularFile(infoFile)) {
-                        Configuration configuration = new Configuration();
+                    // Determine information file
+                    Path infoFile = Main.getInfoFile(imageSet);
 
-                        final Document information;
-                        try (InputStream input = Files.newInputStream(infoFile)) {
-                            information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
-                        }
+                    Configuration configuration = new Configuration();
 
-                        configuration.load(new Entry(information.getDocumentElement()), imageSet, true);
+                    final Document information;
+                    try (InputStream input = Files.newInputStream(infoFile)) {
+                        information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                    }
 
-                        if (configuration.containsInformationKey(configuration.getSchema().getString("Name"))) {
-                            caption = configuration.getInformation(configuration.getSchema().getString("Name"));
-                        }
-                        if (configuration.containsInformationKey(configuration.getSchema().getString("PreviewImage"))) {
-                            imageFile = imageSetDir.resolve(configuration.getInformation(configuration.getSchema().getString("PreviewImage")));
-                        }
+                    configuration.load(new Entry(information.getDocumentElement()), imageSet, true);
+
+                    if (configuration.containsInformationKey(configuration.getSchema().getString("Name"))) {
+                        caption = configuration.getInformation(configuration.getSchema().getString("Name"));
+                    }
+                    if (configuration.containsInformationKey(configuration.getSchema().getString("PreviewImage"))) {
+                        imageFile = imageSetDir.resolve(configuration.getInformation(configuration.getSchema().getString("PreviewImage")));
                     }
 
                 } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
