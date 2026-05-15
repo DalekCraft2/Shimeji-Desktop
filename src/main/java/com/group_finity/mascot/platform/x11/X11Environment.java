@@ -376,5 +376,6 @@ class X11Environment extends AbstractEnvironment {
 
     @Override
     public void dispose() {
+        display.close();
     }
 }
