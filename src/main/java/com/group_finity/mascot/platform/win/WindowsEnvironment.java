@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 class WindowsEnvironment extends AbstractEnvironment {
     private final HashMap<HWND, Boolean> ieCache = new LinkedHashMap<>();
 
-    private final Area workArea = new Area();
+    private final Area workArea = new Area(false);
 
     private final Area activeIeDpiUnaware = new Area();
     private final Area activeIe = new Area();

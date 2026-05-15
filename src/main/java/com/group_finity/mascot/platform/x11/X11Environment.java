@@ -43,7 +43,7 @@ class X11Environment extends AbstractEnvironment {
      * {@link AbstractEnvironment} and {@link ComplexArea} handle detection
      * and dual monitor behavior.
      */
-    private final Area workArea = new Area();
+    private final Area workArea = new Area(false);
 
     private String[] windowTitles = null;
     private String[] windowTitlesBlacklist = null;

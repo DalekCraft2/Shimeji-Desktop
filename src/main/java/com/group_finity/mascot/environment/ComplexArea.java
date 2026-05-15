@@ -34,7 +34,7 @@ public class ComplexArea {
 
         Area area = areas.get(name);
         if (area == null) {
-            area = new Area();
+            area = new Area(false);
             areas.put(name, area);
         }
         area.set(value);

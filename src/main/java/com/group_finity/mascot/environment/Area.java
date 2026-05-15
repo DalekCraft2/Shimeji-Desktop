@@ -8,6 +8,13 @@ import java.awt.*;
  */
 public class Area {
 
+    /**
+     * Whether this area should calculate the delta values of {@code left}, {@code top}, {@code right}, and
+     * {@code bottom} whenever {@link #set} is called. If {@code false}, the getters for the delta values will always
+     * return 0.
+     */
+    private final boolean calcDeltas;
+
     private boolean visible = true;
 
     private int left;
@@ -33,6 +40,14 @@ public class Area {
     private final Wall rightBorder = new Wall(this, true);
 
     private final FloorCeiling bottomBorder = new FloorCeiling(this, true);
+
+    public Area() {
+        calcDeltas = true;
+    }
+
+    public Area(boolean calcDeltas) {
+        this.calcDeltas = calcDeltas;
+    }
 
     public boolean isVisible() {
         return visible;
@@ -75,35 +90,43 @@ public class Area {
     }
 
     public int getDleft() {
-        return dleft;
+        return calcDeltas ? dleft : 0;
     }
 
     public void setDleft(final int dleft) {
-        this.dleft = dleft;
+        if (calcDeltas) {
+            this.dleft = dleft;
+        }
     }
 
     public int getDtop() {
-        return dtop;
+        return calcDeltas ? dtop : 0;
     }
 
     public void setDtop(final int dtop) {
-        this.dtop = dtop;
+        if (calcDeltas) {
+            this.dtop = dtop;
+        }
     }
 
     public int getDright() {
-        return dright;
+        return calcDeltas ? dright : 0;
     }
 
     public void setDright(final int dright) {
-        this.dright = dright;
+        if (calcDeltas) {
+            this.dright = dright;
+        }
     }
 
     public int getDbottom() {
-        return dbottom;
+        return calcDeltas ? dbottom : 0;
     }
 
     public void setDbottom(final int dbottom) {
-        this.dbottom = dbottom;
+        if (calcDeltas) {
+            this.dbottom = dbottom;
+        }
     }
 
     public Wall getLeftBorder() {
@@ -139,10 +162,12 @@ public class Area {
     }
 
     public void set(final int left, final int top, final int right, final int bottom) {
-        dleft = left - this.left;
-        dtop = top - this.top;
-        dright = right - this.right;
-        dbottom = bottom - this.bottom;
+        if (calcDeltas) {
+            dleft = left - this.left;
+            dtop = top - this.top;
+            dright = right - this.right;
+            dbottom = bottom - this.bottom;
+        }
 
         this.left = left;
         this.top = top;

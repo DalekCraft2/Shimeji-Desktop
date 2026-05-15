@@ -29,7 +29,7 @@ public abstract class AbstractEnvironment implements Environment {
         }
     }, "ScreenRectUpdater");
 
-    private final Area screen = new Area();
+    private final Area screen = new Area(false);
 
     private final ComplexArea complexScreen = new ComplexArea();
 
