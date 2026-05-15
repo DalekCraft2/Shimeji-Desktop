@@ -1,7 +1,7 @@
 package com.group_finity.mascot.platform.generic;
 
 import com.group_finity.mascot.environment.Area;
-import com.group_finity.mascot.environment.Environment;
+import com.group_finity.mascot.environment.AbstractEnvironment;
 
 import java.awt.*;
 
@@ -11,7 +11,7 @@ import java.awt.*;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-class GenericEnvironment extends Environment {
+class GenericEnvironment extends AbstractEnvironment {
 
     private final Area activeIE = new Area();
 

@@ -1,8 +1,8 @@
 package com.group_finity.mascot.platform.virtual;
 
 import com.group_finity.mascot.Main;
+import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.environment.Area;
-import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.image.ImageUtils;
 
 import javax.imageio.ImageIO;
@@ -22,7 +22,7 @@ import java.nio.file.Path;
  * @author Kilkakon
  * @since 1.0.20
  */
-class VirtualEnvironment extends Environment {
+class VirtualEnvironment extends AbstractEnvironment {
     private JFrame display;
 
     private final Area activeIE = new Area();

@@ -2,7 +2,7 @@ package com.group_finity.mascot.platform.win;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.Area;
-import com.group_finity.mascot.environment.Environment;
+import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.platform.win.jna.Dwmapi;
 import com.group_finity.mascot.platform.win.jna.User32Extra;
 import com.sun.jna.Pointer;
@@ -29,7 +29,7 @@ import java.util.LinkedHashMap;
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-class WindowsEnvironment extends Environment {
+class WindowsEnvironment extends AbstractEnvironment {
     private final HashMap<HWND, Boolean> ieCache = new LinkedHashMap<>();
 
     private final Area workArea = new Area();

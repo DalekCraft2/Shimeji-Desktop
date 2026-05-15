@@ -5,7 +5,7 @@
 package com.group_finity.mascot.platform.mac;
 
 import com.group_finity.mascot.environment.Area;
-import com.group_finity.mascot.environment.Environment;
+import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.platform.mac.jna.*;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
  *
  * @author nonowarn
  */
-class MacEnvironment extends Environment {
+class MacEnvironment extends AbstractEnvironment {
 
     private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
 

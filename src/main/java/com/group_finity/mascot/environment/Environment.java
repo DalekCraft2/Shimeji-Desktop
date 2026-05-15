@@ -4,109 +4,63 @@ import com.group_finity.mascot.Manager;
 
 import java.awt.*;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
+ * Interacts with, and provides information about, the desktop environment.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
-public abstract class Environment {
-    protected static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
-
-    protected static Map<String, Rectangle> screenRects = new HashMap<>();
-
-    protected static final Object screenRectLock = new Object();
-
-    protected static boolean autoUpdateScreenRect = true;
-
-    private static final Thread thread = new Thread(() -> {
-        try {
-            while (true) {
-                if (autoUpdateScreenRect)
-                    updateScreenRect();
-                Thread.sleep(5000);
-            }
-        } catch (final InterruptedException ignored) {
-        }
-    }, "ScreenRectUpdater");
-
-    private final Area screen = new Area();
-
-    private final ComplexArea complexScreen = new ComplexArea();
-
-    private final Location cursor = new Location();
-
-    private static void updateScreenRect() {
-        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final GraphicsDevice[] gs = ge.getScreenDevices();
-
-        Rectangle virtualBounds = new Rectangle();
-        Map<String, Rectangle> screenRects = new HashMap<>(gs.length);
-
-        for (final GraphicsDevice gd : gs) {
-            Rectangle bounds = gd.getDefaultConfiguration().getBounds();
-            screenRects.put(gd.getIDstring(), bounds);
-            virtualBounds = virtualBounds.union(bounds);
-        }
-
-        synchronized (screenRectLock) {
-            Environment.screenRects = screenRects;
-            screenRect = virtualBounds;
-        }
-    }
-
+public interface Environment {
     /**
-     * Called when this environment is created.
+     * Initializes this environment. Should be called only once when this environment is created.
      */
-    public void init() {
-        autoUpdateScreenRect = true;
-
-        if (!thread.isAlive()) {
-            thread.setDaemon(true);
-            thread.setPriority(Thread.MIN_PRIORITY);
-            thread.start();
-        }
-
-        tick();
-    }
+    void init();
 
     /**
      * Advances this environment by one frame. Called every 40 milliseconds by {@link Manager}.
      */
-    public void tick() {
-        synchronized (screenRectLock) {
-            screen.set(screenRect);
-            complexScreen.set(screenRects);
-        }
-        PointerInfo info = MouseInfo.getPointerInfo();
-        if (info != null) {
-            cursor.set(info.getLocation());
-        } else {
-            cursor.set(0, 0);
-        }
-    }
-
-    protected abstract Area getWorkArea();
+    void tick();
 
     /**
-     * Gets the area of the screen. This area includes everything from the top left to the bottom right of the display.
+     * Gets the work area.
+     * The work area typically encompasses all of a given screen except for the taskbar.
      *
-     * @return screen area
+     * @return the work area
      */
-    public Area getScreen() {
-        return screen;
-    }
+    Area getWorkArea();
 
-    public Collection<Area> getScreens() {
-        return complexScreen.getAreas();
-    }
+    /**
+     * Gets the area of the screen.
+     * This area is the combined areas of all active displays.
+     *
+     * @return the screen area
+     */
+    Area getScreen();
 
-    public ComplexArea getComplexScreen() {
-        return complexScreen;
-    }
+    /**
+     * Gets the areas of all active displays.
+     *
+     * @return the areas of all active displays
+     */
+    Collection<Area> getScreens();
 
-    public boolean isScreenTopBottom(final Point location) {
+    /**
+     * Gets a {@link ComplexArea} representing the areas of all active displays.
+     *
+     * @return a {@link ComplexArea} representing the areas of all active displays
+     */
+    ComplexArea getComplexScreen();
+
+    /**
+     * Gets whether the given point lies on the floor or ceiling of exactly one screen.
+     * Returns {@code false} if the point is on multiple floors/ceilings (i.e., the point is on the border between
+     * two screens).
+     *
+     * @param location the point to check
+     * @return whether the point lies on the floor or ceiling of exactly one screen
+     */
+    default boolean isScreenTopBottom(final Point location) {
         int count = 0;
 
         for (Area area : getScreens()) {
@@ -131,7 +85,14 @@ public abstract class Environment {
         return count == 1;
     }
 
-    public boolean isScreenLeftRight(final Point location) {
+    /**
+     * Gets whether the given point lies on the wall of exactly one screen.
+     * Returns {@code false} if the point is on multiple walls (i.e., the point is on the border between two screens).
+     *
+     * @param location the point to check
+     * @return whether the point lies on the wall of exactly one screen
+     */
+    default boolean isScreenLeftRight(final Point location) {
         int count = 0;
 
         for (Area area : getScreens()) {
@@ -156,26 +117,55 @@ public abstract class Environment {
         return count == 1;
     }
 
-    public abstract Area getActiveIE();
-
-    public abstract String getActiveIETitle();
-
-    public abstract long getActiveWindowId();
-
-    public abstract void moveActiveIE(final Point point);
-
-    public abstract void restoreIE();
+    /**
+     * Gets the area of the active window.
+     * If there is currently no active window, the return value is implementation-specific.
+     *
+     * @return the area of the active window
+     */
+    Area getActiveIE();
 
     /**
-     * Gets the cursor position as of the start of the last tick.
+     * Gets the title of the active window.
+     * May return {@code null}, depending on the implementation.
+     *
+     * @return the title of the active window
+     */
+    String getActiveIETitle();
+
+    /**
+     * Gets the ID of the active window. If there is currently no active window, returns 0.
+     *
+     * @return the ID of the active window, or 0 if there is currently no active window
+     */
+    long getActiveWindowId();
+
+    /**
+     * Repositions the active window so its top-left corner is at the given point.
+     *
+     * @param point the point at which the active window's top-left corner should be after it is moved
+     */
+    void moveActiveIE(final Point point);
+
+    /**
+     * Searches for windows that have been thrown off-screen and repositions them to be on-screen.
+     */
+    void restoreIE();
+
+    /**
+     * Gets the cursor position.
      *
      * @return a {@link Location} containing the cursor position and velocity
      */
-    public Location getCursor() {
-        return cursor;
-    }
+    Location getCursor();
 
-    public abstract void refreshCache();
+    /**
+     * Clears the cached data for which windows are allowed to be interactable.
+     */
+    void refreshCache();
 
-    public abstract void dispose();
+    /**
+     * Releases any native resources held by this environment.
+     */
+    void dispose();
 }

@@ -6,8 +6,8 @@ package com.group_finity.mascot.platform.x11;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.Area;
+import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.environment.ComplexArea;
-import com.group_finity.mascot.environment.Environment;
 import com.group_finity.mascot.platform.x11.X.Display;
 import com.group_finity.mascot.platform.x11.X.Window;
 import com.group_finity.mascot.platform.x11.X.X11Exception;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author asdfman
  */
-class X11Environment extends Environment {
+class X11Environment extends AbstractEnvironment {
 
     /**
      * The {@link X} display.
@@ -40,7 +40,7 @@ class X11Environment extends Environment {
 
     /**
      * Current screen. Never changes after initial assignment.
-     * {@link Environment} and {@link ComplexArea} handle detection
+     * {@link AbstractEnvironment} and {@link ComplexArea} handle detection
      * and dual monitor behavior.
      */
     private final Area workArea = new Area();
