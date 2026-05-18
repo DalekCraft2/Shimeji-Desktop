@@ -32,7 +32,7 @@ the community.
 ==== Requirements ====
 
 * Windows Vista or newer / macOS / Linux (X11)
-* Java 11 or newer
+* Java 25 or newer
 
 ==== How to Start ====
 
@@ -155,8 +155,8 @@ If the Shimeji-ee icon appears, but no Shimeji appear:
 
 1. Make sure you have the newest version of Shimeji-ee.
 2. Make sure you only have image set folders in your img directory.
-3. Make sure you have Java 11 or newer on your system.
+3. Make sure you have Java 25 or newer on your system.
 4. If you're somewhat computer savvy, you can try running Shimeji-ee from the command line. Navigate to the Shimeji-ee
-   directory and run this command: "C:\Program Files\Java\jdk-11\bin\java" -jar Shimeji-ee.jar
+   directory and run this command: "C:\Program Files\Java\jdk-25\bin\java" -jar Shimeji-ee.jar
 5. Try checking the log (ShimejieeLogX.log) for errors. If you find a bug (which is very likely), report it on
    Kilkakon's Discord server.

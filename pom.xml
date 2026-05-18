@@ -37,7 +37,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
         <mainClass>com.group_finity.mascot.Main</mainClass>
 
         <libPrefix>lib</libPrefix>
@@ -206,7 +206,7 @@
                         </manifest>
                         <manifestEntries>
                             <!-- This fixes a warning involving restricted native access on JDK 24+ -->
-                            <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
+                            <Enable-Native-Access>com.sun.jna,com.formdev.flatlaf</Enable-Native-Access>
                         </manifestEntries>
                     </archive>
                 </configuration>

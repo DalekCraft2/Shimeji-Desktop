@@ -1,7 +1,7 @@
 # Fork notes
 
 This is a fork of [Kilkakon's fork](https://kilkakon.com/shimeji/) of
-[Shimeji-ee](https://code.google.com/archive/p/shimeji-ee/) that updates the runtime from JRE 6 to JDK 11.
+[Shimeji-ee](https://code.google.com/archive/p/shimeji-ee/) that updates the runtime from JRE 6 to JDK 25.
 It also contains:
 
 * Bug fixes
@@ -57,7 +57,7 @@ Shimeji by Kilkakon and other members of the community.
 ## Requirements
 
 * Windows Vista or newer / macOS / Linux (X11)
-* Java 11 or newer
+* Java 25 or newer
 
 ## How to Start
 
@@ -165,7 +165,7 @@ Delete the unzipped folder.
 1. Download the source code. This can be done by either downloading a ZIP file containing the source or using Git to
    clone the repository to your computer. Both options are available through the green "Code" button at the top of the
    GitHub page. Git is recommended if you plan to contribute changes to this repository.
-2. Install Java 11 or newer.
+2. Install Java 25 or newer.
 3. Install [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/).
 4. Open the source code directory in the IDE.
 5. Open the Maven tool window on the right side of the UI. The icon to open the window should look like an "m".
@@ -193,8 +193,8 @@ If the Shimeji-ee icon appears, but no Shimeji appear:
 
 1. Make sure you have the newest version of Shimeji-ee.
 2. Make sure you only have image set folders in your `img` directory.
-3. Make sure you have Java 11 or newer on your system.
+3. Make sure you have Java 25 or newer on your system.
 4. If you're somewhat computer savvy, you can try running Shimeji-ee from the command line. Navigate to the Shimeji-ee
-   directory and run this command: `"C:\Program Files\Java\jdk-11\bin\java" -jar Shimeji-ee.jar`
+   directory and run this command: `"C:\Program Files\Java\jdk-25\bin\java" -jar Shimeji-ee.jar`
 5. Try checking the log (`ShimejieeLogX.log`) for errors. If you find a bug (which is very likely), report it on
    Kilkakon's Discord server.
