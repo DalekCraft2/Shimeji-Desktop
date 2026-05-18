@@ -174,15 +174,6 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     /**
-     * If {@code min < max}, return {@code a} if {@code min <= a <= max}.
-     * If {@code a < min}, return {@code min}.
-     * If {@code a > max}, return {@code max}.
-     */
-    private static double betweenOrLimit(double a, double min, double max) {
-        return Math.min(Math.max(a, min), max);
-    }
-
-    /**
      * Returns the range that will not be pushed back even if the window is moved within the screen as a Rectangle.
      * On Mac, if you try to move the window completely off the screen,
      * the window gets pushed back into the screen.
@@ -342,10 +333,10 @@ class MacEnvironment extends AbstractEnvironment {
                 pY = point.getY();
 
         // Wrapping in the X direction
-        pX = betweenOrLimit(pX, minX, maxX);
+        pX = Math.clamp(pX, minX, maxX);
 
         // Wrapping in Y direction
-        pY = betweenOrLimit(pY, minY, maxY);
+        pY = Math.clamp(pY, minY, maxY);
 
         point.setLocation(pX, pY);
         moveFrontmostWindow(point);
