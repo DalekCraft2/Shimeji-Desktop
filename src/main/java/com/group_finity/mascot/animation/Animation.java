@@ -50,7 +50,7 @@ public class Animation {
         time %= duration;
 
         for (final Pose pose : poses) {
-            time -= pose.getDuration();
+            time -= pose.duration();
             if (time < 0) {
                 return pose;
             }

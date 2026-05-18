@@ -70,7 +70,7 @@ public class AnimationBuilder {
             }
         }
         poses = List.of(poseArray);
-        duration = poses.stream().mapToInt(Pose::getDuration).sum();
+        duration = poses.stream().mapToInt(Pose::duration).sum();
 
         List<Entry> hotspotNodes = animationNode.selectChildren(schema.getString("Hotspot"));
         Hotspot[] hotspotArray = new Hotspot[hotspotNodes.size()];
