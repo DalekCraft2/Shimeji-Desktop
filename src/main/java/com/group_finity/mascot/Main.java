@@ -158,10 +158,11 @@ public class Main {
                     + "Shimeji mascots in the image folder for your computer to handle. "
                     + "Select fewer image sets or move some to the "
                     + "img/unused folder and try again.", err);
-            showError("Out of memory. There are probably too many\n"
-                    + "Shimeji mascots for your computer to handle.\n"
-                    + "Select fewer image sets or move some to the\n"
-                    + "img/unused folder and try again.");
+            showError("""
+                    Out of memory. There are probably too many
+                    Shimeji mascots for your computer to handle.
+                    Select fewer image sets or move some to the
+                    img/unused folder and try again.""");
             System.exit(0);
         }
     }
