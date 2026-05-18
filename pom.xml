@@ -102,6 +102,8 @@
         </dependency>
 
         <dependency>
+            <!-- The oshi-core-java11 artifact has been migrated to oshi-core as of version 7.0.0,
+             but jSystemThemeDetector doesn't support oshi-core 7.0.0 yet -->
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core-java11</artifactId>
             <version>6.11.1</version>
