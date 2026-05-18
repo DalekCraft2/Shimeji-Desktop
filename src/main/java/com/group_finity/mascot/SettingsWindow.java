@@ -79,7 +79,7 @@ public class SettingsWindow extends JDialog {
         sldScaling.setLabelTable(labelTable);
 
         if (!getIconImages().isEmpty()) {
-            lblIcon.setIcon(new ImageIcon(getIconImages().get(0).getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_SMOOTH)));
+            lblIcon.setIcon(new ImageIcon(getIconImages().getFirst().getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_SMOOTH)));
         }
 
         // localisation

@@ -30,7 +30,7 @@ public class MoveWithTurn extends Move {
     protected Animation getAnimation() throws VariableException {
         // force to last animation if turning
         if (turning) {
-            return getAnimations().get(getAnimations().size() - 1);
+            return getAnimations().getLast();
         } else {
             List<Animation> animations = getAnimations();
             for (int index = 0; index < animations.size() - 1; index++) {
