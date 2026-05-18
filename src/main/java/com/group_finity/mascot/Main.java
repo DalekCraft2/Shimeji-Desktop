@@ -149,7 +149,7 @@ public class Main {
             // Create frame before anything else happens, in case showError() gets called
             frame = new JFrame();
         });
-        OsThemeDetector.getDetector().registerListener(ignored -> SwingUtilities.invokeLater(Main::updateLookAndFeel));
+        OsThemeDetector.getDetector().registerListener(Main::updateLookAndFeel);
 
         try {
             INSTANCE.run();
@@ -677,6 +677,19 @@ public class Main {
     /** Updates the {@link LookAndFeel} of the application based on the current OS and whether it's using dark/light mode. */
     private static void updateLookAndFeel() {
         final boolean isDark = OsThemeDetector.isSupported() && OsThemeDetector.getDetector().isDark();
+        updateLookAndFeel(isDark);
+    }
+
+    /**
+     * Updates the {@link LookAndFeel} of the application based on the current OS and whether it's using dark/light mode.
+     *
+     * @param isDark whether the system is currently using a dark theme
+     */
+    private static void updateLookAndFeel(boolean isDark) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> updateLookAndFeel(isDark));
+            return;
+        }
 
         if (OS.isFamilyMac()) {
             if (isDark) {
