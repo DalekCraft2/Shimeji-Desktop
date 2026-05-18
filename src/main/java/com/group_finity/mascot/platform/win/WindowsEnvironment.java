@@ -1,8 +1,8 @@
 package com.group_finity.mascot.platform.win;
 
 import com.group_finity.mascot.Main;
-import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.AbstractEnvironment;
+import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.platform.win.jna.Dwmapi;
 import com.group_finity.mascot.platform.win.jna.User32Extra;
 import com.sun.jna.Pointer;

@@ -5,8 +5,8 @@
 package com.group_finity.mascot.platform.x11;
 
 import com.group_finity.mascot.Main;
-import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.AbstractEnvironment;
+import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.ComplexArea;
 import com.group_finity.mascot.platform.x11.X.Display;
 import com.group_finity.mascot.platform.x11.X.Window;

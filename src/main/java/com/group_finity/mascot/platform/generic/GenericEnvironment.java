@@ -1,7 +1,7 @@
 package com.group_finity.mascot.platform.generic;
 
-import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.AbstractEnvironment;
+import com.group_finity.mascot.environment.Area;
 
 import java.awt.*;
 
