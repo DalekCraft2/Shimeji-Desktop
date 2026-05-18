@@ -142,7 +142,7 @@ public class Main {
         showError(message + "\n" + INSTANCE.languageBundle.getString("SeeLogForDetails"));
     }
 
-    public static void main(final String[] args) throws InterruptedException, InvocationTargetException {
+    static void main(final String[] args) throws InterruptedException, InvocationTargetException {
         SwingUtilities.invokeAndWait(() -> {
             // Load theme before any Swing components are created
             updateLookAndFeel();
