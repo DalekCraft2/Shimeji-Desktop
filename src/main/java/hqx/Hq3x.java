@@ -148,22 +148,7 @@ public final class Hq3x {
                     flag <<= 1;
                 }
                 switch (pattern) {
-                    case 0:
-                    case 1:
-                    case 4:
-                    case 5:
-                    case 32:
-                    case 33:
-                    case 36:
-                    case 37:
-                    case 128:
-                    case 129:
-                    case 132:
-                    case 133:
-                    case 160:
-                    case 161:
-                    case 164:
-                    case 165: {
+                    case 0, 1, 4, 5, 32, 33, 36, 37, 128, 129, 132, 133, 160, 161, 164, 165 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -173,12 +158,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 2:
-                    case 34:
-                    case 130:
-                    case 162: {
+                    case 2, 34, 130, 162 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -188,12 +169,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 16:
-                    case 17:
-                    case 48:
-                    case 49: {
+                    case 16, 17, 48, 49 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -203,12 +180,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 64:
-                    case 65:
-                    case 68:
-                    case 69: {
+                    case 64, 65, 68, 69 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -218,12 +191,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 8:
-                    case 12:
-                    case 136:
-                    case 140: {
+                    case 8, 12, 136, 140 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -233,12 +202,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 3:
-                    case 35:
-                    case 131:
-                    case 163: {
+                    case 3, 35, 131, 163 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -248,12 +213,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 6:
-                    case 38:
-                    case 134:
-                    case 166: {
+                    case 6, 38, 134, 166 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -263,12 +224,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 20:
-                    case 21:
-                    case 52:
-                    case 53: {
+                    case 20, 21, 52, 53 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -278,12 +235,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 144:
-                    case 145:
-                    case 176:
-                    case 177: {
+                    case 144, 145, 176, 177 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -293,12 +246,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 192:
-                    case 193:
-                    case 196:
-                    case 197: {
+                    case 192, 193, 196, 197 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -308,12 +257,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 96:
-                    case 97:
-                    case 100:
-                    case 101: {
+                    case 96, 97, 100, 101 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -323,12 +268,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 40:
-                    case 44:
-                    case 168:
-                    case 172: {
+                    case 40, 44, 168, 172 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -338,12 +279,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 9:
-                    case 13:
-                    case 137:
-                    case 141: {
+                    case 9, 13, 137, 141 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -353,10 +290,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 18:
-                    case 50: {
+                    case 18, 50 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -372,10 +307,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 80:
-                    case 81: {
+                    case 80, 81 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -391,10 +324,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 72:
-                    case 76: {
+                    case 72, 76 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -410,10 +341,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 10:
-                    case 138: {
+                    case 10, 138 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                             dp[dpIdx + 1] = w[4];
@@ -429,9 +358,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 66: {
+                    case 66 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -441,9 +369,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 24: {
+                    case 24 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -453,12 +380,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 7:
-                    case 39:
-                    case 135:
-                    case 167: {
+                    case 7, 39, 135, 167 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -468,12 +391,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 148:
-                    case 149:
-                    case 180:
-                    case 181: {
+                    case 148, 149, 180, 181 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -483,12 +402,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 224:
-                    case 225:
-                    case 228:
-                    case 229: {
+                    case 224, 225, 228, 229 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -498,12 +413,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 41:
-                    case 45:
-                    case 169:
-                    case 173: {
+                    case 41, 45, 169, 173 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -513,10 +424,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 22:
-                    case 54: {
+                    case 22, 54 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -532,10 +441,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 208:
-                    case 209: {
+                    case 208, 209 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -551,10 +458,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 104:
-                    case 108: {
+                    case 104, 108 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -570,10 +475,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 11:
-                    case 139: {
+                    case 11, 139 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -589,10 +492,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 19:
-                    case 51: {
+                    case 19, 51 -> {
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                             dp[dpIdx + 1] = w[4];
@@ -609,10 +510,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 146:
-                    case 178: {
+                    case 146, 178 -> {
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
                             dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -629,10 +528,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 84:
-                    case 85: {
+                    case 84, 85 -> {
                         if (Util.diff(w[5], w[7], trY, trU, trV, trA)) {
                             dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
                             dp[dpIdx + dpL + 2] = w[4];
@@ -649,10 +546,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
-                        break;
                     }
-                    case 112:
-                    case 113: {
+                    case 112, 113 -> {
                         if (Util.diff(w[5], w[7], trY, trU, trV, trA)) {
                             dp[dpIdx + dpL + 2] = w[4];
                             dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
@@ -669,10 +564,8 @@ public final class Hq3x {
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
                         dp[dpIdx + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + 1] = w[4];
-                        break;
                     }
-                    case 200:
-                    case 204: {
+                    case 200, 204 -> {
                         if (Util.diff(w[7], w[3], trY, trU, trV, trA)) {
                             dp[dpIdx + dpL] = w[4];
                             dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
@@ -689,10 +582,8 @@ public final class Hq3x {
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 73:
-                    case 77: {
+                    case 73, 77 -> {
                         if (Util.diff(w[7], w[3], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                             dp[dpIdx + dpL] = w[4];
@@ -709,10 +600,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + 2] = Util.mix3To1(w[4], w[5]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 42:
-                    case 170: {
+                    case 42, 170 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                             dp[dpIdx + 1] = w[4];
@@ -729,10 +618,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 2] = Util.mix3To1(w[4], w[5]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 14:
-                    case 142: {
+                    case 14, 142 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                             dp[dpIdx + 1] = w[4];
@@ -749,9 +636,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 67: {
+                    case 67 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -761,9 +647,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 70: {
+                    case 70 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -773,9 +658,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 28: {
+                    case 28 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -785,9 +669,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 152: {
+                    case 152 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -797,9 +680,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 194: {
+                    case 194 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -809,9 +691,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 98: {
+                    case 98 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -821,9 +702,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 56: {
+                    case 56 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -833,9 +713,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 25: {
+                    case 25 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -845,10 +724,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 26:
-                    case 31: {
+                    case 26, 31 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + dpL] = w[4];
@@ -868,10 +745,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 82:
-                    case 214: {
+                    case 82, 214 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -891,10 +766,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 88:
-                    case 248: {
+                    case 88, 248 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -914,10 +787,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + 2] = Util.mix7To1(w[4], w[5]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 74:
-                    case 107: {
+                    case 74, 107 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -937,9 +808,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 27: {
+                    case 27 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -955,9 +825,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 86: {
+                    case 86 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -973,9 +842,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 216: {
+                    case 216 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -991,9 +859,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 106: {
+                    case 106 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1009,9 +876,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 30: {
+                    case 30 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -1027,9 +893,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 210: {
+                    case 210 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1045,9 +910,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 120: {
+                    case 120 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1063,9 +927,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 75: {
+                    case 75 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -1081,9 +944,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 29: {
+                    case 29 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1093,9 +955,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 198: {
+                    case 198 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -1105,9 +966,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 184: {
+                    case 184 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1117,9 +977,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 99: {
+                    case 99 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1129,9 +988,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 57: {
+                    case 57 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1141,9 +999,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 71: {
+                    case 71 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -1153,9 +1010,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 156: {
+                    case 156 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1165,9 +1021,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 226: {
+                    case 226 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1177,9 +1032,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 60: {
+                    case 60 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1189,9 +1043,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 195: {
+                    case 195 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1201,9 +1054,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 102: {
+                    case 102 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -1213,9 +1065,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 153: {
+                    case 153 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1225,9 +1076,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 58: {
+                    case 58 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -1245,9 +1095,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 83: {
+                    case 83 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -1265,9 +1114,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 92: {
+                    case 92 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1285,9 +1133,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 202: {
+                    case 202 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -1305,9 +1152,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 78: {
+                    case 78 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -1325,9 +1171,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 154: {
+                    case 154 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -1345,9 +1190,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 114: {
+                    case 114 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -1365,9 +1209,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 89: {
+                    case 89 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1385,9 +1228,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 90: {
+                    case 90 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -1413,10 +1255,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 23:
-                    case 55: {
+                    case 23, 55 -> {
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                             dp[dpIdx + 1] = w[4];
@@ -1433,10 +1273,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 150:
-                    case 182: {
+                    case 150, 182 -> {
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
                             dp[dpIdx + 2] = w[4];
@@ -1453,10 +1291,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 212:
-                    case 213: {
+                    case 212, 213 -> {
                         if (Util.diff(w[5], w[7], trY, trU, trV, trA)) {
                             dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
                             dp[dpIdx + dpL + 2] = w[4];
@@ -1473,10 +1309,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
-                        break;
                     }
-                    case 240:
-                    case 241: {
+                    case 240, 241 -> {
                         if (Util.diff(w[5], w[7], trY, trU, trV, trA)) {
                             dp[dpIdx + dpL + 2] = w[4];
                             dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
@@ -1493,10 +1327,8 @@ public final class Hq3x {
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
                         dp[dpIdx + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + 1] = w[4];
-                        break;
                     }
-                    case 232:
-                    case 236: {
+                    case 232, 236 -> {
                         if (Util.diff(w[7], w[3], trY, trU, trV, trA)) {
                             dp[dpIdx + dpL] = w[4];
                             dp[dpIdx + dpL + dpL] = w[4];
@@ -1513,10 +1345,8 @@ public final class Hq3x {
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 105:
-                    case 109: {
+                    case 105, 109 -> {
                         if (Util.diff(w[7], w[3], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                             dp[dpIdx + dpL] = w[4];
@@ -1533,10 +1363,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + 2] = Util.mix3To1(w[4], w[5]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 43:
-                    case 171: {
+                    case 43, 171 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -1553,10 +1381,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 2] = Util.mix3To1(w[4], w[5]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 15:
-                    case 143: {
+                    case 15, 143 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -1573,9 +1399,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 124: {
+                    case 124 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1591,9 +1416,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 203: {
+                    case 203 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -1609,9 +1433,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 62: {
+                    case 62 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -1627,9 +1450,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 211: {
+                    case 211 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1645,9 +1467,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 118: {
+                    case 118 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -1663,9 +1484,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 217: {
+                    case 217 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1681,9 +1501,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 110: {
+                    case 110 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -1699,9 +1518,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 155: {
+                    case 155 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -1717,9 +1535,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 188: {
+                    case 188 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1729,9 +1546,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 185: {
+                    case 185 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1741,9 +1557,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 61: {
+                    case 61 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1753,9 +1568,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 157: {
+                    case 157 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1765,9 +1579,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 103: {
+                    case 103 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -1777,9 +1590,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 227: {
+                    case 227 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1789,9 +1601,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 230: {
+                    case 230 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -1801,9 +1612,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 199: {
+                    case 199 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -1813,9 +1623,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 220: {
+                    case 220 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -1835,9 +1644,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 158: {
+                    case 158 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -1857,9 +1665,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 234: {
+                    case 234 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -1879,9 +1686,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 242: {
+                    case 242 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -1901,9 +1707,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 59: {
+                    case 59 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -1923,9 +1728,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 121: {
+                    case 121 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -1945,9 +1749,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 87: {
+                    case 87 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -1967,9 +1770,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 79: {
+                    case 79 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -1989,9 +1791,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 122: {
+                    case 122 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -2019,9 +1820,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 94: {
+                    case 94 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -2049,9 +1849,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 218: {
+                    case 218 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -2079,9 +1878,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 91: {
+                    case 91 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2109,9 +1907,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 186: {
+                    case 186 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -2129,9 +1926,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 115: {
+                    case 115 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -2149,9 +1945,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 93: {
+                    case 93 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -2169,9 +1964,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 206: {
+                    case 206 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -2189,10 +1983,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 201:
-                    case 205: {
+                    case 201, 205 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -2206,10 +1998,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 46:
-                    case 174: {
+                    case 46, 174 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         } else {
@@ -2223,10 +2013,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 147:
-                    case 179: {
+                    case 147, 179 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -2240,10 +2028,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 116:
-                    case 117: {
+                    case 116, 117 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -2257,9 +2043,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 189: {
+                    case 189 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -2269,9 +2054,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 231: {
+                    case 231 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
@@ -2281,9 +2065,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 126: {
+                    case 126 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -2305,9 +2088,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 219: {
+                    case 219 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2329,9 +2111,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 125: {
+                    case 125 -> {
                         if (Util.diff(w[7], w[3], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                             dp[dpIdx + dpL] = w[4];
@@ -2348,9 +2129,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + 2] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 221: {
+                    case 221 -> {
                         if (Util.diff(w[5], w[7], trY, trU, trV, trA)) {
                             dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
                             dp[dpIdx + dpL + 2] = w[4];
@@ -2367,9 +2147,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL] = w[4];
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
-                        break;
                     }
-                    case 207: {
+                    case 207 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2386,9 +2165,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 238: {
+                    case 238 -> {
                         if (Util.diff(w[7], w[3], trY, trU, trV, trA)) {
                             dp[dpIdx + dpL] = w[4];
                             dp[dpIdx + dpL + dpL] = w[4];
@@ -2405,9 +2183,8 @@ public final class Hq3x {
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[5]);
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 190: {
+                    case 190 -> {
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
                             dp[dpIdx + 2] = w[4];
@@ -2424,9 +2201,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 187: {
+                    case 187 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2443,9 +2219,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + 2] = w[4];
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 243: {
+                    case 243 -> {
                         if (Util.diff(w[5], w[7], trY, trU, trV, trA)) {
                             dp[dpIdx + dpL + 2] = w[4];
                             dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
@@ -2462,9 +2237,8 @@ public final class Hq3x {
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
                         dp[dpIdx + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + 1] = w[4];
-                        break;
                     }
-                    case 119: {
+                    case 119 -> {
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                             dp[dpIdx + 1] = w[4];
@@ -2481,10 +2255,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 233:
-                    case 237: {
+                    case 233, 237 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix2To1To1(w[4], w[1], w[5]);
@@ -2498,10 +2270,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 47:
-                    case 175: {
+                    case 47, 175 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                         } else {
@@ -2515,10 +2285,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
-                        break;
                     }
-                    case 151:
-                    case 183: {
+                    case 151, 183 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -2532,10 +2300,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix2To1To1(w[4], w[7], w[3]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 244:
-                    case 245: {
+                    case 244, 245 -> {
                         dp[dpIdx] = Util.mix2To1To1(w[4], w[3], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -2549,9 +2315,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 250: {
+                    case 250 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = w[4];
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -2571,9 +2336,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + 2] = Util.mix7To1(w[4], w[5]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 123: {
+                    case 123 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2593,9 +2357,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 95: {
+                    case 95 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + dpL] = w[4];
@@ -2615,9 +2378,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 222: {
+                    case 222 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -2637,9 +2399,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 252: {
+                    case 252 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -2658,9 +2419,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 249: {
+                    case 249 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[2]);
@@ -2679,9 +2439,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + 2] = Util.mix7To1(w[4], w[5]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 235: {
+                    case 235 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2700,9 +2459,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 111: {
+                    case 111 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                         } else {
@@ -2721,9 +2479,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 63: {
+                    case 63 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                         } else {
@@ -2742,9 +2499,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 159: {
+                    case 159 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + dpL] = w[4];
@@ -2763,9 +2519,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[6]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 215: {
+                    case 215 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -2784,9 +2539,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 246: {
+                    case 246 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -2805,9 +2559,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 254: {
+                    case 254 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[0]);
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
                             dp[dpIdx + 1] = w[4];
@@ -2833,9 +2586,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 253: {
+                    case 253 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[1]);
                         dp[dpIdx + 2] = Util.mix3To1(w[4], w[1]);
@@ -2853,9 +2605,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 251: {
+                    case 251 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2881,9 +2632,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + 2] = Util.mix7To1(w[4], w[5]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 239: {
+                    case 239 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                         } else {
@@ -2901,9 +2651,8 @@ public final class Hq3x {
                         }
                         dp[dpIdx + dpL + dpL + 1] = w[4];
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[5]);
-                        break;
                     }
-                    case 127: {
+                    case 127 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + 1] = w[4];
@@ -2929,9 +2678,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                         }
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[8]);
-                        break;
                     }
-                    case 191: {
+                    case 191 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                         } else {
@@ -2949,9 +2697,8 @@ public final class Hq3x {
                         dp[dpIdx + dpL + dpL] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 1] = Util.mix3To1(w[4], w[7]);
                         dp[dpIdx + dpL + dpL + 2] = Util.mix3To1(w[4], w[7]);
-                        break;
                     }
-                    case 223: {
+                    case 223 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                             dp[dpIdx + dpL] = w[4];
@@ -2977,9 +2724,8 @@ public final class Hq3x {
                             dp[dpIdx + dpL + dpL + 1] = Util.mix7To1(w[4], w[7]);
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To7To7(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 247: {
+                    case 247 -> {
                         dp[dpIdx] = Util.mix3To1(w[4], w[3]);
                         dp[dpIdx + 1] = w[4];
                         if (Util.diff(w[1], w[5], trY, trU, trV, trA)) {
@@ -2997,9 +2743,8 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
-                    case 255: {
+                    case 255 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
                         } else {
@@ -3025,7 +2770,6 @@ public final class Hq3x {
                         } else {
                             dp[dpIdx + dpL + dpL + 2] = Util.mix2To1To1(w[4], w[5], w[7]);
                         }
-                        break;
                     }
                 }
                 spIdx++;

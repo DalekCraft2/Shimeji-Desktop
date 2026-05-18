@@ -170,20 +170,16 @@ class WindowsEnvironment extends AbstractEnvironment {
     private HWND findActiveIE() {
         activeIeObject = null;
 
-        User32.INSTANCE.EnumWindows((hWnd, data) -> {
-            switch (getIeStatus(hWnd)) {
-                case VALID:
-                    activeIeObject = hWnd;
-                    return false;
-
-                case OUT_OF_BOUNDS:
-                case IGNORED: // Valid window but not interactive according to user settings
-                    return true;
-
-                case INVALID: // Something invalid is the foreground object
-                default:
-                    activeIeObject = null;
-                    return false;
+        User32.INSTANCE.EnumWindows((hWnd, data) -> switch (getIeStatus(hWnd)) {
+            case VALID -> {
+                activeIeObject = hWnd;
+                yield false;
+            }
+            case OUT_OF_BOUNDS, IGNORED -> // Valid window but not interactive according to user settings
+                    true;
+            default -> { // Something invalid is the foreground object
+                activeIeObject = null;
+                yield false;
             }
         }, null);
 

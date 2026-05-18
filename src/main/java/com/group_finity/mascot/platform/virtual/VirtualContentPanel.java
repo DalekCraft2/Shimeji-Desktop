@@ -77,22 +77,20 @@ public class VirtualContentPanel extends JPanel {
     private void resizeImage(Image image) {
         if (image != null) {
             switch (mode) {
-                case CENTRE:
-                    break;
-                case FILL:
-                case FIT:
+                case CENTRE -> {
+                }
+                case FILL, FIT -> {
                     double widthRatio = getWidth() / (double) image.getWidth(null);
                     double heightRatio = getHeight() / (double) image.getHeight(null);
-                    double factor = mode == VirtualContentPanel.ResizeMode.FIT ?
+                    double factor = mode == ResizeMode.FIT ?
                             Math.min(widthRatio, heightRatio) :
                             Math.max(widthRatio, heightRatio);
 
                     resizedImage = image.getScaledInstance((int) (factor * image.getWidth(null)),
                             (int) (factor * image.getHeight(null)),
                             Image.SCALE_SMOOTH);
-                    break;
-                case STRETCH:
-                    resizedImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+                }
+                case STRETCH -> resizedImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
             }
         }
     }
@@ -102,26 +100,19 @@ public class VirtualContentPanel extends JPanel {
         super.paintComponent(g);
         if (resizedImage != null) {
             switch (mode) {
-                case CENTRE:
-                    g.drawImage(resizedImage,
-                            resizedImage.getWidth(null) > getWidth() ?
-                                    (resizedImage.getWidth(null) - getWidth()) / -2 :
-                                    (getWidth() - resizedImage.getWidth(null)) / 2,
-                            resizedImage.getHeight(null) > getHeight() ?
-                                    (resizedImage.getHeight(null) - getHeight()) / -2 :
-                                    (getHeight() - resizedImage.getHeight(null)) / 2,
-                            null);
-                    break;
-                case FILL:
-                case FIT:
-                    g.drawImage(resizedImage,
-                            (getWidth() - resizedImage.getWidth(null)) / 2,
-                            (getHeight() - resizedImage.getHeight(null)) / 2,
-                            null);
-                    break;
-                case STRETCH:
-                    g.drawImage(resizedImage, 0, 0, null);
-                    break;
+                case CENTRE -> g.drawImage(resizedImage,
+                        resizedImage.getWidth(null) > getWidth() ?
+                                (resizedImage.getWidth(null) - getWidth()) / -2 :
+                                (getWidth() - resizedImage.getWidth(null)) / 2,
+                        resizedImage.getHeight(null) > getHeight() ?
+                                (resizedImage.getHeight(null) - getHeight()) / -2 :
+                                (getHeight() - resizedImage.getHeight(null)) / 2,
+                        null);
+                case FILL, FIT -> g.drawImage(resizedImage,
+                        (getWidth() - resizedImage.getWidth(null)) / 2,
+                        (getHeight() - resizedImage.getHeight(null)) / 2,
+                        null);
+                case STRETCH -> g.drawImage(resizedImage, 0, 0, null);
             }
         }
     }

@@ -188,17 +188,18 @@ class MacEnvironment extends AbstractEnvironment {
         final String orientation = getDockOrientation();
         final int tilesize = getDockTileSize();
 
-        if ("bottom".equals(orientation)) {
-            height -= tilesize;
-        } else if ("right".equals(orientation)) {
-            width -= tilesize;
-        } else if ("left".equals(orientation)) {
-            x += tilesize;
-            width -= tilesize;
-        } else /* if ("null".equals(orientation)) */ {
-            // We don't know the direction of the Dock, so we want it to be in either direction.
-            x += tilesize;
-            width -= 2 * tilesize;
+        switch (orientation) {
+            case "bottom" -> height -= tilesize;
+            case "right" -> width -= tilesize;
+            case "left" -> {
+                x += tilesize;
+                width -= tilesize;
+            }
+            case null, default -> {
+                // We don't know the direction of the Dock, so we want it to be in either direction.
+                x += tilesize;
+                width -= 2 * tilesize;
+            }
         }
 
         return new Rectangle(x, y, width, height);

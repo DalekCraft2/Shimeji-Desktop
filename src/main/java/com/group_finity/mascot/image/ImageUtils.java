@@ -174,15 +174,9 @@ public final class ImageUtils {
                 int newHeight = height * hqxType;
                 int[] dstBuffer = new int[newWidth * newHeight];
                 switch (hqxType) {
-                    case 4:
-                        Hq4x.scale4(srcBuffer, dstBuffer, width, height);
-                        break;
-                    case 3:
-                        Hq3x.scale3(srcBuffer, dstBuffer, width, height);
-                        break;
-                    case 2:
-                        Hq2x.scale2(srcBuffer, dstBuffer, width, height);
-                        break;
+                    case 4 -> Hq4x.scale4(srcBuffer, dstBuffer, width, height);
+                    case 3 -> Hq3x.scale3(srcBuffer, dstBuffer, width, height);
+                    case 2 -> Hq2x.scale2(srcBuffer, dstBuffer, width, height);
                 }
 
                 effectiveScaling = effectiveScaling / hqxType;

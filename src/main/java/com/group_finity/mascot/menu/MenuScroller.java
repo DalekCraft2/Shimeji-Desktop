@@ -592,29 +592,26 @@ public final class MenuScroller
         public void menuKeyReleased(MenuKeyEvent e) {
             int keyCode = e.getKeyCode();
             switch (keyCode) {
-                case KeyEvent.VK_UP: {
+                case KeyEvent.VK_UP -> {
                     // log.debug("MenuScroller.keyReleased(VK_UP)");
                     firstIndex--;
                     if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
                         refreshMenu();
                     }
                     e.consume();
-                    break;
                 }
 
-                case KeyEvent.VK_DOWN: {
+                case KeyEvent.VK_DOWN -> {
                     // log.debug("MenuScroller.keyReleased(VK_DOWN)");
                     firstIndex++;
                     if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
                         refreshMenu();
                     }
                     e.consume();
-                    break;
                 }
 
-                default: {
+                default -> {
                     // log.debug("MenuScroller.keyReleased({})", keyCode);
-                    break;
                 }
             }   //switch
         }

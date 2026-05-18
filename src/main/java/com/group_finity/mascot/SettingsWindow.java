@@ -1017,10 +1017,9 @@ public class SettingsWindow extends JDialog {
         }
 
         switch (backgroundMode) {
-            case CENTRE:
-                break;
-            case FILL:
-            case FIT:
+            case CENTRE -> {
+            }
+            case FILL, FIT -> {
                 double widthRatio = size.width / (double) image.getWidth(null);
                 double heightRatio = size.height / (double) image.getHeight(null);
                 double factor = backgroundMode == VirtualContentPanel.ResizeMode.FIT ?
@@ -1030,11 +1029,10 @@ public class SettingsWindow extends JDialog {
                 image = image.getScaledInstance((int) (factor * image.getWidth(null)),
                         (int) (factor * image.getHeight(null)),
                         Image.SCALE_SMOOTH);
-                break;
-            case STRETCH:
-                image = image.getScaledInstance(size.width,
-                        size.height,
-                        Image.SCALE_SMOOTH);
+            }
+            case STRETCH -> image = image.getScaledInstance(size.width,
+                    size.height,
+                    Image.SCALE_SMOOTH);
         }
 
         lblBackgroundImage.setIcon(new ImageIcon(image));

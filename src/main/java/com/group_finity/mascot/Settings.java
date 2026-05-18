@@ -127,18 +127,10 @@ public class Settings {
         backgroundImage = backgroundImageText == null || backgroundImageText.isEmpty() ? null : Path.of(properties.getProperty("BackgroundImage"));
         String backgroundModeText = properties.getProperty("BackgroundMode", "centre");
         switch (backgroundModeText) {
-            case "fill":
-                backgroundMode = VirtualContentPanel.ResizeMode.FILL;
-                break;
-            case "fit":
-                backgroundMode = VirtualContentPanel.ResizeMode.FIT;
-                break;
-            case "stretch":
-                backgroundMode = VirtualContentPanel.ResizeMode.STRETCH;
-                break;
-            default:
-                backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
-                break;
+            case "fill" -> backgroundMode = VirtualContentPanel.ResizeMode.FILL;
+            case "fit" -> backgroundMode = VirtualContentPanel.ResizeMode.FIT;
+            case "stretch" -> backgroundMode = VirtualContentPanel.ResizeMode.STRETCH;
+            default -> backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
         }
     }
 
@@ -226,15 +218,9 @@ public class Settings {
         properties.setProperty("AlwaysShowInformationScreen", String.valueOf(alwaysShowInformationScreen));
         properties.setProperty("DrawShimejiBounds", String.valueOf(drawShimejiBounds));
         switch (filter) {
-            case NEAREST_NEIGHBOUR:
-                properties.setProperty("Filter", "nearest");
-                break;
-            case BICUBIC:
-                properties.setProperty("Filter", "bicubic");
-                break;
-            case HQX:
-                properties.setProperty("Filter", "hqx");
-                break;
+            case NEAREST_NEIGHBOUR -> properties.setProperty("Filter", "nearest");
+            case BICUBIC -> properties.setProperty("Filter", "bicubic");
+            case HQX -> properties.setProperty("Filter", "hqx");
         }
         properties.setProperty("Opacity", String.valueOf(opacity));
         properties.setProperty("Scaling", String.valueOf(scaling));
@@ -248,18 +234,10 @@ public class Settings {
         properties.setProperty("WindowSize", windowSize.width + "x" + windowSize.height);
         properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
         switch (backgroundMode) {
-            case CENTRE:
-                properties.setProperty("BackgroundMode", "centre");
-                break;
-            case FILL:
-                properties.setProperty("BackgroundMode", "fill");
-                break;
-            case FIT:
-                properties.setProperty("BackgroundMode", "fit");
-                break;
-            case STRETCH:
-                properties.setProperty("BackgroundMode", "stretch");
-                break;
+            case CENTRE -> properties.setProperty("BackgroundMode", "centre");
+            case FILL -> properties.setProperty("BackgroundMode", "fill");
+            case FIT -> properties.setProperty("BackgroundMode", "fit");
+            case STRETCH -> properties.setProperty("BackgroundMode", "stretch");
         }
         properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage.toString());
 
