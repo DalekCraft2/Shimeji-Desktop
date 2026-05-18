@@ -32,7 +32,7 @@ public interface CarbonExtra extends Library {
      * <a href="https://developer.apple.com/documentation/corefoundation/kcfpreferencesanyhost">Apple docs: kCFPreferencesAnyHost</a>
      * <p>
      * Indicates a preference that applies only to the current user.
-     * <h1>Discussion</h1>
+     * <h4>Discussion</h4>
      * This option is not supported.
      */
     CFStringRef kCFPreferencesAnyHost = new CFStringRef(nl.getGlobalVariableAddress("kCFPreferencesAnyHost"));
@@ -100,7 +100,7 @@ public interface CarbonExtra extends Library {
      * <a href="https://developer.apple.com/documentation/applicationservices/1460434-axuielementsetattributevalue">Apple docs: AXUIElementSetAttributeValue</a>
      * <p>
      * Sets the accessibility object's attribute to the specified value.
-     * <h1>Discussion</h1>
+     * <h4>Discussion</h4>
      * You can send and receive many different CFTypeRefs using the accessibility API. These include all CFPropertyListRef types, AXUIElementRef, AXValueRef, AXTextMarkerRef, AXTextMarkerRangeRef, CFNullRef, CFAttributedStringRef, and CRURLRef.
      *
      * @param element The AXUIElementRef representing the accessibility object.
@@ -153,7 +153,7 @@ public interface CarbonExtra extends Library {
      * <a href="https://developer.apple.com/documentation/corefoundation/cfpreferencescopyvalue(_:_:_:_:)">Apple docs: CFPreferencesCopyValue</a>
      * <p>
      * Returns a preference value for a given domain.
-     * <h1>Discussion</h1>
+     * <h4>Discussion</h4>
      * This function is the primitive get mechanism for the higher level preference function {@code CFPreferencesCopyAppValue}.
      * Unlike the high-level function, {@code CFPreferencesCopyValue} searches only the exact domain specified. Do not
      * use this function directly unless you have a need. All arguments must be non-{@code NULL}. Do not use arbitrary user and
@@ -178,7 +178,7 @@ public interface CarbonExtra extends Library {
      * <p>
      * Writes to permanent storage all pending changes to the preference data for the application,
      * and reads the latest preference data from permanent storage.
-     * <h1>Discussion</h1>
+     * <h4>Discussion</h4>
      * Calling the function {@code CFPreferencesSetAppValue} is not in itself sufficient for storing preferences.
      * The {@code CFPreferencesAppSynchronize} function writes to permanent storage all pending preference changes
      * for the application. Typically you would call this function after multiple calls to {@code CFPreferencesSetAppValue}.
@@ -195,7 +195,7 @@ public interface CarbonExtra extends Library {
      * <a href="https://developer.apple.com/documentation/corefoundation/cfstringgetsystemencoding()">Apple docs: CFStringGetSystemEncoding</a>
      * <p>
      * Returns the default encoding used by the operating system when it creates strings.
-     * <h1>Discussion</h1>
+     * <h4>Discussion</h4>
      * This function returns the default text encoding used by the OS when it creates strings. In macOS, this encoding
      * is determined by the user’s preferred language setting. The preferred language is the first language listed in
      * the International pane of the System Preferences.
@@ -215,13 +215,13 @@ public interface CarbonExtra extends Library {
      * <p>
      * Prints a description of a Core Foundation object to stderr.
      *
-     * <h1>Discussion</h1>
+     * <h4>Discussion</h4>
      * The output is printed to the standard I/O standard error (stderr).
      * <p>
      * This function is useful as a debugging aid for Core Foundation objects. Because these objects are based on opaque
      * types, it is difficult to examine their contents directly. However, the opaque types implement {@code description}
      * function callbacks that return descriptions of their objects. This function invokes these callbacks.
-     * <h2>Special Considerations</h2>
+     * <h5>Special Considerations</h5>
      * You can use {@code CFShow} in one of two general ways. If your debugger supports function calls (such as {@code gdb}does),
      * call {@code CFShow} in the debugger:
      * <pre>
