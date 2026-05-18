@@ -241,12 +241,10 @@ public class Mascot {
                         synchronized (getHotspotLock()) {
                             for (Hotspot hotspot : getHotspots()) {
                                 Shape shape = hotspot.getShape();
-                                if (shape instanceof Rectangle) {
-                                    Rectangle rectangle = (Rectangle) shape;
+                                if (shape instanceof Rectangle rectangle) {
                                     int x = lookRight ? bounds.width - rectangle.x - rectangle.width : rectangle.x;
                                     g.drawRect(x, rectangle.y, rectangle.width - 1, rectangle.height - 1);
-                                } else if (shape instanceof Ellipse2D) {
-                                    Ellipse2D ellipse = (Ellipse2D) shape;
+                                } else if (shape instanceof Ellipse2D ellipse) {
                                     double x = lookRight ? bounds.width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
                                     g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
                                 }

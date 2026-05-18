@@ -19,8 +19,7 @@ public class ImageSetPanelList extends JList<ImageSetPanel> {
         @Override
         public Component getListCellRendererComponent(JList<? extends T> list, T value,
                                                       int index, boolean isSelected, boolean cellHasFocus) {
-            if (value instanceof ImageSetPanel) {
-                ImageSetPanel component = (ImageSetPanel) value;
+            if (value instanceof ImageSetPanel component) {
                 component.setCheckbox(isSelected);
                 return component;
             } else {

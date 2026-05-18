@@ -43,11 +43,10 @@ public class MascotImage {
             return true;
         }
 
-        if (!(obj instanceof MascotImage)) {
+        if (!(obj instanceof MascotImage mi)) {
             return false;
         }
 
-        MascotImage mi = (MascotImage) obj;
         return image.equals(mi.image) && center.equals(mi.center) && size.equals(mi.size);
     }
 }

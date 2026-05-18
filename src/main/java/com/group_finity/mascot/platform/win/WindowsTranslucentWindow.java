@@ -43,8 +43,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
-        if (comp instanceof JComponent) {
-            final JComponent jcomp = (JComponent) comp;
+        if (comp instanceof JComponent jcomp) {
             jcomp.setOpaque(false);
         }
     }
@@ -61,9 +60,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
 
     @Override
     public void paint(final Graphics g) {
-        if (g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
-
+        if (g instanceof Graphics2D g2d) {
             // Higher-quality image
             g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         }
