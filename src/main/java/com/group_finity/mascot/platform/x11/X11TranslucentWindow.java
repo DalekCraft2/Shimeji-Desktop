@@ -65,7 +65,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
          */
         try {
             if (b) {
-                if (!visible) {
+                if (!super.isVisible()) {
                     super.setVisible(true);
                 }
                 WindowUtils.setWindowAlpha(this, 1.0f);
