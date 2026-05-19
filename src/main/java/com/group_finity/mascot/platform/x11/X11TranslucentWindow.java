@@ -43,23 +43,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         setContentPane(panel);
 
         setLayout(new BorderLayout());
-
-        // Fix for JDK-8016530 (https://bugs.openjdk.org/browse/JDK-8016530), from https://stackoverflow.com/a/75807264
-        // TODO: Test whether the above bug is present in JDK 25, because the linked issue says it was fixed in JDK 22
-        AtomicBoolean updating = new AtomicBoolean();
-        addPropertyChangeListener("graphicsConfiguration", evt -> {
-            if (updating.compareAndSet(false, true)) {
-                /*
-                 * trigger frame to pick a graphics context with transparency support again
-                 */
-                try {
-                    setBackground(new Color(0, 0, 0, 255));
-                    setBackground(new Color(0, 0, 0, 0));
-                } finally {
-                    updating.set(false);
-                }
-            }
-        });
     }
 
     @Override
