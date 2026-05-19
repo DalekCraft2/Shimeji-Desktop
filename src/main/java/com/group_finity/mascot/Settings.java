@@ -217,10 +217,17 @@ public class Settings {
         properties.setProperty("AlwaysShowShimejiChooser", String.valueOf(alwaysShowShimejiChooser));
         properties.setProperty("AlwaysShowInformationScreen", String.valueOf(alwaysShowInformationScreen));
         properties.setProperty("DrawShimejiBounds", String.valueOf(drawShimejiBounds));
-        switch (filter) {
-            case NEAREST_NEIGHBOUR -> properties.setProperty("Filter", "nearest");
-            case BICUBIC -> properties.setProperty("Filter", "bicubic");
-            case HQX -> properties.setProperty("Filter", "hqx");
+        /*
+        BUG: Using switch statements in this method seem to sometimes cause NoClassDefFoundError (likely related to the
+        fact that this method is only called when the program is shutting down), so we have to use if statements instead.
+        https://stackoverflow.com/questions/24473247/java-enum-noclassdeffounderror
+         */
+        if (filter == Filter.NEAREST_NEIGHBOUR) {
+            properties.setProperty("Filter", "nearest");
+        } else if (filter == Filter.BICUBIC) {
+            properties.setProperty("Filter", "bicubic");
+        } else if (filter == Filter.HQX) {
+            properties.setProperty("Filter", "hqx");
         }
         properties.setProperty("Opacity", String.valueOf(opacity));
         properties.setProperty("Scaling", String.valueOf(scaling));
@@ -233,11 +240,14 @@ public class Settings {
         properties.setProperty("Environment", windowedMode ? "virtual" : "generic");
         properties.setProperty("WindowSize", windowSize.width + "x" + windowSize.height);
         properties.setProperty("Background", String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
-        switch (backgroundMode) {
-            case CENTRE -> properties.setProperty("BackgroundMode", "centre");
-            case FILL -> properties.setProperty("BackgroundMode", "fill");
-            case FIT -> properties.setProperty("BackgroundMode", "fit");
-            case STRETCH -> properties.setProperty("BackgroundMode", "stretch");
+        if (backgroundMode == VirtualContentPanel.ResizeMode.CENTRE) {
+            properties.setProperty("BackgroundMode", "centre");
+        } else if (backgroundMode == VirtualContentPanel.ResizeMode.FILL) {
+            properties.setProperty("BackgroundMode", "fill");
+        } else if (backgroundMode == VirtualContentPanel.ResizeMode.FIT) {
+            properties.setProperty("BackgroundMode", "fit");
+        } else if (backgroundMode == VirtualContentPanel.ResizeMode.STRETCH) {
+            properties.setProperty("BackgroundMode", "stretch");
         }
         properties.setProperty("BackgroundImage", backgroundImage == null ? "" : backgroundImage.toString());
 
