@@ -206,7 +206,7 @@
                         </manifest>
                         <manifestEntries>
                             <!-- This fixes a warning involving restricted native access on JDK 24+ -->
-                            <Enable-Native-Access>com.sun.jna,com.formdev.flatlaf</Enable-Native-Access>
+                            <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
                         </manifestEntries>
                     </archive>
                 </configuration>
