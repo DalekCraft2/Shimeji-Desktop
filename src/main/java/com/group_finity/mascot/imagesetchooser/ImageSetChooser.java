@@ -118,6 +118,12 @@ public class ImageSetChooser extends JDialog {
         setUpList(lstImageSets);
         lstImageSets.setListData(listData.toArray(new ImageSetPanel[0]));
         lstImageSets.setSelectedIndices(convertIntegers(selectedIndices));
+        /*
+        Set the visible row count to the minimum amount that is required for two columns,
+        to ensure that there are always two cells for every row (except the last row, which can have either one or two)
+         */
+        int numRows = listData.size() % 2 == 0 ? listData.size() / 2 : (listData.size() + 1) / 2;
+        lstImageSets.setVisibleRowCount(Math.min(numRows, lstImageSets.getVisibleRowCount()));
     }
 
     public List<String> display() {
