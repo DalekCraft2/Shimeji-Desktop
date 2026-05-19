@@ -41,21 +41,16 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
+    public String toString() {
+        return "WindowsTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+    }
+
+    @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
         if (comp instanceof JComponent jComp) {
             jComp.setOpaque(false);
         }
-    }
-
-    @Override
-    public Component asComponent() {
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "WindowsTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
     }
 
     @Override
@@ -68,6 +63,21 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
+    public boolean contains(int x, int y) {
+        if (image != null && super.contains(x, y) &&
+                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+            // Check whether the pixel at the given position of the image has an alpha greater than 0
+            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public Component asComponent() {
+        return this;
+    }
+
+    @Override
     public void setImage(final BufferedImage image) {
         this.image = image;
     }
@@ -76,15 +86,5 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     public void updateImage() {
         validate();
         repaint();
-    }
-
-    @Override
-    public boolean contains(int x, int y) {
-        if (image != null && super.contains(x, y) &&
-                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-            // Check whether the pixel at the given position of the image has an alpha greater than 0
-            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
-        }
-        return false;
     }
 }

@@ -49,6 +49,11 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
+    public String toString() {
+        return "MacTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+    }
+
+    @Override
     public void setVisible(final boolean b) {
         if (isVisible() == b) {
             return;
@@ -71,13 +76,18 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
-    public Component asComponent() {
-        return this;
+    public boolean contains(int x, int y) {
+        if (image != null && super.contains(x, y) &&
+                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+            // Check whether the pixel at the given position of the image has an alpha greater than 0
+            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
+        }
+        return false;
     }
 
     @Override
-    public String toString() {
-        return "MacTranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+    public Component asComponent() {
+        return this;
     }
 
     @Override
@@ -89,15 +99,5 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
     public void updateImage() {
         validate();
         repaint();
-    }
-
-    @Override
-    public boolean contains(int x, int y) {
-        if (image != null && super.contains(x, y) &&
-                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-            // Check whether the pixel at the given position of the image has an alpha greater than 0
-            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
-        }
-        return false;
     }
 }

@@ -45,6 +45,11 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
+    public String toString() {
+        return "X11TranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+    }
+
+    @Override
     public void setVisible(final boolean b) {
         /*
          * On Linux, setting the window to visible, then invisible, and then visible again will make an icon for the
@@ -73,22 +78,27 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
-    public Component asComponent() {
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return "X11TranslucentWindow[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
-    }
-
-    @Override
     public void paint(final Graphics g) {
         if (g instanceof Graphics2D g2d) {
             // Higher-quality image
             g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         }
         super.paint(g);
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        if (image != null && super.contains(x, y) &&
+                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+            // Check whether the pixel at the given position of the image has an alpha greater than 0
+            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public Component asComponent() {
+        return this;
     }
 
     @Override
@@ -100,15 +110,5 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     public void updateImage() {
         validate();
         repaint();
-    }
-
-    @Override
-    public boolean contains(int x, int y) {
-        if (image != null && super.contains(x, y) &&
-                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-            // Check whether the pixel at the given position of the image has an alpha greater than 0
-            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
-        }
-        return false;
     }
 }

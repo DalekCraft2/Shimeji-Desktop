@@ -32,10 +32,10 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (image != null) {
-            g.drawImage(image, 0, 0, null);
+    protected void addImpl(final Component comp, final Object constraints, final int index) {
+        super.addImpl(comp, constraints, index);
+        if (comp instanceof JComponent jComp) {
+            jComp.setOpaque(false);
         }
     }
 
@@ -49,25 +49,21 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     }
 
     @Override
-    public Component asComponent() {
-        return this;
-    }
-
-    @Override
-    protected void addImpl(final Component comp, final Object constraints, final int index) {
-        super.addImpl(comp, constraints, index);
-        if (comp instanceof JComponent jComp) {
-            jComp.setOpaque(false);
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (image != null) {
+            g.drawImage(image, 0, 0, null);
         }
     }
 
     @Override
-    public void setAlwaysOnTop(boolean onTop) {
-    }
-
-    @Override
-    public void setImage(BufferedImage image) {
-        this.image = image;
+    public boolean contains(int x, int y) {
+        if (image != null && super.contains(x, y) &&
+                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
+            // Check whether the pixel at the given position of the image has an alpha greater than 0
+            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
+        }
+        return false;
     }
 
     @Override
@@ -80,18 +76,22 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     }
 
     @Override
+    public Component asComponent() {
+        return this;
+    }
+
+    @Override
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
+    @Override
     public void updateImage() {
         validate();
         repaint();
     }
 
     @Override
-    public boolean contains(int x, int y) {
-        if (image != null && super.contains(x, y) &&
-                x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
-            // Check whether the pixel at the given position of the image has an alpha greater than 0
-            return (image.getRGB(x, y) & 0xff000000) >>> 24 > 0;
-        }
-        return false;
+    public void setAlwaysOnTop(boolean onTop) {
     }
 }
