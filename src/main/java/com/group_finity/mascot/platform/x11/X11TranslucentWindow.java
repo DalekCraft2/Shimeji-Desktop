@@ -23,6 +23,8 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private BufferedImage image;
 
+    private boolean visible;
+
     X11TranslucentWindow() {
         super();
 
@@ -50,6 +52,11 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @Override
     public void setVisible(final boolean b) {
         /*
          * On Linux, setting the window to visible, then invisible, and then visible again will make an icon for the
@@ -58,12 +65,14 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
          */
         try {
             if (b) {
-                if (!isVisible()) {
+                if (!visible) {
                     super.setVisible(true);
                 }
                 WindowUtils.setWindowAlpha(this, 1.0f);
+                visible = true;
             } else {
                 WindowUtils.setWindowAlpha(this, 0.0f);
+                visible = false;
             }
         } catch (IllegalArgumentException ignored) {
         }
