@@ -49,8 +49,8 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
     @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
-        if (comp instanceof JComponent jcomp) {
-            jcomp.setOpaque(false);
+        if (comp instanceof JComponent jComp) {
+            jComp.setOpaque(false);
         }
     }
 

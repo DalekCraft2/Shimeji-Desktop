@@ -186,19 +186,19 @@ class MacEnvironment extends AbstractEnvironment {
 
         refreshDockState();
         final String orientation = getDockOrientation();
-        final int tilesize = getDockTileSize();
+        final int tileSize = getDockTileSize();
 
         switch (orientation) {
-            case "bottom" -> height -= tilesize;
-            case "right" -> width -= tilesize;
+            case "bottom" -> height -= tileSize;
+            case "right" -> width -= tileSize;
             case "left" -> {
-                x += tilesize;
-                width -= tilesize;
+                x += tileSize;
+                width -= tileSize;
             }
             case null, default -> {
                 // We don't know the direction of the Dock, so we want it to be in either direction.
-                x += tilesize;
-                width -= 2 * tilesize;
+                x += tileSize;
+                width -= 2 * tileSize;
             }
         }
 
