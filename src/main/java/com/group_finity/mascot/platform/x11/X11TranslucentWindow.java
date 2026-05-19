@@ -10,7 +10,6 @@ import com.sun.jna.platform.WindowUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Image window with alpha value.
