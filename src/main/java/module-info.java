@@ -10,25 +10,17 @@ module com.group_finity.mascot {
     requires com.formdev.flatlaf;
     requires org.slf4j;
 
+    // Export classes used in scripting
+    // (i.e., any classes that are accessible from Mascot and Action)
     exports com.group_finity.mascot;
     exports com.group_finity.mascot.action;
     exports com.group_finity.mascot.animation;
     exports com.group_finity.mascot.behavior;
-    exports com.group_finity.mascot.config;
     exports com.group_finity.mascot.environment;
-    exports com.group_finity.mascot.exception;
     exports com.group_finity.mascot.image;
-    exports com.group_finity.mascot.imagesetchooser;
-    exports com.group_finity.mascot.menu;
-    exports com.group_finity.mascot.platform;
-    exports com.group_finity.mascot.platform.generic;
-    exports com.group_finity.mascot.platform.mac;
-    exports com.group_finity.mascot.platform.mac.jna;
-    exports com.group_finity.mascot.platform.virtual;
-    exports com.group_finity.mascot.platform.win;
-    exports com.group_finity.mascot.platform.win.jna;
-    exports com.group_finity.mascot.platform.x11;
     exports com.group_finity.mascot.script;
-    exports com.group_finity.mascot.sound;
-    exports hqx;
+
+    // Open JNA packages to JNA
+    opens com.group_finity.mascot.platform.mac.jna to com.sun.jna;
+    opens com.group_finity.mascot.platform.win.jna to com.sun.jna;
 }
