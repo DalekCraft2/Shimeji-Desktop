@@ -76,6 +76,15 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
+    public void paint(final Graphics g) {
+        if (g instanceof Graphics2D g2d) {
+            // Higher-quality image
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        }
+        super.paint(g);
+    }
+
+    @Override
     public boolean contains(int x, int y) {
         if (image != null && super.contains(x, y) &&
                 x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight()) {
