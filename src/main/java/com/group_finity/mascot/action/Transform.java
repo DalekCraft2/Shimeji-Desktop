@@ -2,7 +2,7 @@ package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.animation.Animation;
-import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.behavior.BehaviorExecutionException;
 import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.script.VariableException;
 import com.group_finity.mascot.script.VariableMap;
@@ -47,7 +47,7 @@ public class Transform extends Animate {
         getMascot().setImageSet(childType);
         try {
             getMascot().setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getTransformBehavior(), getMascot()));
-        } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+        } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
             log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", getTransformBehavior(), getMascot(), e);
             Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), getTransformBehavior(), getMascot()), e);
         }

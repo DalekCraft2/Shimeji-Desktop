@@ -3,7 +3,7 @@ package com.group_finity.mascot.action;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
-import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.behavior.BehaviorExecutionException;
 import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.script.VariableException;
 import com.group_finity.mascot.script.VariableMap;
@@ -92,7 +92,7 @@ public class Breed extends Animate {
                 try {
                     newMascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehavior(), action.getMascot()));
                     action.getMascot().getManager().add(newMascot);
-                } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
                     log.error("Failed to create mascot \"{}\" with behavior \"{}\"", newMascot, getBornBehavior(), e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage"), e);
                     newMascot.dispose();

@@ -1,7 +1,7 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.behavior.Behavior;
-import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.behavior.BehaviorExecutionException;
 import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.platform.NativeFactory;
@@ -235,7 +235,7 @@ public class Manager {
                 Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
                 try {
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
-                } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
                     Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
                     mascot.dispose();
@@ -258,7 +258,7 @@ public class Manager {
                     if (mascot.getImageSet().equals(imageSet)) {
                         mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
                     }
-                } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
                     Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
                     mascot.dispose();

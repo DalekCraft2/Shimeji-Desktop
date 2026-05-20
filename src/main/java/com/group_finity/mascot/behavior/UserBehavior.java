@@ -59,7 +59,7 @@ public class UserBehavior implements Behavior {
     }
 
     @Override
-    public synchronized void init(final Mascot mascot) throws CantBeAliveException {
+    public synchronized void init(final Mascot mascot) throws BehaviorExecutionException {
         if (mascot == null) {
             return;
         }
@@ -74,16 +74,16 @@ public class UserBehavior implements Behavior {
                 try {
                     mascot.setBehavior(configuration.buildNextBehavior(name, mascot));
                 } catch (final BehaviorInstantiationException e) {
-                    throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
+                    throw new BehaviorExecutionException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
                 }
             }
         } catch (final VariableException e) {
-            throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
+            throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
         }
     }
 
     @Override
-    public synchronized void next() throws CantBeAliveException {
+    public synchronized void next() throws BehaviorExecutionException {
         if (mascot == null) {
             return;
         }
@@ -107,7 +107,7 @@ public class UserBehavior implements Behavior {
                                 try {
                                     mascot.setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                                 } catch (final BehaviorInstantiationException e) {
-                                    throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
+                                    throw new BehaviorExecutionException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
                                 }
                             }
                             break;
@@ -139,7 +139,7 @@ public class UserBehavior implements Behavior {
                         try {
                             mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_FALL)));
                         } catch (final BehaviorInstantiationException e) {
-                            throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
+                            throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), e);
                         }
                     }
                 } else {
@@ -148,7 +148,7 @@ public class UserBehavior implements Behavior {
                     try {
                         mascot.setBehavior(configuration.buildNextBehavior(name, mascot));
                     } catch (final BehaviorInstantiationException e) {
-                        throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
+                        throw new BehaviorExecutionException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), e.getBehaviorName()), e);
                     }
                 }
             }
@@ -160,10 +160,10 @@ public class UserBehavior implements Behavior {
             try {
                 mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_FALL)));
             } catch (final BehaviorInstantiationException ex) {
-                throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), ex);
+                throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("FailedFallingActionInitialiseErrorMessage"), ex);
             }
         } catch (final VariableException e) {
-            throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
+            throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("VariableEvaluationErrorMessage"), e);
         }
     }
 
@@ -171,11 +171,10 @@ public class UserBehavior implements Behavior {
      * Called when a mouse button is pressed.
      * If the left button is pressed, start dragging.
      *
-     * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
-     * disposed
+     * @throws BehaviorExecutionException if the next behavior fails to initialize
      */
     @Override
-    public synchronized void mousePressed(final MouseEvent event) throws CantBeAliveException {
+    public synchronized void mousePressed(final MouseEvent event) throws BehaviorExecutionException {
         if (mascot == null) {
             return;
         }
@@ -195,7 +194,7 @@ public class UserBehavior implements Behavior {
                             try {
                                 mascot.setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
                             } catch (final BehaviorInstantiationException e) {
-                                throw new CantBeAliveException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), hotspot.getBehaviour()), e);
+                                throw new BehaviorExecutionException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseFollowingBehaviourErrorMessage"), hotspot.getBehaviour()), e);
                             }
                         }
                         break;
@@ -208,7 +207,7 @@ public class UserBehavior implements Behavior {
                 try {
                     handled = !((ActionBase) action).isDraggable();
                 } catch (VariableException ex) {
-                    throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDragActionInitialiseErrorMessage"), ex);
+                    throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("FailedDragActionInitialiseErrorMessage"), ex);
                 }
             }
 
@@ -217,7 +216,7 @@ public class UserBehavior implements Behavior {
                 try {
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_DRAGGED)));
                 } catch (final BehaviorInstantiationException e) {
-                    throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDragActionInitialiseErrorMessage"), e);
+                    throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("FailedDragActionInitialiseErrorMessage"), e);
                 }
             }
         }
@@ -227,11 +226,10 @@ public class UserBehavior implements Behavior {
      * Called when a mouse button is released.
      * If the left button is released, the dragging ends.
      *
-     * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
-     * disposed
+     * @throws BehaviorExecutionException if the next behavior fails to initialize
      */
     @Override
-    public synchronized void mouseReleased(final MouseEvent event) throws CantBeAliveException {
+    public synchronized void mouseReleased(final MouseEvent event) throws BehaviorExecutionException {
         if (mascot == null) {
             return;
         }
@@ -248,7 +246,7 @@ public class UserBehavior implements Behavior {
                 try {
                     mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_THROWN)));
                 } catch (final BehaviorInstantiationException e) {
-                    throw new CantBeAliveException(Main.getInstance().getLanguageBundle().getString("FailedDropActionInitialiseErrorMessage"), e);
+                    throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("FailedDropActionInitialiseErrorMessage"), e);
                 }
             }
         }

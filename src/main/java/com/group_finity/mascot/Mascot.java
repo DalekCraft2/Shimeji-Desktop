@@ -3,7 +3,7 @@ package com.group_finity.mascot;
 import com.group_finity.mascot.animation.Animation;
 import com.group_finity.mascot.animation.Hotspot;
 import com.group_finity.mascot.behavior.Behavior;
-import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.behavior.BehaviorExecutionException;
 import com.group_finity.mascot.behavior.UserBehavior;
 import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.config.Configuration;
@@ -303,7 +303,7 @@ public class Mascot {
             if (!paused && behavior != null) {
                 try {
                     behavior.mousePressed(event);
-                } catch (final CantBeAliveException e) {
+                } catch (final BehaviorExecutionException e) {
                     log.error("Severe error in mouse press handler for mascot \"{}\"", this, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
                     dispose();
@@ -321,7 +321,7 @@ public class Mascot {
             if (!paused && behavior != null) {
                 try {
                     behavior.mouseReleased(event);
-                } catch (final CantBeAliveException e) {
+                } catch (final BehaviorExecutionException e) {
                     log.error("Severe error in mouse release handler for mascot \"{}\"", this, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
                     dispose();
@@ -409,7 +409,7 @@ public class Mascot {
                             public void actionPerformed(final ActionEvent e) {
                                 try {
                                     setBehavior(config.buildBehavior(behaviorName));
-                                } catch (BehaviorInstantiationException | CantBeAliveException ex) {
+                                } catch (BehaviorInstantiationException | BehaviorExecutionException ex) {
                                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorName, this, ex);
                                     Main.showError(String.format(languageBundle.getString("FailedSetBehaviourErrorMessage"), behaviorName, this), ex);
                                 }
@@ -470,7 +470,7 @@ public class Mascot {
             if (behavior != null) {
                 try {
                     behavior.next();
-                } catch (final CantBeAliveException e) {
+                } catch (final BehaviorExecutionException e) {
                     log.error("Could not get next behavior for mascot \"{}\"", this, e);
                     Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("CouldNotGetNextBehaviourErrorMessage"), this), e);
                     dispose();
@@ -660,7 +660,7 @@ public class Mascot {
         return behavior;
     }
 
-    public void setBehavior(final Behavior behavior) throws CantBeAliveException {
+    public void setBehavior(final Behavior behavior) throws BehaviorExecutionException {
         this.behavior = behavior;
         this.behavior.init(this);
     }

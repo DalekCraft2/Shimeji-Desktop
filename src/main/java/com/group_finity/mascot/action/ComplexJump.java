@@ -3,7 +3,7 @@ package com.group_finity.mascot.action;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.animation.Animation;
-import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.behavior.BehaviorExecutionException;
 import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.script.VariableException;
 import com.group_finity.mascot.script.VariableMap;
@@ -171,7 +171,7 @@ public class ComplexJump extends ActionBase {
                             targetMascot.setLookRight(!getMascot().isLookRight());
                         }
                     }
-                } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+                } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
                     String behaviorParam = setFirstBehavior ? getTargetBehavior() : getBehavior();
                     Mascot mascotParam = setFirstBehavior ? targetMascot : getMascot();
                     log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorParam, mascotParam, e);

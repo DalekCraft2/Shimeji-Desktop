@@ -2,7 +2,7 @@ package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.animation.Animation;
-import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.behavior.BehaviorExecutionException;
 import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.script.VariableException;
 import com.group_finity.mascot.script.VariableMap;
@@ -39,7 +39,7 @@ public class Interact extends Animate {
         if ((getTime() == animation.getDuration() - 1 || animation.getDuration() == 1) && !getBehavior().trim().isEmpty()) {
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));
-            } catch (final BehaviorInstantiationException | CantBeAliveException e) {
+            } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
                 log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", getBehavior(), getMascot(), e);
                 Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), getBehavior(), getMascot()), e);
             }

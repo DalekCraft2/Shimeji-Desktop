@@ -18,34 +18,31 @@ public interface Behavior {
      * Called when starting a behavior.
      *
      * @param mascot the {@link Mascot} with which to associate
-     * @throws CantBeAliveException if this behavior, its corresponding action, or any next behavior fails to initialize
-     * and the associated {@link Mascot} should be disposed
+     * @throws BehaviorExecutionException if this behavior, its corresponding action, or any next behavior fails to
+     * initialize
      */
-    void init(Mascot mascot) throws CantBeAliveException;
+    void init(Mascot mascot) throws BehaviorExecutionException;
 
     /**
      * Advances the associated {@link Mascot} to the next frame.
      *
-     * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
-     * disposed
+     * @throws BehaviorExecutionException if the next behavior fails to initialize
      */
-    void next() throws CantBeAliveException;
+    void next() throws BehaviorExecutionException;
 
     /**
      * Called when a mouse button is pressed.
      *
      * @param e the event created by a mouse button being pressed
-     * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
-     * disposed
+     * @throws BehaviorExecutionException if the next behavior fails to initialize
      */
-    void mousePressed(MouseEvent e) throws CantBeAliveException;
+    void mousePressed(MouseEvent e) throws BehaviorExecutionException;
 
     /**
      * Called when a mouse button is released.
      *
      * @param e the event created by a mouse button being released
-     * @throws CantBeAliveException if the next behavior fails to initialize and the associated {@link Mascot} should be
-     * disposed
+     * @throws BehaviorExecutionException if the next behavior fails to initialize
      */
-    void mouseReleased(MouseEvent e) throws CantBeAliveException;
+    void mouseReleased(MouseEvent e) throws BehaviorExecutionException;
 }
