@@ -79,7 +79,7 @@ public class Move extends BorderedAction {
         }
 
         // Animate
-        animation.next(getMascot(), getTime());
+        animation.apply(getMascot(), getTime());
 
         if (targetX != DEFAULT_TARGETX) {
             // If we went past the target, set ourselves to the target position

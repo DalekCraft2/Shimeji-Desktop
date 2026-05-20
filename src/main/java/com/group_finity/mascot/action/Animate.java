@@ -40,6 +40,6 @@ public class Animate extends BorderedAction {
         }
 
         // Animate
-        getAnimation().next(getMascot(), getTime());
+        getAnimation().apply(getMascot(), getTime());
     }
 }

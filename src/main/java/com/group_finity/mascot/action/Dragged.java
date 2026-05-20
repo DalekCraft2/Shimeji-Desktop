@@ -90,7 +90,7 @@ public class Dragged extends ActionBase {
         putVariable(getSchema().getString(VARIABLE_FOOTX), footX);
 
         // Animate
-        getAnimation().next(getMascot(), getTime());
+        getAnimation().apply(getMascot(), getTime());
 
         // Align the mascot position to the mouse cursor
         getMascot().getAnchor().setLocation(cursor.getX() + offsetX, cursor.getY() + offsetY);

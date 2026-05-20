@@ -94,8 +94,8 @@ public class Animation {
      * @param mascot the mascot to which to apply the pose
      * @param time the number of ticks since this animation began
      */
-    public void next(final Mascot mascot, final int time) {
-        getPoseAt(time).next(mascot);
+    public void apply(final Mascot mascot, final int time) {
+        getPoseAt(time).apply(mascot);
     }
 
     /**

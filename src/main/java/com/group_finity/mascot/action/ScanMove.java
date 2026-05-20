@@ -99,7 +99,7 @@ public class ScanMove extends BorderedAction {
             animation = getAnimation();
         }
 
-        animation.next(getMascot(), getTime());
+        animation.apply(getMascot(), getTime());
 
         if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX ||
                 !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {

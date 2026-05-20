@@ -105,7 +105,7 @@ public class ScanJump extends ActionBase {
             putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
 
             getMascot().getAnchor().translate((int) Math.round(velocityX), (int) Math.round(velocityY));
-            getAnimation().next(getMascot(), getTime());
+            getAnimation().apply(getMascot(), getTime());
         }
 
         if (distance <= velocity) {

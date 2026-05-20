@@ -144,7 +144,7 @@ public class Fall extends ActionBase {
         }
 
         // Animate
-        getAnimation().next(mascot, getTime());
+        getAnimation().apply(mascot, getTime());
     }
 
     private int getInitialVx() throws VariableException {

@@ -58,7 +58,7 @@ public class Regist extends ActionBase {
         getMascot().setDragging(true);
 
         // Animate
-        getAnimation().next(getMascot(), getTime());
+        getAnimation().apply(getMascot(), getTime());
 
         if (getTime() + 1 >= getAnimation().getDuration()) {
             // Ended because the period has passed.

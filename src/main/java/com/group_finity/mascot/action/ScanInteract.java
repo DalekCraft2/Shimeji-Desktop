@@ -95,7 +95,7 @@ public class ScanInteract extends BorderedAction {
                 animation = getAnimation();
             }
 
-            animation.next(getMascot(), getTime());
+            animation.apply(getMascot(), getTime());
             animation = getAnimation();
 
             if (!turning && (getTime() == animation.getDuration() - 1 || animation.getDuration() == 1) && !getBehavior().trim().isEmpty()) {

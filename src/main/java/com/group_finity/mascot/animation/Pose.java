@@ -23,7 +23,7 @@ public record Pose(String imageKey, int dx, int dy, int duration, String soundKe
      *
      * @param mascot the mascot to which to apply this pose
      */
-    public void next(final Mascot mascot) {
+    public void apply(final Mascot mascot) {
         mascot.getAnchor().translate(mascot.isLookRight() ? -dx : dx, dy);
         mascot.setImage(imageKey == null || !ImagePairs.contains(imageKey) ? null :
                 ImagePairs.get(imageKey).getImage(mascot.isLookRight()));

@@ -43,7 +43,7 @@ public class Turn extends BorderedAction {
             throw new LostGroundException();
         }
 
-        getAnimation().next(getMascot(), getTime());
+        getAnimation().apply(getMascot(), getTime());
     }
 
     private boolean isLookRight() throws VariableException {
