@@ -2,8 +2,7 @@ package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Mascot;
 import com.group_finity.mascot.environment.Border;
-import com.group_finity.mascot.exception.LostGroundException;
-import com.group_finity.mascot.exception.VariableException;
+import com.group_finity.mascot.script.VariableException;
 
 /**
  * An object that represents a {@link Mascot}'s short-term movement.

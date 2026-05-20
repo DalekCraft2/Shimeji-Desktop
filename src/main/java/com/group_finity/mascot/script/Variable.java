@@ -1,7 +1,5 @@
 package com.group_finity.mascot.script;
 
-import com.group_finity.mascot.exception.VariableException;
-
 /**
  * Represents a scriptable value that can be used by {@link com.group_finity.mascot.action.Action Actions} or
  * {@link com.group_finity.mascot.behavior.Behavior Behaviors}.

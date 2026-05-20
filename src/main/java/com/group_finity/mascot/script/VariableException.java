@@ -1,4 +1,4 @@
-package com.group_finity.mascot.exception;
+package com.group_finity.mascot.script;
 
 /**
  * Thrown when a scripted parameter in a mascot's configuration has an invalid value or can not be

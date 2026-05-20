@@ -5,11 +5,11 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.config.Configuration;
+import com.group_finity.mascot.config.ConfigurationException;
 import com.group_finity.mascot.config.Entry;
-import com.group_finity.mascot.exception.BehaviorInstantiationException;
-import com.group_finity.mascot.exception.CantBeAliveException;
-import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.image.ImageUtils;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
@@ -128,7 +128,10 @@ public class Main {
     public static void showError(String message, Throwable exception) {
         StringBuilder messageBuilder = new StringBuilder(message);
         do {
-            if (exception.getClass().getPackageName().equals("com.group_finity.mascot.exception")) {
+            Class<? extends Throwable> exceptionClass = exception.getClass();
+            if (exceptionClass.getModule().getName().equals(Main.class.getModule().getName()) &&
+                    exceptionClass != com.group_finity.mascot.platform.x11.X.X11Exception.class) {
+                // If it's a Shimeji exception, only append the exception message
                 messageBuilder.append("\n").append(exception.getMessage());
             } else if (exception instanceof SAXParseException) {
                 messageBuilder.append("\nLine ").append(((SAXParseException) exception).getLineNumber()).append(": ").append(exception.getMessage());

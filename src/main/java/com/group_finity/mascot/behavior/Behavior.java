@@ -1,7 +1,6 @@
 package com.group_finity.mascot.behavior;
 
 import com.group_finity.mascot.Mascot;
-import com.group_finity.mascot.exception.CantBeAliveException;
 
 import java.awt.event.MouseEvent;
 

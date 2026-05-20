@@ -1,7 +1,7 @@
-package com.group_finity.mascot.exception;
+package com.group_finity.mascot.behavior;
 
 /**
- * Thrown when a {@link com.group_finity.mascot.behavior.Behavior Behavior} encounters an error during its
+ * Thrown when a {@link Behavior} encounters an error during its
  * initialization or execution.
  *
  * @author Yuki Yamada

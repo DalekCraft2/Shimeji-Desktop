@@ -1,7 +1,6 @@
 package com.group_finity.mascot.script;
 
 import com.group_finity.mascot.Main;
-import com.group_finity.mascot.exception.VariableException;
 
 import javax.script.Bindings;
 import java.util.*;

@@ -1,9 +1,9 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.behavior.Behavior;
+import com.group_finity.mascot.behavior.CantBeAliveException;
+import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.config.Configuration;
-import com.group_finity.mascot.exception.BehaviorInstantiationException;
-import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.platform.NativeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

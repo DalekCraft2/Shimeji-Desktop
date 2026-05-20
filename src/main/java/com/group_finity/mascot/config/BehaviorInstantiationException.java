@@ -1,4 +1,4 @@
-package com.group_finity.mascot.exception;
+package com.group_finity.mascot.config;
 
 /**
  * Thrown when a {@link com.group_finity.mascot.behavior.Behavior Behavior} fails to be built.

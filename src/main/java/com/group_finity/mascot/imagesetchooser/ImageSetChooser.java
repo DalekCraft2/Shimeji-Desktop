@@ -2,8 +2,8 @@ package com.group_finity.mascot.imagesetchooser;
 
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.config.Configuration;
+import com.group_finity.mascot.config.ConfigurationException;
 import com.group_finity.mascot.config.Entry;
-import com.group_finity.mascot.exception.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

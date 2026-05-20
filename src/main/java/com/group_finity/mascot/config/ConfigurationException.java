@@ -1,4 +1,4 @@
-package com.group_finity.mascot.exception;
+package com.group_finity.mascot.config;
 
 /**
  * Thrown when a mascot's configuration contains some kind of error.

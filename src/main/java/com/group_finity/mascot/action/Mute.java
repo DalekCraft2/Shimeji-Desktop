@@ -1,7 +1,7 @@
 package com.group_finity.mascot.action;
 
 import com.group_finity.mascot.Main;
-import com.group_finity.mascot.exception.VariableException;
+import com.group_finity.mascot.script.VariableException;
 import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
 import org.slf4j.Logger;
