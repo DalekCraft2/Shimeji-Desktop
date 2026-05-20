@@ -119,7 +119,7 @@ public abstract class ActionBase implements Action {
         // Clear cached variable values (each frame)
         getVariables().initFrame();
 
-        // Initialize animation frames
+        // Clear cached animation condition values (each frame)
         for (final Animation animation : getAnimations()) {
             animation.initFrame();
         }
