@@ -116,7 +116,7 @@ public abstract class ActionBase implements Action {
     }
 
     private void initFrame() {
-        // Initialize variable values (each frame)
+        // Clear cached variable values (each frame)
         getVariables().initFrame();
 
         // Initialize animation frames

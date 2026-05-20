@@ -7,22 +7,39 @@ import javax.script.Bindings;
 import java.util.*;
 
 /**
+ * A map of values that can be used for evaluating {@link Variable Variables}.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class VariableMap extends AbstractMap<String, Object> implements Bindings {
+    /**
+     * An internal map used by this map to store {@link Variable Variables}.
+     */
     private final Map<String, Variable> rawMap = new LinkedHashMap<>();
 
+    /**
+     * Gets the internal map used by this map to store {@link Variable Variables}.
+     *
+     * @return this map's internal map
+     */
     public Map<String, Variable> getRawMap() {
         return rawMap;
     }
 
+    /**
+     * Initializes the values of all variables stored in this map.
+     */
     public void init() {
         for (final Variable o : rawMap.values()) {
             o.init();
         }
     }
 
+    /**
+     * Clears the cached values of all variables stored in this map, if necessary.
+     * Called at the start of each frame.
+     */
     public void initFrame() {
         for (final Variable o : rawMap.values()) {
             o.initFrame();

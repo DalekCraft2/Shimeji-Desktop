@@ -9,21 +9,49 @@ import javax.script.CompiledScript;
 import javax.script.ScriptException;
 
 /**
+ * An implementation of {@link Variable} that represents a scripted value. The value can be evaluated by being supplied
+ * with a {@link VariableMap}, and can optionally be reevaluated at the start of each frame.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class Script extends Variable {
 
+    /**
+     * The script engine used to compile all scripts.
+     */
     private static final NashornScriptEngine ENGINE = (NashornScriptEngine) new NashornScriptEngineFactory().getScriptEngine(className -> false);
 
+    /**
+     * The source that was used to compile this script.
+     */
     private final String source;
 
+    /**
+     * Whether this script's cached value should be cleared at the start of each frame, forcing it to be
+     * reevaluated.
+     */
     private final boolean clearAtInitFrame;
 
+    /**
+     * The compiled script object that is used to evaluate this script's value.
+     */
     private final CompiledScript compiled;
 
+    /**
+     * The value of this script. Is evaluated at most once per frame, and is set to {@code null} at the start of each
+     * frame if {@link #clearAtInitFrame} is {@code true}.
+     */
     private Object value;
 
+    /**
+     * Creates a new Script.
+     *
+     * @param source the source that will be compiled into a script
+     * @param clearAtInitFrame whether this script's cached value should be cleared at the start of each frame,
+     * forcing it to be reevaluated
+     * @throws VariableException if {@code source} is in script syntax but is not compilable
+     */
     public Script(final String source, final boolean clearAtInitFrame) throws VariableException {
         this.source = source;
         this.clearAtInitFrame = clearAtInitFrame;
@@ -44,6 +72,10 @@ public class Script extends Variable {
         value = null;
     }
 
+    /**
+     * Clears the cached value of this script if {@link #clearAtInitFrame} is {@code true}.
+     * Called at the start of each frame.
+     */
     @Override
     public void initFrame() {
         if (clearAtInitFrame) {
