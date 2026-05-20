@@ -68,7 +68,7 @@ public class Script extends Variable {
     }
 
     @Override
-    public void init() {
+    public synchronized void init() {
         value = null;
     }
 
@@ -79,7 +79,9 @@ public class Script extends Variable {
     @Override
     public void resetValue() {
         if (allowValueReset) {
-            value = null;
+            synchronized (this) {
+                value = null;
+            }
         }
     }
 
