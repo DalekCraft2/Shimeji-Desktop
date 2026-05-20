@@ -99,7 +99,7 @@ public abstract class ActionBase implements Action {
             return;
         }
 
-        initFrame();
+        resetVariables();
 
         // Clear affordances
         if (!getMascot().getAffordances().isEmpty()) {
@@ -115,13 +115,13 @@ public abstract class ActionBase implements Action {
         tick();
     }
 
-    private void initFrame() {
+    private void resetVariables() {
         // Clear cached variable values (each frame)
-        getVariables().initFrame();
+        getVariables().resetValues();
 
         // Clear cached animation condition values (each frame)
         for (final Animation animation : getAnimations()) {
-            animation.initFrame();
+            animation.resetCondition();
         }
     }
 

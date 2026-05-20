@@ -31,7 +31,7 @@ public class Script extends Variable {
      * Whether this script's cached value should be cleared at the start of each frame, forcing it to be
      * reevaluated.
      */
-    private final boolean clearAtInitFrame;
+    private final boolean allowValueReset;
 
     /**
      * The compiled script object that is used to evaluate this script's value.
@@ -40,7 +40,7 @@ public class Script extends Variable {
 
     /**
      * The value of this script. Is evaluated at most once per frame, and is set to {@code null} at the start of each
-     * frame if {@link #clearAtInitFrame} is {@code true}.
+     * frame if {@link #allowValueReset} is {@code true}.
      */
     private Object value;
 
@@ -48,13 +48,13 @@ public class Script extends Variable {
      * Creates a new Script.
      *
      * @param source the source that will be compiled into a script
-     * @param clearAtInitFrame whether this script's cached value should be cleared at the start of each frame,
+     * @param allowValueReset whether this script's cached value should be cleared at the start of each frame,
      * forcing it to be reevaluated
      * @throws VariableException if {@code source} is in script syntax but is not compilable
      */
-    public Script(final String source, final boolean clearAtInitFrame) throws VariableException {
+    public Script(final String source, final boolean allowValueReset) throws VariableException {
         this.source = source;
-        this.clearAtInitFrame = clearAtInitFrame;
+        this.allowValueReset = allowValueReset;
         try {
             compiled = ENGINE.compile(this.source);
         } catch (final ScriptException e) {
@@ -64,7 +64,7 @@ public class Script extends Variable {
 
     @Override
     public String toString() {
-        return clearAtInitFrame ? "#{" + source + "}" : "${" + source + "}";
+        return allowValueReset ? "#{" + source + "}" : "${" + source + "}";
     }
 
     @Override
@@ -73,12 +73,12 @@ public class Script extends Variable {
     }
 
     /**
-     * Clears the cached value of this script if {@link #clearAtInitFrame} is {@code true}.
+     * Clears the cached value of this script if {@link #allowValueReset} is {@code true}.
      * Called at the start of each frame.
      */
     @Override
-    public void initFrame() {
-        if (clearAtInitFrame) {
+    public void resetValue() {
+        if (allowValueReset) {
             value = null;
         }
     }

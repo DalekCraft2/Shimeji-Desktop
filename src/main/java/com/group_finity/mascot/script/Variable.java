@@ -79,7 +79,7 @@ public abstract class Variable {
      * Clears the cached value of this variable if necessary.
      * Called at the start of each frame.
      */
-    public abstract void initFrame();
+    public abstract void resetValue();
 
     /**
      * Evaluates this variable using the provided context.

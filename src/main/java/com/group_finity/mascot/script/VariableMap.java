@@ -40,9 +40,9 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
      * Clears the cached values of all variables stored in this map, if necessary.
      * Called at the start of each frame.
      */
-    public void initFrame() {
+    public void resetValues() {
         for (final Variable o : rawMap.values()) {
-            o.initFrame();
+            o.resetValue();
         }
     }
 

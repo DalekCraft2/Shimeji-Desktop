@@ -32,7 +32,7 @@ public class Constant extends Variable {
     }
 
     @Override
-    public void initFrame() {
+    public void resetValue() {
     }
 
     @Override

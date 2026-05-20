@@ -73,8 +73,8 @@ public class Animation {
      * Clears the cached value of whether this animation's condition passed.
      * Called at the start of each frame.
      */
-    public void initFrame() {
-        condition.initFrame();
+    public void resetCondition() {
+        condition.resetValue();
     }
 
     /**
