@@ -413,10 +413,13 @@ public class Main {
     }
 
     /**
-     * Creates a random {@link Mascot}.
+     * Creates a {@link Mascot} with a randomly selected image set.
      */
     public void createMascot() {
         int length = imageSets.size();
+        if (length == 0) {
+            return;
+        }
         int random = (int) (length * Math.random());
         createMascot(imageSets.get(random));
     }
