@@ -39,7 +39,7 @@ public class Turn extends BorderedAction {
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
-            throw new LostGroundException();
+            throw new LostGroundException("Mascot is not on border");
         }
 
         getAnimation().apply(getMascot(), getTime());

@@ -64,8 +64,7 @@ public class Regist extends ActionBase {
 
             getMascot().setLookRight(Math.random() < 0.5);
 
-            log.info("Lost ground ({}, {})", getMascot(), this);
-            throw new LostGroundException();
+            throw new LostGroundException("Mascot finished Regist action");
         }
     }
 

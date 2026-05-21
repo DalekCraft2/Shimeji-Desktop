@@ -73,8 +73,7 @@ public class ScanMove extends BorderedAction {
         getMascot().getAffordances().clear();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
-            log.info("Lost ground ({}, {})", getMascot(), this);
-            throw new LostGroundException();
+            throw new LostGroundException("Mascot is not on border");
         }
 
         Mascot targetMascot = target == null ? null : target.get();

@@ -8,4 +8,11 @@ package com.group_finity.mascot.action;
  * @author Shimeji-ee Group
  */
 public class LostGroundException extends Exception {
+    public LostGroundException() {
+        super();
+    }
+
+    public LostGroundException(final String message) {
+        super(message);
+    }
 }

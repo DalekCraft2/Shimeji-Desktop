@@ -53,8 +53,7 @@ public class WalkWithIE extends Move {
     protected void tick() throws LostGroundException, VariableException {
         final Area activeIE = getEnvironment().getActiveIE();
         if (!activeIE.isVisible()) {
-            log.info("IE was hidden ({}, {})", getMascot(), this);
-            throw new LostGroundException();
+            throw new LostGroundException("IE is not visible");
         }
 
         // Can't use scaling here yet because it doesn't work for scales other than 1; the Shimejis will just release the window immediately.
@@ -66,14 +65,12 @@ public class WalkWithIE extends Move {
         if (getMascot().isLookRight()) {
             if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.info("Lost ground ({}, {})", getMascot(), this);
-                throw new LostGroundException();
+                throw new LostGroundException("Mascot is not holding IE");
             }
         } else {
             if (getMascot().getAnchor().x + offsetX != activeIE.getRight()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                log.info("Lost ground ({}, {})", getMascot(), this);
-                throw new LostGroundException();
+                throw new LostGroundException("Mascot is not holding IE");
             }
         }
 

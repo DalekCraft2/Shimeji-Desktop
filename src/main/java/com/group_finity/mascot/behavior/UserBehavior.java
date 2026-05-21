@@ -153,7 +153,11 @@ public class UserBehavior implements Behavior {
                 }
             }
         } catch (final LostGroundException e) {
-            log.info("Lost ground ({}, {})", mascot, this);
+            if (e.getMessage() != null) {
+                log.info("Lost ground ({}, {}): {}", mascot, this, e.getMessage());
+            } else {
+                log.info("Lost ground ({}, {})", mascot, this);
+            }
 
             mascot.setCursorPosition(null);
             mascot.setDragging(false);

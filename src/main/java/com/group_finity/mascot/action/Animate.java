@@ -34,8 +34,7 @@ public class Animate extends BorderedAction {
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
-            // Mascot is off the ground
-            throw new LostGroundException();
+            throw new LostGroundException("Mascot is not on border");
         }
 
         // Animate

@@ -49,9 +49,7 @@ public class Move extends BorderedAction {
         super.tick();
 
         if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
-            // The mascot is off the wall
-            log.info("Lost ground ({}, {})", getMascot(), this);
-            throw new LostGroundException();
+            throw new LostGroundException("Mascot is not on border");
         }
 
         int targetX = getTargetX();
