@@ -12,7 +12,7 @@ import com.group_finity.mascot.platform.TranslucentWindow;
  * @author asdfman
  */
 public class X11NativeFactory extends NativeFactory {
-    private final Environment environment = new X11Environment();
+    private final X11Environment environment = new X11Environment();
 
     @Override
     public Environment getEnvironment() {
@@ -21,6 +21,6 @@ public class X11NativeFactory extends NativeFactory {
 
     @Override
     public TranslucentWindow newTranslucentWindow() {
-        return new X11TranslucentWindow();
+        return new X11TranslucentWindow(environment.getDisplay().getX11Display(), environment.getDockValue());
     }
 }

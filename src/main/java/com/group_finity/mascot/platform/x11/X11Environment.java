@@ -378,4 +378,12 @@ class X11Environment extends AbstractEnvironment {
     public void dispose() {
         display.close();
     }
+
+    Display getDisplay() {
+        return display;
+    }
+
+    int getDockValue() {
+        return dockValue;
+    }
 }

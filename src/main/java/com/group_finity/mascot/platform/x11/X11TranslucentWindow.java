@@ -5,10 +5,14 @@
 package com.group_finity.mascot.platform.x11;
 
 import com.group_finity.mascot.platform.TranslucentWindow;
+import com.sun.jna.Native;
 import com.sun.jna.platform.WindowUtils;
+import com.sun.jna.platform.unix.X11;
+import com.sun.jna.ptr.IntByReference;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.HierarchyEvent;
 import java.awt.image.BufferedImage;
 
 /**
@@ -25,7 +29,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
     private boolean visible;
 
-    X11TranslucentWindow() {
+    X11TranslucentWindow(X11.Display dpy, int dockValue) {
         super();
 
         setBackground(new Color(0, 0, 0, 0));
@@ -44,6 +48,20 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         setContentPane(panel);
 
         setLayout(new BorderLayout());
+
+        // Add a listener for when the window becomes visible, because the native window will not be null by then
+        addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
+                // Get the handle of the native window for this JWindow
+                X11.Window win = new X11.Window((int) Native.getWindowID(this));
+                X11 x11 = X11.INSTANCE;
+
+                // Set the window type of the window to "dock" so it can move past the bounds of the screen
+                IntByReference dockAtom = new IntByReference(dockValue);
+                x11.XChangeProperty(dpy, win, x11.XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", false),
+                        X11.XA_ATOM, 32, X11.PropModeReplace, dockAtom.getPointer(), 1);
+            }
+        });
     }
 
     @Override
