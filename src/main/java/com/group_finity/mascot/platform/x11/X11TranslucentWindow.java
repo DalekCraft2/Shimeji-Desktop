@@ -80,18 +80,15 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
          * window appear in the taskbar, which should not happen. The workaround is to simply never call
          * super.setVisible(false), and use WindowUtils.setWindowAlpha() to hide the window instead.
          */
-        try {
-            if (b) {
-                if (!super.isVisible()) {
-                    super.setVisible(true);
-                }
-                WindowUtils.setWindowAlpha(this, 1.0f);
-                visible = true;
-            } else {
-                WindowUtils.setWindowAlpha(this, 0.0f);
-                visible = false;
+        if (b) {
+            if (!super.isVisible()) {
+                super.setVisible(true);
             }
-        } catch (IllegalArgumentException ignored) {
+            WindowUtils.setWindowAlpha(this, 1.0f);
+            visible = true;
+        } else {
+            WindowUtils.setWindowAlpha(this, 0.0f);
+            visible = false;
         }
     }
 
