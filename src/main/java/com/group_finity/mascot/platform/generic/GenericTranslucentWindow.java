@@ -39,15 +39,6 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
     }
 
     @Override
-    public void setVisible(final boolean b) {
-        if (isVisible() == b) {
-            return;
-        }
-
-        super.setVisible(b);
-    }
-
-    @Override
     protected void addImpl(final Component comp, final Object constraints, final int index) {
         super.addImpl(comp, constraints, index);
         if (comp instanceof JComponent jComp) {
