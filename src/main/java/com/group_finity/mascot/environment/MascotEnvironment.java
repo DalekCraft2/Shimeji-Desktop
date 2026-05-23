@@ -314,7 +314,40 @@ public class MascotEnvironment {
      * @return whether the mascot is on the floor or ceiling of exactly one screen
      */
     private boolean isScreenTopBottom() {
-        return impl.isScreenTopBottom(mascot.getAnchor());
+        return isScreenTopBottom(mascot.getAnchor());
+    }
+
+    /**
+     * Gets whether the given point lies on the floor or ceiling of exactly one screen.
+     * Returns {@code false} if the point is on multiple floors/ceilings (i.e., the point is on the border between
+     * two screens).
+     *
+     * @param location the point to check
+     * @return whether the point lies on the floor or ceiling of exactly one screen
+     */
+    private boolean isScreenTopBottom(final Point location) {
+        int count = 0;
+
+        for (Area area : impl.getScreens()) {
+            if (area.getTopBorder().isOn(location)) {
+                count++;
+            }
+            if (area.getBottomBorder().isOn(location)) {
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            Area workArea = getWorkArea();
+            if (workArea.getTopBorder().isOn(location)) {
+                return true;
+            }
+            if (workArea.getBottomBorder().isOn(location)) {
+                return true;
+            }
+        }
+
+        return count == 1;
     }
 
     /**
@@ -324,6 +357,38 @@ public class MascotEnvironment {
      * @return whether the mascot is on the wall of exactly one screen
      */
     private boolean isScreenLeftRight() {
-        return impl.isScreenLeftRight(mascot.getAnchor());
+        return isScreenLeftRight(mascot.getAnchor());
+    }
+
+    /**
+     * Gets whether the given point lies on the wall of exactly one screen.
+     * Returns {@code false} if the point is on multiple walls (i.e., the point is on the border between two screens).
+     *
+     * @param location the point to check
+     * @return whether the point lies on the wall of exactly one screen
+     */
+    private boolean isScreenLeftRight(final Point location) {
+        int count = 0;
+
+        for (Area area : impl.getScreens()) {
+            if (area.getLeftBorder().isOn(location)) {
+                count++;
+            }
+            if (area.getRightBorder().isOn(location)) {
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            Area workArea = getWorkArea();
+            if (workArea.getLeftBorder().isOn(location)) {
+                return true;
+            }
+            if (workArea.getRightBorder().isOn(location)) {
+                return true;
+            }
+        }
+
+        return count == 1;
     }
 }
