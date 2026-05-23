@@ -23,7 +23,7 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
     MacTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 
-        JPanel panel = new JPanel() {
+        setContentPane(new JPanel() {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
@@ -31,12 +31,8 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
                     g.drawImage(image, 0, 0, null);
                 }
             }
-        };
-        panel.setBackground(new Color(0, 0, 0, 0));
+        });
         setBackground(new Color(0, 0, 0, 0));
-        panel.setOpaque(false);
-        setContentPane(panel);
-
         setLayout(new BorderLayout());
 
         JRootPane rootPane = getRootPane();

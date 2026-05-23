@@ -18,9 +18,9 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
     private BufferedImage image;
 
     GenericTranslucentWindow() {
-        super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
+        super();
 
-        JPanel panel = new JPanel() {
+        setContentPane(new JPanel() {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
@@ -28,12 +28,8 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
                     g.drawImage(image, 0, 0, null);
                 }
             }
-        };
-        panel.setBackground(new Color(0, 0, 0, 0));
+        });
         setBackground(new Color(0, 0, 0, 0));
-        panel.setOpaque(false);
-        setContentPane(panel);
-
         setLayout(new BorderLayout());
     }
 

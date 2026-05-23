@@ -32,21 +32,20 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     X11TranslucentWindow(X11.Display dpy, int dockValue) {
         super();
 
-        setBackground(new Color(0, 0, 0, 0));
-
-        JPanel panel = new JPanel() {
+        setContentPane(new JPanel() {
             @Override
             protected void paintComponent(final Graphics g) {
-                g.clearRect(0, 0, getWidth(), getHeight());
                 super.paintComponent(g);
                 if (image != null) {
                     g.drawImage(image, 0, 0, null);
                 }
             }
-        };
-        panel.setOpaque(false);
-        setContentPane(panel);
-
+        });
+        Color transparent = new Color(0, 0, 0, 0);
+        setBackground(transparent);
+        // We need to set the root pane's background to transparent too on Linux,
+        // otherwise the window will not be transparent.
+        getRootPane().setBackground(transparent);
         setLayout(new BorderLayout());
 
         // Add a listener for when the window becomes visible, because the native window will not be null by then

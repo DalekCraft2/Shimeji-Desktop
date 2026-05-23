@@ -21,7 +21,6 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     VirtualTranslucentPanel() {
         super();
 
-        setBackground(new Color(0, 0, 0, 0));
         setOpaque(false);
         setLayout(new BorderLayout());
     }

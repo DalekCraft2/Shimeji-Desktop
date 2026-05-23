@@ -23,9 +23,7 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     WindowsTranslucentWindow() {
         super();
 
-        setBackground(new Color(0, 0, 0, 0));
-
-        JPanel panel = new JPanel() {
+        setContentPane(new JPanel() {
             @Override
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
@@ -33,10 +31,8 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
                     g.drawImage(image, 0, 0, null);
                 }
             }
-        };
-        panel.setOpaque(false);
-        setContentPane(panel);
-
+        });
+        setBackground(new Color(0, 0, 0, 0));
         setLayout(new BorderLayout());
     }
 
