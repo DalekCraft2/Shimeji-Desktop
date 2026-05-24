@@ -81,10 +81,22 @@ public final class ImagePairs {
         return key;
     }
 
+    /**
+     * Checks whether there is an image pair associated with the given key.
+     *
+     * @param key the key whose presence is to be checked
+     * @return whether the key has an associated image pair
+     */
     public static boolean contains(String key) {
         return imagePairs.containsKey(key);
     }
 
+    /**
+     * Gets the image pair associated with the given key.
+     *
+     * @param key the key whose associated image pair is to be returned
+     * @return the key's associated image pair
+     */
     public static ImagePair get(String key) {
         return key == null ? null : imagePairs.get(key);
     }
@@ -104,6 +116,11 @@ public final class ImagePairs {
         }
     }
 
+    /**
+     * Removes all image pairs attributed to the given image set.
+     *
+     * @param imageSet the image set whose image pairs should be removed
+     */
     public static void removeAll(String imageSet) {
         if (!IMAGESETS_TO_IMAGEPAIRS.containsKey(imageSet)) {
             return;
@@ -116,6 +133,9 @@ public final class ImagePairs {
         IMAGESETS_TO_IMAGEPAIRS.remove(imageSet);
     }
 
+    /**
+     * Clears all currently loaded image pairs.
+     */
     public static void clear() {
         imagePairs.clear();
     }
