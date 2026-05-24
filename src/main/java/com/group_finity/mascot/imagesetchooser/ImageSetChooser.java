@@ -347,10 +347,7 @@ public class ImageSetChooser extends JDialog {
         });
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    static void main(String[] args) {
+    static void main() {
         EventQueue.invokeLater(() -> {
             new ImageSetChooser(new JFrame(), true).display();
             System.exit(0);
