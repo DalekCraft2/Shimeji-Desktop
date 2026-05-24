@@ -48,7 +48,7 @@ public class FallWithIE extends Fall {
             throw new LostGroundException("Window is not visible");
         }
 
-        // Can't use scaling here yet because it doesn't work for scales other than 1; the Shimejis will just fall off the window immediately.
+        // Can't use scaling here yet because it doesn't work for scales other than 1; the mascots will just fall off the window immediately.
         // final int offsetX = (int) Math.round(getIEOffsetX() * scaling);
         // final int offsetY = (int) Math.round(getIEOffsetY() * scaling);
         final int offsetX = getIEOffsetX();

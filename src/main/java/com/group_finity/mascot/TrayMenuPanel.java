@@ -617,7 +617,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
             }
             // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
             if (dialog.isEnvironmentReloadRequired() || dialog.isImageReloadRequired()) {
-                // need to reload the shimeji as the images have rescaled
+                // need to reload the image sets as the images have rescaled
                 Main.getInstance().reloadAllImageSets();
             }
             if (dialog.isInteractiveWindowReloadRequired()) {

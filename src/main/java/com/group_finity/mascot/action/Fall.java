@@ -62,7 +62,7 @@ public class Fall extends ActionBase {
         scaling = Main.getInstance().getSettings().scaling;
 
         /*
-         * FIXME: Shimejis start falling much more quickly (if scaled up) or slowly (if scaled down) than they should
+         * FIXME: Mascots start falling much more quickly (if scaled up) or slowly (if scaled down) than they should
          *  when released by the cursor, due to the scaling being used here. However, other things besides being thrown
          *  use the Fall action, so I am kind of in a dilemma here.
          *

@@ -459,8 +459,8 @@ public class Mascot {
         // TODO: Get the popup to close when clicking outside of it
         windowComponent.requestFocus();
 
-        // Lightweight popups expect the shimeji window to draw them if they fall inside the shimeji window's boundary.
-        // As the shimeji window can't support this, we need to set them to heavyweight.
+        // Lightweight popups expect the mascot window to draw them if they fall inside the mascot window's boundary.
+        // As the mascot window can't support this, we need to set them to heavyweight.
         popup.setLightWeightPopupEnabled(false);
         popup.show(windowComponent, x, y);
     }

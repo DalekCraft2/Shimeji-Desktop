@@ -185,9 +185,9 @@ class VirtualEnvironment extends AbstractEnvironment {
         display.dispose();
     }
 
-    void addShimeji(final VirtualTranslucentPanel shimeji) {
+    void addMascot(final VirtualTranslucentPanel mascotPanel) {
         if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(() -> addShimeji(shimeji));
+            SwingUtilities.invokeLater(() -> addMascot(mascotPanel));
             return;
         }
         if (display.getContentPane().getSize().width > 0 && display.getContentPane().getSize().height > 0) {
@@ -195,6 +195,6 @@ class VirtualEnvironment extends AbstractEnvironment {
             display.getRootPane().setPreferredSize(display.getRootPane().getSize());
             display.getContentPane().setPreferredSize(display.getContentPane().getSize());
         }
-        display.add(shimeji);
+        display.add(mascotPanel);
     }
 }

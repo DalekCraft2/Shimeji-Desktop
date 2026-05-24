@@ -34,7 +34,7 @@ class MacEnvironment extends AbstractEnvironment {
     private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
 
     /**
-     * On Mac, you can take the active window, so Shimeji will react to it.
+     * On Mac, you can take the active window, so mascots will react to it.
      * <p>
      * Therefore, in this class, give {@code activeWindow} an alias called {@link #frontmostWindow}.
      */
