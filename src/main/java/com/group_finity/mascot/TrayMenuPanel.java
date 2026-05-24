@@ -494,7 +494,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnReduceToOneActionPerformed
 
     private void btnRestoreWindowsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreWindowsActionPerformed
-        Main.getExecutorService().submit(() -> NativeFactory.getInstance().getEnvironment().restoreIE());
+        Main.getExecutorService().submit(() -> NativeFactory.getInstance().getEnvironment().restoreWindows());
         if (useSystemTray)
             ((Window) getTopLevelAncestor()).dispose();
     }//GEN-LAST:event_btnRestoreWindowsActionPerformed

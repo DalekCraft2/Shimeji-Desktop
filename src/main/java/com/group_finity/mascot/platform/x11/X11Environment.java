@@ -29,14 +29,14 @@ class X11Environment extends AbstractEnvironment {
      */
     private final Display display = new Display();
 
-    private final HashMap<Window, Boolean> ieCache = new LinkedHashMap<>();
+    private final HashMap<Window, Boolean> interactiveCache = new LinkedHashMap<>();
 
     /**
      * Window for jump action targeting.
      */
-    private final Area activeIe = new Area();
+    private final Area activeWindow = new Area();
 
-    private Window activeIeObject = null;
+    private Window activeWindowObject = null;
 
     /**
      * Current screen. Never changes after initial assignment.
@@ -59,14 +59,23 @@ class X11Environment extends AbstractEnvironment {
     private final int fullscreenValue;
     private final int dockValue;
 
-    private enum IeStatus {
-        /** The IE is valid. */
+    /**
+     * Enumeration of the possible return statuses when checking whether
+     * a given window is valid to be interactive at any given moment.
+     *
+     * @author LavenderSnek
+     */
+    private enum WindowStatus {
+        /** The window is valid and will prevent other windows from being valid. */
         VALID,
-        /** The IE is invalid and blocks any other valid IEs. */
+        /** The window is invalid and will prevent other windows from being valid. */
         INVALID,
-        /** The IE is invalid but does not prevent other IEs from being valid. */
+        /** The window is invalid but will not prevent other windows from being valid. */
         IGNORED,
-        /** The IE is out of bounds and does not prevent other IEs from being valid. */
+        /**
+         * The window is valid, but it is out of bounds and should be ignored.
+         * It will not prevent other windows from being valid.
+         */
         OUT_OF_BOUNDS
     }
 
@@ -97,23 +106,23 @@ class X11Environment extends AbstractEnvironment {
         super.tick();
 
         workArea.set(getWorkAreaRect());
-        final Rectangle ieRect = getWindowBounds(findActiveIE());
-        activeIe.setVisible(getScreen().intersects(ieRect));
-        activeIe.set(ieRect);
+        final Rectangle windowRect = getWindowBounds(findActiveWindow());
+        activeWindow.setVisible(getScreen().intersects(windowRect));
+        activeWindow.set(windowRect);
     }
 
-    private boolean isIE(final Window window) {
-        final Boolean cachedValue = ieCache.get(window);
+    private boolean isInteractive(final Window window) {
+        final Boolean cachedValue = interactiveCache.get(window);
         if (cachedValue != null) {
             return cachedValue;
         }
 
-        // Determine whether it is IE by the window title
-        final String ieTitle = getWindowTitle(window);
+        // Determine whether the window is interactive based on its title
+        final String windowTitle = getWindowTitle(window);
 
         // optimisation to remove empty windows from consideration without the loop.
-        if (ieTitle.isEmpty()) {
-            ieCache.put(window, false);
+        if (windowTitle.isEmpty()) {
+            interactiveCache.put(window, false);
             return false;
         }
 
@@ -122,11 +131,11 @@ class X11Environment extends AbstractEnvironment {
         if (windowTitlesBlacklist == null) {
             windowTitlesBlacklist = Main.getInstance().getSettings().interactiveWindowsBlacklist.toArray(new String[0]);
         }
-        for (String windowTitle : windowTitlesBlacklist) {
-            if (!windowTitle.trim().isEmpty()) {
+        for (String title : windowTitlesBlacklist) {
+            if (!title.trim().isEmpty()) {
                 blacklistInUse = true;
-                if (ieTitle.contains(windowTitle)) {
-                    ieCache.put(window, false);
+                if (windowTitle.contains(title)) {
+                    interactiveCache.put(window, false);
                     return false;
                 }
             }
@@ -137,29 +146,29 @@ class X11Environment extends AbstractEnvironment {
         if (windowTitles == null) {
             windowTitles = Main.getInstance().getSettings().interactiveWindows.toArray(new String[0]);
         }
-        for (String windowTitle : windowTitles) {
-            if (!windowTitle.trim().isEmpty()) {
-                // Window is IE
+        for (String title : windowTitles) {
+            if (!title.trim().isEmpty()) {
+                // Window is interactive
                 whitelistInUse = true;
-                if (ieTitle.contains(windowTitle)) {
-                    ieCache.put(window, true);
+                if (windowTitle.contains(title)) {
+                    interactiveCache.put(window, true);
                     return true;
                 }
             }
         }
 
         if (whitelistInUse || !blacklistInUse) {
-            // Window is not IE
-            ieCache.put(window, false);
+            // Window is not interactive
+            interactiveCache.put(window, false);
             return false;
         } else {
-            // Window is IE
-            ieCache.put(window, true);
+            // Window is interactive
+            interactiveCache.put(window, true);
             return true;
         }
     }
 
-    private IeStatus getIeStatus(Window window) {
+    private WindowStatus getWindowStatus(Window window) {
         int curDesktop;
         int desktop;
         List<Integer> state;
@@ -172,47 +181,48 @@ class X11Environment extends AbstractEnvironment {
         } catch (X11Exception e) {
             /*
             NOTE: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
-            not focused, this method has to return IeStatus.IGNORED for most windows other than the currently focused one.
+            not focused, this method has to return WindowStatus.IGNORED for most windows other than the currently focused one.
 
             I don't think I can do anything about that. Sorry!
              */
-            return IeStatus.IGNORED;
+            return WindowStatus.IGNORED;
         }
         boolean badDesktop = desktop != curDesktop && desktop != -1;
         // System.out.println("ID: " + window.getID() + "; Title: " + getWindowTitle(window) + "; State: " + state + "; Type: " + type);
         if (!badDesktop && !checkState(state) && !checkType(type)) {
             if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
-                // Aborted because a maximized window was found
-                return IeStatus.INVALID;
+                // Window is maximized and is therefore invalid
+                return WindowStatus.INVALID;
             }
 
             /*
              * TODO: Find some X11 atom that is dedicated to a window being minimized,
              *  because _NET_WM_STATE_HIDDEN is used for both invisible windows and minimized windows
              */
-            if (isIE(window) && !state.contains(minimizedValue)) {
-                // IE found
-                Rectangle ieRect = getWindowBounds(window);
+            if (isInteractive(window) && !state.contains(minimizedValue)) {
+                // Window is valid
+                Rectangle windowRect = getWindowBounds(window);
                 /*
                  * TODO: Some Linux window managers don't seem to allow windows to be moved off screen, so this check
                  *  always passes on those systems, making it impossible for a window to have the OUT_OF_BOUNDS status.
                  *  We should instead figure out how close to the edge of the screen the windows are allowed to be,
                  *  and then check for windows that are that close to the edge.
                  */
-                if (getScreen().intersects(ieRect)) {
-                    return IeStatus.VALID;
+                if (getScreen().intersects(windowRect)) {
+                    return WindowStatus.VALID;
                 } else {
-                    return IeStatus.OUT_OF_BOUNDS;
+                    // Window is out of bounds and will be ignored
+                    return WindowStatus.OUT_OF_BOUNDS;
                 }
             }
         }
 
-        // Not found
-        return IeStatus.IGNORED;
+        // Window is valid but not interactive according to user settings
+        return WindowStatus.IGNORED;
     }
 
-    private Window findActiveIE() {
-        activeIeObject = null;
+    private Window findActiveWindow() {
+        activeWindowObject = null;
 
         // Retrieve all windows from the X Display
         Window[] allWindows;
@@ -229,23 +239,22 @@ class X11Environment extends AbstractEnvironment {
 
         loop:
         for (Window window : allWindows) {
-            switch (getIeStatus(window)) {
+            switch (getWindowStatus(window)) {
                 case VALID:
-                    activeIeObject = window;
+                    activeWindowObject = window;
                     break loop;
 
-                case OUT_OF_BOUNDS:
-                case IGNORED: // Valid window but not interactive according to user settings
+                case IGNORED, OUT_OF_BOUNDS:
                     continue;
 
-                case INVALID: // Something invalid is the foreground object
+                case INVALID: // The window is invalid, so abort the search here
                 default:
-                    activeIeObject = null;
+                    activeWindowObject = null;
                     break loop;
             }
         }
 
-        return activeIeObject;
+        return activeWindowObject;
     }
 
     /**
@@ -310,30 +319,30 @@ class X11Environment extends AbstractEnvironment {
     }
 
     @Override
-    public Area getActiveIE() {
-        return activeIe;
+    public Area getActiveWindow() {
+        return activeWindow;
     }
 
     @Override
-    public String getActiveIETitle() {
-        return getWindowTitle(activeIeObject);
+    public String getActiveWindowTitle() {
+        return getWindowTitle(activeWindowObject);
     }
 
     @Override
     public long getActiveWindowId() {
-        return activeIeObject == null ? 0 : activeIeObject.getID();
+        return activeWindowObject == null ? 0 : activeWindowObject.getID();
     }
 
     @Override
-    public void moveActiveIE(Point point) {
-        if (activeIeObject != null) {
+    public void moveActiveWindow(Point point) {
+        if (activeWindowObject != null) {
             // FIXME: Mascots will often let go of a window very shortly after they pick it up, without throwing it
-            X11.INSTANCE.XMoveWindow(display.getX11Display(), activeIeObject.getX11Window(), point.x, point.y);
+            X11.INSTANCE.XMoveWindow(display.getX11Display(), activeWindowObject.getX11Window(), point.x, point.y);
         }
     }
 
     @Override
-    public void restoreIE() {
+    public void restoreWindows() {
         // Retrieve all windows from the X Display
         Window[] allWindows;
         try {
@@ -348,13 +357,13 @@ class X11Environment extends AbstractEnvironment {
         int offset = 25;
 
         for (Window window : allWindows) {
-            IeStatus result = getIeStatus(window);
-            if (result == IeStatus.OUT_OF_BOUNDS) {
-                // IE found
+            WindowStatus result = getWindowStatus(window);
+            if (result == WindowStatus.OUT_OF_BOUNDS) {
+                // Valid interactive window found
 
                 // Get the work area rectangle
                 final Rectangle workArea = getWorkAreaRect();
-                // Get IE rectangle
+                // Get window rectangle
                 final Rectangle rect = getWindowBounds(window);
 
                 // Move the window to be on-screen
@@ -369,7 +378,7 @@ class X11Environment extends AbstractEnvironment {
 
     @Override
     public void refreshCache() {
-        ieCache.clear(); // will be repopulated next isIE call
+        interactiveCache.clear(); // Will be repopulated in the next isInteractive() call
         windowTitles = null;
         windowTitlesBlacklist = null;
     }

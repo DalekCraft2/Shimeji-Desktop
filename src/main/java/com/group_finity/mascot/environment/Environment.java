@@ -58,7 +58,7 @@ public interface Environment {
      *
      * @return the area of the active window
      */
-    Area getActiveIE();
+    Area getActiveWindow();
 
     /**
      * Gets the title of the active window.
@@ -66,7 +66,7 @@ public interface Environment {
      *
      * @return the title of the active window
      */
-    String getActiveIETitle();
+    String getActiveWindowTitle();
 
     /**
      * Gets the ID of the active window. If there is currently no active window, returns 0.
@@ -80,12 +80,12 @@ public interface Environment {
      *
      * @param point the point at which the active window's top-left corner should be after it is moved
      */
-    void moveActiveIE(final Point point);
+    void moveActiveWindow(final Point point);
 
     /**
      * Searches for windows that have been thrown off-screen and repositions them to be on-screen.
      */
-    void restoreIE();
+    void restoreWindows();
 
     /**
      * Gets the cursor position.

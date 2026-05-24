@@ -13,12 +13,12 @@ import java.awt.*;
  */
 class GenericEnvironment extends AbstractEnvironment {
 
-    private final Area activeIE = new Area();
+    private final Area activeWindow = new Area();
 
     @Override
     public void tick() {
         super.tick();
-        activeIE.setVisible(false);
+        activeWindow.setVisible(false);
     }
 
     @Override
@@ -27,12 +27,12 @@ class GenericEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public Area getActiveIE() {
-        return activeIE;
+    public Area getActiveWindow() {
+        return activeWindow;
     }
 
     @Override
-    public String getActiveIETitle() {
+    public String getActiveWindowTitle() {
         return null;
     }
 
@@ -42,11 +42,11 @@ class GenericEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveIE(final Point point) {
+    public void moveActiveWindow(final Point point) {
     }
 
     @Override
-    public void restoreIE() {
+    public void restoreWindows() {
     }
 
     @Override

@@ -45,7 +45,7 @@ public class FallWithIE extends Fall {
     protected void tick() throws LostGroundException, VariableException {
         final Area activeIE = getEnvironment().getActiveIE();
         if (!activeIE.isVisible()) {
-            throw new LostGroundException("IE is not visible");
+            throw new LostGroundException("Window is not visible");
         }
 
         // Can't use scaling here yet because it doesn't work for scales other than 1; the Shimejis will just fall off the window immediately.
@@ -58,12 +58,12 @@ public class FallWithIE extends Fall {
         if (getMascot().isLookRight()) {
             if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                throw new LostGroundException("Mascot is not holding IE");
+                throw new LostGroundException("Mascot is not holding window");
             }
         } else {
             if (getMascot().getAnchor().x + offsetX != activeIE.getRight()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
-                throw new LostGroundException("Mascot is not holding IE");
+                throw new LostGroundException("Mascot is not holding window");
             }
         }
 

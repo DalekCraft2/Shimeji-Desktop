@@ -25,7 +25,7 @@ import java.nio.file.Path;
 class VirtualEnvironment extends AbstractEnvironment {
     private JFrame display;
 
-    private final Area activeIE = new Area();
+    private final Area activeWindow = new Area();
 
     private boolean isInitializing = false;
 
@@ -111,8 +111,8 @@ class VirtualEnvironment extends AbstractEnvironment {
             SwingUtilities.invokeLater(runnable);
         }
 
-        activeIE.setVisible(false);
-        activeIE.setRect(-500, -500, 0, 0);
+        activeWindow.setVisible(false);
+        activeWindow.setRect(-500, -500, 0, 0);
     }
 
     @Override
@@ -147,12 +147,12 @@ class VirtualEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public Area getActiveIE() {
-        return activeIE;
+    public Area getActiveWindow() {
+        return activeWindow;
     }
 
     @Override
-    public String getActiveIETitle() {
+    public String getActiveWindowTitle() {
         return null;
     }
 
@@ -162,11 +162,11 @@ class VirtualEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveIE(final Point point) {
+    public void moveActiveWindow(final Point point) {
     }
 
     @Override
-    public void restoreIE() {
+    public void restoreWindows() {
     }
 
     @Override

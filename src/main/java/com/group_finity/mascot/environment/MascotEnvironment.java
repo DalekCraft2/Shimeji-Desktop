@@ -249,7 +249,7 @@ public class MascotEnvironment {
      * @return the area of the active window
      */
     public Area getActiveIE() {
-        Area activeIE = impl.getActiveIE();
+        Area activeIE = impl.getActiveWindow();
 
         if (currentWorkArea != null && !Main.getInstance().getSettings().multiscreen && !currentWorkArea.intersects(activeIE)) {
             return new Area();
@@ -265,7 +265,7 @@ public class MascotEnvironment {
      * @return the title of the active window
      */
     public String getActiveIETitle() {
-        return impl.getActiveIETitle();
+        return impl.getActiveWindowTitle();
     }
 
     /**
@@ -285,7 +285,7 @@ public class MascotEnvironment {
      * @param point the point at which the active window's top-left corner should be after it is moved
      */
     public void moveActiveIE(Point point) {
-        impl.moveActiveIE(point);
+        impl.moveActiveWindow(point);
     }
 
     /**
@@ -294,7 +294,7 @@ public class MascotEnvironment {
      * <b>This method is for internal use only. It should not be used in scripts.</b>
      */
     public void restoreIE() {
-        impl.restoreIE();
+        impl.restoreWindows();
     }
 
     /**

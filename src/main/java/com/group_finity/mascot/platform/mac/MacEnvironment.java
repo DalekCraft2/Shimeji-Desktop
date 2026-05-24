@@ -36,10 +36,10 @@ class MacEnvironment extends AbstractEnvironment {
     /**
      * On Mac, you can take the active window, so Shimeji will react to it.
      * <p>
-     * Therefore, in this class, give {@code activeIE} an alias called {@link #frontmostWindow}.
+     * Therefore, in this class, give {@code activeWindow} an alias called {@link #frontmostWindow}.
      */
-    private final Area activeIE = new Area();
-    private final Area frontmostWindow = activeIE;
+    private final Area activeWindow = new Area();
+    private final Area frontmostWindow = activeWindow;
 
     private final int myPID = (int) ProcessHandle.current().pid();
 
@@ -295,12 +295,12 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public Area getActiveIE() {
-        return activeIE;
+    public Area getActiveWindow() {
+        return activeWindow;
     }
 
     @Override
-    public String getActiveIETitle() {
+    public String getActiveWindowTitle() {
         return null;
     }
 
@@ -310,7 +310,7 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveIE(final Point point) {
+    public void moveActiveWindow(final Point point) {
         /*
          * As mentioned above, if you try to move completely off-screen, you will be pushed back,
          * so if you specify such a position, switch to moving as far as possible.
@@ -344,7 +344,7 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void restoreIE() {
+    public void restoreWindows() {
         final Rectangle visibleRect = getWindowVisibleArea();
         restoreWindowsNotIn(visibleRect);
         touchedProcesses.clear();
