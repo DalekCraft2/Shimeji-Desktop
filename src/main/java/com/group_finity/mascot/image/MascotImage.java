@@ -4,35 +4,74 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
+ * An object that contains image data as well as information for how to position the image relative to a mascot.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class MascotImage {
 
+    /**
+     * This image's raw image data.
+     */
     private final BufferedImage image;
 
+    /**
+     * The point of this image that aligns with the mascot's anchor.
+     */
     private final Point center;
 
+    /**
+     * The size of this image.
+     */
     private final Dimension size;
 
+    /**
+     * Creates a new MascotImage.
+     *
+     * @param image this image's raw image data
+     * @param center the point of this image that aligns with the mascot's anchor
+     * @param size the size of this image
+     */
     public MascotImage(final BufferedImage image, final Point center, final Dimension size) {
         this.image = image;
         this.center = center;
         this.size = size;
     }
 
+    /**
+     * Creates a new MascotImage. The size is defaulted to the dimensions of the raw image data.
+     *
+     * @param image this image's raw image data
+     * @param center the point of this image that aligns with the mascot's anchor
+     */
     public MascotImage(final BufferedImage image, final Point center) {
         this(image, center, new Dimension(image.getWidth(), image.getHeight()));
     }
 
+    /**
+     * Gets this image's raw image data.
+     *
+     * @return this image's raw image data
+     */
     public BufferedImage getImage() {
         return image;
     }
 
+    /**
+     * Gets the point of this image that aligns with the mascot's anchor.
+     *
+     * @return the point of this image that aligns with the mascot's anchor
+     */
     public Point getCenter() {
         return center;
     }
 
+    /**
+     * Gets the size of this image.
+     *
+     * @return the size of this image
+     */
     public Dimension getSize() {
         return size;
     }
