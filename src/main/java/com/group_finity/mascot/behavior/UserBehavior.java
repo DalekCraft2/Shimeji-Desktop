@@ -33,9 +33,22 @@ public class UserBehavior implements Behavior {
 
     public static final String BEHAVIORNAME_THROWN = "Thrown";
 
+    /**
+     * Enumeration of the state a hotspot is in, in terms of whether it is being clicked
+     * and whether it has a behavior set.
+     */
     private enum HotspotState {
+        /**
+         * No hotspot is being clicked.
+         */
         INACTIVE,
+        /**
+         * A hotspot is being clicked, but it has no behavior set.
+         */
         ACTIVE_NULL,
+        /**
+         * A hotspot is being clicked, and it has a behavior set.
+         */
         ACTIVE
     }
 
