@@ -1,7 +1,6 @@
 package com.group_finity.mascot.platform.generic;
 
 import com.group_finity.mascot.platform.TranslucentWindow;
-import com.sun.jna.platform.WindowUtils;
 
 import javax.swing.*;
 import java.awt.*;
