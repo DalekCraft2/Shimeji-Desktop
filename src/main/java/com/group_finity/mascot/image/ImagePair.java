@@ -7,35 +7,14 @@ package com.group_finity.mascot.image;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @param leftImage left-facing image
+ * @param rightImage right-facing image
  */
-public class ImagePair {
-
-    /**
-     * Image facing left.
-     */
-    private final MascotImage leftImage;
-
-    /**
-     * Image facing right.
-     */
-    private final MascotImage rightImage;
-
-    /**
-     * Creates an image pair from two existing images.
-     *
-     * @param leftImage image facing left
-     * @param rightImage image facing right
-     */
-    public ImagePair(
-            final MascotImage leftImage, final MascotImage rightImage) {
-        this.leftImage = leftImage;
-        this.rightImage = rightImage;
-    }
-
+public record ImagePair(MascotImage leftImage, MascotImage rightImage) {
     /**
      * Obtains an image facing the specified direction.
      *
-     * @param lookRight whether to get images facing right
+     * @param lookRight whether to get the right-facing image
      * @return image facing the specified direction
      */
     public MascotImage getImage(final boolean lookRight) {
