@@ -285,8 +285,14 @@ class MacEnvironment extends AbstractEnvironment {
     @Override
     public void tick() {
         super.tick();
+        long prevWindowId = getActiveWindowId();
         updateFrontmostApp();
         updateFrontmostWindow();
+
+        if (prevWindowId != getActiveWindowId()) {
+            // If the active window has changed, reset the active window's deltas to 0
+            frontmostWindow.resetDeltas();
+        }
     }
 
     @Override

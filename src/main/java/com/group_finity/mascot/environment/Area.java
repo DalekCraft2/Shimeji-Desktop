@@ -175,6 +175,18 @@ public class Area {
         this.bottom = bottom;
     }
 
+    /**
+     * Resets all delta values in this area to 0.
+     */
+    public void resetDeltas() {
+        if (calcDeltas) {
+            dleft = 0;
+            dtop = 0;
+            dright = 0;
+            dbottom = 0;
+        }
+    }
+
     public boolean contains(final Point point) {
         return contains(point.x, point.y);
     }

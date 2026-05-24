@@ -66,7 +66,9 @@ class WindowsEnvironment extends AbstractEnvironment {
     @Override
     public void tick() {
         super.tick();
+
         workArea.set(getWorkAreaRect(true));
+        long prevWindowId = getActiveWindowId();
         // Get DPI-unaware window rectangle
         final Rectangle windowRect = getWindowRect(findActiveWindow(), false);
         activeWindowDpiUnaware.set(windowRect);
@@ -81,6 +83,12 @@ class WindowsEnvironment extends AbstractEnvironment {
         }
         activeWindow.setVisible(getScreen().intersects(windowRect));
         activeWindow.set(windowRect);
+
+        if (prevWindowId != getActiveWindowId()) {
+            // If the active window has changed, reset the active window's deltas to 0
+            activeWindow.resetDeltas();
+            activeWindowDpiUnaware.resetDeltas();
+        }
     }
 
     private boolean isInteractive(final HWND hWnd) {

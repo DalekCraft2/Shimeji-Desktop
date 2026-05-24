@@ -106,9 +106,15 @@ class X11Environment extends AbstractEnvironment {
         super.tick();
 
         workArea.set(getWorkAreaRect());
+        long prevWindowId = getActiveWindowId();
         final Rectangle windowRect = getWindowBounds(findActiveWindow());
         activeWindow.setVisible(getScreen().intersects(windowRect));
         activeWindow.set(windowRect);
+
+        if (prevWindowId != getActiveWindowId()) {
+            // If the active window has changed, reset the active window's deltas to 0
+            activeWindow.resetDeltas();
+        }
     }
 
     private boolean isInteractive(final Window window) {
