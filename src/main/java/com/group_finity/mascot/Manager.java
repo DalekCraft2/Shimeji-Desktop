@@ -65,9 +65,12 @@ public class Manager {
     private Thread thread;
 
     public Manager() {
-        // This is to fix a bug in Java running on Windows
-        // Frequent calls to Thread.sleep with short lengths will mess up the Windows clock
-        // You can avoid this problem by calling long Thread.sleep.
+        /*
+        JDK bug: https://bugs.openjdk.org/browse/JDK-6435126
+        This is a workaround designed to fix a Java bug on Windows.
+        Frequently calling `Thread.sleep` with short durations causes the Windows system clock to drift.
+        Calling `Thread.sleep` with longer durations allows you to avoid this issue.
+         */
         new Thread() {
             {
                 setDaemon(true);
