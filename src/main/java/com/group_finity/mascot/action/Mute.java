@@ -29,9 +29,10 @@ public class Mute extends InstantAction {
     protected void apply() throws VariableException {
         String soundName = getSound();
         if (soundName != null) {
-            List<Clip> clips = Sounds.getAllByFile(Main.IMAGE_DIRECTORY.resolve(getMascot().getImageSet()).resolve(Main.SOUND_DIRECTORY).resolve(soundName).toString());
+            String imageSet = getMascot().getImageSet();
+            List<Clip> clips = Sounds.getAllByFile(Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundName).toString());
             if (clips.isEmpty()) {
-                clips = Sounds.getAllByFile(Main.SOUND_DIRECTORY.resolve(getMascot().getImageSet()).resolve(soundName).toString());
+                clips = Sounds.getAllByFile(Main.SOUND_DIRECTORY.resolve(imageSet).resolve(soundName).toString());
                 if (clips.isEmpty()) {
                     clips = Sounds.getAllByFile(Main.SOUND_DIRECTORY.resolve(soundName).toString());
                 }

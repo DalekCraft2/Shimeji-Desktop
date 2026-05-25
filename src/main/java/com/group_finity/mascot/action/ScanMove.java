@@ -57,12 +57,16 @@ public class ScanMove extends BorderedAction {
 
     @Override
     public boolean hasNext() throws VariableException {
-        if (getMascot().getManager() == null) {
-            return super.hasNext();
+        if (!super.hasNext()) {
+            return false;
+        }
+
+        if (getMascot().getManager() == null || turning) {
+            return true;
         }
 
         Mascot targetMascot = target == null ? null : target.get();
-        return super.hasNext() && (turning || targetMascot != null && targetMascot.getAffordances().contains(getAffordance()));
+        return targetMascot != null && targetMascot.getAffordances().contains(getAffordance());
     }
 
     @Override

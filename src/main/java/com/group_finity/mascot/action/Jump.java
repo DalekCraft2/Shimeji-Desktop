@@ -49,6 +49,10 @@ public class Jump extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
+        if (!super.hasNext()) {
+            return false;
+        }
+
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
@@ -57,7 +61,7 @@ public class Jump extends ActionBase {
 
         final double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-        return super.hasNext() && distance != 0;
+        return distance != 0;
     }
 
     @Override

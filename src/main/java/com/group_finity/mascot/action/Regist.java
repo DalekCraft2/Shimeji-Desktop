@@ -42,14 +42,17 @@ public class Regist extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
+        if (!super.hasNext()) {
+            return false;
+        }
+
         int offsetX = (int) Math.round(getOffsetX() * scaling);
         if (getOffsetType().equals(getSchema().getString("Origin"))) {
             offsetX = getMascot().getImage().getCenter().x - offsetX;
         }
 
         final boolean moved = Math.abs(getEnvironment().getCursor().getX() - getMascot().getAnchor().x + offsetX) >= 5;
-
-        return super.hasNext() && !moved;
+        return !moved;
     }
 
     @Override

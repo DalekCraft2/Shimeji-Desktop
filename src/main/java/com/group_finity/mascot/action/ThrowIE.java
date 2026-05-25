@@ -53,12 +53,16 @@ public class ThrowIE extends Animate {
             return false;
         }
 
+        if (!super.hasNext()) {
+            return false;
+        }
+
         // Check whether the window being thrown has not changed;
         // this ensures that only one window gets moved off-screen instead of all of the on-screen windows.
         final boolean isSameWindow = activeWindowId == getEnvironment().getActiveWindowId();
         final boolean ieVisible = getEnvironment().getActiveIE().isVisible();
 
-        return super.hasNext() && isSameWindow && ieVisible;
+        return isSameWindow && ieVisible;
     }
 
     @Override

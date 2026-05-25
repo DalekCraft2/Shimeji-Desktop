@@ -86,10 +86,7 @@ public abstract class ActionBase implements Action {
             return false;
         }
 
-        final boolean effective = isEffective();
-        final boolean inTime = getTime() < getDuration();
-
-        return effective && inTime;
+        return isEffective() && getTime() < getDuration();
     }
 
     @Override

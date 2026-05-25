@@ -96,12 +96,17 @@ public class ComplexJump extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
+        if (!super.hasNext()) {
+            return false;
+        }
+
         if (scanEnabled) {
             if (getMascot().getManager() == null) {
-                return super.hasNext();
+                return true;
             }
+
             Mascot targetMascot = target == null ? null : target.get();
-            return super.hasNext() && targetMascot != null && targetMascot.getAffordances().contains(getAffordance());
+            return targetMascot != null && targetMascot.getAffordances().contains(getAffordance());
         } else {
             final int targetX = getTargetX();
             final int targetY = getTargetY();
@@ -111,7 +116,7 @@ public class ComplexJump extends ActionBase {
 
             final double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-            return super.hasNext() && distance != 0;
+            return distance != 0;
         }
     }
 

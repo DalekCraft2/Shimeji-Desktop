@@ -34,6 +34,14 @@ public class Move extends BorderedAction {
 
     @Override
     public boolean hasNext() throws VariableException {
+        if (!super.hasNext()) {
+            return false;
+        }
+
+        if (turning) {
+            return true;
+        }
+
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
@@ -41,7 +49,7 @@ public class Move extends BorderedAction {
         boolean hasReachedTarget = targetX != Integer.MIN_VALUE && getMascot().getAnchor().x == targetX ||
                 targetY != Integer.MIN_VALUE && getMascot().getAnchor().y == targetY;
 
-        return super.hasNext() && (!hasReachedTarget || turning);
+        return !hasReachedTarget;
     }
 
     @Override

@@ -65,12 +65,16 @@ public class ScanJump extends ActionBase {
 
     @Override
     public boolean hasNext() throws VariableException {
+        if (!super.hasNext()) {
+            return false;
+        }
+
         if (getMascot().getManager() == null) {
-            return super.hasNext();
+            return true;
         }
 
         Mascot targetMascot = target == null ? null : target.get();
-        return super.hasNext() && targetMascot != null && targetMascot.getAffordances().contains(getAffordance());
+        return targetMascot != null && targetMascot.getAffordances().contains(getAffordance());
     }
 
     @Override

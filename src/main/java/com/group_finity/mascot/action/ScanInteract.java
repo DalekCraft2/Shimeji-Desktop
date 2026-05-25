@@ -53,9 +53,7 @@ public class ScanInteract extends BorderedAction {
 
     @Override
     public boolean hasNext() throws VariableException {
-        final boolean inTime = getTime() < getAnimation().getDuration();
-
-        return super.hasNext() && (turning || inTime);
+        return super.hasNext() && (turning || getTime() < getAnimation().getDuration());
     }
 
     @Override
