@@ -2,6 +2,7 @@ package com.group_finity.mascot.image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 /**
  * An object that contains image data as well as information for how to position the image relative to a mascot.
@@ -77,15 +78,26 @@ public class MascotImage {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
+    public int hashCode() {
+        int result = Objects.hashCode(image);
+        result = 31 * result + Objects.hashCode(center);
+        result = 31 * result + Objects.hashCode(size);
+        return result;
+    }
 
-        if (!(obj instanceof MascotImage mi)) {
-            return false;
-        }
+    @Override
+    public final boolean equals(Object obj) {
+        if (!(obj instanceof MascotImage mi)) return false;
 
         return image.equals(mi.image) && center.equals(mi.center) && size.equals(mi.size);
+    }
+
+    @Override
+    public String toString() {
+        return "MascotImage[" +
+                "image=" + image +
+                ", center=" + center +
+                ", size=" + size +
+                ']';
     }
 }
