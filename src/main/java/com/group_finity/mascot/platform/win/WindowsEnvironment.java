@@ -218,7 +218,7 @@ class WindowsEnvironment extends AbstractEnvironment {
                 // The exception was not due to the window handle being invalid, so rethrow the exception
                 throw e;
             }
-            return new Rectangle();
+            return new Rectangle(-1, -1, 0, 0);
         }
         if (dpiAware) {
             double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();

@@ -270,7 +270,7 @@ class X11Environment extends AbstractEnvironment {
      */
     private static Rectangle getWindowBounds(Window window) {
         if (window == null) {
-            return new Rectangle();
+            return new Rectangle(-1, -1, 0, 0);
         }
         return window.getBounds();
     }
