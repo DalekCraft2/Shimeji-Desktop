@@ -129,6 +129,10 @@ public class ComplexMove extends BorderedAction {
 
         Mascot targetMascot = target == null ? null : target.get();
         if (scanEnabled) {
+            if (targetMascot == null) {
+                return;
+            }
+
             targetX = targetMascot.getAnchor().x;
             targetY = targetMascot.getAnchor().y;
 

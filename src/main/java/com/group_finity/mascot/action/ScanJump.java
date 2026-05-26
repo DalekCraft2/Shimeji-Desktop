@@ -83,7 +83,10 @@ public class ScanJump extends ActionBase {
         getMascot().getAffordances().clear();
 
         Mascot targetMascot = target == null ? null : target.get();
-        // TODO: Figure out how to handle targetMascot possibly being null here and in other "Scan"/"Complex" action classes
+        if (targetMascot == null) {
+            return;
+        }
+
         int targetX = targetMascot.getAnchor().x;
         int targetY = targetMascot.getAnchor().y;
 

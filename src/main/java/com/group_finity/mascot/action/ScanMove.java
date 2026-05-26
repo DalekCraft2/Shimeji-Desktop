@@ -81,6 +81,10 @@ public class ScanMove extends BorderedAction {
         }
 
         Mascot targetMascot = target == null ? null : target.get();
+        if (targetMascot == null) {
+            return;
+        }
+
         int targetX = targetMascot.getAnchor().x;
         int targetY = targetMascot.getAnchor().y;
 

@@ -130,6 +130,10 @@ public class ComplexJump extends ActionBase {
             // cannot broadcast while scanning for an affordance
             getMascot().getAffordances().clear();
 
+            if (targetMascot == null) {
+                return;
+            }
+
             targetX = targetMascot.getAnchor().x;
             targetY = targetMascot.getAnchor().y;
 
