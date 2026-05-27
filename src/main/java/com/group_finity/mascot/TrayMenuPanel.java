@@ -521,26 +521,22 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAllowedBehaviorsMouseReleased
 
     private void chkBreedingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkBreedingItemStateChanged
-        boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getSettings().breeding = selected;
+        Main.getInstance().getSettings().breeding = evt.getStateChange() == ItemEvent.SELECTED;
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkBreedingItemStateChanged
 
     private void chkTransientItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransientItemStateChanged
-        boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getSettings().transients = selected;
+        Main.getInstance().getSettings().transients = evt.getStateChange() == ItemEvent.SELECTED;
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransientItemStateChanged
 
     private void chkTransformationItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransformationItemStateChanged
-        boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getSettings().transformation = selected;
+        Main.getInstance().getSettings().transformation = evt.getStateChange() == ItemEvent.SELECTED;
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransformationItemStateChanged
 
     private void chkThrowingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkThrowingItemStateChanged
-        boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getSettings().throwing = selected;
+        Main.getInstance().getSettings().throwing = evt.getStateChange() == ItemEvent.SELECTED;
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkThrowingItemStateChanged
 
@@ -553,8 +549,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_chkSoundsItemStateChanged
 
     private void chkMultiscreenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkMultiscreenItemStateChanged
-        boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getSettings().multiscreen = selected;
+        Main.getInstance().getSettings().multiscreen = evt.getStateChange() == ItemEvent.SELECTED;
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkMultiscreenItemStateChanged
 
