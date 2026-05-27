@@ -149,45 +149,19 @@ public final class Hq4x {
                 }
 
                 switch (pattern) {
-                    case 0, 1, 4, 5, 32, 33, 36, 37, 128, 129, 132, 133, 160, 161, 164, 165 -> {
-                        case0(dp, dpIdx, dpL, w);
-                    }
-                    case 2, 34, 130, 162 -> {
-                        case2(dp, dpIdx, dpL, w);
-                    }
-                    case 16, 17, 48, 49 -> {
-                        case16(dp, dpIdx, dpL, w);
-                    }
-                    case 64, 65, 68, 69 -> {
-                        case64(dp, dpIdx, dpL, w);
-                    }
-                    case 8, 12, 136, 140 -> {
-                        case8(dp, dpIdx, dpL, w);
-                    }
-                    case 3, 35, 131, 163 -> {
-                        case3(dp, dpIdx, dpL, w);
-                    }
-                    case 6, 38, 134, 166 -> {
-                        case6(dp, dpIdx, dpL, w);
-                    }
-                    case 20, 21, 52, 53 -> {
-                        case20(dp, dpIdx, dpL, w);
-                    }
-                    case 144, 145, 176, 177 -> {
-                        case144(dp, dpIdx, dpL, w);
-                    }
-                    case 192, 193, 196, 197 -> {
-                        case192(dp, dpIdx, dpL, w);
-                    }
-                    case 96, 97, 100, 101 -> {
-                        case96(dp, dpIdx, dpL, w);
-                    }
-                    case 40, 44, 168, 172 -> {
-                        case40(dp, dpIdx, dpL, w);
-                    }
-                    case 9, 13, 137, 141 -> {
-                        case9(dp, dpIdx, dpL, w);
-                    }
+                    case 0, 1, 4, 5, 32, 33, 36, 37, 128, 129, 132, 133, 160, 161, 164, 165 -> case0(dp, dpIdx, dpL, w);
+                    case 2, 34, 130, 162 -> case2(dp, dpIdx, dpL, w);
+                    case 16, 17, 48, 49 -> case16(dp, dpIdx, dpL, w);
+                    case 64, 65, 68, 69 -> case64(dp, dpIdx, dpL, w);
+                    case 8, 12, 136, 140 -> case8(dp, dpIdx, dpL, w);
+                    case 3, 35, 131, 163 -> case3(dp, dpIdx, dpL, w);
+                    case 6, 38, 134, 166 -> case6(dp, dpIdx, dpL, w);
+                    case 20, 21, 52, 53 -> case20(dp, dpIdx, dpL, w);
+                    case 144, 145, 176, 177 -> case144(dp, dpIdx, dpL, w);
+                    case 192, 193, 196, 197 -> case192(dp, dpIdx, dpL, w);
+                    case 96, 97, 100, 101 -> case96(dp, dpIdx, dpL, w);
+                    case 40, 44, 168, 172 -> case40(dp, dpIdx, dpL, w);
+                    case 9, 13, 137, 141 -> case9(dp, dpIdx, dpL, w);
                     case 18, 50 -> {
                         dp[dpIdx] = Util.mix5To3(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[0]);
@@ -288,24 +262,12 @@ public final class Hq4x {
                         dp[dpIdx + dpL + dpL + dpL + 2] = Util.mix4To2To1(w[4], w[7], w[5]);
                         dp[dpIdx + dpL + dpL + dpL + 3] = Util.mix2To1To1(w[4], w[7], w[5]);
                     }
-                    case 66 -> {
-                        case66(dp, dpIdx, dpL, w);
-                    }
-                    case 24 -> {
-                        case24(dp, dpIdx, dpL, w);
-                    }
-                    case 7, 39, 135, 167 -> {
-                        case7(dp, dpIdx, dpL, w);
-                    }
-                    case 148, 149, 180, 181 -> {
-                        case148(dp, dpIdx, dpL, w);
-                    }
-                    case 224, 225, 228, 229 -> {
-                        case224(dp, dpIdx, dpL, w);
-                    }
-                    case 41, 45, 169, 173 -> {
-                        case41(dp, dpIdx, dpL, w);
-                    }
+                    case 66 -> case66(dp, dpIdx, dpL, w);
+                    case 24 -> case24(dp, dpIdx, dpL, w);
+                    case 7, 39, 135, 167 -> case7(dp, dpIdx, dpL, w);
+                    case 148, 149, 180, 181 -> case148(dp, dpIdx, dpL, w);
+                    case 224, 225, 228, 229 -> case224(dp, dpIdx, dpL, w);
+                    case 41, 45, 169, 173 -> case41(dp, dpIdx, dpL, w);
                     case 22, 54 -> {
                         dp[dpIdx] = Util.mix5To3(w[4], w[0]);
                         dp[dpIdx + 1] = Util.mix3To1(w[4], w[0]);
@@ -618,30 +580,14 @@ public final class Hq4x {
                         dp[dpIdx + dpL + dpL + dpL + 2] = Util.mix4To2To1(w[4], w[7], w[5]);
                         dp[dpIdx + dpL + dpL + dpL + 3] = Util.mix2To1To1(w[4], w[7], w[5]);
                     }
-                    case 67 -> {
-                        case67(dp, dpIdx, dpL, w);
-                    }
-                    case 70 -> {
-                        case70(dp, dpIdx, dpL, w);
-                    }
-                    case 28 -> {
-                        case28(dp, dpIdx, dpL, w);
-                    }
-                    case 152 -> {
-                        case152(dp, dpIdx, dpL, w);
-                    }
-                    case 194 -> {
-                        case194(dp, dpIdx, dpL, w);
-                    }
-                    case 98 -> {
-                        case98(dp, dpIdx, dpL, w);
-                    }
-                    case 56 -> {
-                        case56(dp, dpIdx, dpL, w);
-                    }
-                    case 25 -> {
-                        case25(dp, dpIdx, dpL, w);
-                    }
+                    case 67 -> case67(dp, dpIdx, dpL, w);
+                    case 70 -> case70(dp, dpIdx, dpL, w);
+                    case 28 -> case28(dp, dpIdx, dpL, w);
+                    case 152 -> case152(dp, dpIdx, dpL, w);
+                    case 194 -> case194(dp, dpIdx, dpL, w);
+                    case 98 -> case98(dp, dpIdx, dpL, w);
+                    case 56 -> case56(dp, dpIdx, dpL, w);
+                    case 25 -> case25(dp, dpIdx, dpL, w);
                     case 26, 31 -> {
                         if (Util.diff(w[3], w[1], trY, trU, trV, trA)) {
                             dp[dpIdx] = w[4];
