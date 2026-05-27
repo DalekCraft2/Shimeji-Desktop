@@ -97,7 +97,7 @@ public class MascotEnvironment {
 
     /**
      * Gets the area of the screen.
-     * This area is the combined areas of all active displays.
+     * This area is the union of the areas of all active displays.
      *
      * @return the screen area
      */
@@ -280,7 +280,7 @@ public class MascotEnvironment {
     }
 
     /**
-     * Repositions the active window so its top-left corner is at the given point.
+     * Repositions the active window so its top-left corner is at the specified point.
      *
      * @param point the point at which the active window's top-left corner should be after it is moved
      */
@@ -307,23 +307,23 @@ public class MascotEnvironment {
     }
 
     /**
-     * Gets whether the mascot is on the floor or ceiling of exactly one screen.
-     * Returns {@code false} if the mascot is on multiple floors/ceilings (i.e., the mascot is on the border between
+     * Checks whether the mascot is on the top or bottom border of exactly one screen.
+     * Returns {@code false} if the mascot is on multiple top/bottom borders (i.e., the mascot is on the border between
      * two screens).
      *
-     * @return whether the mascot is on the floor or ceiling of exactly one screen
+     * @return whether the mascot is on the top or bottom border of exactly one screen
      */
     private boolean isScreenTopBottom() {
         return isScreenTopBottom(mascot.getAnchor());
     }
 
     /**
-     * Gets whether the given point lies on the floor or ceiling of exactly one screen.
-     * Returns {@code false} if the point is on multiple floors/ceilings (i.e., the point is on the border between
+     * Checks whether the specified point lies on the top or bottom border of exactly one screen.
+     * Returns {@code false} if the point is on multiple top/bottom borders (i.e., the point is on the border between
      * two screens).
      *
      * @param location the point to check
-     * @return whether the point lies on the floor or ceiling of exactly one screen
+     * @return whether the point lies on the top or bottom border of exactly one screen
      */
     private boolean isScreenTopBottom(final Point location) {
         int count = 0;
@@ -351,7 +351,7 @@ public class MascotEnvironment {
     }
 
     /**
-     * Gets whether the mascot is on the wall of exactly one screen.
+     * Checks whether the mascot is on the wall of exactly one screen.
      * Returns {@code false} if the mascot is on multiple walls (i.e., the mascot is on the border between two screens).
      *
      * @return whether the mascot is on the wall of exactly one screen
@@ -361,7 +361,7 @@ public class MascotEnvironment {
     }
 
     /**
-     * Gets whether the given point lies on the wall of exactly one screen.
+     * Checks whether the specified point lies on the wall of exactly one screen.
      * Returns {@code false} if the point is on multiple walls (i.e., the point is on the border between two screens).
      *
      * @param location the point to check

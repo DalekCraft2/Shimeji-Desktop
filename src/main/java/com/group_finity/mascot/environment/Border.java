@@ -13,23 +13,26 @@ import java.awt.*;
 public interface Border {
 
     /**
-     * Returns whether the given {@link Point} is on this border.
+     * Checks whether the specified {@link Point} is on this {@code Border}.
      *
-     * @param location the {@link Point} to check
-     * @return whether the given {@link Point} is on this border
+     * @param location the {@code Point} to check
+     * @return whether the specified {@code Point} is on this {@code Border}
      */
     boolean isOn(Point location);
 
     /**
-     * Moves the given {@link Point} to match any changes to the position and size of this border since the last frame.
+     * Moves the specified {@link Point} to match any changes to the
+     * position and size of this {@code Border} since the last frame.
      * <p>
-     * For example, if this border has moved to the right by X units, then {@code location} will be moved to the right
-     * by X units as well. If this border is a {@linkplain FloorCeiling floor or ceiling} and has been scaled to be half
-     * as wide compared to the last frame, then {@code location} will be updated to be half as far from the border's
-     * left edge than it previously was.
+     * For example, if this {@code Border} has moved to the right by X units,
+     * then {@code location} will be moved to the right by X units as well.
+     * If this {@code Border} is a {@linkplain FloorCeiling floor or ceiling}
+     * and has been scaled to be half as wide compared to the last frame,
+     * then {@code location} will be updated to be half as far from this
+     * {@code Border} object's left edge than it previously was.
      *
-     * @param location the {@link Point} to move
-     * @return the moved {@link Point}
+     * @param location the {@code Point} to move
+     * @return the moved {@code Point}
      */
     Point move(Point location);
 }

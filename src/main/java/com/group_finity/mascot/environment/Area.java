@@ -3,164 +3,377 @@ package com.group_finity.mascot.environment;
 import java.awt.*;
 
 /**
+ * Represents a region of space with which {@link com.group_finity.mascot.Mascot Mascots} can interact.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class Area {
 
     /**
-     * Whether this area should calculate the delta values of {@code left}, {@code top}, {@code right}, and
-     * {@code bottom} whenever {@link #set} is called. If {@code false}, the getters for the delta values will always
+     * Whether this {@code Area} should calculate the delta values of {@link #left}, {@link #top}, {@link #right}, and
+     * {@link #bottom} whenever {@link #set} is called. If {@code false}, the getters for the delta values will always
      * return 0.
      */
     private final boolean calcDeltas;
 
+    /**
+     * Whether this {@code Area} is visible.
+     * Generally, if this is {@code false}, {@link com.group_finity.mascot.Mascot Mascot} objects
+     * should not be able to interact with this {@code Area}.
+     */
     private boolean visible = true;
 
+    /**
+     * The x-coordinate of the left border of this {@code Area}.
+     */
     private int left;
 
+    /**
+     * The y-coordinate of the top border of this {@code Area}.
+     */
     private int top;
 
+    /**
+     * The x-coordinate of the right border of this {@code Area}.
+     */
     private int right;
 
+    /**
+     * The y-coordinate of the bottom border of this {@code Area}.
+     */
     private int bottom;
 
+    /**
+     * The delta x-coordinate of the left border of this {@code Area}.
+     * Represents the distance between the current x-coordinate and the previous x-coordinate.
+     */
     private int dleft;
 
+    /**
+     * The delta y-coordinate of the top border of this {@code Area}.
+     * Represents the distance between the current y-coordinate and the previous y-coordinate.
+     */
     private int dtop;
 
+    /**
+     * The delta x-coordinate of the right border of this {@code Area}.
+     * Represents the distance between the current x-coordinate and the previous x-coordinate.
+     */
     private int dright;
 
+    /**
+     * The delta y-coordinate of the bottom border of this {@code Area}.
+     * Represents the distance between the current y-coordinate and the previous y-coordinate.
+     */
     private int dbottom;
 
+    /**
+     * The left {@link Wall} border of this {@code Area}.
+     */
     private final Wall leftBorder = new Wall(this, false);
 
+    /**
+     * The top {@link FloorCeiling} border of this {@code Area}.
+     */
     private final FloorCeiling topBorder = new FloorCeiling(this, false);
 
+    /**
+     * The right {@link Wall} border of this {@code Area}.
+     */
     private final Wall rightBorder = new Wall(this, true);
 
+    /**
+     * The bottom {@link FloorCeiling} border of this {@code Area}.
+     */
     private final FloorCeiling bottomBorder = new FloorCeiling(this, true);
 
+    /**
+     * Creates a new {@code Area}. Calculating delta values is enabled by default.
+     */
     public Area() {
         calcDeltas = true;
     }
 
+    /**
+     * Creates a new {@code Area}.
+     *
+     * @param calcDeltas Whether this {@code Area} should calculate the delta values of {@link #left}, {@link #top},
+     * {@link #right}, and {@link #bottom} whenever {@link #set} is called.
+     * If {@code false}, the getters for the delta values will always return 0.
+     */
     public Area(boolean calcDeltas) {
         this.calcDeltas = calcDeltas;
     }
 
+    /**
+     * Gets whether this {@code Area} is visible.
+     * Generally, if this returns {@code false}, {@link com.group_finity.mascot.Mascot Mascot} objects
+     * should not be able to interact with this {@code Area}.
+     *
+     * @return {@code true} if this {@code Area} is visible; {@code false} otherwise
+     */
     public boolean isVisible() {
         return visible;
     }
 
+    /**
+     * Sets whether this {@code Area} is visible.
+     *
+     * @param visible {@code true} to make this {@code Area} visible; {@code false} to make it invisible
+     */
     public void setVisible(final boolean visible) {
         this.visible = visible;
     }
 
+    /**
+     * Gets the x-coordinate of the left border of this {@code Area}.
+     *
+     * @return the x-coordinate of the left border of this {@code Area}
+     */
     public int getLeft() {
         return left;
     }
 
+    /**
+     * Sets the x-coordinate of the left border of this {@code Area}.
+     *
+     * @param left the new x-coordinate of the left border
+     */
     public void setLeft(final int left) {
         this.left = left;
     }
 
+    /**
+     * Gets the y-coordinate of the top border of this {@code Area}.
+     *
+     * @return the y-coordinate of the top border of this {@code Area}
+     */
     public int getTop() {
         return top;
     }
 
+    /**
+     * Sets the y-coordinate of the top border of this {@code Area}.
+     *
+     * @param top the new y-coordinate of the top border
+     */
     public void setTop(final int top) {
         this.top = top;
     }
 
+    /**
+     * Gets the x-coordinate of the right border of this {@code Area}.
+     *
+     * @return the x-coordinate of the right border of this {@code Area}
+     */
     public int getRight() {
         return right;
     }
 
+    /**
+     * Sets the x-coordinate of the right border of this {@code Area}.
+     *
+     * @param right the new x-coordinate of the right border
+     */
     public void setRight(final int right) {
         this.right = right;
     }
 
+    /**
+     * Gets the y-coordinate of the bottom border of this {@code Area}.
+     *
+     * @return the y-coordinate of the bottom border of this {@code Area}
+     */
     public int getBottom() {
         return bottom;
     }
 
+    /**
+     * Sets the y-coordinate of the bottom border of this {@code Area}.
+     *
+     * @param bottom the new y-coordinate of the bottom border
+     */
     public void setBottom(final int bottom) {
         this.bottom = bottom;
     }
 
+    /**
+     * Gets the delta x-coordinate of the left border of this {@code Area}.
+     * The returned value represents the distance between
+     * the current x-coordinate and the previous x-coordinate.
+     *
+     * @return the delta x-coordinate of the left border of this {@code Area}
+     */
     public int getDleft() {
         return calcDeltas ? dleft : 0;
     }
 
+    /**
+     * Sets the delta x-coordinate of the left border of this {@code Area}.
+     *
+     * @param dleft the new delta x-coordinate of the left border
+     */
     public void setDleft(final int dleft) {
         if (calcDeltas) {
             this.dleft = dleft;
         }
     }
 
+    /**
+     * Gets the delta y-coordinate of the top border of this {@code Area}.
+     * The returned value represents the distance between
+     * the current y-coordinate and the previous y-coordinate.
+     *
+     * @return the delta x-coordinate of the top border of this {@code Area}
+     */
     public int getDtop() {
         return calcDeltas ? dtop : 0;
     }
 
+    /**
+     * Sets the delta y-coordinate of the top border of this {@code Area}.
+     *
+     * @param dtop the new delta y-coordinate of the top border
+     */
     public void setDtop(final int dtop) {
         if (calcDeltas) {
             this.dtop = dtop;
         }
     }
 
+    /**
+     * Gets the delta x-coordinate of the right border of this {@code Area}.
+     * The returned value represents the distance between
+     * the current x-coordinate and the previous x-coordinate.
+     *
+     * @return the delta x-coordinate of the right border of this {@code Area}
+     */
     public int getDright() {
         return calcDeltas ? dright : 0;
     }
 
+    /**
+     * Sets the delta x-coordinate of the right border of this {@code Area}.
+     *
+     * @param dright the new delta x-coordinate of the right border
+     */
     public void setDright(final int dright) {
         if (calcDeltas) {
             this.dright = dright;
         }
     }
 
+    /**
+     * Gets the delta y-coordinate of the bottom border of this {@code Area}.
+     * The returned value represents the distance between
+     * the current y-coordinate and the previous y-coordinate.
+     *
+     * @return the delta x-coordinate of the bottom border of this {@code Area}
+     */
     public int getDbottom() {
         return calcDeltas ? dbottom : 0;
     }
 
+    /**
+     * Sets the delta y-coordinate of the bottom border of this {@code Area}.
+     *
+     * @param dbottom the new delta y-coordinate of the bottom border
+     */
     public void setDbottom(final int dbottom) {
         if (calcDeltas) {
             this.dbottom = dbottom;
         }
     }
 
+    /**
+     * Gets the left {@link Wall} border of this {@code Area}.
+     *
+     * @return the left {@code Wall} border of this {@code Area}
+     */
     public Wall getLeftBorder() {
         return leftBorder;
     }
 
+    /**
+     * Gets the top {@link FloorCeiling} border of this {@code Area}.
+     *
+     * @return the top {@code FloorCeiling} border of this {@code Area}
+     */
     public FloorCeiling getTopBorder() {
         return topBorder;
     }
 
+    /**
+     * Gets the right {@link Wall} border of this {@code Area}.
+     *
+     * @return the right {@code Wall} border of this {@code Area}
+     */
     public Wall getRightBorder() {
         return rightBorder;
     }
 
+    /**
+     * Gets the bottom {@link FloorCeiling} border of this {@code Area}.
+     *
+     * @return the bottom {@code FloorCeiling} border of this {@code Area}
+     */
     public FloorCeiling getBottomBorder() {
         return bottomBorder;
     }
 
+    /**
+     * Gets the width of this {@code Area}.
+     *
+     * @return the width of this {@code Area}
+     */
     public int getWidth() {
         return right - left;
     }
 
+    /**
+     * Gets the height of this {@code Area}.
+     *
+     * @return the height of this {@code Area}
+     */
     public int getHeight() {
         return bottom - top;
     }
 
-    public void set(final Rectangle value) {
-        setRect(value.x, value.y, value.width, value.height);
+    /**
+     * Sets the bounds of this {@code Area} to match the specified {@link Rectangle}.
+     * This will also update the delta values of this {@code Area}.
+     *
+     * @param r the specified {@code Rectangle}
+     */
+    public void set(final Rectangle r) {
+        setRect(r.x, r.y, r.width, r.height);
     }
 
+    /**
+     * Sets the bounds of this {@code Area} to the specified
+     * {@code x}, {@code y}, {@code width}, and {@code height} values.
+     * This will also update the delta values of this {@code Area}.
+     *
+     * @param x the new x-coordinate for the upper-left corner of this {@code Area}
+     * @param y the new y-coordinate for the upper-left corner of this {@code Area}
+     * @param width the new width of this {@code Area}
+     * @param height the new height of this {@code Area}
+     */
     public void setRect(final int x, final int y, final int width, final int height) {
         set(x, y, x + width, y + height);
     }
 
+    /**
+     * Sets the bounds of this {@code Area} to the specified
+     * {@code left}, {@code top}, {@code right}, and {@code bottom} values.
+     * This will also update the delta values of this {@code Area}.
+     *
+     * @param left the new x-coordinate for the left border of this {@code Area}
+     * @param top the new y-coordinate for the top border of this {@code Area}
+     * @param right the new x-coordinate for the right border of this {@code Area}
+     * @param bottom the new y-coordinate for the bottom border of this {@code Area}
+     */
     public void set(final int left, final int top, final int right, final int bottom) {
         if (calcDeltas) {
             dleft = left - this.left;
@@ -176,7 +389,7 @@ public class Area {
     }
 
     /**
-     * Resets all delta values in this area to 0.
+     * Resets all delta values in this {@code Area} to 0.
      */
     public void resetDeltas() {
         if (calcDeltas) {
@@ -187,10 +400,27 @@ public class Area {
         }
     }
 
+    /**
+     * Checks whether this {@code Area} contains the specified {@link Point}.
+     *
+     * @param point the {@code Point} to test
+     * @return {@code true} if the specified {@code Point}
+     * is inside this {@code Area}; {@code false} otherwise
+     * @see Rectangle#contains(Point)
+     */
     public boolean contains(final Point point) {
         return contains(point.x, point.y);
     }
 
+    /**
+     * Checks whether this {@code Area} contains the point at the specified location {@code (x, y)}.
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return {@code true} if the specified point
+     * is inside this {@code Area}; {@code false} otherwise
+     * @see Rectangle#contains(int, int)
+     */
     public boolean contains(final int x, final int y) {
         if ((right - left | bottom - top) < 0) {
             // At least one of the dimensions is negative
@@ -200,10 +430,30 @@ public class Area {
         return left <= x && x <= right && top <= y && y <= bottom;
     }
 
+    /**
+     * Checks whether this {@code Area} entirely contains the specified {@code Area}.
+     *
+     * @param a the specified {@code Area}
+     * @return {@code true} if the specified {@code Area}
+     * is contained entirely inside this {@code Area}; {@code false} otherwise
+     * @see Rectangle#contains(Rectangle)
+     */
     public boolean contains(Area a) {
         return contains(a.left, a.top, a.right, a.bottom);
     }
 
+    /**
+     * Checks whether this {@code Area} entirely contains the {@code Area} bounded by the specified
+     * x-coordinates {@code left} and {@code right}, and the specified y-coordinates {@code top} and {@code bottom}.
+     *
+     * @param left the x-coordinate for the left border of the {@code Area}
+     * @param top the y-coordinate for the top border of the {@code Area}
+     * @param right the x-coordinate for the right border of the {@code Area}
+     * @param bottom the y-coordinate for the bottom border of the {@code Area}
+     * @return {@code true} if the {@code Area} specified by {@code (left, top, right, bottom)}
+     * is contained entirely inside this {@code Area}; {@code false} otherwise
+     * @see Rectangle#contains(int, int, int, int)
+     */
     // Adapted from Rectangle.contains(int, int, int, int)
     public boolean contains(int left, int top, int right, int bottom) {
         if ((this.right - this.left | this.bottom - this.top | right - left | bottom - top) < 0) {
@@ -230,6 +480,17 @@ public class Area {
         return true;
     }
 
+    /**
+     * Determines whether this {@code Area} and the specified
+     * {@code Rectangle} intersect. An area and a rectangle intersect if
+     * their intersection is nonempty.
+     *
+     * @param r the specified {@code Rectangle}
+     * @return    {@code true} if the specified {@code Rectangle}
+     *            and this {@code Area} intersect;
+     *            {@code false} otherwise
+     * @see Rectangle#intersects(Rectangle)
+     */
     // Adapted from Rectangle.intersects(Rectangle)
     public boolean intersects(Rectangle r) {
         int tw = right - left;
@@ -254,6 +515,17 @@ public class Area {
                 (th < ty || th > ry);
     }
 
+    /**
+     * Determines whether this {@code Area} and the specified
+     * {@code Area} intersect. Two areas intersect if
+     * their intersection is nonempty.
+     *
+     * @param a the specified {@code Area}
+     * @return    {@code true} if the specified {@code Area}
+     *            and this {@code Area} intersect;
+     *            {@code false} otherwise
+     * @see Rectangle#intersects(Rectangle)
+     */
     // Adapted from Rectangle.intersects(Rectangle)
     public boolean intersects(Area a) {
         int tw = right - left;
@@ -278,6 +550,11 @@ public class Area {
                 (th < ty || th > ay);
     }
 
+    /**
+     * Creates a {@link Rectangle} with the same bounds as this {@code Area}.
+     *
+     * @return a {@code Rectangle} with the same bounds as this {@code Area}
+     */
     public Rectangle toRectangle() {
         return new Rectangle(left, top, right - left, bottom - top);
     }

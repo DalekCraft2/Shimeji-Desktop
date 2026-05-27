@@ -32,7 +32,7 @@ public interface Environment {
 
     /**
      * Gets the area of the screen.
-     * This area is the combined areas of all active displays.
+     * This area is the union of the areas of all active displays.
      *
      * @return the screen area
      */
@@ -76,7 +76,7 @@ public interface Environment {
     long getActiveWindowId();
 
     /**
-     * Repositions the active window so its top-left corner is at the given point.
+     * Repositions the active window so its top-left corner is at the specified point.
      *
      * @param point the point at which the active window's top-left corner should be after it is moved
      */

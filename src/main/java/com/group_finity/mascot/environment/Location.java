@@ -3,54 +3,133 @@ package com.group_finity.mascot.environment;
 import java.awt.*;
 
 /**
+ * Represents a point in space, and the distance it has traveled from its previous position.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public class Location {
 
+    /**
+     * The x-coordinate of this {@code Location}.
+     */
     private int x;
+
+    /**
+     * The y-coordinate of this {@code Location}.
+     */
     private int y;
 
+    /**
+     * The delta x-coordinate of this {@code Location}.
+     * Represents the distance between the current x-coordinate and the previous x-coordinate.
+     */
     private int dx;
+
+    /**
+     * The delta y-coordinate of this {@code Location}.
+     * Represents the distance between the current y-coordinate and the previous y-coordinate.
+     */
     private int dy;
 
+    /**
+     * Gets the x-coordinate of this {@code Location}.
+     *
+     * @return the x-coordinate of this {@code Location}
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Sets the x-coordinate of this {@code Location}.
+     *
+     * @param x the new x-coordinate
+     */
     public void setX(final int x) {
         this.x = x;
     }
 
+    /**
+     * Gets the y-coordinate of this {@code Location}.
+     *
+     * @return the y-coordinate of this {@code Location}
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Sets the y-coordinate of this {@code Location}.
+     *
+     * @param y the new y-coordinate
+     */
     public void setY(final int y) {
         this.y = y;
     }
 
+    /**
+     * Gets the delta x-coordinate of this {@code Location}.
+     * The returned value represents the distance between
+     * the current x-coordinate and the previous x-coordinate.
+     *
+     * @return the delta x-coordinate of this {@code Location}
+     */
     public int getDx() {
         return dx;
     }
 
+    /**
+     * Sets the delta x-coordinate of this {@code Location}.
+     *
+     * @param dx the new delta x-coordinate
+     */
     public void setDx(final int dx) {
         this.dx = dx;
     }
 
+    /**
+     * Gets the delta y-coordinate of this {@code Location}.
+     * The returned value represents the distance between
+     * the current y-coordinate and the previous y-coordinate.
+     *
+     * @return the delta y-coordinate of this {@code Location}
+     */
     public int getDy() {
         return dy;
     }
 
+    /**
+     * Sets the delta y-coordinate of this {@code Location}.
+     *
+     * @param dy the new delta y-coordinate
+     */
     public void setDy(final int dy) {
         this.dy = dy;
     }
 
-    public void set(final Point value) {
-        set(value.x, value.y);
+    /**
+     * Sets the coordinates of this {@code Location} to match the specified {@link Point}.
+     * This will also update the delta values of this {@code Location}.
+     *
+     * @param p the specified {@code Point}
+     */
+    public void set(final Point p) {
+        set(p.x, p.y);
     }
 
+    /**
+     * Sets the coordinates of this {@code Location} to the specified {@code x} and {@code y} values.
+     * This will also update the delta values of this {@code Location}.
+     *
+     * @param x the new x-coordinate
+     * @param y the new y-coordinate
+     */
     public void set(final int x, final int y) {
+        // Rather than calculate the delta values properly, we calculate the average between the stored delta values
+        // (dx and dy) and the actual delta values ((x - this.x) and (y - this.y)) so they don't return to 0 the moment
+        // the Location stops moving. This lets mascot scripts use the delta values in the Dragged action to transition
+        // between animations more smoothly.
         dx = (dx + x - this.x) / 2;
         dy = (dy + y - this.y) / 2;
 
