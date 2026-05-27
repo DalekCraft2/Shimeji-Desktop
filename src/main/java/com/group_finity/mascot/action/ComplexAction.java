@@ -58,8 +58,7 @@ public abstract class ComplexAction extends ActionBase {
             return false;
         }
 
-        final boolean inRange = getCurrentAction() < getActions().length;
-        return inRange && getAction().hasNext();
+        return getCurrentAction() < getActions().length && getAction().hasNext();
     }
 
     @Override

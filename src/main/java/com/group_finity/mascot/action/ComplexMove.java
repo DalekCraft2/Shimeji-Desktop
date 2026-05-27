@@ -88,12 +88,16 @@ public class ComplexMove extends BorderedAction {
 
     @Override
     public boolean hasNext() throws VariableException {
-        if (scanEnabled) {
-            if (!super.hasNext()) {
-                return false;
-            }
+        if (!super.hasNext()) {
+            return false;
+        }
 
-            if (getMascot().getManager() == null || turning) {
+        if (turning) {
+            return true;
+        }
+
+        if (scanEnabled) {
+            if (getMascot().getManager() == null) {
                 return true;
             }
 
@@ -107,7 +111,7 @@ public class ComplexMove extends BorderedAction {
             boolean hasReachedTarget = targetX != Integer.MIN_VALUE && getMascot().getAnchor().x == targetX ||
                     targetY != Integer.MIN_VALUE && getMascot().getAnchor().y == targetY;
 
-            return super.hasNext() && (!hasReachedTarget || turning);
+            return !hasReachedTarget;
         }
     }
 

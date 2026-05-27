@@ -61,7 +61,7 @@ public class ScanMove extends BorderedAction {
             return false;
         }
 
-        if (getMascot().getManager() == null || turning) {
+        if (turning || getMascot().getManager() == null) {
             return true;
         }
 

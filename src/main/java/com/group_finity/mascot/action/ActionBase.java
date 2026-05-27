@@ -86,7 +86,7 @@ public abstract class ActionBase implements Action {
             return false;
         }
 
-        return isEffective() && getTime() < getDuration();
+        return getTime() < getDuration() && isEffective();
     }
 
     @Override

@@ -92,7 +92,7 @@ public class Fall extends ActionBase {
         Point pos = getMascot().getAnchor();
         // Check that the velocity is at least 0 so that, if a mascot starts an action with negative initial Y velocity,
         // the action is not canceled immediately.
-        boolean onBorder = getEnvironment().getFloor().isOn(pos) && velocityY >= 0 || getEnvironment().getWall().isOn(pos);
+        boolean onBorder = velocityY >= 0 && getEnvironment().getFloor().isOn(pos) || getEnvironment().getWall().isOn(pos);
         return !onBorder;
     }
 
