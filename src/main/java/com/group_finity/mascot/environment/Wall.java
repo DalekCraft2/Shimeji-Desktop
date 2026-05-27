@@ -133,13 +133,22 @@ public class Wall implements Border {
             return location;
         }
 
-        final int newHeight = getBottom() - getDBottom() - (getTop() - getDTop());
-        if (newHeight == 0) {
+        // Return the location as is if the border hasn't moved
+        if (getDTop() == 0 && getDBottom() == 0 && getDX() == 0) {
             return location;
         }
 
-        final Point newLocation = new Point(location.x + getDX(), (location.y - (getTop() - getDTop()))
-                * getHeight() / newHeight + getTop());
+        final int prevTop = getTop() - getDTop();
+        final int prevHeight = getBottom() - getDBottom() - prevTop;
+        // Return the location as is if the height of the border was previously 0, to avoid division by 0
+        if (prevHeight == 0) {
+            return location;
+        }
+
+        final Point newLocation = new Point(
+                location.x + getDX(),
+                (location.y - prevTop) * getHeight() / prevHeight + getTop()
+        );
 
         if (Math.abs(newLocation.x - location.x) >= 80 || Math.abs(newLocation.y - location.y) >= 80) {
             return location;
