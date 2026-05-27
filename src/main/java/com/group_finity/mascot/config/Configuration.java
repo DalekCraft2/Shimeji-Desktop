@@ -177,12 +177,12 @@ public class Configuration {
     }
 
     public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
-        final ActionBuilder factory = actionBuilders.get(name);
-        if (factory == null) {
+        final ActionBuilder builder = actionBuilders.get(name);
+        if (builder == null) {
             throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage"), name));
         }
 
-        return factory.buildAction(params);
+        return builder.buildAction(params);
     }
 
     public Behavior buildNextBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
@@ -193,35 +193,35 @@ public class Configuration {
         final Collection<IBehaviorBuilder> candidates = new ArrayList<>();
         long totalFrequency = 0;
 
-        final BehaviorBuilder previousBehaviorFactory;
+        final BehaviorBuilder prevBehaviorBuilder;
         if (previousName != null) {
-            previousBehaviorFactory = behaviorBuilders.get(previousName);
+            prevBehaviorBuilder = behaviorBuilders.get(previousName);
         } else {
-            previousBehaviorFactory = null;
+            prevBehaviorBuilder = null;
         }
 
-        if (previousBehaviorFactory == null || previousBehaviorFactory.isNextAdditive()) {
-            for (final BehaviorBuilder behaviorFactory : behaviorBuilders.values()) {
+        if (prevBehaviorBuilder == null || prevBehaviorBuilder.isNextAdditive()) {
+            for (final BehaviorBuilder behaviorBuilder : behaviorBuilders.values()) {
                 try {
-                    if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory, mascot)) {
-                        candidates.add(behaviorFactory);
-                        totalFrequency += behaviorFactory.getFrequency();
+                    if (behaviorBuilder.isEffective(context) && isBehaviorEnabled(behaviorBuilder, mascot)) {
+                        candidates.add(behaviorBuilder);
+                        totalFrequency += behaviorBuilder.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.warn("Failed to evaluate condition for behavior: {}", behaviorFactory, e);
+                    log.warn("Failed to evaluate condition for behavior: {}", behaviorBuilder, e);
                 }
             }
         }
 
-        if (previousBehaviorFactory != null) {
-            for (final BehaviorRef behaviorFactory : previousBehaviorFactory.getNextBehaviorBuilders()) {
+        if (prevBehaviorBuilder != null) {
+            for (final BehaviorRef behaviorBuilder : prevBehaviorBuilder.getNextBehaviorBuilders()) {
                 try {
-                    if (behaviorFactory.isEffective(context) && isBehaviorEnabled(behaviorFactory.getName(), mascot)) {
-                        candidates.add(behaviorFactory);
-                        totalFrequency += behaviorFactory.getFrequency();
+                    if (behaviorBuilder.isEffective(context) && isBehaviorEnabled(behaviorBuilder.getName(), mascot)) {
+                        candidates.add(behaviorBuilder);
+                        totalFrequency += behaviorBuilder.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.warn("Failed to evaluate condition for behavior: {}", behaviorFactory, e);
+                    log.warn("Failed to evaluate condition for behavior: {}", behaviorBuilder, e);
                 }
             }
         }
@@ -236,10 +236,10 @@ public class Configuration {
 
         double random = Math.random() * totalFrequency;
 
-        for (final IBehaviorBuilder behaviorFactory : candidates) {
-            random -= behaviorFactory.getFrequency();
+        for (final IBehaviorBuilder behaviorBuilder : candidates) {
+            random -= behaviorBuilder.getFrequency();
             if (random < 0) {
-                return behaviorFactory.buildBehavior();
+                return behaviorBuilder.buildBehavior();
             }
         }
 
