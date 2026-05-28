@@ -1213,13 +1213,15 @@ public class X {
             return list.toArray(new Window[0]);
         }
 
-        private static void recurse(List<Window> list, X11 x11, Display display, X11.Window root, int depth) {
+        private static void recurse(List<Window> list, X11 x11, Display display, X11.Window root, int depth) throws X11Exception {
             X11.WindowByReference windowRef = new X11.WindowByReference();
             X11.WindowByReference parentRef = new X11.WindowByReference();
             PointerByReference childrenRef = new PointerByReference();
             IntByReference childCountRef = new IntByReference();
 
-            x11.XQueryTree(display.x11Display, root, windowRef, parentRef, childrenRef, childCountRef);
+            if (x11.XQueryTree(display.x11Display, root, windowRef, parentRef, childrenRef, childCountRef) == 0) {
+                throw new X11Exception("Can't query subwindows");
+            }
             if (childrenRef.getValue() == null) {
                 return;
             }
