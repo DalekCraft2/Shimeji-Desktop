@@ -176,24 +176,26 @@ class X11Environment extends AbstractEnvironment {
 
     private WindowStatus getWindowStatus(Window window) {
         int curDesktop;
-        int desktop;
+        Integer desktop;
         List<Integer> state;
         List<Integer> type;
         try {
+             /*
+            NOTE: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
+            not focused, this method has to return WindowStatus.IGNORED for most windows other than the currently focused one.
+            This is because window.getDesktop() will return null in that case, so badDesktop will equal true later,
+            causing the bulk of this method to be skipped.
+
+            I don't think I can do anything about that. Sorry!
+             */
             curDesktop = display.getActiveDesktopNumber();
             desktop = window.getDesktop();
             state = Arrays.asList(window.getState());
             type = Arrays.asList(window.getType());
         } catch (X11Exception e) {
-            /*
-            NOTE: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
-            not focused, this method has to return WindowStatus.IGNORED for most windows other than the currently focused one.
-
-            I don't think I can do anything about that. Sorry!
-             */
             return WindowStatus.IGNORED;
         }
-        boolean badDesktop = desktop != curDesktop && desktop != -1;
+        boolean badDesktop = desktop != null && desktop != curDesktop;
         // System.out.println("ID: " + window.getID() + "; Title: " + getWindowTitle(window) + "; State: " + state + "; Type: " + type);
         if (!badDesktop && !checkState(state) && !checkType(type)) {
             if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {

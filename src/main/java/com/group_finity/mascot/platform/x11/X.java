@@ -239,7 +239,7 @@ public class X {
          * @return number of desktops
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public int getDesktopCount() throws X11Exception {
+        public Integer getDesktopCount() throws X11Exception {
             Window root = getRootWindow();
 
             try {
@@ -259,7 +259,7 @@ public class X {
          * @return number of the active desktop
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public int getActiveDesktopNumber() throws X11Exception {
+        public Integer getActiveDesktopNumber() throws X11Exception {
             Window root = getRootWindow();
             int curDesktop;
 
@@ -270,8 +270,6 @@ public class X {
                     curDesktop = root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
                 } catch (X11Exception e1) {
                     throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
-                    // NOTE This is a hotfix for Ubuntu because this method fails on it (at least in a VM).
-                    // return 0;
                 }
             }
 
@@ -644,7 +642,7 @@ public class X {
          * @return desktop ID of the window
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public int getDesktop() throws X11Exception {
+        public Integer getDesktop() throws X11Exception {
             try {
                 return getIntProperty(X11.XA_CARDINAL, "_NET_WM_DESKTOP");
             } catch (X11Exception e) {
