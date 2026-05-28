@@ -195,8 +195,8 @@ class X11Environment extends AbstractEnvironment {
         } catch (X11Exception e) {
             return WindowStatus.IGNORED;
         }
-        boolean badDesktop = desktop != null && desktop != curDesktop;
         // System.out.println("ID: " + window.getID() + "; Title: " + getWindowTitle(window) + "; State: " + state + "; Type: " + type);
+        boolean badDesktop = desktop != null && desktop != curDesktop;
         if (!badDesktop && !checkState(state) && !checkType(type)) {
             if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
                 // Window is maximized and is therefore invalid
@@ -235,12 +235,7 @@ class X11Environment extends AbstractEnvironment {
         // Retrieve all windows from the X Display
         Window[] allWindows;
         try {
-            // allWindows = display.getWindows();
-            // allWindows = display.getRootWindow().getSubwindows();
-            // allWindows = display.getRootWindow().getAllSubwindows();
-
-            // Because this support is so badly optimized, we will only check the currently focused window for now.
-            allWindows = new Window[]{display.getActiveWindow()};
+            allWindows = display.getWindows();
         } catch (X11Exception e) {
             return null;
         }
@@ -288,7 +283,7 @@ class X11Environment extends AbstractEnvironment {
         }
         String title;
         try {
-            title = window.getID() == 0 ? "" : window.getTitle();
+            title = window.getTitle();
         } catch (X11Exception e) {
             title = "";
         }
@@ -354,10 +349,7 @@ class X11Environment extends AbstractEnvironment {
         // Retrieve all windows from the X Display
         Window[] allWindows;
         try {
-            // allWindows = display.getWindows();
-            // allWindows = display.getRootWindow().getSubwindows();
-            allWindows = display.getRootWindow().getAllSubwindows();
-            // allWindows = new Window[]{display.getActiveWindow()};
+            allWindows = display.getWindows();
         } catch (X11Exception e) {
             return;
         }
