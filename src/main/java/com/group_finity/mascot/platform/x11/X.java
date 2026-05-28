@@ -1085,8 +1085,18 @@ public class X {
             X11.Atom xaRetType = xaRetTypeRef.getValue();
             Pointer retProp = retPropRef.getValue();
 
-            if (xaRetType == null || xaPropType == null ||
-                    !xaRetType.toNative().equals(xaPropType.toNative())) {
+            if (xaRetType == null || xaPropType == null) {
+                // The specified property does not exist for the specified window.
+                // The return property doesn't need to be freed because
+                // it should also be null if the return type is null.
+                if (xaPropType != null) {
+                    // But let's free it anyway just to be safe.
+                    x11.XFree(retProp);
+                }
+                return null;
+            }
+
+            if (!xaRetType.toNative().equals(xaPropType.toNative())) {
                 x11.XFree(retProp);
                 String propName = x11.XGetAtomName(display.x11Display, xaPropName);
                 throw new X11Exception("Invalid type of " + propName + " property");
@@ -1096,18 +1106,13 @@ public class X {
             long retNItems = retNItemsRef.getValue().longValue();
 
             // null terminate the result to make string handling easier
-            int nBytes;
-            if (retFormat == 32) {
-                nBytes = Native.LONG_SIZE;
-            } else if (retFormat == 16) {
-                nBytes = Native.LONG_SIZE / 2;
-            } else if (retFormat == 8) {
-                nBytes = 1;
-            } else if (retFormat == 0) {
-                nBytes = 0;
-            } else {
-                throw new X11Exception("Invalid return format");
-            }
+            int nBytes = switch (retFormat) {
+                case 32 -> Native.LONG_SIZE;
+                case 16 -> Native.LONG_SIZE / 2;
+                case 8 -> 1;
+                case 0 -> 0;
+                default -> throw new X11Exception("Invalid return format");
+            };
             int length = Math.min((int) retNItems * nBytes, MAX_PROPERTY_VALUE_LEN);
 
             byte[] ret = retProp.getByteArray(0, length);
