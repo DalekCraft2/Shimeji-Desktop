@@ -89,11 +89,11 @@ public class Fall extends ActionBase {
             return false;
         }
 
-        Point pos = getMascot().getAnchor();
-        // Check that the velocity is at least 0 so that, if a mascot starts an action with negative initial Y velocity,
-        // the action is not canceled immediately.
-        boolean onBorder = velocityY >= 0 && getEnvironment().getFloor().isOn(pos) || getEnvironment().getWall().isOn(pos);
-        return !onBorder;
+        Point anchor = getMascot().getAnchor();
+        /* Return true if the mascot is not on a floor or wall.
+        However, ignore whether the mascot is on a floor if they have upward velocity; this allows mascots to start
+        the Fall action on the ground with an upward initial velocity and not have the action be canceled immediately. */
+        return (velocityY < 0 || !getEnvironment().getFloor().isOn(anchor)) && !getEnvironment().getWall().isOn(anchor);
     }
 
     @Override
@@ -103,6 +103,7 @@ public class Fall extends ActionBase {
             mascot.setLookRight(velocityX > 0);
         }
 
+        // velocityX and velocityY were already scaled in init(), so only scale gravity here
         velocityX = velocityX - velocityX * getResistanceX();
         velocityY = velocityY - velocityY * getResistanceY() + getGravity() * scaling;
 

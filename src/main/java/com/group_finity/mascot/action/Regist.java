@@ -51,8 +51,10 @@ public class Regist extends ActionBase {
             offsetX = getMascot().getImage().getCenter().x - offsetX;
         }
 
-        final boolean moved = Math.abs(getEnvironment().getCursor().getX() - getMascot().getAnchor().x + offsetX) >= 5;
-        return !moved;
+        /* Return true if the cursor's x-coordinate has moved less than 5 units from the mascot's x-coordinate.
+        Note that this action does not update the mascot's position, so this condition will use the mascot's
+        *initial* position unless the position is updated from somewhere else. */
+        return Math.abs(getEnvironment().getCursor().getX() - getMascot().getAnchor().x + offsetX) < 5;
     }
 
     @Override

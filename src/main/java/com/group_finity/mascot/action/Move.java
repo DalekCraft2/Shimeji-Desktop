@@ -45,11 +45,9 @@ public class Move extends BorderedAction {
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
-        // Have we reached the target coordinates?
-        boolean hasReachedTarget = targetX != Integer.MIN_VALUE && getMascot().getAnchor().x == targetX ||
-                targetY != Integer.MIN_VALUE && getMascot().getAnchor().y == targetY;
-
-        return !hasReachedTarget;
+        // Return true if the mascot has reached neither TargetX nor TargetY
+        return (targetX == Integer.MIN_VALUE || getMascot().getAnchor().x != targetX) &&
+                (targetY == Integer.MIN_VALUE || getMascot().getAnchor().y != targetY);
     }
 
     @Override

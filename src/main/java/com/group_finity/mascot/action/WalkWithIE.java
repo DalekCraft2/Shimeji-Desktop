@@ -42,11 +42,7 @@ public class WalkWithIE extends Move {
 
     @Override
     public boolean hasNext() throws VariableException {
-        if (!Main.getInstance().getSettings().throwing) {
-            return false;
-        }
-
-        return super.hasNext();
+        return Main.getInstance().getSettings().throwing && super.hasNext();
     }
 
     @Override

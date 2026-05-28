@@ -82,11 +82,7 @@ public abstract class ActionBase implements Action {
 
     @Override
     public boolean hasNext() throws VariableException {
-        if (getMascot() == null) {
-            return false;
-        }
-
-        return getTime() < getDuration() && isEffective();
+        return getMascot() != null && getTime() < getDuration() && isEffective();
     }
 
     @Override

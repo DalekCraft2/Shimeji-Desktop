@@ -49,21 +49,12 @@ public class ThrowIE extends Animate {
 
     @Override
     public boolean hasNext() throws VariableException {
-        if (!Main.getInstance().getSettings().throwing) {
-            return false;
-        }
-
-        if (!super.hasNext()) {
-            return false;
-        }
-
-        if (!getEnvironment().getActiveIE().isVisible()) {
-            return false;
-        }
-
-        // Check whether the window being thrown has not changed;
+        // Check whether the window being thrown has not changed by comparing the active window IDs;
         // this ensures that only one window gets moved off-screen instead of all of the on-screen windows.
-        return activeWindowId == getEnvironment().getActiveWindowId();
+        return Main.getInstance().getSettings().throwing &&
+                super.hasNext() &&
+                getEnvironment().getActiveIE().isVisible() &&
+                activeWindowId == getEnvironment().getActiveWindowId();
     }
 
     @Override
