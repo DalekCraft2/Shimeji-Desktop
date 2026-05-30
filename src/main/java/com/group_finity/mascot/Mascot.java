@@ -350,51 +350,26 @@ public class Mascot {
             }
         });
 
-        // "Another One!" menu item
-        final JMenuItem increaseMenu = new JMenuItem(languageBundle.getString("CallAnother"));
-        increaseMenu.addActionListener(event -> Main.getInstance().createMascot(imageSet));
+        final JMenuItem callAnotherItem = new JMenuItem(languageBundle.getString("CallAnother"));
+        callAnotherItem.addActionListener(event -> Main.getInstance().createMascot(imageSet));
 
-        // "Bye Bye!" menu item
-        final JMenuItem disposeMenu = new JMenuItem(languageBundle.getString("Dismiss"));
-        disposeMenu.addActionListener(e -> dispose());
+        final JMenuItem followCursorItem = new JMenuItem(languageBundle.getString("FollowCursor"));
+        followCursorItem.addActionListener(event -> manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER, imageSet));
 
-        // "Follow Mouse!" menu item
-        final JMenuItem gatherMenu = new JMenuItem(languageBundle.getString("FollowCursor"));
-        gatherMenu.addActionListener(event -> manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER, imageSet));
+        final JMenuItem restoreWindowsItem = new JMenuItem(languageBundle.getString("RestoreWindows"));
+        restoreWindowsItem.addActionListener(event -> environment.restoreIE());
 
-        // "Reduce to One!" menu item
-        final JMenuItem oneMenu = new JMenuItem(languageBundle.getString("DismissOthers"));
-        oneMenu.addActionListener(event -> manager.remainOne(imageSet, this));
-
-        // "Reduce to One!" menu item
-        final JMenuItem onlyOneMenu = new JMenuItem(languageBundle.getString("DismissAllOthers"));
-        onlyOneMenu.addActionListener(event -> manager.remainOne(this));
-
-        // "Restore IE!" menu item
-        final JMenuItem restoreMenu = new JMenuItem(languageBundle.getString("RestoreWindows"));
-        restoreMenu.addActionListener(event -> environment.restoreIE());
-
-        // Debug menu item
-        final JMenuItem debugMenu = new JMenuItem(languageBundle.getString("RevealStatistics"));
-        debugMenu.addActionListener(event -> {
+        final JMenuItem debugMenuItem = new JMenuItem(languageBundle.getString("RevealStatistics"));
+        debugMenuItem.addActionListener(event -> {
             if (debugWindow == null) {
                 debugWindow = new DebugWindow();
             }
             debugWindow.setVisible(true);
         });
 
-        // "Bye Everyone!" menu item
-        final JMenuItem closeMenu = new JMenuItem(languageBundle.getString("DismissAll"));
-        closeMenu.addActionListener(e -> Main.getInstance().exit());
-
-        // "Paused" Menu item
-        final JMenuItem pauseMenu = new JMenuItem(isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
-        pauseMenu.addActionListener(event -> setPaused(!isPaused()));
-
-        // Add the Behaviors submenu.
-        JMenu submenu = new JMenu(languageBundle.getString("SetBehaviour"));
-        JMenu allowedSubmenu = new JMenu(languageBundle.getString("AllowedBehaviours"));
-        submenu.setAutoscrolls(true);
+        JMenu setBehaviorMenu = new JMenu(languageBundle.getString("SetBehaviour"));
+        JMenu allowedBehaviorsMenu = new JMenu(languageBundle.getString("AllowedBehaviours"));
+        setBehaviorMenu.setAutoscrolls(true);
         JMenuItem item;
         JCheckBoxMenuItem toggleItem;
         final Configuration config = Main.getInstance().getConfiguration(imageSet);
@@ -415,43 +390,59 @@ public class Mascot {
                                 }
                             }
                         });
-                        submenu.add(item);
+                        setBehaviorMenu.add(item);
                     }
                     if (config.isBehaviorToggleable(behaviorName) && !behaviorName.contains("/")) {
                         toggleItem = new JCheckBoxMenuItem(caption, config.isBehaviorEnabled(behaviorName, this));
                         toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(behaviorName, this, !config.isBehaviorEnabled(behaviorName, this)));
-                        allowedSubmenu.add(toggleItem);
+                        allowedBehaviorsMenu.add(toggleItem);
                     }
                 }
             } catch (RuntimeException e) {
                 // just skip if something goes wrong
             }
         }
-        // Create the MenuScroller after adding all the items to the submenu, so it is positioned correctly when first shown.
-        MenuScroller.setScrollerFor(submenu, 30, 125);
-        MenuScroller.setScrollerFor(allowedSubmenu, 30, 125);
+        // Create the MenuScrollers after adding all the items to the menus,
+        // so the menus are positioned correctly when first shown.
+        MenuScroller.setScrollerFor(setBehaviorMenu, 30, 125);
+        MenuScroller.setScrollerFor(allowedBehaviorsMenu, 30, 125);
 
-        popup.add(increaseMenu);
+        final JMenuItem pauseItem = new JMenuItem(isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
+        pauseItem.addActionListener(event -> setPaused(!isPaused()));
+
+        final JMenuItem disposeMenu = new JMenuItem(languageBundle.getString("Dismiss"));
+        disposeMenu.addActionListener(e -> dispose());
+
+        final JMenuItem remainOneItem = new JMenuItem(languageBundle.getString("DismissOthers"));
+        remainOneItem.addActionListener(event -> manager.remainOne(imageSet, this));
+
+        final JMenuItem remainOnlyOneItem = new JMenuItem(languageBundle.getString("DismissAllOthers"));
+        remainOnlyOneItem.addActionListener(event -> manager.remainOne(this));
+
+        final JMenuItem closeMenu = new JMenuItem(languageBundle.getString("DismissAll"));
+        closeMenu.addActionListener(e -> Main.getInstance().exit());
+
+        popup.add(callAnotherItem);
         popup.addSeparator();
-        popup.add(gatherMenu);
-        popup.add(restoreMenu);
-        popup.add(debugMenu);
+        popup.add(followCursorItem);
+        popup.add(restoreWindowsItem);
+        popup.add(debugMenuItem);
         popup.addSeparator();
-        if (submenu.getMenuComponentCount() > 0) {
-            popup.add(submenu);
+        if (setBehaviorMenu.getMenuComponentCount() > 0) {
+            popup.add(setBehaviorMenu);
         }
-        if (allowedSubmenu.getMenuComponentCount() > 0) {
-            popup.add(allowedSubmenu);
+        if (allowedBehaviorsMenu.getMenuComponentCount() > 0) {
+            popup.add(allowedBehaviorsMenu);
         }
         // Only add a second separator if either menu has a component count greater than 0. Just in case!
-        if (submenu.getMenuComponentCount() > 0 || allowedSubmenu.getMenuComponentCount() > 0) {
+        if (setBehaviorMenu.getMenuComponentCount() > 0 || allowedBehaviorsMenu.getMenuComponentCount() > 0) {
             popup.addSeparator();
         }
-        popup.add(pauseMenu);
+        popup.add(pauseItem);
         popup.addSeparator();
         popup.add(disposeMenu);
-        popup.add(oneMenu);
-        popup.add(onlyOneMenu);
+        popup.add(remainOneItem);
+        popup.add(remainOnlyOneItem);
         popup.add(closeMenu);
 
         final Component windowComponent = window.asComponent();
