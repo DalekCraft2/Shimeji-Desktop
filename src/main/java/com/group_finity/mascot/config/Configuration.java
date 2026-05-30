@@ -174,6 +174,27 @@ public class Configuration {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), builder), e);
             }
         }
+
+        // Ensure that all required behaviors are present
+        String[] requiredBehaviors = {
+                schema.getString(UserBehavior.BEHAVIORNAME_CHASEMOUSE),
+                schema.getString(UserBehavior.BEHAVIORNAME_FALL),
+                schema.getString(UserBehavior.BEHAVIORNAME_DRAGGED),
+                schema.getString(UserBehavior.BEHAVIORNAME_THROWN)
+        };
+        StringBuilder stringBuilder = null;
+        for (String requiredBehavior : requiredBehaviors) {
+            if (!behaviorBuilders.containsKey(requiredBehavior)) {
+                if (stringBuilder == null) {
+                    stringBuilder = new StringBuilder(requiredBehavior);
+                } else {
+                    stringBuilder.append(", ").append(requiredBehavior);
+                }
+            }
+        }
+        if (stringBuilder != null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("MissingRequiredBehaviourErrorMessage"), stringBuilder));
+        }
     }
 
     public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
