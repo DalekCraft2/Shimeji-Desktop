@@ -67,11 +67,6 @@ public class Main {
             "behaviors.xml", "behavior.xml", "行動.xml", "two.xml", "2.xml"
     };
 
-    /**
-     * Action that matches the "Gather Around Mouse!" context menu command
-     */
-    static final String BEHAVIOR_GATHER = "ChaseMouse";
-
     static {
         try (InputStream input = Files.newInputStream(LOGGING_FILE)) {
             LogManager.getLogManager().readConfiguration(input);

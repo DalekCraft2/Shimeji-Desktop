@@ -27,6 +27,11 @@ import java.awt.event.MouseEvent;
 public class UserBehavior implements Behavior {
     private static final Logger log = LoggerFactory.getLogger(UserBehavior.class);
 
+    /**
+     * Action that matches the "Gather Around Mouse!" context menu command
+     */
+    public static final String BEHAVIORNAME_CHASEMOUSE = "ChaseMouse";
+
     public static final String BEHAVIORNAME_FALL = "Fall";
 
     public static final String BEHAVIORNAME_DRAGGED = "Dragged";

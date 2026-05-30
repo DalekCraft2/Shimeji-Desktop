@@ -5,6 +5,7 @@
 
 package com.group_finity.mascot;
 
+import com.group_finity.mascot.behavior.UserBehavior;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.sound.Sounds;
@@ -482,7 +483,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCallShimejiActionPerformed
 
     private void btnFollowCursorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFollowCursorActionPerformed
-        Main.getExecutorService().submit(() -> Main.getInstance().getManager().setBehaviorAll(Main.BEHAVIOR_GATHER));
+        Main.getExecutorService().submit(() -> Main.getInstance().getManager().setBehaviorAll(UserBehavior.BEHAVIORNAME_CHASEMOUSE));
         if (useSystemTray)
             ((Window) getTopLevelAncestor()).dispose();
     }//GEN-LAST:event_btnFollowCursorActionPerformed

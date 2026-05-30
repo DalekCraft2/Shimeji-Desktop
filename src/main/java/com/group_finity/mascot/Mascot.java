@@ -354,7 +354,7 @@ public class Mascot {
         callAnotherItem.addActionListener(event -> Main.getInstance().createMascot(imageSet));
 
         final JMenuItem followCursorItem = new JMenuItem(languageBundle.getString("FollowCursor"));
-        followCursorItem.addActionListener(event -> manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), Main.BEHAVIOR_GATHER, imageSet));
+        followCursorItem.addActionListener(event -> manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), UserBehavior.BEHAVIORNAME_CHASEMOUSE, imageSet));
 
         final JMenuItem restoreWindowsItem = new JMenuItem(languageBundle.getString("RestoreWindows"));
         restoreWindowsItem.addActionListener(event -> environment.restoreIE());
