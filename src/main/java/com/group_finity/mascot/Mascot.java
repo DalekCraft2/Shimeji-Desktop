@@ -394,7 +394,7 @@ public class Mascot {
                     }
                     if (config.isBehaviorToggleable(behaviorName) && !behaviorName.contains("/")) {
                         toggleItem = new JCheckBoxMenuItem(caption, config.isBehaviorEnabled(behaviorName, this));
-                        toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(behaviorName, this, !config.isBehaviorEnabled(behaviorName, this)));
+                        toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(behaviorName, this, e.getStateChange() == ItemEvent.SELECTED));
                         allowedBehaviorsMenu.add(toggleItem);
                     }
                 }
