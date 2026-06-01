@@ -142,128 +142,6 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="TargetX" type="tns:IntParameter">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the final x-position of the mascot when using the Jump or Move
-                    actions (or subclasses of them). Works the same for the ComplexJump and ComplexMove actions if Scan
-                    features are not enabled in the "Characteristics" attribute. For Jump, defaults to 0. For Move,
-                    defaults to the maximum integer value.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="TargetY" type="tns:IntParameter">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the final y-position of the mascot when using the Jump or Move
-                    actions (or subclasses of them). Works the same for the ComplexJump and ComplexMove actions if Scan
-                    features are not enabled in the "Characteristics" attribute. For Jump, defaults to 0. For Move,
-                    defaults to the maximum integer value.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="InitialVX" type="tns:IntParameter">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the initial x-velocity of the mascot when using the Fall action
-                    (or subclasses of it), or the initial x-velocity of the window when using the ThrowIE action. For
-                    Fall, defaults to 0. For ThrowIE, defaults to 32.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="InitialVY" type="tns:IntParameter">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the initial y-velocity of the mascot when using the Fall action
-                    (or subclasses of it), or the initial y-velocity of the window when using the ThrowIE action. For
-                    Fall, defaults to 0. For ThrowIE, defaults to -10.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="X" type="tns:IntParameter" default="0">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the x-offset of the mascot when using the Offset action. Defaults
-                    to 0.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="Y" type="tns:IntParameter" default="0">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the y-offset of the mascot when using the Offset action. Defaults
-                    to 0.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="LookRight" type="tns:BooleanParameter">
-            <annotation>
-                <documentation>
-                    A scriptable boolean representing whether the mascot should face right when using the Look
-                    or Turn actions. Defaults to the direction opposite of whichever the mascot is currently facing.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="IeOffsetX" type="tns:IntParameter" default="0">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the x-offset of the window when using the FallWithIE or WalkWithIE
-                    actions. Defaults to 0.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="IeOffsetY" type="tns:IntParameter" default="0">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the y-offset of the window when using the FallWithIE or WalkWithIE
-                    actions. Defaults to 0.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="OffsetX" type="tns:IntParameter" default="0">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the x-offset of the mascot when using the Dragged or Regist
-                    actions. Defaults to 0.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="OffsetY" type="tns:IntParameter" default="120">
-            <annotation>
-                <documentation>
-                    A scriptable integer representing the y-offset of the mascot when using the Dragged action. Defaults
-                    to 120.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="OffsetType" default="ImageAnchor">
-            <annotation>
-                <documentation>
-                    A scriptable enum representing how the offset coordinates (the "OffsetX" and "OffsetY" attributes)
-                    should be interpreted when using the Dragged or Regist actions. Defaults to "ImageAnchor".
-                </documentation>
-            </annotation>
-            <simpleType>
-                <restriction base="string">
-                    <enumeration value="ImageAnchor">
-                        <annotation>
-                            <documentation>
-                                An offset of (0, 0) is placed at the image anchor. Positive values move the offset left
-                                and up.
-                            </documentation>
-                        </annotation>
-                    </enumeration>
-                    <enumeration value="Origin">
-                        <annotation>
-                            <documentation>
-                                An offset of (0, 0) is placed at the image origin (the upper-left corner of the image).
-                                Positive values move the offset right and down.
-                            </documentation>
-                        </annotation>
-                    </enumeration>
-                </restriction>
-            </simpleType>
-        </attribute>
         <attribute name="Affordance" type="tns:StringParameter" default="">
             <annotation>
                 <documentation>
@@ -275,6 +153,34 @@
                     Defaults to an empty string.
                 </documentation>
             </annotation>
+        </attribute>
+        <attribute name="BorderType">
+            <annotation>
+                <documentation>
+                    A scriptable enum representing the type of border on which to stay when using any bordered action
+                    (any subclass of BorderedAction). For most bordered actions, if the mascot is not on any instance of
+                    the specified border, it will enter the "Fall" action. Defaults to no border.
+                </documentation>
+            </annotation>
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="Ceiling">
+                        <annotation>
+                            <documentation>The action occurs on a ceiling.</documentation>
+                        </annotation>
+                    </enumeration>
+                    <enumeration value="Wall">
+                        <annotation>
+                            <documentation>The action occurs on a wall.</documentation>
+                        </annotation>
+                    </enumeration>
+                    <enumeration value="Floor">
+                        <annotation>
+                            <documentation>The action occurs on a floor.</documentation>
+                        </annotation>
+                    </enumeration>
+                </restriction>
+            </simpleType>
         </attribute>
         <attribute name="BornX" type="tns:IntParameter" default="0">
             <annotation>
@@ -344,52 +250,16 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="VelocityParam" type="tns:DoubleParameter" default="20">
+        <attribute name="Characteristics" type="tns:StringParameter" default="">
             <annotation>
                 <documentation>
-                    A scriptable double representing a scalar value for both the x- and y-velocities of the mascot when
-                    using the Jump, ScanJump, or ComplexJump actions (or subclasses of them). Defaults to 20.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="RegistanceX" type="tns:DoubleParameter" default="0.05">
-            <annotation>
-                <documentation>
-                    A scriptable double representing the x-resistance of the mascot when using the Fall action (or
-                    subclasses of it). Defaults to 0.05.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="RegistanceY" type="tns:DoubleParameter" default="0.1">
-            <annotation>
-                <documentation>
-                    A scriptable double representing the y-resistance of the mascot when using the Fall action (or
-                    subclasses of it). Defaults to 0.1.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="Gravity" type="tns:DoubleParameter">
-            <annotation>
-                <documentation>
-                    A scriptable double representing the downward acceleration of the mascot when using the Fall action
-                    (or subclasses of it), or the downward acceleration of the window when using the ThrowIE action. For
-                    Fall, defaults to 2. For ThrowIE, defaults to 0.5.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="TransformMascot" type="tns:StringParameter" default="">
-            <annotation>
-                <documentation>
-                    A scriptable string representing the name of the new image set for this mascot when using the
-                    Transform action. Defaults to an empty string, which means this mascot's image set is used.
-                </documentation>
-            </annotation>
-        </attribute>
-        <attribute name="TransformBehavior" type="tns:StringParameter" default="">
-            <annotation>
-                <documentation>
-                    A scriptable string representing the name of the initial behavior of this mascot after transforming
-                    when using the Transform action. Defaults to an empty string.
+                    A scriptable string of comma-separated values representing the features to enable when using the
+                    ComplexJump or ComplexMove actions. By default, these actions will behave like the standard Jump and
+                    Move actions respectively. However, setting this attribute to "Breed,Scan" will allow them to use
+                    Breed/Scan action attributes and features. It can also be set to only "Breed" or "Scan" to enable
+                    only those features. Without enabling these features, the Breed/Scan attributes will do nothing when
+                    applied to this action. Defaults to an empty string, which means neither of the two features are
+                    enabled.
                 </documentation>
             </annotation>
         </attribute>
@@ -424,16 +294,174 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Characteristics" type="tns:StringParameter" default="">
+        <attribute name="TargetX" type="tns:IntParameter">
             <annotation>
                 <documentation>
-                    A scriptable string of comma-separated values representing the features to enable when using the
-                    ComplexJump or ComplexMove actions. By default, these actions will behave like the standard Jump and
-                    Move actions respectively. However, setting this attribute to "Breed,Scan" will allow them to use
-                    Breed/Scan action attributes and features. It can also be set to only "Breed" or "Scan" to enable
-                    only those features. Without enabling these features, the Breed/Scan attributes will do nothing when
-                    applied to this action. Defaults to an empty string, which means neither of the two features are
-                    enabled.
+                    A scriptable integer representing the final x-position of the mascot when using the Jump or Move
+                    actions (or subclasses of them). Works the same for the ComplexJump and ComplexMove actions if Scan
+                    features are not enabled in the "Characteristics" attribute. For Jump, defaults to 0. For Move,
+                    defaults to the maximum integer value.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TargetY" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the final y-position of the mascot when using the Jump or Move
+                    actions (or subclasses of them). Works the same for the ComplexJump and ComplexMove actions if Scan
+                    features are not enabled in the "Characteristics" attribute. For Jump, defaults to 0. For Move,
+                    defaults to the maximum integer value.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="VelocityParam" type="tns:DoubleParameter" default="20">
+            <annotation>
+                <documentation>
+                    A scriptable double representing a scalar value for both the x- and y-velocities of the mascot when
+                    using the Jump, ScanJump, or ComplexJump actions (or subclasses of them). Defaults to 20.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="InitialVX" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the initial x-velocity of the mascot when using the Fall action
+                    (or subclasses of it), or the initial x-velocity of the window when using the ThrowIE action. For
+                    Fall, defaults to 0. For ThrowIE, defaults to 32.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="InitialVY" type="tns:IntParameter">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the initial y-velocity of the mascot when using the Fall action
+                    (or subclasses of it), or the initial y-velocity of the window when using the ThrowIE action. For
+                    Fall, defaults to 0. For ThrowIE, defaults to -10.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="RegistanceX" type="tns:DoubleParameter" default="0.05">
+            <annotation>
+                <documentation>
+                    A scriptable double representing the x-resistance of the mascot when using the Fall action (or
+                    subclasses of it). Defaults to 0.05.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="RegistanceY" type="tns:DoubleParameter" default="0.1">
+            <annotation>
+                <documentation>
+                    A scriptable double representing the y-resistance of the mascot when using the Fall action (or
+                    subclasses of it). Defaults to 0.1.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Gravity" type="tns:DoubleParameter">
+            <annotation>
+                <documentation>
+                    A scriptable double representing the downward acceleration of the mascot when using the Fall action
+                    (or subclasses of it), or the downward acceleration of the window when using the ThrowIE action. For
+                    Fall, defaults to 2. For ThrowIE, defaults to 0.5.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="IeOffsetX" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the x-offset of the window when using the FallWithIE or WalkWithIE
+                    actions. Defaults to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="IeOffsetY" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the y-offset of the window when using the FallWithIE or WalkWithIE
+                    actions. Defaults to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="OffsetX" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the x-offset of the mascot when using the Dragged or Regist
+                    actions. Defaults to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="OffsetY" type="tns:IntParameter" default="120">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the y-offset of the mascot when using the Dragged action. Defaults
+                    to 120.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="OffsetType" default="ImageAnchor">
+            <annotation>
+                <documentation>
+                    A scriptable enum representing how the offset coordinates (the "OffsetX" and "OffsetY" attributes)
+                    should be interpreted when using the Dragged or Regist actions. Defaults to "ImageAnchor".
+                </documentation>
+            </annotation>
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="ImageAnchor">
+                        <annotation>
+                            <documentation>
+                                An offset of (0, 0) is placed at the image anchor. Positive values move the offset left
+                                and up.
+                            </documentation>
+                        </annotation>
+                    </enumeration>
+                    <enumeration value="Origin">
+                        <annotation>
+                            <documentation>
+                                An offset of (0, 0) is placed at the image origin (the upper-left corner of the image).
+                                Positive values move the offset right and down.
+                            </documentation>
+                        </annotation>
+                    </enumeration>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="X" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the x-offset of the mascot when using the Offset action. Defaults
+                    to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="Y" type="tns:IntParameter" default="0">
+            <annotation>
+                <documentation>
+                    A scriptable integer representing the y-offset of the mascot when using the Offset action. Defaults
+                    to 0.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="LookRight" type="tns:BooleanParameter">
+            <annotation>
+                <documentation>
+                    A scriptable boolean representing whether the mascot should face right when using the Look
+                    or Turn actions. Defaults to the direction opposite of whichever the mascot is currently facing.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TransformBehavior" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the initial behavior of this mascot after transforming
+                    when using the Transform action. Defaults to an empty string.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="TransformMascot" type="tns:StringParameter" default="">
+            <annotation>
+                <documentation>
+                    A scriptable string representing the name of the new image set for this mascot when using the
+                    Transform action. Defaults to an empty string, which means this mascot's image set is used.
                 </documentation>
             </annotation>
         </attribute>
@@ -446,34 +474,6 @@
                     "img/[image_set]/sound/".
                 </documentation>
             </annotation>
-        </attribute>
-        <attribute name="BorderType">
-            <annotation>
-                <documentation>
-                    A scriptable enum representing the type of border on which to stay when using any bordered action
-                    (any subclass of BorderedAction). For most bordered actions, if the mascot is not on any instance of
-                    the specified border, it will enter the "Fall" action. Defaults to no border.
-                </documentation>
-            </annotation>
-            <simpleType>
-                <restriction base="string">
-                    <enumeration value="Floor">
-                        <annotation>
-                            <documentation>The action occurs on a floor.</documentation>
-                        </annotation>
-                    </enumeration>
-                    <enumeration value="Wall">
-                        <annotation>
-                            <documentation>The action occurs on a wall.</documentation>
-                        </annotation>
-                    </enumeration>
-                    <enumeration value="Ceiling">
-                        <annotation>
-                            <documentation>The action occurs on a ceiling.</documentation>
-                        </annotation>
-                    </enumeration>
-                </restriction>
-            </simpleType>
         </attribute>
         <attribute name="Loop" type="tns:BooleanParameter" default="false">
             <annotation>
