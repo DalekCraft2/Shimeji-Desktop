@@ -117,8 +117,8 @@
         </choice>
     </complexType>
 
-    <complexType name="ActionArguments" abstract="true">
-        <attribute name="Duration" type="tns:IntParameter">
+    <complexType name="ActionParameters" abstract="true">
+        <attribute name="Duration" type="tns:ScriptableInt">
             <annotation>
                 <documentation>
                     A scriptable integer representing the duration of this action, in ticks. Defaults to the maximum
@@ -126,7 +126,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Condition" type="tns:BooleanParameter" default="true">
+        <attribute name="Condition" type="tns:ScriptableBoolean" default="true">
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether this action should be performed. Defaults to
@@ -134,7 +134,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Draggable" type="tns:BooleanParameter" default="true">
+        <attribute name="Draggable" type="tns:ScriptableBoolean" default="true">
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether the mascot should be draggable during this
@@ -142,7 +142,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Affordance" type="tns:StringParameter" default="">
+        <attribute name="Affordance" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string representing the name of an affordance. For ScanInteract, ScanJump, and
@@ -182,7 +182,7 @@
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="BornX" type="tns:IntParameter" default="0">
+        <attribute name="BornX" type="tns:ScriptableInt" default="0">
             <annotation>
                 <documentation>
                     A scriptable integer representing the relative x-position of the newly created mascot when using the
@@ -191,7 +191,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="BornY" type="tns:IntParameter" default="0">
+        <attribute name="BornY" type="tns:ScriptableInt" default="0">
             <annotation>
                 <documentation>
                     A scriptable integer representing the relative y-position of the newly created mascot when using the
@@ -200,7 +200,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="BornBehavior" type="tns:StringParameter" default="">
+        <attribute name="BornBehavior" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the initial behavior of the newly created mascot when
@@ -210,7 +210,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="BornMascot" type="tns:StringParameter" default="">
+        <attribute name="BornMascot" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the image set of the newly created mascot when using
@@ -220,7 +220,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="BornTransient" type="tns:BooleanParameter" default="false">
+        <attribute name="BornTransient" type="tns:ScriptableBoolean" default="false">
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether to mark the newly created mascot as transient when using
@@ -230,7 +230,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="BornInterval" type="tns:IntParameter" default="1">
+        <attribute name="BornInterval" type="tns:ScriptableInt" default="1">
             <annotation>
                 <documentation>
                     A scriptable integer representing the interval between each breeding, in ticks, when using the
@@ -240,7 +240,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="BornCount" type="tns:IntParameter" default="1">
+        <attribute name="BornCount" type="tns:ScriptableInt" default="1">
             <annotation>
                 <documentation>
                     A scriptable integer representing the number of mascots to create during each breeding when using
@@ -250,7 +250,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Characteristics" type="tns:StringParameter" default="">
+        <attribute name="Characteristics" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string of comma-separated values representing the features to enable when using the
@@ -263,7 +263,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Behavior" type="tns:StringParameter" default="">
+        <attribute name="Behavior" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the behavior to perform whilst overlapping another
@@ -274,7 +274,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="TargetBehavior" type="tns:StringParameter" default="">
+        <attribute name="TargetBehavior" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the behavior for the target mascot to perform after
@@ -284,7 +284,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="TargetLook" type="tns:BooleanParameter" default="false">
+        <attribute name="TargetLook" type="tns:ScriptableBoolean" default="false">
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether to make the target mascot look toward this mascot after
@@ -294,7 +294,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="TargetX" type="tns:IntParameter">
+        <attribute name="TargetX" type="tns:ScriptableInt">
             <annotation>
                 <documentation>
                     A scriptable integer representing the final x-position of the mascot when using the Jump or Move
@@ -304,7 +304,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="TargetY" type="tns:IntParameter">
+        <attribute name="TargetY" type="tns:ScriptableInt">
             <annotation>
                 <documentation>
                     A scriptable integer representing the final y-position of the mascot when using the Jump or Move
@@ -314,7 +314,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="VelocityParam" type="tns:DoubleParameter" default="20">
+        <attribute name="VelocityParam" type="tns:ScriptableDouble" default="20">
             <annotation>
                 <documentation>
                     A scriptable double representing a scalar value for both the x- and y-velocities of the mascot when
@@ -322,7 +322,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="InitialVX" type="tns:IntParameter">
+        <attribute name="InitialVX" type="tns:ScriptableInt">
             <annotation>
                 <documentation>
                     A scriptable integer representing the initial x-velocity of the mascot when using the Fall action
@@ -331,7 +331,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="InitialVY" type="tns:IntParameter">
+        <attribute name="InitialVY" type="tns:ScriptableInt">
             <annotation>
                 <documentation>
                     A scriptable integer representing the initial y-velocity of the mascot when using the Fall action
@@ -340,7 +340,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="RegistanceX" type="tns:DoubleParameter" default="0.05">
+        <attribute name="RegistanceX" type="tns:ScriptableDouble" default="0.05">
             <annotation>
                 <documentation>
                     A scriptable double representing the x-resistance of the mascot when using the Fall action (or
@@ -348,7 +348,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="RegistanceY" type="tns:DoubleParameter" default="0.1">
+        <attribute name="RegistanceY" type="tns:ScriptableDouble" default="0.1">
             <annotation>
                 <documentation>
                     A scriptable double representing the y-resistance of the mascot when using the Fall action (or
@@ -356,7 +356,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Gravity" type="tns:DoubleParameter">
+        <attribute name="Gravity" type="tns:ScriptableDouble">
             <annotation>
                 <documentation>
                     A scriptable double representing the downward acceleration of the mascot when using the Fall action
@@ -365,7 +365,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="IeOffsetX" type="tns:IntParameter" default="0">
+        <attribute name="IeOffsetX" type="tns:ScriptableInt" default="0">
             <annotation>
                 <documentation>
                     A scriptable integer representing the x-offset of the window when using the FallWithIE or WalkWithIE
@@ -373,7 +373,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="IeOffsetY" type="tns:IntParameter" default="0">
+        <attribute name="IeOffsetY" type="tns:ScriptableInt" default="0">
             <annotation>
                 <documentation>
                     A scriptable integer representing the y-offset of the window when using the FallWithIE or WalkWithIE
@@ -381,7 +381,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="OffsetX" type="tns:IntParameter" default="0">
+        <attribute name="OffsetX" type="tns:ScriptableInt" default="0">
             <annotation>
                 <documentation>
                     A scriptable integer representing the x-offset of the mascot when using the Dragged or Regist
@@ -389,7 +389,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="OffsetY" type="tns:IntParameter" default="120">
+        <attribute name="OffsetY" type="tns:ScriptableInt" default="120">
             <annotation>
                 <documentation>
                     A scriptable integer representing the y-offset of the mascot when using the Dragged action. Defaults
@@ -425,7 +425,7 @@
                 </restriction>
             </simpleType>
         </attribute>
-        <attribute name="X" type="tns:IntParameter" default="0">
+        <attribute name="X" type="tns:ScriptableInt" default="0">
             <annotation>
                 <documentation>
                     A scriptable integer representing the x-offset of the mascot when using the Offset action. Defaults
@@ -433,7 +433,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Y" type="tns:IntParameter" default="0">
+        <attribute name="Y" type="tns:ScriptableInt" default="0">
             <annotation>
                 <documentation>
                     A scriptable integer representing the y-offset of the mascot when using the Offset action. Defaults
@@ -441,7 +441,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="LookRight" type="tns:BooleanParameter">
+        <attribute name="LookRight" type="tns:ScriptableBoolean">
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether the mascot should face right when using the Look
@@ -449,7 +449,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="TransformBehavior" type="tns:StringParameter" default="">
+        <attribute name="TransformBehavior" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the initial behavior of this mascot after transforming
@@ -457,7 +457,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="TransformMascot" type="tns:StringParameter" default="">
+        <attribute name="TransformMascot" type="tns:ScriptableString" default="">
             <annotation>
                 <documentation>
                     A scriptable string representing the name of the new image set for this mascot when using the
@@ -465,7 +465,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Sound" type="tns:StringParameter">
+        <attribute name="Sound" type="tns:ScriptableString">
             <annotation>
                 <documentation>
                     A scriptable string representing the path to the sound file to mute when using the Mute action. This
@@ -475,7 +475,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Loop" type="tns:BooleanParameter" default="false">
+        <attribute name="Loop" type="tns:ScriptableBoolean" default="false">
             <annotation>
                 <documentation>
                     A scriptable boolean representing whether to loop this action indefinitely when using the Sequence
@@ -489,7 +489,7 @@
         It is used in the default action.xml file to make use of the feature of using attributes in the scripts.
         It is included here only to prevent errors in the default action.xml file.
         -->
-        <attribute name="Gap" type="tns:Parameter"/>
+        <attribute name="Gap" type="tns:Scriptable"/>
     </complexType>
 
     <complexType name="Action">
@@ -497,7 +497,7 @@
             <documentation>Defines an action that can be performed by the mascot.</documentation>
         </annotation>
         <complexContent>
-            <extension base="tns:ActionArguments">
+            <extension base="tns:ActionParameters">
                 <choice>
                     <element name="Animation" type="tns:Animation" minOccurs="0" maxOccurs="unbounded"/>
                     <sequence>
@@ -639,7 +639,7 @@
             <element name="Pose" type="tns:Pose" minOccurs="1" maxOccurs="unbounded"/>
             <element name="Hotspot" type="tns:Hotspot" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
-        <attribute name="Condition" type="tns:BooleanParameter" default="true">
+        <attribute name="Condition" type="tns:ScriptableBoolean" default="true">
             <annotation>
                 <documentation>
                     A scriptable boolean condition to determine whether this animation should be performed.
@@ -800,7 +800,7 @@
             </documentation>
         </annotation>
         <complexContent>
-            <extension base="tns:ActionArguments">
+            <extension base="tns:ActionParameters">
                 <attribute name="Name" type="string" use="required">
                     <annotation>
                         <documentation>
@@ -867,7 +867,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Condition" type="tns:BooleanParameter">
+        <attribute name="Condition" type="tns:ScriptableBoolean">
             <annotation>
                 <documentation>
                     A scriptable boolean condition to determine whether this behavior should be performed.
@@ -898,7 +898,7 @@
         </annotation>
         <complexContent>
             <extension base="tns:BehaviorList">
-                <attribute name="Condition" type="tns:BooleanParameter">
+                <attribute name="Condition" type="tns:ScriptableBoolean">
                     <annotation>
                         <documentation>
                             A scriptable boolean condition to determine whether any of the behaviors inside this list
@@ -956,7 +956,7 @@
                 </documentation>
             </annotation>
         </attribute>
-        <attribute name="Condition" type="tns:BooleanParameter">
+        <attribute name="Condition" type="tns:ScriptableBoolean">
             <annotation>
                 <documentation>
                     A scriptable boolean condition to determine whether this behavior should be performed.
@@ -974,7 +974,7 @@
         </annotation>
         <complexContent>
             <extension base="tns:NextBehaviorList">
-                <attribute name="Condition" type="tns:BooleanParameter">
+                <attribute name="Condition" type="tns:ScriptableBoolean">
                     <annotation>
                         <documentation>
                             A scriptable boolean condition to determine whether any of the behaviors inside this list
@@ -997,7 +997,7 @@
         </restriction>
     </simpleType>
 
-    <simpleType name="Parameter">
+    <simpleType name="Scriptable">
         <annotation>
             <documentation>
                 A generic scriptable. Can be a boolean, integer, or double; or can be scripted, meaning it is treated
@@ -1014,7 +1014,7 @@
             <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)|true|false"/>
         </restriction>
     </simpleType>
-    <simpleType name="BooleanParameter">
+    <simpleType name="ScriptableBoolean">
         <annotation>
             <documentation>
                 A scriptable boolean value. Can be either "true" or "false"; or can be scripted, meaning it is treated
@@ -1031,7 +1031,7 @@
             <pattern value="([$#]\{.+\})|true|false"/>
         </restriction>
     </simpleType>
-    <simpleType name="IntParameter">
+    <simpleType name="ScriptableInt">
         <annotation>
             <documentation>
                 A scriptable integer value. Can be any positive or negative integer; or can be scripted, meaning it is
@@ -1048,7 +1048,7 @@
             <pattern value="([$#]\{.+\})|(-?\d+)"/>
         </restriction>
     </simpleType>
-    <simpleType name="DoubleParameter">
+    <simpleType name="ScriptableDouble">
         <annotation>
             <documentation>
                 A scriptable double value. Can be any positive or negative double; or can be scripted, meaning it is
@@ -1065,7 +1065,7 @@
             <pattern value="([$#]\{.+\})|(-?\d+(\.\d+)?)"/>
         </restriction>
     </simpleType>
-    <simpleType name="StringParameter">
+    <simpleType name="ScriptableString">
         <annotation>
             <documentation>
                 A scriptable string value. Can be any string; or can be scripted, meaning it is treated as JavaScript
