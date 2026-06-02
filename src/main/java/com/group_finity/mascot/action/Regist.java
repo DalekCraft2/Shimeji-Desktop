@@ -51,6 +51,9 @@ public class Regist extends ActionBase {
             offsetX = getMascot().getImage().getCenter().x - offsetX;
         }
 
+        /* FIXME: This only compares the x-coordinates of the cursor and the mascot, but not the y-coordinates,
+            so it's possible to move the cursor up/down away from the mascot and still be holding the mascot
+            from far away. */
         /* Return true if the cursor's x-coordinate has moved less than 5 units from the mascot's x-coordinate.
         Note that this action does not update the mascot's position, so this condition will use the mascot's
         *initial* position unless the position is updated from somewhere else. */
