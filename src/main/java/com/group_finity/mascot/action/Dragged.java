@@ -76,7 +76,7 @@ public class Dragged extends ActionBase {
             offsetY = getMascot().getImage().getCenter().y - offsetY;
         }
 
-        if (Math.abs(cursor.getX() - getMascot().getAnchor().x + offsetX) >= 5) {
+        if (Math.abs(cursor.getX() + offsetX - getMascot().getAnchor().x) >= 5) {
             setTime(0);
         }
 
@@ -95,7 +95,9 @@ public class Dragged extends ActionBase {
         // Align the mascot position to the mouse cursor
         getMascot().getAnchor().setLocation(cursor.getX() + offsetX, cursor.getY() + offsetY);
 
-        // recreates old lukewarm behaviour while keeping hasNext deterministic
+        // If the action's time is one less than timeToResist, there is a 90% chance that
+        // we increase timeToResist by 1, which will make the next hasNext() call not return false.
+        // This recreates the old lukewarm behavior while also keeping hasNext() deterministic.
         if (getTime() == timeToResist - 1 && Math.random() >= 0.1) {
             timeToResist++;
         }
