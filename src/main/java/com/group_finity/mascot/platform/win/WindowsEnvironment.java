@@ -34,7 +34,7 @@ class WindowsEnvironment extends AbstractEnvironment {
 
     private final Area workArea = new Area(false);
 
-    private final Area activeWindowDpiUnaware = new Area();
+    private final Rectangle activeWindowDpiUnaware = new Rectangle();
     private final Area activeWindow = new Area();
 
     private HWND activeWindowHandle = null;
@@ -72,10 +72,10 @@ class WindowsEnvironment extends AbstractEnvironment {
         // Get DPI-unaware window rectangle
         final Rectangle windowRect = getWindowRect(findActiveWindow(), false);
         if (windowRect == null) {
-            activeWindowDpiUnaware.setRect(-1, -1, 0, 0);
+            activeWindowDpiUnaware.setBounds(-1, -1, 0, 0);
             activeWindow.setRect(-1, -1, 0, 0);
         } else {
-            activeWindowDpiUnaware.set(windowRect);
+            activeWindowDpiUnaware.setBounds(windowRect);
 
             // Calculate the DPI-aware rectangle here to avoid calling getWindowRect() a second time
             double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
@@ -92,7 +92,6 @@ class WindowsEnvironment extends AbstractEnvironment {
         if (prevWindowId != getActiveWindowId()) {
             // If the active window has changed, reset the active window's deltas to 0
             activeWindow.resetDeltas();
-            activeWindowDpiUnaware.resetDeltas();
         }
     }
 
@@ -296,8 +295,8 @@ class WindowsEnvironment extends AbstractEnvironment {
             y = (int) Math.round(y * dpiScale);
         }
 
-        User32.INSTANCE.MoveWindow(activeWindowHandle, x, y, activeWindowDpiUnaware.getWidth(),
-                activeWindowDpiUnaware.getHeight(), true);
+        User32.INSTANCE.MoveWindow(activeWindowHandle, x, y, activeWindowDpiUnaware.width,
+                activeWindowDpiUnaware.height, true);
     }
 
     @Override
