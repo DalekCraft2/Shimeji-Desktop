@@ -8,7 +8,6 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -68,15 +67,15 @@ public class FallWithIE extends Fall {
         // Move window
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(
+                getEnvironment().moveActiveIE(
                         getMascot().getAnchor().x - offsetX,
                         getMascot().getAnchor().y + offsetY - activeIE.getHeight()
-                ));
+                );
             } else {
-                getEnvironment().moveActiveIE(new Point(
+                getEnvironment().moveActiveIE(
                         getMascot().getAnchor().x + offsetX - activeIE.getWidth(),
                         getMascot().getAnchor().y + offsetY - activeIE.getHeight()
-                ));
+                );
             }
         }
     }

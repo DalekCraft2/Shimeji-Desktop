@@ -9,7 +9,6 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -65,15 +64,15 @@ public class ThrowIE extends Animate {
 
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(
+                getEnvironment().moveActiveIE(
                         activeIE.getLeft() + (int) Math.round(getInitialVx() * scaling),
                         activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)
-                ));
+                );
             } else {
-                getEnvironment().moveActiveIE(new Point(
+                getEnvironment().moveActiveIE(
                         activeIE.getLeft() - (int) Math.round(getInitialVx() * scaling),
                         activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)
-                ));
+                );
             }
         }
     }

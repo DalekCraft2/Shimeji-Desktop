@@ -160,7 +160,7 @@ class VirtualEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveWindow(final Point point) {
+    public void moveActiveWindow(final int x, final int y) {
     }
 
     @Override

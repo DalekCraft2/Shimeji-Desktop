@@ -341,10 +341,10 @@ class X11Environment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveWindow(Point point) {
+    public void moveActiveWindow(int x, int y) {
         if (activeWindowObject != null) {
             // FIXME: Mascots will often let go of a window very shortly after they pick it up, without throwing it
-            X11.INSTANCE.XMoveWindow(display.getX11Display(), activeWindowObject.getX11Window(), point.x, point.y);
+            X11.INSTANCE.XMoveWindow(display.getX11Display(), activeWindowObject.getX11Window(), x, y);
         }
     }
 

@@ -3,8 +3,6 @@ package com.group_finity.mascot.platform.generic;
 import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.environment.Area;
 
-import java.awt.*;
-
 /**
  * Uses JNI to obtain environment information that is difficult to obtain with Java.
  *
@@ -42,7 +40,7 @@ class GenericEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveWindow(final Point point) {
+    public void moveActiveWindow(final int x, final int y) {
     }
 
     @Override

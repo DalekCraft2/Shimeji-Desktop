@@ -285,18 +285,18 @@ class WindowsEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveWindow(final Point point) {
+    public void moveActiveWindow(int x, int y) {
         if (activeWindowHandle == null) {
             return;
         }
 
         double dpiScale = Toolkit.getDefaultToolkit().getScreenResolution() / 96.0;
         if (dpiScale != 1) {
-            point.x = (int) Math.round(point.x * dpiScale);
-            point.y = (int) Math.round(point.y * dpiScale);
+            x = (int) Math.round(x * dpiScale);
+            y = (int) Math.round(y * dpiScale);
         }
 
-        User32.INSTANCE.MoveWindow(activeWindowHandle, point.x, point.y, activeWindowDpiUnaware.getWidth(),
+        User32.INSTANCE.MoveWindow(activeWindowHandle, x, y, activeWindowDpiUnaware.getWidth(),
                 activeWindowDpiUnaware.getHeight(), true);
     }
 

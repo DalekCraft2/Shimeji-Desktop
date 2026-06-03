@@ -80,7 +80,17 @@ public interface Environment {
      *
      * @param point the point at which the active window's top-left corner should be after it is moved
      */
-    void moveActiveWindow(final Point point);
+    default void moveActiveWindow(Point point) {
+        moveActiveWindow(point.x, point.y);
+    }
+
+    /**
+     * Repositions the active window so its top-left corner is at the specified location {@code (x, y)}.
+     *
+     * @param x the x-coordinate at which the active window's left side should be after it is moved
+     * @param y the y-coordinate at which the active window's top side should be after it is moved
+     */
+    void moveActiveWindow(int x, int y);
 
     /**
      * Searches for windows that have been thrown off-screen and repositions them to be on-screen.

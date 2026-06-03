@@ -112,7 +112,7 @@ class MacEnvironment extends AbstractEnvironment {
         return size;
     }
 
-    private void moveFrontmostWindow(final Point point) {
+    private void moveFrontmostWindow(final int x, final int y) {
         AXUIElementRef application =
                 carbonEx.AXUIElementCreateApplication(currentPID);
 
@@ -121,7 +121,7 @@ class MacEnvironment extends AbstractEnvironment {
         if (carbonEx.AXUIElementCopyAttributeValue(
                 application, kAXFocusedWindow, windowp) == CarbonExtra.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef(windowp.getValue());
-            moveWindow(window, point.x, point.y);
+            moveWindow(window, x, y);
         }
 
         application.release();
@@ -316,7 +316,7 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public void moveActiveWindow(final Point point) {
+    public void moveActiveWindow(int x, int y) {
         /*
          * As mentioned above, if you try to move completely off-screen, you will be pushed back,
          * so if you specify such a position, switch to moving as far as possible.
@@ -335,18 +335,13 @@ class MacEnvironment extends AbstractEnvironment {
                 // (Cannot move above the menu bar)
                 maxY = visibleRect.getMaxY(); // Downward wrap coordinate
 
-        double
-                pX = point.getX(),
-                pY = point.getY();
-
         // Wrapping in the X direction
-        pX = Math.clamp(pX, minX, maxX);
+        x = (int) Math.clamp(x, minX, maxX);
 
         // Wrapping in Y direction
-        pY = Math.clamp(pY, minY, maxY);
+        y = (int) Math.clamp(y, minY, maxY);
 
-        point.setLocation(pX, pY);
-        moveFrontmostWindow(point);
+        moveFrontmostWindow(x, y);
     }
 
     @Override

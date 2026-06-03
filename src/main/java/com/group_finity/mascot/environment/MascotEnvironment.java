@@ -289,6 +289,16 @@ public class MascotEnvironment {
     }
 
     /**
+     * Repositions the active window so its top-left corner is at the specified location {@code (x, y)}.
+     *
+     * @param x the x-coordinate at which the active window's left side should be after it is moved
+     * @param y the y-coordinate at which the active window's top side should be after it is moved
+     */
+    public void moveActiveIE(int x, int y) {
+        impl.moveActiveWindow(x, y);
+    }
+
+    /**
      * Searches for windows that have been thrown off-screen and repositions them to be on-screen.
      * <p>
      * <b>This method is for internal use only. It should not be used in scripts.</b>
