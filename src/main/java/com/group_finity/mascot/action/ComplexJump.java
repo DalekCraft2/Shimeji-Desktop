@@ -70,8 +70,7 @@ public class ComplexJump extends ActionBase {
         for (String characteristic : getCharacteristics().split(",")) {
             if (characteristic.equals(getSchema().getString("Breed"))) {
                 breedEnabled = true;
-            }
-            if (characteristic.equals(getSchema().getString("Scan"))) {
+            } else if (characteristic.equals(getSchema().getString("Scan"))) {
                 scanEnabled = true;
             }
         }
