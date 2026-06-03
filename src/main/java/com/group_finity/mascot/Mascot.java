@@ -522,7 +522,10 @@ public class Mascot {
         SwingUtilities.invokeLater(() -> {
             final Component windowComponent = window.asComponent();
             Rectangle bounds = getBounds();
-            if (!windowComponent.getBounds().equals(bounds)) {
+            /* Compare each value individually instead of using windowComponent.getBounds().equals(),
+            to avoid heap allocations caused by Component.getBounds() */
+            if (windowComponent.getX() != bounds.x || windowComponent.getY() != bounds.y ||
+                    windowComponent.getWidth() != bounds.width || windowComponent.getHeight() != bounds.height) {
                 // Set the bounds of the window to the mascot's bounds
                 windowComponent.setBounds(bounds);
             }

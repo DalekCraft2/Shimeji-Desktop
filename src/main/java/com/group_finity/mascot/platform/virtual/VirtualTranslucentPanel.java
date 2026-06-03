@@ -26,8 +26,12 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     }
 
     @Override
-    public String toString() {
-        return "VirtualTranslucentPanel[hashCode=" + hashCode() + ",bounds=" + getBounds() + "]";
+    public String paramString() {
+        return "hashCode=" + hashCode() +
+                ",x=" + getX() +
+                ",y=" + getY() +
+                ",width=" + getWidth() +
+                ",height=" + getHeight();
     }
 
     @Override
