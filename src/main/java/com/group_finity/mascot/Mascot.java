@@ -151,14 +151,16 @@ public class Mascot {
      * Set by {@link #getBounds()} whenever the current image is not {@code null}.
      * When the current image is {@code null}, this value is used by {@link #getBounds()} to calculate the bounds.
      */
-    private Dimension prevImageSize = new Dimension();
+    private Dimension prevImageSize = null;
 
     /**
      * Represents the anchor of the last non-null image this {@code Mascot} had.
      * Set by {@link #getBounds()} whenever the current image is not {@code null}.
      * When the current image is {@code null}, this value is used by {@link #getBounds()} to calculate the bounds.
      */
-    private Point prevImageAnchor = new Point();
+    private Point prevImageAnchor = null;
+
+    private final Object imageFieldLock = new Object();
 
     private boolean needsRepaint = true;
 
@@ -234,7 +236,8 @@ public class Mascot {
                     if (shouldBeEnabled) {
                         super.paintComponent(g);
 
-                        Rectangle bounds = getBounds();
+                        int width = getWidth();
+                        int height = getHeight();
 
                         // Draw hotspots
                         g.setColor(Color.BLUE);
@@ -242,10 +245,10 @@ public class Mascot {
                             for (Hotspot hotspot : getHotspots()) {
                                 Shape shape = hotspot.getShape();
                                 if (shape instanceof Rectangle rectangle) {
-                                    int x = lookRight ? bounds.width - rectangle.x - rectangle.width : rectangle.x;
+                                    int x = lookRight ? width - rectangle.x - rectangle.width : rectangle.x;
                                     g.drawRect(x, rectangle.y, rectangle.width - 1, rectangle.height - 1);
                                 } else if (shape instanceof Ellipse2D ellipse) {
-                                    double x = lookRight ? bounds.width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
+                                    double x = lookRight ? width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
                                     g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
                                 }
                             }
@@ -253,18 +256,22 @@ public class Mascot {
 
                         // Draw bounds
                         g.setColor(Color.RED);
-                        g.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
+                        g.drawRect(getX(), getY(), width - 1, height - 1);
 
-                        // if (image != null) {
                         // Draw image anchor
                         g.setColor(Color.GREEN);
-                        Point imageAnchor = prevImageAnchor;
-                        // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
-                        g.drawOval(imageAnchor.x - 5, imageAnchor.y - 5, 10, 10);
-                        g.drawLine(imageAnchor.x - 10, imageAnchor.y, imageAnchor.x + 10, imageAnchor.y);
-                        g.drawLine(imageAnchor.x, imageAnchor.y - 10, imageAnchor.x, imageAnchor.y + 10);
-                        g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
-                        g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
+                        Point imageAnchor;
+                        synchronized (imageFieldLock) {
+                            imageAnchor = prevImageAnchor;
+                        }
+                        if (imageAnchor != null) {
+                            // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
+                            g.drawOval(imageAnchor.x - 5, imageAnchor.y - 5, 10, 10);
+                            g.drawLine(imageAnchor.x - 10, imageAnchor.y, imageAnchor.x + 10, imageAnchor.y);
+                            g.drawLine(imageAnchor.x, imageAnchor.y - 10, imageAnchor.x, imageAnchor.y + 10);
+                            g.drawLine(imageAnchor.x - 10, imageAnchor.y - 10, imageAnchor.x + 10, imageAnchor.y + 10);
+                            g.drawLine(imageAnchor.x - 10, imageAnchor.y + 10, imageAnchor.x + 10, imageAnchor.y - 10);
+                        }
                     }
                 }
             };
@@ -613,6 +620,13 @@ public class Mascot {
 
         this.image = image;
 
+        if (image != null) {
+            synchronized (imageFieldLock) {
+                prevImageAnchor = image.getCenter();
+                prevImageSize = image.getSize();
+            }
+        }
+
         SwingUtilities.invokeLater(() -> {
             if (image != null) {
                 window.setImage(image.getImage());
@@ -632,15 +646,24 @@ public class Mascot {
     }
 
     public Rectangle getBounds() {
-        if (image != null) {
-            prevImageAnchor = image.getCenter();
-            prevImageSize = image.getSize();
+        // Find the window area from the ground coordinates and image anchor coordinates.
+        // The image anchor has already been adjusted for scaling.
+        Point imageAnchor;
+        Dimension imageSize;
+        synchronized (imageFieldLock) {
+            imageAnchor = prevImageAnchor;
+            imageSize = prevImageSize;
         }
-        // Find the window area from the ground coordinates and image anchor coordinates. The image anchor has already been adjusted for scaling.
-        final int top = anchor.y - prevImageAnchor.y;
-        final int left = anchor.x - prevImageAnchor.x;
+        int x = anchor.x;
+        int y = anchor.y;
+        if (imageAnchor != null) {
+            x -= imageAnchor.x;
+            y -= imageAnchor.y;
+        }
+        final int width = imageSize == null ? 0 : imageSize.width;
+        final int height = imageSize == null ? 0 : imageSize.height;
 
-        return new Rectangle(left, top, prevImageSize.width, prevImageSize.height);
+        return new Rectangle(x, y, width, height);
     }
 
     public int getTime() {
