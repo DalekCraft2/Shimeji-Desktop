@@ -74,8 +74,10 @@ public final class ImagePairs {
 
         int scaledCenterX = (int) Math.round(center.x * scaling);
         int scaledCenterY = (int) Math.round(center.y * scaling);
-        ImagePair ip = new ImagePair(new MascotImage(leftImage, new Point(scaledCenterX, scaledCenterY)),
-                new MascotImage(rightImage, new Point(rightImage.getWidth() - scaledCenterX, scaledCenterY)));
+        ImagePair ip = new ImagePair(
+                new MascotImage(leftImage, new Point(scaledCenterX, scaledCenterY)),
+                new MascotImage(rightImage, new Point(rightImage.getWidth() - scaledCenterX, scaledCenterY))
+        );
         imagePairs.put(key, ip);
 
         return key;

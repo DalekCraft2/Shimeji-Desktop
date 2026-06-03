@@ -103,7 +103,10 @@ public class AnimationBuilder {
         String imageKey = null;
         if (imagePath != null) {
             final String[] anchorCoordinates = anchorText.split(",");
-            final Point anchor = new Point(Integer.parseInt(anchorCoordinates[0]), Integer.parseInt(anchorCoordinates[1]));
+            final Point anchor = new Point(
+                    Integer.parseInt(anchorCoordinates[0]),
+                    Integer.parseInt(anchorCoordinates[1])
+            );
 
             try {
                 imageKey = ImagePairs.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
@@ -171,10 +174,14 @@ public class AnimationBuilder {
         final String[] originCoordinates = originText.split(",");
         final String[] sizeCoordinates = sizeText.split(",");
 
-        final Point origin = new Point((int) Math.round(Integer.parseInt(originCoordinates[0]) * scaling),
-                (int) Math.round(Integer.parseInt(originCoordinates[1]) * scaling));
-        final Dimension size = new Dimension((int) Math.round(Integer.parseInt(sizeCoordinates[0]) * scaling),
-                (int) Math.round(Integer.parseInt(sizeCoordinates[1]) * scaling));
+        final Point origin = new Point(
+                (int) Math.round(Integer.parseInt(originCoordinates[0]) * scaling),
+                (int) Math.round(Integer.parseInt(originCoordinates[1]) * scaling)
+        );
+        final Dimension size = new Dimension(
+                (int) Math.round(Integer.parseInt(sizeCoordinates[0]) * scaling),
+                (int) Math.round(Integer.parseInt(sizeCoordinates[1]) * scaling)
+        );
 
         Shape shape;
         if (shapeText.equalsIgnoreCase("Rectangle")) {

@@ -58,6 +58,7 @@ public class WalkWithIE extends Move {
         final int offsetX = getIEOffsetX();
         final int offsetY = getIEOffsetY();
 
+        // Check whether the mascot has the window properly
         if (getMascot().isLookRight()) {
             if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
                     || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
@@ -72,13 +73,18 @@ public class WalkWithIE extends Move {
 
         super.tick();
 
+        // Move window
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x - offsetX,
-                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()));
+                getEnvironment().moveActiveIE(new Point(
+                        getMascot().getAnchor().x - offsetX,
+                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()
+                ));
             } else {
-                getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x + offsetX - activeIE.getWidth(),
-                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()));
+                getEnvironment().moveActiveIE(new Point(
+                        getMascot().getAnchor().x + offsetX - activeIE.getWidth(),
+                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()
+                ));
             }
         }
     }

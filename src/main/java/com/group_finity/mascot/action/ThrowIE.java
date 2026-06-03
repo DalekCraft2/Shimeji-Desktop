@@ -65,11 +65,15 @@ public class ThrowIE extends Animate {
 
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() + (int) Math.round(getInitialVx() * scaling),
-                        activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)));
+                getEnvironment().moveActiveIE(new Point(
+                        activeIE.getLeft() + (int) Math.round(getInitialVx() * scaling),
+                        activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)
+                ));
             } else {
-                getEnvironment().moveActiveIE(new Point(activeIE.getLeft() - (int) Math.round(getInitialVx() * scaling),
-                        activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)));
+                getEnvironment().moveActiveIE(new Point(
+                        activeIE.getLeft() - (int) Math.round(getInitialVx() * scaling),
+                        activeIE.getTop() + (int) Math.round(getInitialVy() * scaling + getTime() * getGravity() * scaling)
+                ));
             }
         }
     }

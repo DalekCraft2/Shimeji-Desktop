@@ -68,11 +68,15 @@ public class FallWithIE extends Fall {
         // Move window
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
-                getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x - offsetX,
-                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()));
+                getEnvironment().moveActiveIE(new Point(
+                        getMascot().getAnchor().x - offsetX,
+                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()
+                ));
             } else {
-                getEnvironment().moveActiveIE(new Point(getMascot().getAnchor().x + offsetX - activeIE.getWidth(),
-                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()));
+                getEnvironment().moveActiveIE(new Point(
+                        getMascot().getAnchor().x + offsetX - activeIE.getWidth(),
+                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()
+                ));
             }
         }
     }
