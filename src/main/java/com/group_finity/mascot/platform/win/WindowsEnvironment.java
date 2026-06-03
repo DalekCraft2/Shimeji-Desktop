@@ -34,7 +34,6 @@ class WindowsEnvironment extends AbstractEnvironment {
 
     private final Area workArea = new Area(false);
 
-    private final Rectangle activeWindowDpiUnaware = new Rectangle();
     private final Area activeWindow = new Area();
 
     private HWND activeWindowHandle = null;
@@ -70,21 +69,10 @@ class WindowsEnvironment extends AbstractEnvironment {
         workArea.set(getWorkAreaRect(true));
         long prevWindowId = getActiveWindowId();
         // Get DPI-unaware window rectangle
-        final Rectangle windowRect = getWindowRect(findActiveWindow(), false);
+        final Rectangle windowRect = getWindowRect(findActiveWindow(), true);
         if (windowRect == null) {
-            activeWindowDpiUnaware.setBounds(-1, -1, 0, 0);
             activeWindow.setRect(-1, -1, 0, 0);
         } else {
-            activeWindowDpiUnaware.setBounds(windowRect);
-
-            // Calculate the DPI-aware rectangle here to avoid calling getWindowRect() a second time
-            double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-            if (dpiScaleInverse != 1) {
-                windowRect.x = (int) Math.round(windowRect.x * dpiScaleInverse);
-                windowRect.y = (int) Math.round(windowRect.y * dpiScaleInverse);
-                windowRect.width = (int) Math.round(windowRect.width * dpiScaleInverse);
-                windowRect.height = (int) Math.round(windowRect.height * dpiScaleInverse);
-            }
             activeWindow.set(windowRect);
         }
         activeWindow.setVisible(activeWindow.intersects(getScreen()));
@@ -295,8 +283,10 @@ class WindowsEnvironment extends AbstractEnvironment {
             y = (int) Math.round(y * dpiScale);
         }
 
-        User32.INSTANCE.MoveWindow(activeWindowHandle, x, y, activeWindowDpiUnaware.width,
-                activeWindowDpiUnaware.height, true);
+        /* Use SetWindowPos() instead of MoveWindow() so we don't have to
+        pass the previous dimensions of the window to the function */
+        User32.INSTANCE.SetWindowPos(activeWindowHandle, null, x, y,
+                0, 0, User32.SWP_NOSIZE);
     }
 
     @Override
