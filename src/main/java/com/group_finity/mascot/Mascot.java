@@ -148,18 +148,21 @@ public class Mascot {
 
     /**
      * Represents the dimensions of the last non-null image this {@code Mascot} had.
-     * Set by {@link #getBounds()} whenever the current image is not {@code null}.
+     * Set by {@link #setImage} whenever the current image is not {@code null}.
      * When the current image is {@code null}, this value is used by {@link #getBounds()} to calculate the bounds.
      */
     private Dimension prevImageSize = null;
 
     /**
      * Represents the anchor of the last non-null image this {@code Mascot} had.
-     * Set by {@link #getBounds()} whenever the current image is not {@code null}.
+     * Set by {@link #setImage} whenever the current image is not {@code null}.
      * When the current image is {@code null}, this value is used by {@link #getBounds()} to calculate the bounds.
      */
     private Point prevImageAnchor = null;
 
+    /**
+     * A lock used for synchronizing access to {@link #prevImageSize} and {@link #prevImageAnchor}.
+     */
     private final Object imageFieldLock = new Object();
 
     private boolean needsRepaint = true;
