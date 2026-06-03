@@ -126,9 +126,7 @@ class VirtualEnvironment extends AbstractEnvironment {
          *  changing it whilst a Mascot is using it.
          */
         // SwingUtilities.invokeLater(() -> {
-        Rectangle screenRect = new Rectangle();
-        screenRect.setSize(display.getContentPane().getSize());
-        getScreen().set(screenRect);
+        getScreen().setRect(0, 0, display.getContentPane().getWidth(), display.getContentPane().getHeight());
 
         PointerInfo info = MouseInfo.getPointerInfo();
         if (info != null) {

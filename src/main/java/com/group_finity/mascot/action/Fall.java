@@ -122,13 +122,14 @@ public class Fall extends ActionBase {
 
         int dev = Math.max(1, Math.max(Math.abs(dx), Math.abs(dy)));
 
-        final Point anchor = new Point(mascot.getAnchor());
+        final int anchorX = mascot.getAnchor().x;
+        final int anchorY = mascot.getAnchor().y;
         final MascotEnvironment environment = getEnvironment();
 
         OUTER:
         for (int i = 0; i <= dev; i++) {
-            int x = anchor.x + dx * i / dev;
-            int y = anchor.y + dy * i / dev;
+            int x = anchorX + dx * i / dev;
+            int y = anchorY + dy * i / dev;
 
             // Move mascot
             if (dy > 0) {

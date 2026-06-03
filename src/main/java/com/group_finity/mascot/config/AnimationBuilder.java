@@ -174,20 +174,16 @@ public class AnimationBuilder {
         final String[] originCoordinates = originText.split(",");
         final String[] sizeCoordinates = sizeText.split(",");
 
-        final Point origin = new Point(
-                (int) Math.round(Integer.parseInt(originCoordinates[0]) * scaling),
-                (int) Math.round(Integer.parseInt(originCoordinates[1]) * scaling)
-        );
-        final Dimension size = new Dimension(
-                (int) Math.round(Integer.parseInt(sizeCoordinates[0]) * scaling),
-                (int) Math.round(Integer.parseInt(sizeCoordinates[1]) * scaling)
-        );
+        final int originX = (int) Math.round(Integer.parseInt(originCoordinates[0]) * scaling);
+        final int originY = (int) Math.round(Integer.parseInt(originCoordinates[1]) * scaling);
+        final int width = (int) Math.round(Integer.parseInt(sizeCoordinates[0]) * scaling);
+        final int height = (int) Math.round(Integer.parseInt(sizeCoordinates[1]) * scaling);
 
         Shape shape;
         if (shapeText.equalsIgnoreCase("Rectangle")) {
-            shape = new Rectangle(origin, size);
+            shape = new Rectangle(originX, originY, width, height);
         } else if (shapeText.equalsIgnoreCase("Ellipse")) {
-            shape = new Ellipse2D.Float(origin.x, origin.y, size.width, size.height);
+            shape = new Ellipse2D.Float(originX, originY, width, height);
         } else {
             throw new IllegalArgumentException(String.format(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage"), shapeText));
         }

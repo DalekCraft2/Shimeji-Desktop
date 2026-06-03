@@ -108,8 +108,12 @@ class X11Environment extends AbstractEnvironment {
         workArea.set(getWorkAreaRect());
         long prevWindowId = getActiveWindowId();
         final Rectangle windowRect = getWindowBounds(findActiveWindow());
-        activeWindow.setVisible(getScreen().intersects(windowRect));
-        activeWindow.set(windowRect);
+        if (windowRect == null) {
+            activeWindow.setRect(-1, -1, 0, 0);
+        } else {
+            activeWindow.set(windowRect);
+        }
+        activeWindow.setVisible(activeWindow.intersects(getScreen()));
 
         if (prevWindowId != getActiveWindowId()) {
             // If the active window has changed, reset the active window's deltas to 0
@@ -267,7 +271,7 @@ class X11Environment extends AbstractEnvironment {
      */
     private static Rectangle getWindowBounds(Window window) {
         if (window == null) {
-            return new Rectangle(-1, -1, 0, 0);
+            return null;
         }
         return window.getBounds();
     }

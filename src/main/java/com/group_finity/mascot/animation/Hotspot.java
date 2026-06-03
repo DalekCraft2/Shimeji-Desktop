@@ -42,11 +42,10 @@ public class Hotspot {
      */
     public boolean contains(Mascot mascot, Point point) {
         // Flip if facing right
-        if (mascot.isLookRight()) {
-            point = new Point(mascot.getBounds().width - point.x, point.y);
-        }
+        int x = mascot.isLookRight() ? mascot.getBounds().width - point.x : point.x;
+        int y = point.y;
 
-        return shape.contains(point);
+        return shape.contains(x, y);
     }
 
     /**

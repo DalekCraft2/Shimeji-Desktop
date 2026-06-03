@@ -71,18 +71,23 @@ class WindowsEnvironment extends AbstractEnvironment {
         long prevWindowId = getActiveWindowId();
         // Get DPI-unaware window rectangle
         final Rectangle windowRect = getWindowRect(findActiveWindow(), false);
-        activeWindowDpiUnaware.set(windowRect);
+        if (windowRect == null) {
+            activeWindowDpiUnaware.setRect(-1, -1, 0, 0);
+            activeWindow.setRect(-1, -1, 0, 0);
+        } else {
+            activeWindowDpiUnaware.set(windowRect);
 
-        // Calculate the DPI-aware rectangle here to avoid calling getWindowRect() a second time
-        double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-        if (dpiScaleInverse != 1) {
-            windowRect.x = (int) Math.round(windowRect.x * dpiScaleInverse);
-            windowRect.y = (int) Math.round(windowRect.y * dpiScaleInverse);
-            windowRect.width = (int) Math.round(windowRect.width * dpiScaleInverse);
-            windowRect.height = (int) Math.round(windowRect.height * dpiScaleInverse);
+            // Calculate the DPI-aware rectangle here to avoid calling getWindowRect() a second time
+            double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
+            if (dpiScaleInverse != 1) {
+                windowRect.x = (int) Math.round(windowRect.x * dpiScaleInverse);
+                windowRect.y = (int) Math.round(windowRect.y * dpiScaleInverse);
+                windowRect.width = (int) Math.round(windowRect.width * dpiScaleInverse);
+                windowRect.height = (int) Math.round(windowRect.height * dpiScaleInverse);
+            }
+            activeWindow.set(windowRect);
         }
-        activeWindow.setVisible(getScreen().intersects(windowRect));
-        activeWindow.set(windowRect);
+        activeWindow.setVisible(activeWindow.intersects(getScreen()));
 
         if (prevWindowId != getActiveWindowId()) {
             // If the active window has changed, reset the active window's deltas to 0
@@ -169,7 +174,7 @@ class WindowsEnvironment extends AbstractEnvironment {
             if (isInteractive(hWnd) && !User32Extra.INSTANCE.IsIconic(hWnd)) {
                 // Window is valid
                 Rectangle windowRect = getWindowRect(hWnd, true);
-                if (getScreen().intersects(windowRect)) {
+                if (windowRect != null && getScreen().intersects(windowRect)) {
                     return WindowStatus.VALID;
                 } else {
                     // Window is out of bounds and will be ignored
@@ -207,7 +212,7 @@ class WindowsEnvironment extends AbstractEnvironment {
      */
     private static Rectangle getWindowRect(HWND hWnd, boolean dpiAware) {
         if (hWnd == null) {
-            return new Rectangle();
+            return null;
         }
         // Get and return window rectangle
         final Rectangle rect;
@@ -218,7 +223,7 @@ class WindowsEnvironment extends AbstractEnvironment {
                 // The exception was not due to the window handle being invalid, so rethrow the exception
                 throw e;
             }
-            return new Rectangle(-1, -1, 0, 0);
+            return null;
         }
         if (dpiAware) {
             double dpiScaleInverse = 96.0 / Toolkit.getDefaultToolkit().getScreenResolution();
