@@ -126,10 +126,16 @@ public class Location {
      * @param y the new y-coordinate
      */
     public void set(final int x, final int y) {
-        // Rather than calculate the delta values properly, we calculate the average between the stored delta values
-        // (dx and dy) and the actual delta values ((x - this.x) and (y - this.y)) so they don't return to 0 the moment
-        // the Location stops moving. This lets mascot scripts use the delta values in the Dragged action to transition
-        // between animations more smoothly.
+        /*
+        Rather than calculate the delta values properly, we calculate the average between the stored delta values
+        (dx and dy) and the actual delta values ((x - this.x) and (y - this.y)) so they don't return to 0 the moment
+        the Location stops moving. This allows the dx and dy values to be more representative of the momentum of the
+        cursor.
+
+        This is useful for mascot scripts that use the delta values of the cursor to set their velocity when being
+        thrown. If we did not do this and the cursor was stationary for just two ticks, the mascots would have a chance
+        of having 0 velocity when the cursor releases them, even if the cursor had been moving before then.
+        */
         dx = (dx + x - this.x) / 2;
         dy = (dy + y - this.y) / 2;
 
