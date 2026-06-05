@@ -16,26 +16,38 @@ import java.util.List;
 public class Animation {
     /**
      * The condition that must pass for this animation to become active.
+     *
+     * @see #init()
+     * @see #resetCondition()
+     * @see #isEffective(VariableMap)
      */
     private final Variable condition;
 
     /**
      * A sequence of poses through which this animation will iterate when it is active. Must not be empty.
+     *
+     * @see #getPoseAt(int)
      */
     private final List<Pose> poses;
 
     /**
      * The hotspots that this animation will apply to a mascot when it is active.
+     *
+     * @see #getHotspots()
      */
     private final List<Hotspot> hotspots;
 
     /**
      * Whether this animation is used for when a mascot changes walking direction.
+     *
+     * @see #isTurn()
      */
     private final boolean turn;
 
     /**
      * The duration of this animation. This value will equal the sum of the durations in {@link #poses}.
+     *
+     * @see #getDuration()
      */
     private final int duration;
 
@@ -64,6 +76,8 @@ public class Animation {
 
     /**
      * Initializes this animation's condition.
+     *
+     * @see Variable#init()
      */
     public void init() {
         condition.init();
@@ -72,6 +86,8 @@ public class Animation {
     /**
      * Clears the cached value of whether this animation's condition passed.
      * Called at the start of each frame.
+     *
+     * @see Variable#resetValue()
      */
     public void resetCondition() {
         condition.resetValue();
@@ -83,6 +99,7 @@ public class Animation {
      * @param variables the context to use when evaluating this animation's condition
      * @return {@code true} if the condition passed, otherwise {@code false}
      * @throws VariableException if the condition fails to be evaluated
+     * @see Variable#get(VariableMap)
      */
     public boolean isEffective(final VariableMap variables) throws VariableException {
         return (Boolean) condition.get(variables);
@@ -93,6 +110,7 @@ public class Animation {
      *
      * @param mascot the mascot to which to apply the pose
      * @param time the number of ticks since this animation began
+     * @see Pose#apply(Mascot)
      */
     public void apply(final Mascot mascot, final int time) {
         getPoseAt(time).apply(mascot);
@@ -121,6 +139,7 @@ public class Animation {
      * Gets the duration of this animation. This value will equal the sum of the durations in this animation's poses.
      *
      * @return the duration of this animation
+     * @see Pose#duration()
      */
     public int getDuration() {
         return duration;

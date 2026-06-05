@@ -12,23 +12,35 @@ public class Location {
 
     /**
      * The x-coordinate of this {@code Location}.
+     *
+     * @see #getX()
+     * @see #setX(int)
      */
     private int x;
 
     /**
      * The y-coordinate of this {@code Location}.
+     *
+     * @see #getY()
+     * @see #setY(int)
      */
     private int y;
 
     /**
      * The delta x-coordinate of this {@code Location}.
      * Represents the distance between the current x-coordinate and the previous x-coordinate.
+     *
+     * @see #getDx()
+     * @see #setDx(int)
      */
     private int dx;
 
     /**
      * The delta y-coordinate of this {@code Location}.
      * Represents the distance between the current y-coordinate and the previous y-coordinate.
+     *
+     * @see #getDy()
+     * @see #setDy(int)
      */
     private int dy;
 
@@ -36,6 +48,7 @@ public class Location {
      * Gets the x-coordinate of this {@code Location}.
      *
      * @return the x-coordinate of this {@code Location}
+     * @see #setX(int)
      */
     public int getX() {
         return x;
@@ -45,6 +58,7 @@ public class Location {
      * Sets the x-coordinate of this {@code Location}.
      *
      * @param x the new x-coordinate
+     * @see #getX()
      */
     public void setX(final int x) {
         this.x = x;
@@ -54,6 +68,7 @@ public class Location {
      * Gets the y-coordinate of this {@code Location}.
      *
      * @return the y-coordinate of this {@code Location}
+     * @see #setY(int)
      */
     public int getY() {
         return y;
@@ -63,6 +78,7 @@ public class Location {
      * Sets the y-coordinate of this {@code Location}.
      *
      * @param y the new y-coordinate
+     * @see #getY()
      */
     public void setY(final int y) {
         this.y = y;
@@ -74,6 +90,7 @@ public class Location {
      * the current x-coordinate and the previous x-coordinate.
      *
      * @return the delta x-coordinate of this {@code Location}
+     * @see #setDx(int)
      */
     public int getDx() {
         return dx;
@@ -83,6 +100,7 @@ public class Location {
      * Sets the delta x-coordinate of this {@code Location}.
      *
      * @param dx the new delta x-coordinate
+     * @see #getDx()
      */
     public void setDx(final int dx) {
         this.dx = dx;
@@ -94,6 +112,7 @@ public class Location {
      * the current y-coordinate and the previous y-coordinate.
      *
      * @return the delta y-coordinate of this {@code Location}
+     * @see #setDy(int)
      */
     public int getDy() {
         return dy;
@@ -103,6 +122,7 @@ public class Location {
      * Sets the delta y-coordinate of this {@code Location}.
      *
      * @param dy the new delta y-coordinate
+     * @see #getDy()
      */
     public void setDy(final int dy) {
         this.dy = dy;

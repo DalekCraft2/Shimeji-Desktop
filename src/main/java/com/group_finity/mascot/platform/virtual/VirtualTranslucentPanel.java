@@ -15,6 +15,8 @@ import java.awt.image.BufferedImage;
 class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     /**
      * Image to display.
+     *
+     * @see #setImage(BufferedImage)
      */
     private BufferedImage image;
 

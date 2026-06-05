@@ -12,12 +12,16 @@ public class Wall implements Border {
 
     /**
      * The parent {@link Area} of this {@code Wall}.
+     *
+     * @see #getArea()
      */
     private final Area area;
 
     /**
      * Whether this {@code Wall} is the right border of its
      * parent {@link Area}, rather than the left border.
+     *
+     * @see #isRight()
      */
     private final boolean right;
 
@@ -56,6 +60,8 @@ public class Wall implements Border {
      * Gets the x-coordinate of this {@code Wall}.
      *
      * @return this {@code Wall} object's x-coordinate
+     * @see Area#getLeft()
+     * @see Area#getRight()
      */
     public int getX() {
         return right ? area.getRight() : area.getLeft();
@@ -65,6 +71,7 @@ public class Wall implements Border {
      * Gets the y-coordinate of the topmost point on this {@code Wall}.
      *
      * @return the y-coordinate of the topmost point on this {@code Wall}
+     * @see Area#getTop()
      */
     public int getTop() {
         return area.getTop();
@@ -74,6 +81,7 @@ public class Wall implements Border {
      * Gets the y-coordinate of the bottommost point on this {@code Wall}.
      *
      * @return the y-coordinate of the bottommost point on this {@code Wall}
+     * @see Area#getBottom()
      */
     public int getBottom() {
         return area.getBottom();
@@ -85,6 +93,8 @@ public class Wall implements Border {
      * the current x-coordinate and the previous x-coordinate.
      *
      * @return the delta x-coordinate of this {@code Wall}
+     * @see Area#getDleft()
+     * @see Area#getDright()
      */
     public int getDX() {
         return right ? area.getDright() : area.getDleft();
@@ -96,6 +106,7 @@ public class Wall implements Border {
      * and previous topmost points.
      *
      * @return the delta y-coordinate of the topmost point on this {@code Wall}
+     * @see Area#getDtop()
      */
     public int getDTop() {
         return area.getDtop();
@@ -107,6 +118,7 @@ public class Wall implements Border {
      * and previous bottommost points.
      *
      * @return the delta y-coordinate of the topmost point on this {@code Wall}
+     * @see Area#getDbottom()
      */
     public int getDBottom() {
         return area.getDbottom();
@@ -116,6 +128,7 @@ public class Wall implements Border {
      * Gets the height of this {@code Wall}.
      *
      * @return the height of this {@code Wall}
+     * @see Area#getHeight()
      */
     public int getHeight() {
         return area.getHeight();

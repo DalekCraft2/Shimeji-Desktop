@@ -32,19 +32,23 @@ public class Manager {
     public static final int TICK_INTERVAL = 40;
 
     /**
-     * A list of {@link Mascot Mascots} which are managed by this {@code Manager}.
+     * A list of {@link Mascot Mascots} that are managed by this {@code Manager}.
      */
     private final List<Mascot> mascots = new ArrayList<>();
 
     /**
      * List of {@link Mascot Mascots} to be added.
      * To prevent {@link ConcurrentModificationException}, {@link Mascot} additions are reflected all at once every {@link #tick()}.
+     *
+     * @see #add(Mascot)
      */
     private final Set<Mascot> added = new LinkedHashSet<>();
 
     /**
      * List of {@link Mascot Mascots} to be removed.
      * To prevent {@link ConcurrentModificationException}, {@link Mascot} removals are reflected all at once every {@link #tick()}.
+     *
+     * @see #remove(Mascot)
      */
     private final Set<Mascot> removed = new LinkedHashSet<>();
 
@@ -56,6 +60,9 @@ public class Manager {
 
     /**
      * Whether this {@code Manager} is enabled. If set to {@code false}, {@link #tick()} will not be called.
+     *
+     * @see #isEnabled()
+     * @see #setEnabled(boolean)
      */
     private boolean enabled = true;
 

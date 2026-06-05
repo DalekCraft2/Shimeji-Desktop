@@ -11,6 +11,7 @@ import java.util.Map;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @see Area
  */
 public class ComplexArea {
 
@@ -41,6 +42,7 @@ public class ComplexArea {
      *
      * @param name the name of the {@code Area} to update
      * @param value the new bounds of the {@code Area}
+     * @see Area#set(Rectangle)
      */
     public void set(String name, final Rectangle value) {
         // Should I exclude an area which matches exactly?
@@ -70,6 +72,7 @@ public class ComplexArea {
      * to any of the specified names.
      *
      * @param areaNames the names of the {@code Area} objects to retain
+     * @see java.util.Set#retainAll(Collection)
      */
     public void retain(Collection<String> areaNames) {
         areas.keySet().retainAll(areaNames);
@@ -84,6 +87,7 @@ public class ComplexArea {
      * @return the last instance of a bottom border on which {@code location} lies;
      * {@code null} if {@code location} lies on the top border of any {@code Area} in this {@code ComplexArea}
      * or if {@code location} does not lie on any bottom borders
+     * @see Area#getBottomBorder()
      */
     public FloorCeiling getBottomBorder(Point location) {
         FloorCeiling ret = null;
@@ -108,6 +112,7 @@ public class ComplexArea {
      * @return the last instance of a top border on which {@code location} lies;
      * {@code null} if {@code location} lies on the bottom border of any {@code Area} in this {@code ComplexArea}
      * or if {@code location} does not lie on any top borders
+     * @see Area#getTopBorder()
      */
     public FloorCeiling getTopBorder(Point location) {
         FloorCeiling ret = null;
@@ -132,6 +137,7 @@ public class ComplexArea {
      * @return the last instance of a left border on which {@code location} lies;
      * {@code null} if {@code location} lies on the right border of any {@code Area} in this {@code ComplexArea}
      * or if {@code location} does not lie on any left borders
+     * @see Area#getLeftBorder()
      */
     public Wall getLeftBorder(Point location) {
         Wall ret = null;
@@ -156,6 +162,7 @@ public class ComplexArea {
      * @return the last instance of a right border on which {@code location} lies;
      * {@code null} if {@code location} lies on the left border of any {@code Area} in this {@code ComplexArea}
      * or if {@code location} does not lie on any right borders
+     * @see Area#getRightBorder()
      */
     public Wall getRightBorder(Point location) {
         Wall ret = null;

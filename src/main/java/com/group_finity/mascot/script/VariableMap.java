@@ -14,6 +14,8 @@ import java.util.*;
 public class VariableMap extends AbstractMap<String, Object> implements Bindings {
     /**
      * An internal map used by this map to store {@link Variable Variables}.
+     *
+     * @see #getRawMap()
      */
     private final Map<String, Variable> rawMap = new LinkedHashMap<>();
 
@@ -28,6 +30,8 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 
     /**
      * Initializes the values of all variables stored in this map.
+     *
+     * @see Variable#init()
      */
     public void init() {
         for (final Variable o : rawMap.values()) {
@@ -38,6 +42,8 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
     /**
      * Clears the cached values of all variables stored in this map, if necessary.
      * Called at the start of each frame.
+     *
+     * @see Variable#resetValue()
      */
     public void resetValues() {
         for (final Variable o : rawMap.values()) {
@@ -45,6 +51,11 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         }
     }
 
+    /**
+     * The entry set instance of this {@code VariableMap}.
+     *
+     * @see #entrySet()
+     */
     private final Set<Map.Entry<String, Object>> entrySet = new AbstractSet<>() {
         @Override
         public Iterator<Map.Entry<String, Object>> iterator() {

@@ -92,7 +92,9 @@ public class Main {
 
     /**
      * The icon for the program.
-     * Should be accessed through {@link #getIcon}, which initializes this field if it is {@code null}.
+     * Should be accessed through {@link #getIcon()}, which initializes this field if it is {@code null}.
+     *
+     * @see #getIcon()
      */
     private static BufferedImage icon;
 

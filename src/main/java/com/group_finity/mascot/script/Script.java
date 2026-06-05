@@ -29,6 +29,8 @@ public class Script extends Variable {
     /**
      * Whether this script's cached value should be cleared at the start of each frame, forcing it to be
      * reevaluated.
+     *
+     * @see #resetValue()
      */
     private final boolean allowValueReset;
 
@@ -40,6 +42,10 @@ public class Script extends Variable {
     /**
      * The value of this script. Is evaluated at most once per frame, and is set to {@code null} at the start of each
      * frame if {@link #allowValueReset} is {@code true}.
+     *
+     * @see #init()
+     * @see #resetValue()
+     * @see #get(VariableMap)
      */
     private Object value;
 

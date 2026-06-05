@@ -14,16 +14,22 @@ public class MascotImage {
 
     /**
      * This image's raw image data.
+     *
+     * @see #getImage()
      */
     private final BufferedImage image;
 
     /**
      * The point of this image that aligns with the mascot's anchor.
+     *
+     * @see #getCenter()
      */
     private final Point center;
 
     /**
      * The size of this image.
+     *
+     * @see #getSize()
      */
     private final Dimension size;
 

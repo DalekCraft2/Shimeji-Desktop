@@ -11,14 +11,35 @@ import java.awt.*;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @see Environment
  */
 public class MascotEnvironment {
+    /**
+     * The delegate {@link Environment} object that is used by this {@code MascotEnvironment}.
+     */
     private final Environment impl = NativeFactory.getInstance().getEnvironment();
 
+    /**
+     * The {@link Mascot} associated with this {@code MascotEnvironment}.
+     */
     private final Mascot mascot;
 
+    /**
+     * The work area containing this environment's {@link Mascot}.
+     * The work area typically encompasses all of a given screen except for the taskbar.
+     *
+     *
+     * @see #refreshWorkArea()
+     * @see #getWorkArea()
+     * @see #getWorkArea(boolean)
+     */
     private Area currentWorkArea;
 
+    /**
+     * Creates a new {@code MascotEnvironment}.
+     *
+     * @param mascot the {@link Mascot} associated with this {@code MascotEnvironment}
+     */
     public MascotEnvironment(Mascot mascot) {
         this.mascot = mascot;
     }
@@ -28,6 +49,7 @@ public class MascotEnvironment {
      * The work area typically encompasses all of a given screen except for the taskbar.
      *
      * @return the work area containing this environment's {@link Mascot}
+     * @see Environment#getWorkArea()
      */
     public Area getWorkArea() {
         return getWorkArea(false);
@@ -39,6 +61,7 @@ public class MascotEnvironment {
      *
      * @param forceRefresh whether to force the current work area to be recalculated
      * @return the work area containing this environment's {@link Mascot}
+     * @see Environment#getWorkArea()
      */
     public Area getWorkArea(boolean forceRefresh) {
         Area implWorkArea = null;
@@ -100,6 +123,7 @@ public class MascotEnvironment {
      * This area is the union of the areas of all active displays.
      *
      * @return the screen area
+     * @see Environment#getScreen()
      */
     public Area getScreen() {
         return impl.getScreen();
@@ -109,6 +133,7 @@ public class MascotEnvironment {
      * Gets a {@link ComplexArea} representing the areas of all active displays.
      *
      * @return a {@link ComplexArea} representing the areas of all active displays
+     * @see Environment#getComplexScreen()
      */
     public ComplexArea getComplexScreen() {
         return impl.getComplexScreen();
@@ -247,6 +272,7 @@ public class MascotEnvironment {
      * If there is currently no active window, the return value is implementation-specific.
      *
      * @return the area of the active window
+     * @see Environment#getActiveWindow()
      */
     public Area getActiveIE() {
         Area activeIE = impl.getActiveWindow();
@@ -263,6 +289,7 @@ public class MascotEnvironment {
      * May return {@code null}, depending on the implementation.
      *
      * @return the title of the active window
+     * @see Environment#getActiveWindowTitle()
      */
     public String getActiveIETitle() {
         return impl.getActiveWindowTitle();
@@ -274,6 +301,7 @@ public class MascotEnvironment {
      * <b>This method is for internal use only. It should not be used in scripts.</b>
      *
      * @return the ID of the active window, or 0 if there is currently no active window
+     * @see Environment#getActiveWindowId()
      */
     public long getActiveWindowId() {
         return impl.getActiveWindowId();
@@ -283,6 +311,7 @@ public class MascotEnvironment {
      * Repositions the active window so its top-left corner is at the specified point.
      *
      * @param point the point at which the active window's top-left corner should be after it is moved
+     * @see Environment#moveActiveWindow(Point)
      */
     public void moveActiveIE(Point point) {
         impl.moveActiveWindow(point);
@@ -293,6 +322,7 @@ public class MascotEnvironment {
      *
      * @param x the x-coordinate at which the active window's left side should be after it is moved
      * @param y the y-coordinate at which the active window's top side should be after it is moved
+     * @see Environment#moveActiveWindow(int, int)
      */
     public void moveActiveIE(int x, int y) {
         impl.moveActiveWindow(x, y);
@@ -302,6 +332,8 @@ public class MascotEnvironment {
      * Searches for windows that have been thrown off-screen and repositions them to be on-screen.
      * <p>
      * <b>This method is for internal use only. It should not be used in scripts.</b>
+     *
+     * @see Environment#restoreWindows()
      */
     public void restoreIE() {
         impl.restoreWindows();
@@ -311,6 +343,7 @@ public class MascotEnvironment {
      * Gets the cursor position.
      *
      * @return a {@link Location} containing the cursor position and velocity
+     * @see Environment#getCursor()
      */
     public Location getCursor() {
         return impl.getCursor();

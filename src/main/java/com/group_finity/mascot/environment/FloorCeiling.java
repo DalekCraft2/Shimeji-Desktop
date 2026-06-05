@@ -12,6 +12,8 @@ public class FloorCeiling implements Border {
 
     /**
      * The parent {@link Area} of this {@code FloorCeiling}.
+     *
+     * @see #getArea()
      */
     private final Area area;
 
@@ -22,6 +24,8 @@ public class FloorCeiling implements Border {
      * Note that this does not always equal whether this {@code FloorCeiling} is a floor.
      * Some usages of {@code Area} objects may treat the bottom border as a floor,
      * but others may treat it as a ceiling. The same is true for the top border.
+     *
+     * @see #isBottom()
      */
     private final boolean bottom;
 
@@ -65,6 +69,8 @@ public class FloorCeiling implements Border {
      * Gets the y-coordinate of this {@code FloorCeiling}.
      *
      * @return this {@code FloorCeiling} object's y-coordinate
+     * @see Area#getTop()
+     * @see Area#getBottom()
      */
     public int getY() {
         return bottom ? area.getBottom() : area.getTop();
@@ -74,6 +80,7 @@ public class FloorCeiling implements Border {
      * Gets the x-coordinate of the leftmost point on this {@code FloorCeiling}.
      *
      * @return the x-coordinate of the leftmost point on this {@code FloorCeiling}
+     * @see Area#getLeft()
      */
     public int getLeft() {
         return area.getLeft();
@@ -83,6 +90,7 @@ public class FloorCeiling implements Border {
      * Gets the x-coordinate of the rightmost point on this {@code FloorCeiling}.
      *
      * @return the x-coordinate of the rightmost point on this {@code FloorCeiling}
+     * @see Area#getRight()
      */
     public int getRight() {
         return area.getRight();
@@ -94,6 +102,8 @@ public class FloorCeiling implements Border {
      * the current y-coordinate and the previous y-coordinate.
      *
      * @return the delta y-coordinate of this {@code FloorCeiling}
+     * @see Area#getDtop()
+     * @see Area#getDbottom()
      */
     public int getDY() {
         return bottom ? area.getDbottom() : area.getDtop();
@@ -105,6 +115,7 @@ public class FloorCeiling implements Border {
      * and previous leftmost points.
      *
      * @return the delta x-coordinate of the leftmost point on this {@code FloorCeiling}
+     * @see Area#getDleft()
      */
     public int getDLeft() {
         return area.getDleft();
@@ -116,6 +127,7 @@ public class FloorCeiling implements Border {
      * and previous rightmost points.
      *
      * @return the delta x-coordinate of the rightmost point on this {@code FloorCeiling}
+     * @see Area#getDright()
      */
     public int getDRight() {
         return area.getDright();
@@ -125,6 +137,7 @@ public class FloorCeiling implements Border {
      * Gets the width of this {@code FloorCeiling}.
      *
      * @return the width of this {@code FloorCeiling}
+     * @see Area#getWidth()
      */
     public int getWidth() {
         return area.getWidth();

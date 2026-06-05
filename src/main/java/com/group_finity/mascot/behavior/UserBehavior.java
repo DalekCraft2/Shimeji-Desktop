@@ -194,6 +194,7 @@ public class UserBehavior implements Behavior {
      * If the left button is pressed, start dragging.
      *
      * @throws BehaviorExecutionException if the next behavior fails to initialize
+     * @see java.awt.event.MouseListener#mousePressed(MouseEvent)
      */
     @Override
     public synchronized void mousePressed(final MouseEvent event) throws BehaviorExecutionException {
@@ -249,6 +250,7 @@ public class UserBehavior implements Behavior {
      * If the left button is released, the dragging ends.
      *
      * @throws BehaviorExecutionException if the next behavior fails to initialize
+     * @see java.awt.event.MouseListener#mouseReleased(MouseEvent)
      */
     @Override
     public synchronized void mouseReleased(final MouseEvent event) throws BehaviorExecutionException {

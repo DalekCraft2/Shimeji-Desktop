@@ -10,6 +10,7 @@ import java.util.Collection;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @see MascotEnvironment
  */
 public interface Environment {
     /**
@@ -42,6 +43,7 @@ public interface Environment {
      * Gets the areas of all active displays.
      *
      * @return the areas of all active displays
+     * @see #getComplexScreen()
      */
     Collection<Area> getScreens();
 
@@ -49,6 +51,7 @@ public interface Environment {
      * Gets a {@link ComplexArea} representing the areas of all active displays.
      *
      * @return a {@link ComplexArea} representing the areas of all active displays
+     * @see #getScreens()
      */
     ComplexArea getComplexScreen();
 

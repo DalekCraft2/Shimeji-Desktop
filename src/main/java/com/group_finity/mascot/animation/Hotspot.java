@@ -3,6 +3,7 @@ package com.group_finity.mascot.animation;
 import com.group_finity.mascot.Mascot;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  * Represents a clickable area on a mascot, along with the behavior to execute
@@ -39,6 +40,7 @@ public class Hotspot {
      * @param mascot the mascot to use when performing this check
      * @param point the point to check, relative to mascot's bounds
      * @return {@code true} if the point is within this hotspot's shape, otherwise {@code false}
+     * @see Shape#contains(Point2D)
      */
     public boolean contains(Mascot mascot, Point point) {
         // Flip if facing right

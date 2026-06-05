@@ -61,6 +61,8 @@ public class Mascot {
 
     /**
      * Mascot display environment.
+     *
+     * @see #getEnvironment()
      */
     private final MascotEnvironment environment = new MascotEnvironment(this);
 
@@ -71,28 +73,43 @@ public class Mascot {
 
     /**
      * The {@link Manager} that manages this {@code Mascot}.
+     *
+     * @see #getManager()
+     * @see #setManager(Manager)
      */
     private Manager manager = null;
 
     /**
      * The {@code Mascot}'s ground coordinates.
      * For example, its feet or its hands when hanging.
+     *
+     * @see #getAnchor()
+     * @see #setAnchor(Point)
      */
     private Point anchor = new Point(0, 0);
 
     /**
      * The image to display.
+     *
+     * @see #getImage()
+     * @see #setImage(MascotImage)
      */
     private MascotImage image = null;
 
     /**
      * Whether the {@code Mascot} is facing right.
      * The original image is treated as facing left, so setting this to {@code true} will cause it to be reversed.
+     *
+     * @see #isLookRight()
+     * @see #setLookRight(boolean)
      */
     private boolean lookRight = false;
 
     /**
      * An object that represents the long-term behavior of this {@code Mascot}.
+     *
+     * @see #getBehavior()
+     * @see #setBehavior(Behavior)
      */
     private Behavior behavior = null;
 
@@ -113,11 +130,16 @@ public class Mascot {
      *     ~596,523.2 / 60 = ~9,942.0 hours
      *     ~9,942.0 / 24 = ~414.2 days
      * </pre>
+     *
+     * @see #getTime()
      */
     private int time = 0;
 
     /**
      * Whether the animation is running.
+     *
+     * @see #isAnimating()
+     * @see #setAnimating(boolean)
      */
     private boolean animating = true;
 
@@ -126,6 +148,9 @@ public class Mascot {
     /**
      * Set by behaviours when the {@code Mascot} is being dragged by the mouse cursor,
      * as opposed to hotspots or the like.
+     *
+     * @see #isDragging()
+     * @see #setDragging(boolean)
      */
     private boolean dragging = false;
 
@@ -143,6 +168,9 @@ public class Mascot {
      * Set by behaviours when the user has triggered a hotspot on this {@code Mascot},
      * so that the {@code Mascot} knows to check for any new hotspots that emerge while
      * the mouse is held down.
+     *
+     * @see #getCursorPosition()
+     * @see #setCursorPosition(Point)
      */
     private Point cursor = null;
 

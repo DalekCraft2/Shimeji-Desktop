@@ -10,6 +10,8 @@ public class Constant extends Variable {
 
     /**
      * The value of this constant.
+     *
+     * @see #get(VariableMap)
      */
     private final Object value;
 

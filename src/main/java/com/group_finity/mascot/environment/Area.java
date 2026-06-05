@@ -21,70 +21,105 @@ public class Area {
      * Whether this {@code Area} is visible.
      * Generally, if this is {@code false}, {@link com.group_finity.mascot.Mascot Mascot} objects
      * should not be able to interact with this {@code Area}.
+     *
+     * @see #isVisible()
+     * @see #setVisible(boolean)
      */
     private boolean visible = true;
 
     /**
      * The x-coordinate of the left border of this {@code Area}.
+     *
+     * @see #getLeft()
+     * @see #setLeft(int)
      */
     private int left;
 
     /**
      * The y-coordinate of the top border of this {@code Area}.
+     *
+     * @see #getTop()
+     * @see #setTop(int)
      */
     private int top;
 
     /**
      * The x-coordinate of the right border of this {@code Area}.
+     *
+     * @see #getRight()
+     * @see #setRight(int)
      */
     private int right;
 
     /**
      * The y-coordinate of the bottom border of this {@code Area}.
+     *
+     * @see #getBottom()
+     * @see #setBottom(int)
      */
     private int bottom;
 
     /**
      * The delta x-coordinate of the left border of this {@code Area}.
      * Represents the distance between the current x-coordinate and the previous x-coordinate.
+     *
+     * @see #getDleft()
+     * @see #setDleft(int)
      */
     private int dleft;
 
     /**
      * The delta y-coordinate of the top border of this {@code Area}.
      * Represents the distance between the current y-coordinate and the previous y-coordinate.
+     *
+     * @see #getDtop()
+     * @see #setDtop(int)
      */
     private int dtop;
 
     /**
      * The delta x-coordinate of the right border of this {@code Area}.
      * Represents the distance between the current x-coordinate and the previous x-coordinate.
+     *
+     * @see #getDright()
+     * @see #setDright(int)
      */
     private int dright;
 
     /**
      * The delta y-coordinate of the bottom border of this {@code Area}.
      * Represents the distance between the current y-coordinate and the previous y-coordinate.
+     *
+     * @see #getDbottom()
+     * @see #setDbottom(int)
      */
     private int dbottom;
 
     /**
      * The left {@link Wall} border of this {@code Area}.
+     *
+     * @see #getLeftBorder()
      */
     private final Wall leftBorder = new Wall(this, false);
 
     /**
      * The top {@link FloorCeiling} border of this {@code Area}.
+     *
+     * @see #getTopBorder()
      */
     private final FloorCeiling topBorder = new FloorCeiling(this, false);
 
     /**
      * The right {@link Wall} border of this {@code Area}.
+     *
+     * @see #getRightBorder()
      */
     private final Wall rightBorder = new Wall(this, true);
 
     /**
      * The bottom {@link FloorCeiling} border of this {@code Area}.
+     *
+     * @see #getBottomBorder()
      */
     private final FloorCeiling bottomBorder = new FloorCeiling(this, true);
 
@@ -112,6 +147,7 @@ public class Area {
      * should not be able to interact with this {@code Area}.
      *
      * @return {@code true} if this {@code Area} is visible; {@code false} otherwise
+     * @see #setVisible(boolean)
      */
     public boolean isVisible() {
         return visible;
@@ -121,6 +157,7 @@ public class Area {
      * Sets whether this {@code Area} is visible.
      *
      * @param visible {@code true} to make this {@code Area} visible; {@code false} to make it invisible
+     * @see #isVisible()
      */
     public void setVisible(final boolean visible) {
         this.visible = visible;
@@ -130,6 +167,7 @@ public class Area {
      * Gets the x-coordinate of the left border of this {@code Area}.
      *
      * @return the x-coordinate of the left border of this {@code Area}
+     * @see #setLeft(int)
      */
     public int getLeft() {
         return left;
@@ -139,6 +177,7 @@ public class Area {
      * Sets the x-coordinate of the left border of this {@code Area}.
      *
      * @param left the new x-coordinate of the left border
+     * @see #getLeft()
      */
     public void setLeft(final int left) {
         this.left = left;
@@ -148,6 +187,7 @@ public class Area {
      * Gets the y-coordinate of the top border of this {@code Area}.
      *
      * @return the y-coordinate of the top border of this {@code Area}
+     * @see #setTop(int)
      */
     public int getTop() {
         return top;
@@ -157,6 +197,7 @@ public class Area {
      * Sets the y-coordinate of the top border of this {@code Area}.
      *
      * @param top the new y-coordinate of the top border
+     * @see #getTop()
      */
     public void setTop(final int top) {
         this.top = top;
@@ -166,6 +207,7 @@ public class Area {
      * Gets the x-coordinate of the right border of this {@code Area}.
      *
      * @return the x-coordinate of the right border of this {@code Area}
+     * @see #setRight(int)
      */
     public int getRight() {
         return right;
@@ -175,6 +217,7 @@ public class Area {
      * Sets the x-coordinate of the right border of this {@code Area}.
      *
      * @param right the new x-coordinate of the right border
+     * @see #getRight()
      */
     public void setRight(final int right) {
         this.right = right;
@@ -184,6 +227,7 @@ public class Area {
      * Gets the y-coordinate of the bottom border of this {@code Area}.
      *
      * @return the y-coordinate of the bottom border of this {@code Area}
+     * @see #setBottom(int)
      */
     public int getBottom() {
         return bottom;
@@ -193,6 +237,7 @@ public class Area {
      * Sets the y-coordinate of the bottom border of this {@code Area}.
      *
      * @param bottom the new y-coordinate of the bottom border
+     * @see #getBottom()
      */
     public void setBottom(final int bottom) {
         this.bottom = bottom;
@@ -204,6 +249,7 @@ public class Area {
      * the current x-coordinate and the previous x-coordinate.
      *
      * @return the delta x-coordinate of the left border of this {@code Area}
+     * @see #setDleft(int)
      */
     public int getDleft() {
         return calcDeltas ? dleft : 0;
@@ -213,6 +259,7 @@ public class Area {
      * Sets the delta x-coordinate of the left border of this {@code Area}.
      *
      * @param dleft the new delta x-coordinate of the left border
+     * @see #getDleft()
      */
     public void setDleft(final int dleft) {
         if (calcDeltas) {
@@ -226,6 +273,7 @@ public class Area {
      * the current y-coordinate and the previous y-coordinate.
      *
      * @return the delta x-coordinate of the top border of this {@code Area}
+     * @see #setDtop(int)
      */
     public int getDtop() {
         return calcDeltas ? dtop : 0;
@@ -235,6 +283,7 @@ public class Area {
      * Sets the delta y-coordinate of the top border of this {@code Area}.
      *
      * @param dtop the new delta y-coordinate of the top border
+     * @see #getDtop()
      */
     public void setDtop(final int dtop) {
         if (calcDeltas) {
@@ -248,6 +297,7 @@ public class Area {
      * the current x-coordinate and the previous x-coordinate.
      *
      * @return the delta x-coordinate of the right border of this {@code Area}
+     * @see #setDright(int)
      */
     public int getDright() {
         return calcDeltas ? dright : 0;
@@ -257,6 +307,7 @@ public class Area {
      * Sets the delta x-coordinate of the right border of this {@code Area}.
      *
      * @param dright the new delta x-coordinate of the right border
+     * @see #getDright()
      */
     public void setDright(final int dright) {
         if (calcDeltas) {
@@ -270,6 +321,7 @@ public class Area {
      * the current y-coordinate and the previous y-coordinate.
      *
      * @return the delta x-coordinate of the bottom border of this {@code Area}
+     * @see #setDbottom(int)
      */
     public int getDbottom() {
         return calcDeltas ? dbottom : 0;
@@ -279,6 +331,7 @@ public class Area {
      * Sets the delta y-coordinate of the bottom border of this {@code Area}.
      *
      * @param dbottom the new delta y-coordinate of the bottom border
+     * @see #getDbottom()
      */
     public void setDbottom(final int dbottom) {
         if (calcDeltas) {

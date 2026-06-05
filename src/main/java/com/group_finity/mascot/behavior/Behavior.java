@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @see com.group_finity.mascot.action.Action
  */
 public interface Behavior {
 
@@ -20,6 +21,7 @@ public interface Behavior {
      * @param mascot the {@link Mascot} with which to associate
      * @throws BehaviorExecutionException if this behavior, its corresponding action, or any next behavior fails to
      * initialize
+     * @see com.group_finity.mascot.action.Action#init(Mascot)
      */
     void init(Mascot mascot) throws BehaviorExecutionException;
 
@@ -27,6 +29,7 @@ public interface Behavior {
      * Advances the associated {@link Mascot} to the next frame.
      *
      * @throws BehaviorExecutionException if the next behavior fails to initialize
+     * @see com.group_finity.mascot.action.Action#next()
      */
     void next() throws BehaviorExecutionException;
 
@@ -35,6 +38,7 @@ public interface Behavior {
      *
      * @param e the event created by a mouse button being pressed
      * @throws BehaviorExecutionException if the next behavior fails to initialize
+     * @see java.awt.event.MouseListener#mousePressed(MouseEvent)
      */
     void mousePressed(MouseEvent e) throws BehaviorExecutionException;
 
@@ -43,6 +47,7 @@ public interface Behavior {
      *
      * @param e the event created by a mouse button being released
      * @throws BehaviorExecutionException if the next behavior fails to initialize
+     * @see java.awt.event.MouseListener#mouseReleased(MouseEvent)
      */
     void mouseReleased(MouseEvent e) throws BehaviorExecutionException;
 }
