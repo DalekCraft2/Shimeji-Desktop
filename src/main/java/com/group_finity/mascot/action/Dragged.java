@@ -82,10 +82,15 @@ public class Dragged extends ActionBase {
 
         final int newX = cursor.getX();
 
+        /*
+        By calculating footDx like this instead of simply setting it to newX - footX, we can make it oscillate between
+        positive and negative values as it approaches 0. This is useful for mascot scripts that may use this variable
+        in animation conditions to make the mascot sway back and forth when the cursor stops moving.
+        */
         footDx = (footDx + (newX - footX) * 0.1) * 0.8;
         footX = footX + footDx;
 
-        // Since the foot position and foot delta position may be included in the animation conditions, put them in variables
+        // Put FootX and FootDX in the variables so they may be used in animation conditions
         putVariable(getSchema().getString(VARIABLE_FOOTDX), footDx);
         putVariable(getSchema().getString(VARIABLE_FOOTX), footX);
 
