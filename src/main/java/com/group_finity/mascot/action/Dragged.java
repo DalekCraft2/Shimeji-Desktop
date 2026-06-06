@@ -88,7 +88,7 @@ public class Dragged extends ActionBase {
         in animation conditions to make the mascot sway back and forth when the cursor stops moving.
         */
         footDx = (footDx + (newX - footX) * 0.1) * 0.8;
-        footX = footX + footDx;
+        footX += footDx;
 
         // Put FootX and FootDX in the variables so they may be used in animation conditions
         putVariable(getSchema().getString(VARIABLE_FOOTDX), footDx);

@@ -179,7 +179,7 @@ public final class ImageUtils {
                     case 2 -> Hq2x.scale2(srcBuffer, dstBuffer, width, height);
                 }
 
-                effectiveScaling = effectiveScaling / hqxType;
+                effectiveScaling /= hqxType;
                 width = newWidth;
                 height = newHeight;
                 workingImage = createCompatibleImage(width, height, Transparency.TRANSLUCENT);
