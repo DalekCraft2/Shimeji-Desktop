@@ -1205,57 +1205,6 @@ public class X {
             return retVal;
         }
 
-        public Window[] getAllSubwindows() throws X11Exception {
-            List<Window> list = new ArrayList<>();
-            recurse(list, x11, display, x11Window, 0);
-            return list.toArray(new Window[0]);
-        }
-
-        private static void recurse(List<Window> list, X11 x11, Display display, X11.Window root, int depth) throws X11Exception {
-            X11.WindowByReference windowRef = new X11.WindowByReference();
-            X11.WindowByReference parentRef = new X11.WindowByReference();
-            PointerByReference childrenRef = new PointerByReference();
-            IntByReference childCountRef = new IntByReference();
-
-            if (x11.XQueryTree(display.x11Display, root, windowRef, parentRef, childrenRef, childCountRef) == 0) {
-                throw new X11Exception("Can't query subwindows");
-            }
-            if (childrenRef.getValue() == null) {
-                return;
-            }
-
-            long[] ids;
-
-            if (Native.LONG_SIZE == Long.BYTES) {
-                ids = childrenRef.getValue().getLongArray(0, childCountRef.getValue());
-            } else if (Native.LONG_SIZE == Integer.BYTES) {
-                int[] intIds = childrenRef.getValue().getIntArray(0, childCountRef.getValue());
-                ids = new long[intIds.length];
-                for (int i = 0; i < intIds.length; i++) {
-                    ids[i] = intIds[i];
-                }
-            } else {
-                throw new IllegalStateException("Unexpected value for Native.LONG_SIZE: " + Native.LONG_SIZE);
-            }
-
-            for (long id : ids) {
-                if (id == 0) {
-                    continue;
-                }
-                X11.Window window = new X11.Window(id);
-                list.add(new Window(display, window));
-
-                // X11.XTextProperty name = new X11.XTextProperty();
-                // x11.XGetWMName(display.x11Display, window, name);
-                //
-                // System.out.println(String.join("", Collections.nCopies(depth, "  ")) + name.value);
-                // x11.XFree(name.getPointer());
-
-                recurse(list, x11, display, window, depth + 1);
-            }
-        }
-
-
         public String toString() {
             return x11Window.toString();
         }
