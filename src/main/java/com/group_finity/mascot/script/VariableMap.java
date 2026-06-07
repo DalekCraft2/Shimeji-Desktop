@@ -117,8 +117,8 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
     public Object put(final String key, final Object value) {
         Object result;
 
-        if (value instanceof Variable) {
-            result = rawMap.put(key, (Variable) value);
+        if (value instanceof Variable variable) {
+            result = rawMap.put(key, variable);
         } else {
             result = rawMap.put(key, new Constant(value));
         }

@@ -135,8 +135,8 @@ public class Main {
                     exceptionClass != com.group_finity.mascot.platform.x11.X.X11Exception.class) {
                 // If it's a Shimeji exception, only append the exception message
                 messageBuilder.append("\n").append(exception.getMessage());
-            } else if (exception instanceof SAXParseException) {
-                messageBuilder.append("\nLine ").append(((SAXParseException) exception).getLineNumber()).append(": ").append(exception.getMessage());
+            } else if (exception instanceof SAXParseException sax) {
+                messageBuilder.append("\nLine ").append(sax.getLineNumber()).append(": ").append(exception.getMessage());
             } else {
                 messageBuilder.append("\n").append(exception);
             }

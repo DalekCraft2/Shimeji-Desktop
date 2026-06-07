@@ -514,8 +514,8 @@ public class Mascot {
                     // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
                     // debugWindow.setTitle(toString());
 
-                    if (behavior instanceof UserBehavior) {
-                        debugWindow.setBehavior(((UserBehavior) behavior).getName().replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
+                    if (behavior instanceof UserBehavior userBehavior) {
+                        debugWindow.setBehavior(userBehavior.getName().replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
                     } else {
                         debugWindow.setBehavior("");
                     }

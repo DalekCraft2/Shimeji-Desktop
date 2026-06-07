@@ -226,9 +226,9 @@ public class UserBehavior implements Behavior {
             }
 
             // check if this action has dragging disabled
-            if (!handled && action != null && action instanceof ActionBase) {
+            if (!handled && action != null && action instanceof ActionBase actionBase) {
                 try {
-                    handled = !((ActionBase) action).isDraggable();
+                    handled = !actionBase.isDraggable();
                 } catch (VariableException ex) {
                     throw new BehaviorExecutionException(Main.getInstance().getLanguageBundle().getString("FailedDragActionInitialiseErrorMessage"), ex);
                 }

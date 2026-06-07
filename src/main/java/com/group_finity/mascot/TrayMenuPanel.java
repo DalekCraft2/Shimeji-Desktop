@@ -43,16 +43,17 @@ public class TrayMenuPanel extends javax.swing.JPanel {
         ResourceBundle language = Main.getInstance().getLanguageBundle();
         Manager manager = Main.getInstance().getManager();
 
-        if (getTopLevelAncestor() != null) {
+        Container topLevelAncestor = getTopLevelAncestor();
+        if (topLevelAncestor != null) {
             Settings settings = Main.getInstance().getSettings();
             String title = settings.shimejiEeNameOverride;
             if (title.isEmpty()) {
                 title = language.getString("ShimejiEE");
             }
-            if (getTopLevelAncestor() instanceof JDialog) {
-                ((JDialog) getTopLevelAncestor()).setTitle(title);
-            } else if (getTopLevelAncestor() instanceof JFrame) {
-                ((JFrame) getTopLevelAncestor()).setTitle(title);
+            if (topLevelAncestor instanceof JDialog jDialog) {
+                jDialog.setTitle(title);
+            } else if (topLevelAncestor instanceof JFrame jFrame) {
+                jFrame.setTitle(title);
             }
         }
         btnCallShimeji.setText(language.getString("CallShimeji"));
