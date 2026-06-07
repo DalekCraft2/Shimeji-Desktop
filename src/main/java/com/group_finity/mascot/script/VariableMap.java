@@ -56,61 +56,12 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
      *
      * @see #entrySet()
      */
-    private final Set<Map.Entry<String, Object>> entrySet = new AbstractSet<>() {
-        @Override
-        public Iterator<Map.Entry<String, Object>> iterator() {
-            return new Iterator<>() {
-                private final Iterator<Map.Entry<String, Variable>> rawIterator = getRawMap().entrySet()
-                        .iterator();
-
-                @Override
-                public boolean hasNext() {
-                    return rawIterator.hasNext();
-                }
-
-                @Override
-                public Map.Entry<String, Object> next() {
-                    final Map.Entry<String, Variable> rawKeyValue = rawIterator.next();
-                    final Variable value = rawKeyValue.getValue();
-
-                    return new Map.Entry<>() {
-                        @Override
-                        public String getKey() {
-                            return rawKeyValue.getKey();
-                        }
-
-                        @Override
-                        public Object getValue() {
-                            try {
-                                return value.get(VariableMap.this);
-                            } catch (final VariableException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-
-                        @Override
-                        public Object setValue(final Object value) {
-                            throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("SetValueNotSupportedErrorMessage"));
-                        }
-                    };
-                }
-
-                @Override
-                public void remove() {
-                    rawIterator.remove();
-                }
-            };
-        }
-
-        @Override
-        public int size() {
-            return getRawMap().size();
-        }
-    };
+    private Set<Map.Entry<String, Object>> entrySet;
 
     @Override
     public Set<Map.Entry<String, Object>> entrySet() {
-        return entrySet;
+        Set<Map.Entry<String, Object>> es;
+        return (es = entrySet) == null ? (entrySet = new EntrySet()) : es;
     }
 
     @Override
@@ -124,5 +75,62 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         }
 
         return result;
+    }
+
+    final class EntrySet extends AbstractSet<Map.Entry<String, Object>> {
+        @Override
+        public Iterator<Map.Entry<String, Object>> iterator() {
+            return new EntryIterator(getRawMap().entrySet().iterator());
+        }
+
+        @Override
+        public int size() {
+            return getRawMap().size();
+        }
+    }
+
+    final class EntryIterator implements Iterator<Map.Entry<String, Object>> {
+        private final Iterator<Map.Entry<String, Variable>> rawIterator;
+
+        EntryIterator(Iterator<Map.Entry<String, Variable>> rawIterator) {
+            this.rawIterator = rawIterator;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return rawIterator.hasNext();
+        }
+
+        @Override
+        public Map.Entry<String, Object> next() {
+            return new VariableEntry(rawIterator.next());
+        }
+    }
+
+    final class VariableEntry implements Map.Entry<String, Object> {
+        private final Map.Entry<String, Variable> rawEntry;
+
+        VariableEntry(Map.Entry<String, Variable> rawEntry) {
+            this.rawEntry = rawEntry;
+        }
+
+        @Override
+        public String getKey() {
+            return rawEntry.getKey();
+        }
+
+        @Override
+        public Object getValue() {
+            try {
+                return rawEntry.getValue().get(VariableMap.this);
+            } catch (final VariableException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public Object setValue(final Object value) {
+            throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("SetValueNotSupportedErrorMessage"));
+        }
     }
 }
