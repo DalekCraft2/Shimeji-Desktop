@@ -120,7 +120,6 @@ public class ImageSetChooser extends JDialog {
             log.error("Failed to read image sets", e);
         }
 
-        setUpList(lstImageSets);
         lstImageSets.setListData(listData.toArray(EMPTY_PANEL_ARRAY));
         lstImageSets.setSelectedIndices(convertIntegers(selectedIndices));
         /*
@@ -169,7 +168,7 @@ public class ImageSetChooser extends JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         pnlList = new javax.swing.JPanel();
-        lstImageSets = new ImageSetPanelList();
+        lstImageSets = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
         pnlFooter = new javax.swing.JPanel();
         useSelectedButton = new javax.swing.JButton();
@@ -186,7 +185,9 @@ public class ImageSetChooser extends JDialog {
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(9);
 
+        lstImageSets.setCellRenderer(new CustomListCellRenderer());
         lstImageSets.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        lstImageSets.setSelectionModel(new CustomListSelectionModel());
 
         javax.swing.GroupLayout pnlListLayout = new javax.swing.GroupLayout(pnlList);
         pnlList.setLayout(pnlListLayout);
@@ -320,36 +321,46 @@ public class ImageSetChooser extends JDialog {
         return integers.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private void setUpList(JList<?> list) {
-        list.setSelectionModel(new DefaultListSelectionModel() {
-            private int i0 = -1;
-            private int i1 = -1;
+    static class CustomListSelectionModel extends DefaultListSelectionModel {
+        private int i0 = -1;
+        private int i1 = -1;
 
-            @Override
-            public void setSelectionInterval(int index0, int index1) {
-                // These statements ensure that the buttons do not flicker whenever the cursor is dragged over them
-                // This code was made by Francisco on StackOverflow (https://stackoverflow.com/a/5831609)
-                if (i0 == index0 && i1 == index1) {
-                    if (getValueIsAdjusting()) {
-                        setValueIsAdjusting(false);
-                        setSelection(index0, index1);
-                    }
-                } else {
-                    i0 = index0;
-                    i1 = index1;
+        @Override
+        public void setSelectionInterval(int index0, int index1) {
+            // These statements ensure that the buttons do not flicker whenever the cursor is dragged over them
+            // This code was made by Francisco on StackOverflow (https://stackoverflow.com/a/5831609)
+            if (i0 == index0 && i1 == index1) {
+                if (getValueIsAdjusting()) {
                     setValueIsAdjusting(false);
                     setSelection(index0, index1);
                 }
+            } else {
+                i0 = index0;
+                i1 = index1;
+                setValueIsAdjusting(false);
+                setSelection(index0, index1);
             }
+        }
 
-            private void setSelection(int index0, int index1) {
-                if (isSelectedIndex(index0)) {
-                    removeSelectionInterval(index0, index1);
-                } else {
-                    addSelectionInterval(index0, index1);
-                }
+        private void setSelection(int index0, int index1) {
+            if (isSelectedIndex(index0)) {
+                removeSelectionInterval(index0, index1);
+            } else {
+                addSelectionInterval(index0, index1);
             }
-        });
+        }
+    }
+
+    static class CustomListCellRenderer extends DefaultListCellRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value,
+                                                      int index, boolean isSelected, boolean cellHasFocus) {
+            if (value instanceof ImageSetPanel component) {
+                component.setCheckbox(isSelected);
+                return component;
+            }
+            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        }
     }
 
     static void main() {

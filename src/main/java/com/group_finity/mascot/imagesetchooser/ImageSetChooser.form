@@ -84,10 +84,15 @@
           <SubComponents>
             <Component class="javax.swing.JList" name="lstImageSets">
               <Properties>
+                <Property name="cellRenderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new CustomListCellRenderer()" type="code"/>
+                </Property>
                 <Property name="layoutOrientation" type="int" value="2"/>
+                <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new CustomListSelectionModel()" type="code"/>
+                </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ImageSetPanelList()"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ImageSetPanel&gt;"/>
               </AuxValues>
             </Component>
