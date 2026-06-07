@@ -156,12 +156,12 @@ public class SettingsWindow extends JDialog {
             if (!item.trim().isEmpty()) {
                 listData.add(item);
             }
-        lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+        lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
         for (String item : settings.interactiveWindowsBlacklist)
             if (!item.trim().isEmpty()) {
                 blacklistData.add(item);
             }
-        lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
+        lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
 
         chkWindowModeEnabled.setSelected(windowedMode);
         spnWindowWidth.setBackground(txtBackgroundColor.getBackground());
@@ -812,10 +812,10 @@ public class SettingsWindow extends JDialog {
         if (inputValue != null && !inputValue.trim().isEmpty() && !inputValue.contains("/")) {
             if (pnlInteractiveTabs.getSelectedIndex() == 0) {
                 listData.add(inputValue.trim());
-                lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+                lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
             } else {
                 blacklistData.add(inputValue.trim());
-                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
+                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
             }
         }
     }//GEN-LAST:event_btnAddInteractiveWindowActionPerformed
@@ -825,12 +825,12 @@ public class SettingsWindow extends JDialog {
         if (pnlInteractiveTabs.getSelectedIndex() == 0) {
             if (lstInteractiveWindows.getSelectedIndex() != -1) {
                 listData.remove(lstInteractiveWindows.getSelectedIndex());
-                lstInteractiveWindows.setListData(listData.toArray(new String[0]));
+                lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
             }
         } else {
             if (lstInteractiveWindowsBlacklist.getSelectedIndex() != -1) {
                 blacklistData.remove(lstInteractiveWindowsBlacklist.getSelectedIndex());
-                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(new String[0]));
+                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
             }
         }
     }//GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed

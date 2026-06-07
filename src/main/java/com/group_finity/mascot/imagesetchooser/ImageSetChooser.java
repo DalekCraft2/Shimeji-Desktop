@@ -33,6 +33,11 @@ import java.util.ResourceBundle;
  */
 public class ImageSetChooser extends JDialog {
     private static final Logger log = LoggerFactory.getLogger(ImageSetChooser.class);
+
+    /**
+     * Constant for an empty array of ImageSetPanels. Used to save memory.
+     */
+    private static final ImageSetPanel[] EMPTY_PANEL_ARRAY = new ImageSetPanel[0];
     private final List<String> imageSets = new ArrayList<>();
     private boolean closeProgram = true; // Whether the program closes on dispose
     private boolean selectAllSets = false; // Default all to selected
@@ -116,7 +121,7 @@ public class ImageSetChooser extends JDialog {
         }
 
         setUpList(lstImageSets);
-        lstImageSets.setListData(listData.toArray(new ImageSetPanel[0]));
+        lstImageSets.setListData(listData.toArray(EMPTY_PANEL_ARRAY));
         lstImageSets.setSelectedIndices(convertIntegers(selectedIndices));
         /*
         Set the visible row count to the minimum amount that is required for two columns,

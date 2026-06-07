@@ -27,6 +27,11 @@ public class ActionBuilder implements IActionBuilder {
      */
     private static final List<String> VALID_TYPES = List.of("Move", "Stay", "Animate", "Sequence", "Select");
 
+    /**
+     * Constant for an empty array of actions. Used to save memory.
+     */
+    private static final Action[] EMPTY_ACTION_ARRAY = new Action[0];
+
     private final String type;
     private final String name;
     private final String className;
@@ -210,7 +215,7 @@ public class ActionBuilder implements IActionBuilder {
 
     private Action[] createActions() throws ActionInstantiationException {
         if (actionRefs.isEmpty()) {
-            return new Action[0];
+            return EMPTY_ACTION_ARRAY;
         }
 
         final Action[] actions = new Action[actionRefs.size()];

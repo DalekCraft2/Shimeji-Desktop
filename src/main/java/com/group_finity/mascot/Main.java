@@ -67,6 +67,11 @@ public class Main {
             "behaviors.xml", "behavior.xml", "行動.xml", "two.xml", "2.xml"
     };
 
+    /**
+     * Constant for an empty array of strings. Used to save memory.
+     */
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
     static {
         try (InputStream input = Files.newInputStream(LOGGING_FILE)) {
             LogManager.getLogManager().readConfiguration(input);
