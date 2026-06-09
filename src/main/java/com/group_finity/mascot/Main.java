@@ -284,9 +284,14 @@ public class Main {
 
             Configuration configuration = new Configuration();
 
-            configuration.load(new Entry(actions.getDocumentElement()), imageSet);
+            // Store this Entry in a variable so we can reuse it when determining this image set's child image sets
+            Entry actionsEntry = new Entry(actions.getDocumentElement());
+            configuration.load(actionsEntry, imageSet);
 
-            // Save the schema for the actions file so we can use it later
+            /* It's possible (albeit unlikely) that the different config files may use different schemas.
+            Therefore, we need to save the action file's schema into a variable before loading any other files
+            so the Configuration's schema doesn't get overwritten when loading those files.
+            We will use this schema when determining this image set's child image sets. */
             ResourceBundle actionsSchema = configuration.getSchema();
 
             Path behaviorsFile = getBehaviorsFile(imageSet);
@@ -322,7 +327,7 @@ public class Main {
             List<String> childMascots = new ArrayList<>();
 
             // Determine the child image sets for this image set
-            for (final Entry list : new Entry(actions.getDocumentElement()).selectChildren(actionsSchema.getString("ActionList"))) {
+            for (final Entry list : actionsEntry.selectChildren(actionsSchema.getString("ActionList"))) {
                 for (final Entry node : list.selectChildren(actionsSchema.getString("Action"))) {
                     if (node.hasAttribute(actionsSchema.getString("BornMascot"))) {
                         String set = node.getAttribute(actionsSchema.getString("BornMascot"));
