@@ -60,6 +60,9 @@ public final class Sounds {
         }
 
         final Clip clip = AudioSystem.getClip();
+        /* Normally, I would use a Path object here instead of a File object because I prefer java.nio over java.io,
+        but AudioSystem.getAudioInputStream(InputStream) makes use of InputStream's reset() method, and InputStreams
+        that are returned by Files.newInputStream(Path) do not support that method. Unfortunate! */
         try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(fileName))) {
             clip.open(audioInputStream);
             ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
@@ -102,7 +105,17 @@ public final class Sounds {
         return key == null ? null : SOUNDS.get(key);
     }
 
+    /**
+     * Gets all sounds that were loaded from the specified file path.
+     * These sounds will all have different volumes.
+     *
+     * @param fileName the file path whose associated sounds should be returned
+     * @return all sounds that were loaded from the specified file path
+     */
     public static List<Clip> getAllByFile(String fileName) {
+        if (FILE_NAME_MAP.get(fileName).isEmpty()) {
+            return List.of();
+        }
         return FILE_NAME_MAP.get(fileName).stream().map(SOUNDS::get).collect(Collectors.toList());
     }
 
