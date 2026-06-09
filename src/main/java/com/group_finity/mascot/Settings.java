@@ -201,8 +201,12 @@ public class Settings {
             properties.setProperty("DisabledBehaviours." + entry.getKey(), String.join("/", entry.getValue()));
         }
         for (String key : properties.stringPropertyNames()) {
-            if (key.startsWith("DisabledBehaviours.") && !disabledBehaviors.containsKey(key)) {
-                properties.remove(key);
+            // Make sure the key's length is longer than "DisabledBehaviours." to prevent an IndexOutOfBoundsException
+            if (key.startsWith("DisabledBehaviours.") && key.length() > "DisabledBehaviours.".length()) {
+                String imageSet = key.substring(key.indexOf('.') + 1);
+                if (!disabledBehaviors.containsKey(imageSet)) {
+                    properties.remove(key);
+                }
             }
         }
         properties.setProperty("Breeding", String.valueOf(breeding));
