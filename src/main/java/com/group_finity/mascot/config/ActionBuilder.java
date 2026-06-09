@@ -35,7 +35,7 @@ public class ActionBuilder implements IActionBuilder {
     private final String type;
     private final String name;
     private final String className;
-    private Class<? extends Action> cls;
+    private final Class<? extends Action> cls;
     private final Map<String, String> params;
     private final List<AnimationBuilder> animationBuilders;
     private final List<IActionBuilder> actionRefs;
@@ -104,8 +104,11 @@ public class ActionBuilder implements IActionBuilder {
             } catch (final ClassCastException e) {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassIsNotActionErrorMessage"), className), e);
             }
-        } else if (VALID_TYPES.stream().noneMatch(type -> this.type.equals(schema.getString(type)))) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
+        } else {
+            cls = null;
+            if (VALID_TYPES.stream().noneMatch(type -> this.type.equals(schema.getString(type)))) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
+            }
         }
 
         boolean isComplexAction = type.equals(schema.getString("Sequence")) || type.equals(schema.getString("Select"));
