@@ -172,6 +172,8 @@ public class Manager {
         // Update the environmental information first
         NativeFactory.getInstance().getEnvironment().tick();
 
+        boolean noMascots;
+
         synchronized (mascots) {
             synchronized (added) {
                 // Add the mascots that should be added
@@ -187,6 +189,8 @@ public class Manager {
                 }
             }
 
+            noMascots = mascots.isEmpty();
+
             // Advance the mascots' time
             for (final Mascot mascot : mascots) {
                 mascot.tick();
@@ -198,7 +202,7 @@ public class Manager {
             }
         }
 
-        if (exitOnLastRemoved && mascots.isEmpty()) {
+        if (exitOnLastRemoved && noMascots) {
             // exitOnLastRemoved is true and there are no mascots left, so exit.
             Main.getInstance().exit();
         }
