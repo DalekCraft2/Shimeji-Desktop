@@ -31,7 +31,9 @@ public class ActionRef implements IActionBuilder {
 
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
 
-        log.debug("Loading action reference: {}", this);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading action reference: {}", this);
+        }
 
         // No need to check whether the attributes map is empty like in BehaviorBuilder,
         // because it's guaranteed to not be empty since we haven't removed any of the required attributes

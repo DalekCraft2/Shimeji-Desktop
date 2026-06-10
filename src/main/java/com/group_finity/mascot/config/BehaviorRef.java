@@ -38,7 +38,9 @@ public class BehaviorRef implements IBehaviorBuilder {
         name = refNode.getAttribute(schema.getString("Name"));
         frequency = Integer.parseInt(refNode.getAttribute(schema.getString("Frequency")));
 
-        log.debug("Loading behavior reference: {}", this);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading behavior reference: {}", this);
+        }
 
         if (refNode.hasAttribute(schema.getString("Condition"))) {
             String condition = refNode.getAttribute(schema.getString("Condition"));

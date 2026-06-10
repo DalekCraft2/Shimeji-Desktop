@@ -91,7 +91,9 @@ public class AnimationBuilder {
     }
 
     private Pose loadPose(final Entry poseNode) throws IOException {
-        log.debug("Loading pose: {}", poseNode.getAttributes());
+        if (log.isDebugEnabled()) {
+            log.debug("Loading pose: {}", poseNode.getAttributes());
+        }
 
         ResourceBundle schema = configuration.getSchema();
 
@@ -162,13 +164,17 @@ public class AnimationBuilder {
 
         final Pose pose = new Pose(imageKey, scaledDx, scaledDy, duration, soundKey);
 
-        log.debug("Finished loading pose: {}", pose);
+        if (log.isDebugEnabled()) {
+            log.debug("Finished loading pose: {}", pose);
+        }
 
         return pose;
     }
 
     private Hotspot loadHotspot(final Entry hotspotNode) {
-        log.debug("Loading hotspot: {}", hotspotNode.getAttributes());
+        if (log.isDebugEnabled()) {
+            log.debug("Loading hotspot: {}", hotspotNode.getAttributes());
+        }
 
         ResourceBundle schema = configuration.getSchema();
 
@@ -198,7 +204,9 @@ public class AnimationBuilder {
 
         final Hotspot hotspot = new Hotspot(behaviorText, shape);
 
-        log.debug("Finished loading hotspot: {}", hotspot);
+        if (log.isDebugEnabled()) {
+            log.debug("Finished loading hotspot: {}", hotspot);
+        }
 
         return hotspot;
     }

@@ -70,7 +70,9 @@ public class ActionBuilder implements IActionBuilder {
 
         className = actionNode.getAttribute(schema.getString("Class"));
 
-        log.debug("Loading action: {}", this);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading action: {}", this);
+        }
 
         if (type == TYPE_EMBEDDED) {
             // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
@@ -168,7 +170,9 @@ public class ActionBuilder implements IActionBuilder {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), type));
         }
 
-        log.debug("Finished loading action: {}", this);
+        if (log.isDebugEnabled()) {
+            log.debug("Finished loading action: {}", this);
+        }
     }
 
     @Override

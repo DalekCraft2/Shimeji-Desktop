@@ -50,7 +50,9 @@ public class Configuration {
         } else {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnrecognizedRootTagNameErrorMessage"), rootTagName));
         }
-        log.debug("Using {} schema", schema.getLocale().toLanguageTag());
+        if (log.isDebugEnabled()) {
+            log.debug("Using {} schema", schema.getLocale().toLanguageTag());
+        }
 
         if (!onlyLoadInfo) {
             List<Entry> constantNodes = configurationNode.selectChildren(schema.getString("Constant"));

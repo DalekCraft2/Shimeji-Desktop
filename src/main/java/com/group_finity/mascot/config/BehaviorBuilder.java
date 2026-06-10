@@ -51,7 +51,9 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         hidden = behaviorNode.hasAttribute(schema.getString("Hidden")) &&
                 Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Hidden")));
 
-        log.debug("Loading behavior: {}", this);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading behavior: {}", this);
+        }
 
         if (behaviorNode.hasAttribute(schema.getString("Condition"))) {
             String condition = behaviorNode.getAttribute(schema.getString("Condition"));
@@ -129,7 +131,9 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             this.nextBehaviorBuilders = List.copyOf(nextBehaviorBuilders);
         }
 
-        log.debug("Finished loading behavior: {}", this);
+        if (log.isDebugEnabled()) {
+            log.debug("Finished loading behavior: {}", this);
+        }
     }
 
     @Override
