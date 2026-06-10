@@ -278,6 +278,10 @@ public class Main {
 
             log.info("Reading action file \"{}\" for image set \"{}\"", actionsFile, imageSet);
 
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory.setIgnoringComments(true);
+            DocumentBuilder builder = builderFactory.newDocumentBuilder();
+
             final Document actions;
             try (InputStream input = Files.newInputStream(actionsFile)) {
                 actions = builder.parse(input);
