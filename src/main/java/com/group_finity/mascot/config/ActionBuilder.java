@@ -22,18 +22,20 @@ public class ActionBuilder implements IActionBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(ActionBuilder.class);
 
-    /**
-     * List of valid values for the "Type" attribute. "Embedded" is excluded because that is checked separately.
-     */
-    private static final List<String> VALID_TYPES = List.of("Move", "Stay", "Animate", "Sequence", "Select");
+    private static final int TYPE_EMBEDDED = 1;
+    private static final int TYPE_MOVE = 2;
+    private static final int TYPE_STAY = 3;
+    private static final int TYPE_ANIMATE = 4;
+    private static final int TYPE_SEQUENCE = 5;
+    private static final int TYPE_SELECT = 6;
 
     /**
      * Constant for an empty array of actions. Used to save memory.
      */
     private static final Action[] EMPTY_ACTION_ARRAY = new Action[0];
 
-    private final String type;
     private final String name;
+    private final int type;
     private final String className;
     private final Class<? extends Action> cls;
     private final Map<String, String> params;
@@ -48,7 +50,24 @@ public class ActionBuilder implements IActionBuilder {
         we don't need to use hasAttribute() to manually assign a default value
         because getAttribute() will return null if it's absent anyway. */
         name = actionNode.getAttribute(schema.getString("Name"));
-        type = actionNode.getAttribute(schema.getString("Type"));
+
+        String typeString = actionNode.getAttribute(schema.getString("Type"));
+        if (typeString.equals(schema.getString("Embedded"))) {
+            type = TYPE_EMBEDDED;
+        } else if (typeString.equals(schema.getString("Move"))) {
+            type = TYPE_MOVE;
+        } else if (typeString.equals(schema.getString("Stay"))) {
+            type = TYPE_STAY;
+        } else if (typeString.equals(schema.getString("Animate"))) {
+            type = TYPE_ANIMATE;
+        } else if (typeString.equals(schema.getString("Sequence"))) {
+            type = TYPE_SEQUENCE;
+        } else if (typeString.equals(schema.getString("Select"))) {
+            type = TYPE_SELECT;
+        } else {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), typeString));
+        }
+
         className = actionNode.getAttribute(schema.getString("Class"));
 
         log.debug("Loading action: {}", this);
@@ -99,7 +118,7 @@ public class ActionBuilder implements IActionBuilder {
         // Make list immutable
         actionRefs = List.copyOf(tempActionRefs);
 
-        if (type.equals(schema.getString("Embedded"))) {
+        if (type == TYPE_EMBEDDED) {
             // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
             try {
                 cls = Class.forName(className).asSubclass(Action.class);
@@ -110,12 +129,9 @@ public class ActionBuilder implements IActionBuilder {
             }
         } else {
             cls = null;
-            if (VALID_TYPES.stream().noneMatch(type -> this.type.equals(schema.getString(type)))) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
-            }
         }
 
-        boolean isComplexAction = type.equals(schema.getString("Sequence")) || type.equals(schema.getString("Select"));
+        boolean isComplexAction = type == TYPE_SEQUENCE || type == TYPE_SELECT;
         if (isComplexAction && actionRefs.isEmpty()) {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), type));
         } else if (!isComplexAction && !actionRefs.isEmpty()) {
@@ -140,7 +156,16 @@ public class ActionBuilder implements IActionBuilder {
 
     @Override
     public String toString() {
-        return "Action[name=" + name + ",type=" + type + ",className=" + className + "]";
+        String typeString = switch (type) {
+            case TYPE_EMBEDDED -> schema.getString("Embedded");
+            case TYPE_MOVE -> schema.getString("Move");
+            case TYPE_STAY -> schema.getString("Stay");
+            case TYPE_ANIMATE -> schema.getString("Animate");
+            case TYPE_SEQUENCE -> schema.getString("Sequence");
+            case TYPE_SELECT -> schema.getString("Select");
+            default -> throw new IllegalStateException("Unexpected type: " + type);
+        };
+        return "Action[name=" + name + ",type=" + typeString + ",className=" + className + "]";
     }
 
     @Override
@@ -177,46 +202,52 @@ public class ActionBuilder implements IActionBuilder {
         // Create Child Actions
         final Action[] actions = createActions();
 
-        if (type.equals(schema.getString("Embedded"))) {
-            try {
+        switch (type) {
+            case TYPE_EMBEDDED -> {
                 try {
-                    return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
-                } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
-                         IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-                    // NOTE There seems to be no constructor, so move on to the next
-                }
+                    try {
+                        return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InstantiationException | InvocationTargetException e) {
+                        // NOTE There seems to be no constructor, so move on to the next
+                    }
 
-                try {
-                    return cls.getConstructor(ResourceBundle.class, VariableMap.class).newInstance(schema, variables);
-                } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
-                         IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-                    // NOTE There seems to be no constructor, so move on to the next
-                }
+                    try {
+                        return cls.getConstructor(ResourceBundle.class, VariableMap.class).newInstance(schema, variables);
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InstantiationException | InvocationTargetException e) {
+                        // NOTE There seems to be no constructor, so move on to the next
+                    }
 
-                return cls.getConstructor().newInstance();
-            } catch (final NoSuchMethodException e) {
-                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassConstructorNotFoundErrorMessage"), className), e);
-            } catch (final IllegalAccessException e) {
-                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("CannotAccessClassActionErrorMessage"), className), e);
-            } catch (final InstantiationException e) {
-                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), className), e);
-            } catch (final InvocationTargetException e) {
-                // TODO: Think of a unique error message for this without wording it confusingly
-                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), className), e);
+                    return cls.getConstructor().newInstance();
+                } catch (final NoSuchMethodException e) {
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassConstructorNotFoundErrorMessage"), className), e);
+                } catch (final IllegalAccessException e) {
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("CannotAccessClassActionErrorMessage"), className), e);
+                } catch (final InstantiationException e) {
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), className), e);
+                } catch (final InvocationTargetException e) {
+                    // TODO: Think of a unique error message for this without wording it confusingly
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), className), e);
+                }
             }
-
-        } else if (type.equals(schema.getString("Move"))) {
-            return new Move(schema, animations, variables);
-        } else if (type.equals(schema.getString("Stay"))) {
-            return new Stay(schema, animations, variables);
-        } else if (type.equals(schema.getString("Animate"))) {
-            return new Animate(schema, animations, variables);
-        } else if (type.equals(schema.getString("Sequence"))) {
-            return new Sequence(schema, variables, actions);
-        } else if (type.equals(schema.getString("Select"))) {
-            return new Select(schema, variables, actions);
-        } else {
-            throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), type));
+            case TYPE_MOVE -> {
+                return new Move(schema, animations, variables);
+            }
+            case TYPE_STAY -> {
+                return new Stay(schema, animations, variables);
+            }
+            case TYPE_ANIMATE -> {
+                return new Animate(schema, animations, variables);
+            }
+            case TYPE_SEQUENCE -> {
+                return new Sequence(schema, variables, actions);
+            }
+            case TYPE_SELECT -> {
+                return new Select(schema, variables, actions);
+            }
+            default -> // This should not be reached, because we verified that the type was valid in the constructor
+                    throw new IllegalStateException("Unexpected type: " + type);
         }
     }
 
@@ -265,9 +296,5 @@ public class ActionBuilder implements IActionBuilder {
 
     public String getName() {
         return name;
-    }
-
-    public String getType() {
-        return type;
     }
 }
