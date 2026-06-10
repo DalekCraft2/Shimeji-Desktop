@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * An object that builds behavior references.
@@ -33,13 +34,14 @@ public class BehaviorRef implements IBehaviorBuilder {
 
     public BehaviorRef(final Configuration configuration, final Entry refNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
-        name = refNode.getAttribute(configuration.getSchema().getString("Name"));
-        frequency = Integer.parseInt(refNode.getAttribute(configuration.getSchema().getString("Frequency")));
+        ResourceBundle schema = configuration.getSchema();
+        name = refNode.getAttribute(schema.getString("Name"));
+        frequency = Integer.parseInt(refNode.getAttribute(schema.getString("Frequency")));
 
         log.debug("Loading behavior reference: {}", this);
 
-        if (refNode.hasAttribute(configuration.getSchema().getString("Condition"))) {
-            String condition = refNode.getAttribute(configuration.getSchema().getString("Condition"));
+        if (refNode.hasAttribute(schema.getString("Condition"))) {
+            String condition = refNode.getAttribute(schema.getString("Condition"));
             try {
                 // Verify that the condition can be parsed
                 Variable.parse(condition);
@@ -59,12 +61,12 @@ public class BehaviorRef implements IBehaviorBuilder {
         }
 
         Map<String, String> tempParams = new LinkedHashMap<>(refNode.getAttributes());
-        tempParams.remove(configuration.getSchema().getString("Name"));
-        tempParams.remove(configuration.getSchema().getString("Action"));
-        tempParams.remove(configuration.getSchema().getString("Frequency"));
-        tempParams.remove(configuration.getSchema().getString("Hidden"));
-        tempParams.remove(configuration.getSchema().getString("Condition"));
-        tempParams.remove(configuration.getSchema().getString("Toggleable"));
+        tempParams.remove(schema.getString("Name"));
+        tempParams.remove(schema.getString("Action"));
+        tempParams.remove(schema.getString("Frequency"));
+        tempParams.remove(schema.getString("Hidden"));
+        tempParams.remove(schema.getString("Condition"));
+        tempParams.remove(schema.getString("Toggleable"));
         if (tempParams.isEmpty()) {
             // Use the same one empty map instance to save memory
             params = Map.of();

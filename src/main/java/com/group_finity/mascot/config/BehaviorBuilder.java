@@ -9,10 +9,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An object that builds behaviors.
@@ -46,15 +43,16 @@ public class BehaviorBuilder implements IBehaviorBuilder {
 
     public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
-        name = behaviorNode.getAttribute(configuration.getSchema().getString("Name"));
-        actionName = behaviorNode.hasAttribute(configuration.getSchema().getString("Action")) ? behaviorNode.getAttribute(configuration.getSchema().getString("Action")) : name;
-        frequency = Integer.parseInt(behaviorNode.getAttribute(configuration.getSchema().getString("Frequency")));
-        hidden = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Hidden")));
+        ResourceBundle schema = configuration.getSchema();
+        name = behaviorNode.getAttribute(schema.getString("Name"));
+        actionName = behaviorNode.hasAttribute(schema.getString("Action")) ? behaviorNode.getAttribute(schema.getString("Action")) : name;
+        frequency = Integer.parseInt(behaviorNode.getAttribute(schema.getString("Frequency")));
+        hidden = Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Hidden")));
 
         log.debug("Loading behavior: {}", this);
 
-        if (behaviorNode.hasAttribute(configuration.getSchema().getString("Condition"))) {
-            String condition = behaviorNode.getAttribute(configuration.getSchema().getString("Condition"));
+        if (behaviorNode.hasAttribute(schema.getString("Condition"))) {
+            String condition = behaviorNode.getAttribute(schema.getString("Condition"));
             try {
                 // Verify that the condition can be parsed
                 Variable.parse(condition);
@@ -74,22 +72,22 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         }
 
         // override of toggleable state for required fields
-        if (name.equals(configuration.getSchema().getString(UserBehavior.BEHAVIORNAME_CHASEMOUSE)) ||
-                name.equals(configuration.getSchema().getString(UserBehavior.BEHAVIORNAME_FALL)) ||
-                name.equals(configuration.getSchema().getString(UserBehavior.BEHAVIORNAME_THROWN)) ||
-                name.equals(configuration.getSchema().getString(UserBehavior.BEHAVIORNAME_DRAGGED))) {
+        if (name.equals(schema.getString(UserBehavior.BEHAVIORNAME_CHASEMOUSE)) ||
+                name.equals(schema.getString(UserBehavior.BEHAVIORNAME_FALL)) ||
+                name.equals(schema.getString(UserBehavior.BEHAVIORNAME_THROWN)) ||
+                name.equals(schema.getString(UserBehavior.BEHAVIORNAME_DRAGGED))) {
             toggleable = false;
         } else {
-            toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(configuration.getSchema().getString("Toggleable")));
+            toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Toggleable")));
         }
 
         Map<String, String> tempParams = new LinkedHashMap<>(behaviorNode.getAttributes());
-        tempParams.remove(configuration.getSchema().getString("Name"));
-        tempParams.remove(configuration.getSchema().getString("Action"));
-        tempParams.remove(configuration.getSchema().getString("Frequency"));
-        tempParams.remove(configuration.getSchema().getString("Hidden"));
-        tempParams.remove(configuration.getSchema().getString("Condition"));
-        tempParams.remove(configuration.getSchema().getString("Toggleable"));
+        tempParams.remove(schema.getString("Name"));
+        tempParams.remove(schema.getString("Action"));
+        tempParams.remove(schema.getString("Frequency"));
+        tempParams.remove(schema.getString("Hidden"));
+        tempParams.remove(schema.getString("Condition"));
+        tempParams.remove(schema.getString("Toggleable"));
         if (tempParams.isEmpty()) {
             // Use the same one empty map instance to save memory
             params = Map.of();
@@ -110,8 +108,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         boolean nextAdditive = true;
         List<BehaviorRef> nextBehaviorBuilders = new ArrayList<>();
 
-        for (final Entry nextList : behaviorNode.selectChildren(configuration.getSchema().getString("NextBehaviourList"))) {
-            nextAdditive = Boolean.parseBoolean(nextList.getAttribute(configuration.getSchema().getString("Add")));
+        for (final Entry nextList : behaviorNode.selectChildren(schema.getString("NextBehaviourList"))) {
+            nextAdditive = Boolean.parseBoolean(nextList.getAttribute(schema.getString("Add")));
 
             loadBehaviors(nextList, List.of(), nextBehaviorBuilders);
         }
@@ -129,11 +127,12 @@ public class BehaviorBuilder implements IBehaviorBuilder {
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions, final List<BehaviorRef> nextBehaviorBuilders) throws ConfigurationException {
+        ResourceBundle schema = configuration.getSchema();
         for (final Entry node : list.getChildren()) {
-            if (node.getName().equals(configuration.getSchema().getString("Condition"))) {
+            if (node.getName().equals(schema.getString("Condition"))) {
                 List<String> newConditions;
-                if (node.hasAttribute(configuration.getSchema().getString("Condition"))) {
-                    String condition = node.getAttribute(configuration.getSchema().getString("Condition"));
+                if (node.hasAttribute(schema.getString("Condition"))) {
+                    String condition = node.getAttribute(schema.getString("Condition"));
                     try {
                         // Verify that the condition can be parsed
                         Variable.parse(condition);
@@ -153,7 +152,7 @@ public class BehaviorBuilder implements IBehaviorBuilder {
                 }
 
                 loadBehaviors(node, newConditions, nextBehaviorBuilders);
-            } else if (node.getName().equals(configuration.getSchema().getString("BehaviourReference"))) {
+            } else if (node.getName().equals(schema.getString("BehaviourReference"))) {
                 try {
                     nextBehaviorBuilders.add(new BehaviorRef(configuration, node, conditions));
                 } catch (ConfigurationException e) {
