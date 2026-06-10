@@ -20,7 +20,7 @@ public class MascotImage {
     private final BufferedImage image;
 
     /**
-     * The point of this image that aligns with the mascot's anchor.
+     * The point on this image that aligns with the mascot's anchor.
      *
      * @see #getCenter()
      */
@@ -37,7 +37,7 @@ public class MascotImage {
      * Creates a new MascotImage.
      *
      * @param image this image's raw image data
-     * @param center the point of this image that aligns with the mascot's anchor
+     * @param center the point on this image that aligns with the mascot's anchor
      * @param size the size of this image
      */
     public MascotImage(final BufferedImage image, final Point center, final Dimension size) {
@@ -50,7 +50,7 @@ public class MascotImage {
      * Creates a new MascotImage. The size is defaulted to the dimensions of the raw image data.
      *
      * @param image this image's raw image data
-     * @param center the point of this image that aligns with the mascot's anchor
+     * @param center the point on this image that aligns with the mascot's anchor
      */
     public MascotImage(final BufferedImage image, final Point center) {
         this(image, center, new Dimension(image.getWidth(), image.getHeight()));
@@ -66,9 +66,9 @@ public class MascotImage {
     }
 
     /**
-     * Gets the point of this image that aligns with the mascot's anchor.
+     * Gets the point on this image that aligns with the mascot's anchor.
      *
-     * @return the point of this image that aligns with the mascot's anchor
+     * @return the point on this image that aligns with the mascot's anchor
      */
     public Point getCenter() {
         return center;
