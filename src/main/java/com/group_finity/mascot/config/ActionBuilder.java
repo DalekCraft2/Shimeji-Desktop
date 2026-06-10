@@ -139,7 +139,7 @@ public class ActionBuilder implements IActionBuilder {
                 if (isReference || node.getName().equals(schema.getString("Action"))) {
                     // Do not allow non-ComplexAction-type actions to have child actions
                     if (!isComplexAction) {
-                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), typeString));
                     }
                     if (tempActionRefs == null) {
                         // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory.
@@ -170,7 +170,7 @@ public class ActionBuilder implements IActionBuilder {
 
         // Ensure that ComplexAction-type actions have child actions
         if (isComplexAction && actionRefs.isEmpty()) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), type));
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), typeString));
         }
 
         if (log.isDebugEnabled()) {
