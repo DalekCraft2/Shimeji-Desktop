@@ -16,6 +16,8 @@ import java.util.List;
 public class Animation {
     /**
      * The condition that must pass for this animation to become active.
+     * If this is {@code null}, the condition will be treated as if it evaluates to {@code true},
+     * meaning this animation will always be able to become active.
      *
      * @see #init()
      * @see #resetCondition()
@@ -80,6 +82,9 @@ public class Animation {
      * @see Variable#init()
      */
     public void init() {
+        if (condition == null) {
+            return;
+        }
         condition.init();
     }
 
@@ -90,6 +95,9 @@ public class Animation {
      * @see Variable#resetValue()
      */
     public void resetCondition() {
+        if (condition == null) {
+            return;
+        }
         condition.resetValue();
     }
 
@@ -102,6 +110,10 @@ public class Animation {
      * @see Variable#get(VariableMap)
      */
     public boolean isEffective(final VariableMap variables) throws VariableException {
+        if (condition == null) {
+            // Always allow the animation to be applied to a mascot if it has no condition
+            return true;
+        }
         return (Boolean) condition.get(variables);
     }
 

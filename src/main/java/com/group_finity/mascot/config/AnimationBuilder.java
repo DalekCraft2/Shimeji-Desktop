@@ -42,18 +42,19 @@ public class AnimationBuilder {
         this.imageSet = imageSet;
         this.configuration = configuration;
         ResourceBundle schema = configuration.getSchema();
-        condition = animationNode.hasAttribute(schema.getString("Condition")) ?
-                animationNode.getAttribute(schema.getString("Condition")) : "true";
+        condition = animationNode.getAttribute(schema.getString("Condition"));
         turn = animationNode.hasAttribute(schema.getString("IsTurn")) &&
                 Boolean.parseBoolean(animationNode.getAttribute(schema.getString("IsTurn")));
 
         log.debug("Loading an animation");
 
-        try {
-            // Verify that the condition can be parsed
-            Variable.parse(condition);
-        } catch (final VariableException e) {
-            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+        if (condition != null) {
+            try {
+                // Verify that the condition can be parsed
+                Variable.parse(condition);
+            } catch (final VariableException e) {
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+            }
         }
 
         List<Entry> poseNodes = animationNode.selectChildren(schema.getString("Pose"));
@@ -209,7 +210,7 @@ public class AnimationBuilder {
 
     public Animation buildAnimation() throws AnimationInstantiationException {
         try {
-            return new Animation(Variable.parse(condition), poses, hotspots, turn, duration);
+            return new Animation(condition == null ? null : Variable.parse(condition), poses, hotspots, turn, duration);
         } catch (final VariableException e) {
             throw new AnimationInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
         }
