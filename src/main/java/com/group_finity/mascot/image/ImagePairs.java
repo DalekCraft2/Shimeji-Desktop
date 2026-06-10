@@ -42,15 +42,17 @@ public final class ImagePairs {
      * @param path file path of left-facing image to load
      * @param rightPath file path of right-facing image to load. If {@code null}, the left-facing image will be copied
      * and horizontally flipped.
-     * @param center image center coordinate
+     * @param anchorX the x-coordinate of the point on the image that aligns with the mascot's anchor
+     * @param anchorY the y-coordinate of the point on the image that aligns with the mascot's anchor
      * @param scaling the scale factor of the image
      * @param filter the type of filter to use to generate the image
      * @param opacity the opacity of the image
      * @return a key to access the loaded image pair
      * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
      */
-    public static String load(final Path path, final Path rightPath, final Point center, final double scaling, final Filter filter, final double opacity) throws IOException {
-        String key = center.x + "," + center.y + ":" + path.toString() + (rightPath == null ? "" : ":" + rightPath);
+    public static String load(final Path path, final Path rightPath, final int anchorX, final int anchorY,
+                              final double scaling, final Filter filter, final double opacity) throws IOException {
+        String key = anchorX + "," + anchorY + ":" + path.toString() + (rightPath == null ? "" : ":" + rightPath);
         if (imagePairs.containsKey(key)) {
             return key;
         }
@@ -72,11 +74,11 @@ public final class ImagePairs {
             rightImage = ImageUtils.premultiply(ImageUtils.scale(rightImage, scaling, filter), opacity);
         }
 
-        int scaledCenterX = (int) Math.round(center.x * scaling);
-        int scaledCenterY = (int) Math.round(center.y * scaling);
+        int scaledAnchorX = (int) Math.round(anchorX * scaling);
+        int scaledAnchorY = (int) Math.round(anchorY * scaling);
         ImagePair ip = new ImagePair(
-                new MascotImage(leftImage, new Point(scaledCenterX, scaledCenterY)),
-                new MascotImage(rightImage, new Point(rightImage.getWidth() - scaledCenterX, scaledCenterY))
+                new MascotImage(leftImage, new Point(scaledAnchorX, scaledAnchorY)),
+                new MascotImage(rightImage, new Point(rightImage.getWidth() - scaledAnchorX, scaledAnchorY))
         );
         imagePairs.put(key, ip);
 

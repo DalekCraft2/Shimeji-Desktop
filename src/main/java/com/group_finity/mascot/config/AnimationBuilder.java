@@ -103,13 +103,11 @@ public class AnimationBuilder {
         String imageKey = null;
         if (imagePath != null) {
             final String[] anchorCoordinates = anchorText.split(",");
-            final Point anchor = new Point(
-                    Integer.parseInt(anchorCoordinates[0]),
-                    Integer.parseInt(anchorCoordinates[1])
-            );
+            final int anchorX = Integer.parseInt(anchorCoordinates[0]);
+            final int anchorY = Integer.parseInt(anchorCoordinates[1]);
 
             try {
-                imageKey = ImagePairs.load(imagePath, imageRightPath, anchor, scaling, filter, opacity);
+                imageKey = ImagePairs.load(imagePath, imageRightPath, anchorX, anchorY, scaling, filter, opacity);
                 ImagePairs.addUsage(imageKey, imageSet);
             } catch (NumberFormatException | IOException e) {
                 String imagePairString = imagePath.toString();
