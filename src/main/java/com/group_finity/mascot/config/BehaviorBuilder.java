@@ -45,7 +45,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         this.configuration = configuration;
         ResourceBundle schema = configuration.getSchema();
         name = behaviorNode.getAttribute(schema.getString("Name"));
-        actionName = behaviorNode.hasAttribute(schema.getString("Action")) ? behaviorNode.getAttribute(schema.getString("Action")) : name;
+        actionName = behaviorNode.hasAttribute(schema.getString("Action")) ?
+                behaviorNode.getAttribute(schema.getString("Action")) : name;
         frequency = Integer.parseInt(behaviorNode.getAttribute(schema.getString("Frequency")));
         hidden = Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Hidden")));
 
