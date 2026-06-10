@@ -72,13 +72,33 @@ public class ActionBuilder implements IActionBuilder {
 
         log.debug("Loading action: {}", this);
 
-        Map<String, String> attributes = actionNode.getAttributes();
-        if (attributes.isEmpty()) {
-            // Use the same one empty map instance to save memory
-            params = Map.of();
+        if (type == TYPE_EMBEDDED) {
+            // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
+            try {
+                cls = Class.forName(className).asSubclass(Action.class);
+                if (cls.isAnnotationPresent(Deprecated.class)) {
+                    log.warn("Image set \"{}\" uses deprecated action class: {}", imageSet, cls.getName());
+                }
+            } catch (final ClassNotFoundException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage"), className), e);
+            } catch (final ClassCastException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassIsNotActionErrorMessage"), className), e);
+            }
         } else {
-            // Use new LinkedHashMap() instead of Map.copyOf() to preserve LinkedHashMap behavior
-            params = new LinkedHashMap<>(attributes);
+            cls = null;
+        }
+
+        // No need to check whether the attributes map is empty like in BehaviorBuilder,
+        // because it's guaranteed to not be empty since we haven't removed any of the required attributes
+        params = new LinkedHashMap<>(actionNode.getAttributes());
+
+        // Verify that all parameters can be parsed
+        for (final Map.Entry<String, String> param : params.entrySet()) {
+            try {
+                Variable.parse(param.getValue());
+            } catch (final VariableException e) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+            }
         }
 
         List<Entry> animationNodes = actionNode.selectChildren(schema.getString("Animation"));
@@ -93,6 +113,8 @@ public class ActionBuilder implements IActionBuilder {
         }
         animationBuilders = List.of(animationBuilderArray);
 
+        boolean isComplexAction = type == TYPE_SEQUENCE || type == TYPE_SELECT;
+
         /*
         To estimate the number of ActionReference and Action tags combined, we subtract the number of Animation tags
         from the total number of children. We could alternatively call selectChildren() for both ActionReference and
@@ -102,12 +124,20 @@ public class ActionBuilder implements IActionBuilder {
         List<IActionBuilder> tempActionRefs = new ArrayList<>(actionNode.getChildren().size() - animationNodes.size());
         for (final Entry node : actionNode.getChildren()) {
             if (node.getName().equals(schema.getString("ActionReference"))) {
+                // Do not allow non-ComplexAction-type actions to have child actions
+                if (!isComplexAction) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
+                }
                 try {
                     tempActionRefs.add(new ActionRef(configuration, node));
                 } catch (ConfigurationException e) {
                     throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionReferenceErrorMessage"), node.getAttributes()), e);
                 }
             } else if (node.getName().equals(schema.getString("Action"))) {
+                // Do not allow non-ComplexAction-type actions to have child actions
+                if (!isComplexAction) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
+                }
                 try {
                     tempActionRefs.add(new ActionBuilder(configuration, node, imageSet));
                 } catch (ConfigurationException e) {
@@ -118,37 +148,9 @@ public class ActionBuilder implements IActionBuilder {
         // Make list immutable
         actionRefs = List.copyOf(tempActionRefs);
 
-        if (type == TYPE_EMBEDDED) {
-            // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
-            try {
-                cls = Class.forName(className).asSubclass(Action.class);
-            } catch (final ClassNotFoundException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage"), className), e);
-            } catch (final ClassCastException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassIsNotActionErrorMessage"), className), e);
-            }
-        } else {
-            cls = null;
-        }
-
-        boolean isComplexAction = type == TYPE_SEQUENCE || type == TYPE_SELECT;
+        // Ensure that ComplexAction-type actions have child actions
         if (isComplexAction && actionRefs.isEmpty()) {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), type));
-        } else if (!isComplexAction && !actionRefs.isEmpty()) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
-        }
-
-        if (cls != null && cls.isAnnotationPresent(Deprecated.class)) {
-            log.warn("Image set \"{}\" uses deprecated action class: {}", imageSet, cls.getName());
-        }
-
-        // Verify that all parameters can be parsed
-        for (final Map.Entry<String, String> param : params.entrySet()) {
-            try {
-                Variable.parse(param.getValue());
-            } catch (final VariableException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
-            }
         }
 
         log.debug("Finished loading action: {}", this);

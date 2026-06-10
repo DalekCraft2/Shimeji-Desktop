@@ -33,14 +33,9 @@ public class ActionRef implements IActionBuilder {
 
         log.debug("Loading action reference: {}", this);
 
-        Map<String, String> attributes = refNode.getAttributes();
-        if (attributes.isEmpty()) {
-            // Use the same one empty map instance to save memory
-            params = Map.of();
-        } else {
-            // Use new LinkedHashMap() instead of Map.copyOf() to preserve LinkedHashMap behavior
-            params = new LinkedHashMap<>(attributes);
-        }
+        // No need to check whether the attributes map is empty like in BehaviorBuilder,
+        // because it's guaranteed to not be empty since we haven't removed any of the required attributes
+        params = new LinkedHashMap<>(refNode.getAttributes());
 
         // Verify that all parameters can be parsed
         for (final Map.Entry<String, String> param : params.entrySet()) {
