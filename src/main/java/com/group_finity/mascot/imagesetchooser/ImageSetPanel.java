@@ -87,7 +87,7 @@ public class ImageSetPanel extends JPanel {
 
         pnlLabels.setMaximumSize(new java.awt.Dimension(32767, 48));
         pnlLabels.setOpaque(false);
-        pnlLabels.setLayout(new javax.swing.BoxLayout(pnlLabels, javax.swing.BoxLayout.Y_AXIS));
+        pnlLabels.setLayout(new javax.swing.BoxLayout(pnlLabels, javax.swing.BoxLayout.PAGE_AXIS));
 
         caption.setFont(caption.getFont().deriveFont(caption.getFont().getStyle() | java.awt.Font.BOLD));
         caption.setText("Builder");

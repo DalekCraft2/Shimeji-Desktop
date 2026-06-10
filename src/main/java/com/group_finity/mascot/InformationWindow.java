@@ -183,7 +183,7 @@ public class InformationWindow extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Information");
 
-        pnlImage.setLayout(new javax.swing.BoxLayout(pnlImage, javax.swing.BoxLayout.Y_AXIS));
+        pnlImage.setLayout(new javax.swing.BoxLayout(pnlImage, javax.swing.BoxLayout.PAGE_AXIS));
 
         lblSplashImage.setAlignmentX(0.5F);
         pnlImage.add(lblSplashImage);

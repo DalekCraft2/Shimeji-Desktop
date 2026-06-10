@@ -559,7 +559,7 @@ public class SettingsWindow extends JDialog {
 
         lblBackgroundColor.setText("Colour");
 
-        pnlBackgroundPreviewContainer.setLayout(new javax.swing.BoxLayout(pnlBackgroundPreviewContainer, javax.swing.BoxLayout.Y_AXIS));
+        pnlBackgroundPreviewContainer.setLayout(new javax.swing.BoxLayout(pnlBackgroundPreviewContainer, javax.swing.BoxLayout.PAGE_AXIS));
         pnlBackgroundPreviewContainer.add(glueBackground);
 
         pnlBackgroundPreview.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
@@ -674,7 +674,7 @@ public class SettingsWindow extends JDialog {
 
         pnlTabs.addTab("Window Mode", pnlWindowMode);
 
-        pnlAbout.setLayout(new javax.swing.BoxLayout(pnlAbout, javax.swing.BoxLayout.Y_AXIS));
+        pnlAbout.setLayout(new javax.swing.BoxLayout(pnlAbout, javax.swing.BoxLayout.PAGE_AXIS));
         pnlAbout.add(glue1);
 
         lblIcon.setAlignmentX(0.5F);

@@ -53,7 +53,7 @@
     <Container class="javax.swing.JPanel" name="pnlImage">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
-        <Property name="axis" type="int" value="1"/>
+        <Property name="axis" type="int" value="3"/>
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblSplashImage">
