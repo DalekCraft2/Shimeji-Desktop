@@ -48,7 +48,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         actionName = behaviorNode.hasAttribute(schema.getString("Action")) ?
                 behaviorNode.getAttribute(schema.getString("Action")) : name;
         frequency = Integer.parseInt(behaviorNode.getAttribute(schema.getString("Frequency")));
-        hidden = Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Hidden")));
+        hidden = behaviorNode.hasAttribute(schema.getString("Hidden")) &&
+                Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Hidden")));
 
         log.debug("Loading behavior: {}", this);
 
@@ -73,7 +74,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         }
 
         // override of toggleable state for required fields
-        if (name.equals(schema.getString(UserBehavior.BEHAVIORNAME_CHASEMOUSE)) ||
+        if (!behaviorNode.hasAttribute(schema.getString("Toggleable")) ||
+                name.equals(schema.getString(UserBehavior.BEHAVIORNAME_CHASEMOUSE)) ||
                 name.equals(schema.getString(UserBehavior.BEHAVIORNAME_FALL)) ||
                 name.equals(schema.getString(UserBehavior.BEHAVIORNAME_THROWN)) ||
                 name.equals(schema.getString(UserBehavior.BEHAVIORNAME_DRAGGED))) {

@@ -43,6 +43,10 @@ public class ActionBuilder implements IActionBuilder {
 
     public ActionBuilder(final Configuration configuration, final Entry actionNode, final String imageSet) throws ConfigurationException {
         schema = configuration.getSchema();
+        /* The Name attribute is optional (more specifically, it's required for top-level actions
+        and unused for child actions). However, because we want it to default to null if it's absent,
+        we don't need to use hasAttribute() to manually assign a default value
+        because getAttribute() will return null if it's absent anyway. */
         name = actionNode.getAttribute(schema.getString("Name"));
         type = actionNode.getAttribute(schema.getString("Type"));
         className = actionNode.getAttribute(schema.getString("Class"));
