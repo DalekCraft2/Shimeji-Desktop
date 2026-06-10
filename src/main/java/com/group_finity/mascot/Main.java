@@ -25,6 +25,7 @@ import org.xml.sax.SAXParseException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.image.BufferedImage;
@@ -279,7 +280,7 @@ public class Main {
 
             final Document actions;
             try (InputStream input = Files.newInputStream(actionsFile)) {
-                actions = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                actions = builder.parse(input);
             }
 
             Configuration configuration = new Configuration();
@@ -300,7 +301,7 @@ public class Main {
 
             final Document behaviors;
             try (InputStream input = Files.newInputStream(behaviorsFile)) {
-                behaviors = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                behaviors = builder.parse(input);
             }
 
             configuration.load(new Entry(behaviors.getDocumentElement()), imageSet);
@@ -312,7 +313,7 @@ public class Main {
 
                 final Document information;
                 try (InputStream input = Files.newInputStream(infoFile)) {
-                    information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                    information = builder.parse(input);
                 }
 
                 configuration.load(new Entry(information.getDocumentElement()), imageSet);

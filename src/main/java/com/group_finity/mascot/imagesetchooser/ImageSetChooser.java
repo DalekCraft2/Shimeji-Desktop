@@ -10,6 +10,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
@@ -85,13 +86,16 @@ public class ImageSetChooser extends JDialog {
                     // Determine information file
                     Path infoFile = Main.getInfoFile(imageSet);
 
-                    Configuration configuration = new Configuration();
+                    DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+                    builderFactory.setIgnoringComments(true);
+                    DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
                     final Document information;
                     try (InputStream input = Files.newInputStream(infoFile)) {
-                        information = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                        information = builder.parse(input);
                     }
 
+                    Configuration configuration = new Configuration();
                     configuration.load(new Entry(information.getDocumentElement()), imageSet, true);
 
                     if (configuration.containsInformationKey(configuration.getSchema().getString("Name"))) {
