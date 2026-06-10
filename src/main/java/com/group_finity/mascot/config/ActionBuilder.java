@@ -30,7 +30,8 @@ public class ActionBuilder implements IActionBuilder {
     private static final int TYPE_SELECT = 6;
 
     /**
-     * Constant for an empty array of actions. Used to save memory.
+     * Constant for an empty array of actions.
+     * This is used to save memory by only allocating one empty array.
      */
     private static final Action[] EMPTY_ACTION_ARRAY = new Action[0];
 

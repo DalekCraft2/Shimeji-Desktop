@@ -69,8 +69,11 @@ public class Main {
     };
 
     /**
-     * Constant for an empty array of strings. Used to save memory.
+     * Constant for an empty array of strings.
+     * This is used to save memory by only allocating one empty array.
      */
+    // If we had enough stray constants to warrant creating a Constants class, I would have put this in there.
+    // Alas, we don't have that many constants.
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     static {

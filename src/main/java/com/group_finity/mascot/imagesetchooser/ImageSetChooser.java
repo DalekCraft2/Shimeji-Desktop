@@ -36,7 +36,8 @@ public class ImageSetChooser extends JDialog {
     private static final Logger log = LoggerFactory.getLogger(ImageSetChooser.class);
 
     /**
-     * Constant for an empty array of ImageSetPanels. Used to save memory.
+     * Constant for an empty array of ImageSetPanels.
+     * This is used to save memory by only allocating one empty array.
      */
     private static final ImageSetPanel[] EMPTY_PANEL_ARRAY = new ImageSetPanel[0];
     private final List<String> imageSets = new ArrayList<>();
