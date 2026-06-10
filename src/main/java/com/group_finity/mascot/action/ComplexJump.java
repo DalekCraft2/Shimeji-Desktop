@@ -67,11 +67,13 @@ public class ComplexJump extends ActionBase {
 
         scaling = Main.getInstance().getSettings().scaling;
 
-        for (String characteristic : getCharacteristics().split(",")) {
-            if (characteristic.equals(getSchema().getString("Breed"))) {
-                breedEnabled = true;
-            } else if (characteristic.equals(getSchema().getString("Scan"))) {
-                scanEnabled = true;
+        if (!getCharacteristics().isEmpty()) {
+            for (String characteristic : getCharacteristics().split(",")) {
+                if (characteristic.equals(getSchema().getString("Breed"))) {
+                    breedEnabled = true;
+                } else if (characteristic.equals(getSchema().getString("Scan"))) {
+                    scanEnabled = true;
+                }
             }
         }
 

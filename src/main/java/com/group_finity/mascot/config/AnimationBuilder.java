@@ -74,16 +74,20 @@ public class AnimationBuilder {
         duration = poses.stream().mapToInt(Pose::duration).sum();
 
         List<Entry> hotspotNodes = animationNode.selectChildren(schema.getString("Hotspot"));
-        Hotspot[] hotspotArray = new Hotspot[hotspotNodes.size()];
-        for (int i = 0; i < hotspotNodes.size(); i++) {
-            Entry hotspotNode = hotspotNodes.get(i);
-            try {
-                hotspotArray[i] = loadHotspot(hotspotNode);
-            } catch (RuntimeException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), hotspotNode.getAttributes()), e);
+        if (hotspotNodes.isEmpty()) {
+            hotspots = List.of();
+        } else {
+            Hotspot[] hotspotArray = new Hotspot[hotspotNodes.size()];
+            for (int i = 0; i < hotspotNodes.size(); i++) {
+                Entry hotspotNode = hotspotNodes.get(i);
+                try {
+                    hotspotArray[i] = loadHotspot(hotspotNode);
+                } catch (RuntimeException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), hotspotNode.getAttributes()), e);
+                }
             }
+            hotspots = List.of(hotspotArray);
         }
-        hotspots = List.of(hotspotArray);
     }
 
     private Pose loadPose(final Entry poseNode) throws IOException {
@@ -200,6 +204,9 @@ public class AnimationBuilder {
     }
 
     public void validate() throws ConfigurationException {
+        if (hotspots.isEmpty()) {
+            return;
+        }
         for (Hotspot hotspot : hotspots) {
             String behavior = hotspot.getBehaviour();
             if (behavior != null && !configuration.getBehaviorNames().contains(behavior)) {

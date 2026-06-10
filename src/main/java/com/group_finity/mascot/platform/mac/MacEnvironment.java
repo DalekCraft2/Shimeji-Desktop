@@ -128,24 +128,30 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     private void restoreWindowsNotIn(final Rectangle rect) {
+        if (touchedProcesses.isEmpty()) {
+            return;
+        }
         for (int pid : touchedProcesses) {
             AXUIElementRef application =
                     carbonEx.AXUIElementCreateApplication(pid);
 
-            for (AXUIElementRef window : getWindowsOf(application)) {
-                window.retain();
-                Rectangle windowRect = getRectOfWindow(window);
-                if (!rect.intersects(windowRect)) {
-                    moveWindow(window, 0, 0);
+            List<AXUIElementRef> windowsOfApp = getWindowsOf(application);
+            if (!windowsOfApp.isEmpty()) {
+                for (AXUIElementRef window : windowsOfApp) {
+                    window.retain();
+                    Rectangle windowRect = getRectOfWindow(window);
+                    if (!rect.intersects(windowRect)) {
+                        moveWindow(window, 0, 0);
+                    }
+                    window.release();
                 }
-                window.release();
             }
 
             application.release();
         }
     }
 
-    private static Iterable<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
+    private static List<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
         PointerByReference axWindowsp = new PointerByReference();
 
         carbonEx.AXUIElementCopyAttributeValue(application, kAXChildren, axWindowsp);

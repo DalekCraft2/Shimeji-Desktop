@@ -53,48 +53,67 @@ public class Configuration {
         log.debug("Using {} schema", schema.getLocale().toLanguageTag());
 
         if (!onlyLoadInfo) {
-            for (Entry constant : configurationNode.selectChildren(schema.getString("Constant"))) {
-                constants.put(constant.getAttribute(schema.getString("Name")),
-                        constant.getAttribute(schema.getString("Value")));
-            }
-
-            for (final Entry list : configurationNode.selectChildren(schema.getString("ActionList"))) {
-                log.debug("Reading an action list...");
-
-                for (final Entry node : list.selectChildren(schema.getString("Action"))) {
-                    final ActionBuilder action;
-                    try {
-                        action = new ActionBuilder(this, node, imageSet);
-                    } catch (ConfigurationException e) {
-                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
-                    }
-
-                    if (actionBuilders.containsKey(action.getName())) {
-                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage"), action.getName()));
-                    }
-
-                    actionBuilders.put(action.getName(), action);
+            List<Entry> constantNodes = configurationNode.selectChildren(schema.getString("Constant"));
+            if (!constantNodes.isEmpty()) {
+                for (Entry constantNode : constantNodes) {
+                    constants.put(constantNode.getAttribute(schema.getString("Name")),
+                            constantNode.getAttribute(schema.getString("Value")));
                 }
             }
 
-            for (final Entry list : configurationNode.selectChildren(schema.getString("BehaviourList"))) {
-                log.debug("Reading a behavior list...");
+            List<Entry> actionLists = configurationNode.selectChildren(schema.getString("ActionList"));
+            if (!actionLists.isEmpty()) {
+                for (final Entry actionList : actionLists) {
+                    log.debug("Reading an action list...");
 
-                loadBehaviors(list, List.of());
+                    List<Entry> actionNodes = actionList.selectChildren(schema.getString("Action"));
+                    if (!actionNodes.isEmpty()) {
+                        for (final Entry actionNode : actionNodes) {
+                            final ActionBuilder action;
+                            try {
+                                action = new ActionBuilder(this, actionNode, imageSet);
+                            } catch (ConfigurationException e) {
+                                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), actionNode.getAttributes()), e);
+                            }
+
+                            if (actionBuilders.containsKey(action.getName())) {
+                                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage"), action.getName()));
+                            }
+
+                            actionBuilders.put(action.getName(), action);
+                        }
+                    }
+                }
+            }
+
+            List<Entry> behaviorLists = configurationNode.selectChildren(schema.getString("BehaviourList"));
+            if (!behaviorLists.isEmpty()) {
+                for (final Entry behaviorList : behaviorLists) {
+                    log.debug("Reading a behavior list...");
+
+                    loadBehaviors(behaviorList, List.of());
+                }
             }
         }
 
-        for (final Entry list : configurationNode.selectChildren(schema.getString("Information"))) {
-            log.debug("Reading an information group...");
+        List<Entry> infoNodes = configurationNode.selectChildren(schema.getString("Information"));
+        if (!infoNodes.isEmpty()) {
+            for (final Entry infoNode : infoNodes) {
+                log.debug("Reading an information group...");
 
-            loadInformation(list);
+                loadInformation(infoNode);
+            }
         }
 
         log.debug("Configuration loaded successfully");
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions) throws ConfigurationException {
-        for (final Entry node : list.getChildren()) {
+        List<Entry> children = list.getChildren();
+        if (children.isEmpty()) {
+            return;
+        }
+        for (final Entry node : children) {
             if (node.getName().equals(schema.getString("Condition"))) {
                 final List<String> newConditions;
                 if (node.hasAttribute(schema.getString("Condition"))) {
@@ -135,8 +154,12 @@ public class Configuration {
         }
     }
 
-    private void loadInformation(final Entry list) {
-        for (final Entry node : list.getChildren()) {
+    private void loadInformation(final Entry infoNode) {
+        List<Entry> children = infoNode.getChildren();
+        if (children.isEmpty()) {
+            return;
+        }
+        for (final Entry node : children) {
             String nodeName = node.getName();
             if (nodeName.equals(schema.getString("Name")) ||
                     nodeName.equals(schema.getString("PreviewImage")) ||
@@ -160,18 +183,22 @@ public class Configuration {
     }
 
     public void validate() throws ConfigurationException {
-        for (final ActionBuilder builder : actionBuilders.values()) {
-            try {
-                builder.validate();
-            } catch (ConfigurationException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateActionErrorMessage"), builder), e);
+        if (!actionBuilders.isEmpty()) {
+            for (final ActionBuilder builder : actionBuilders.values()) {
+                try {
+                    builder.validate();
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateActionErrorMessage"), builder), e);
+                }
             }
         }
-        for (final BehaviorBuilder builder : behaviorBuilders.values()) {
-            try {
-                builder.validate();
-            } catch (ConfigurationException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), builder), e);
+        if (!behaviorBuilders.isEmpty()) {
+            for (final BehaviorBuilder builder : behaviorBuilders.values()) {
+                try {
+                    builder.validate();
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), builder), e);
+                }
             }
         }
 
@@ -234,15 +261,15 @@ public class Configuration {
             }
         }
 
-        if (prevBehaviorBuilder != null) {
-            for (final BehaviorRef behaviorBuilder : prevBehaviorBuilder.getNextBehaviorBuilders()) {
+        if (prevBehaviorBuilder != null && !prevBehaviorBuilder.getNextBehaviorBuilders().isEmpty()) {
+            for (final BehaviorRef behaviorRef : prevBehaviorBuilder.getNextBehaviorBuilders()) {
                 try {
-                    if (behaviorBuilder.isEffective(context) && isBehaviorEnabled(behaviorBuilder.getName(), mascot)) {
-                        candidates.add(behaviorBuilder);
-                        totalFrequency += behaviorBuilder.getFrequency();
+                    if (behaviorRef.isEffective(context) && isBehaviorEnabled(behaviorRef.getName(), mascot)) {
+                        candidates.add(behaviorRef);
+                        totalFrequency += behaviorRef.getFrequency();
                     }
                 } catch (final VariableException e) {
-                    log.warn("Failed to evaluate condition for behavior: {}", behaviorBuilder, e);
+                    log.warn("Failed to evaluate condition for behavior: {}", behaviorRef, e);
                 }
             }
         }

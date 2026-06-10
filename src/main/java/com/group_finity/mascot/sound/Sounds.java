@@ -186,10 +186,12 @@ public final class Sounds {
      * Removes all currently loaded sounds.
      */
     public static void clear() {
-        for (Clip clip : SOUNDS.values()) {
-            clip.close();
+        if (!SOUNDS.isEmpty()) {
+            for (Clip clip : SOUNDS.values()) {
+                clip.close();
+            }
+            SOUNDS.clear();
         }
-        SOUNDS.clear();
         FILE_NAME_MAP.clear();
         SOUNDS_TO_IMAGESETS.clear();
         IMAGESETS_TO_SOUNDS.clear();
@@ -208,6 +210,10 @@ public final class Sounds {
      * Stops all sounds that are currently playing.
      */
     public static void stopAll() {
+        if (SOUNDS.isEmpty()) {
+            return;
+        }
+
         // mute everything
         for (Clip clip : SOUNDS.values()) {
             clip.stop();

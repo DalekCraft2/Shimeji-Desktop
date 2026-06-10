@@ -100,26 +100,34 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         }
 
         // Verify that all parameters can be parsed
-        for (final Map.Entry<String, String> param : params.entrySet()) {
-            try {
-                Variable.parse(param.getValue());
-            } catch (final VariableException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+        if (!params.isEmpty()) {
+            for (final Map.Entry<String, String> param : params.entrySet()) {
+                try {
+                    Variable.parse(param.getValue());
+                } catch (final VariableException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                }
             }
         }
 
-        boolean nextAdditive = true;
-        List<BehaviorRef> nextBehaviorBuilders = new ArrayList<>();
+        List<Entry> nextLists = behaviorNode.selectChildren(schema.getString("NextBehaviourList"));
+        if (nextLists.isEmpty()) {
+            nextAdditive = true;
+            nextBehaviorBuilders = List.of();
+        } else {
+            boolean nextAdditive = true;
+            List<BehaviorRef> nextBehaviorBuilders = new ArrayList<>();
 
-        for (final Entry nextList : behaviorNode.selectChildren(schema.getString("NextBehaviourList"))) {
-            nextAdditive = Boolean.parseBoolean(nextList.getAttribute(schema.getString("Add")));
+            for (final Entry nextList : nextLists) {
+                nextAdditive = Boolean.parseBoolean(nextList.getAttribute(schema.getString("Add")));
 
-            loadBehaviors(nextList, List.of(), nextBehaviorBuilders);
+                loadBehaviors(nextList, List.of(), nextBehaviorBuilders);
+            }
+
+            this.nextAdditive = nextAdditive;
+            // Make list immutable
+            this.nextBehaviorBuilders = List.copyOf(nextBehaviorBuilders);
         }
-
-        this.nextAdditive = nextAdditive;
-        // Make list immutable
-        this.nextBehaviorBuilders = List.copyOf(nextBehaviorBuilders);
 
         log.debug("Finished loading behavior: {}", this);
     }
@@ -130,8 +138,12 @@ public class BehaviorBuilder implements IBehaviorBuilder {
     }
 
     private void loadBehaviors(final Entry list, final List<String> conditions, final List<BehaviorRef> nextBehaviorBuilders) throws ConfigurationException {
+        List<Entry> children = list.getChildren();
+        if (children.isEmpty()) {
+            return;
+        }
         ResourceBundle schema = configuration.getSchema();
-        for (final Entry node : list.getChildren()) {
+        for (final Entry node : children) {
             if (node.getName().equals(schema.getString("Condition"))) {
                 List<String> newConditions;
                 if (node.hasAttribute(schema.getString("Condition"))) {
@@ -175,11 +187,13 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage"), actionName));
         }
-        for (final BehaviorRef ref : nextBehaviorBuilders) {
-            try {
-                ref.validate();
-            } catch (ConfigurationException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), ref), e);
+        if (!nextBehaviorBuilders.isEmpty()) {
+            for (final BehaviorRef ref : nextBehaviorBuilders) {
+                try {
+                    ref.validate();
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), ref), e);
+                }
             }
         }
     }
@@ -217,10 +231,12 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             return false;
         }
 
-        for (final String condition : conditions) {
-            if (condition != null) {
-                if (!(Boolean) Variable.parse(condition).get(context)) {
-                    return false;
+        if (!conditions.isEmpty()) {
+            for (final String condition : conditions) {
+                if (condition != null) {
+                    if (!(Boolean) Variable.parse(condition).get(context)) {
+                        return false;
+                    }
                 }
             }
         }

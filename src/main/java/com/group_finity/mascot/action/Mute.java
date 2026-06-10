@@ -37,9 +37,11 @@ public class Mute extends InstantAction {
                     clips = Sounds.getAllByFile(Main.SOUND_DIRECTORY.resolve(soundName).toString());
                 }
             }
-            for (Clip clip : clips) {
-                if (clip != null && clip.isRunning()) {
-                    clip.stop();
+            if (!clips.isEmpty()) {
+                for (Clip clip : clips) {
+                    if (clip != null && clip.isRunning()) {
+                        clip.stop();
+                    }
                 }
             }
         } else {

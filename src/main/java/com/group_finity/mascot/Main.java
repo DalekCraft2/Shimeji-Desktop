@@ -282,15 +282,15 @@ public class Main {
             builderFactory.setIgnoringComments(true);
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
-            final Document actions;
+            final Document actionsDocument;
             try (InputStream input = Files.newInputStream(actionsFile)) {
-                actions = builder.parse(input);
+                actionsDocument = builder.parse(input);
             }
 
             Configuration configuration = new Configuration();
 
             // Store this Entry in a variable so we can reuse it when determining this image set's child image sets
-            Entry actionsEntry = new Entry(actions.getDocumentElement());
+            Entry actionsEntry = new Entry(actionsDocument.getDocumentElement());
             configuration.load(actionsEntry, imageSet);
 
             /* It's possible (albeit unlikely) that the different config files may use different schemas.
@@ -303,24 +303,24 @@ public class Main {
 
             log.info("Reading behavior file \"{}\" for image set \"{}\"", behaviorsFile, imageSet);
 
-            final Document behaviors;
+            final Document behaviorsDocument;
             try (InputStream input = Files.newInputStream(behaviorsFile)) {
-                behaviors = builder.parse(input);
+                behaviorsDocument = builder.parse(input);
             }
 
-            configuration.load(new Entry(behaviors.getDocumentElement()), imageSet);
+            configuration.load(new Entry(behaviorsDocument.getDocumentElement()), imageSet);
 
             try {
                 Path infoFile = getInfoFile(imageSet);
 
                 log.info("Reading information file \"{}\" for image set \"{}\"", infoFile, imageSet);
 
-                final Document information;
+                final Document infoDocument;
                 try (InputStream input = Files.newInputStream(infoFile)) {
-                    information = builder.parse(input);
+                    infoDocument = builder.parse(input);
                 }
 
-                configuration.load(new Entry(information.getDocumentElement()), imageSet);
+                configuration.load(new Entry(infoDocument.getDocumentElement()), imageSet);
             } catch (FileNotFoundException ignored) {
                 // Information file is optional, so ignore if it's missing
             }
@@ -332,24 +332,30 @@ public class Main {
             List<String> childMascots = new ArrayList<>();
 
             // Determine the child image sets for this image set
-            for (final Entry list : actionsEntry.selectChildren(actionsSchema.getString("ActionList"))) {
-                for (final Entry node : list.selectChildren(actionsSchema.getString("Action"))) {
-                    if (node.hasAttribute(actionsSchema.getString("BornMascot"))) {
-                        String set = node.getAttribute(actionsSchema.getString("BornMascot"));
-                        if (!childMascots.contains(set)) {
-                            childMascots.add(set);
-                        }
-                        if (!configurations.containsKey(set)) {
-                            loadConfiguration(set);
-                        }
-                    }
-                    if (node.hasAttribute(actionsSchema.getString("TransformMascot"))) {
-                        String set = node.getAttribute(actionsSchema.getString("TransformMascot"));
-                        if (!childMascots.contains(set)) {
-                            childMascots.add(set);
-                        }
-                        if (!configurations.containsKey(set)) {
-                            loadConfiguration(set);
+            List<Entry> actionLists = actionsEntry.selectChildren(actionsSchema.getString("ActionList"));
+            if (!actionLists.isEmpty()) {
+                for (final Entry actionList : actionLists) {
+                    List<Entry> actionNodes = actionList.selectChildren(actionsSchema.getString("Action"));
+                    if (!actionNodes.isEmpty()) {
+                        for (final Entry actionNode : actionNodes) {
+                            if (actionNode.hasAttribute(actionsSchema.getString("BornMascot"))) {
+                                String childImageSet = actionNode.getAttribute(actionsSchema.getString("BornMascot"));
+                                if (!childMascots.contains(childImageSet)) {
+                                    childMascots.add(childImageSet);
+                                }
+                                if (!configurations.containsKey(childImageSet)) {
+                                    loadConfiguration(childImageSet);
+                                }
+                            }
+                            if (actionNode.hasAttribute(actionsSchema.getString("TransformMascot"))) {
+                                String childImageSet = actionNode.getAttribute(actionsSchema.getString("TransformMascot"));
+                                if (!childMascots.contains(childImageSet)) {
+                                    childMascots.add(childImageSet);
+                                }
+                                if (!configurations.containsKey(childImageSet)) {
+                                    loadConfiguration(childImageSet);
+                                }
+                            }
                         }
                     }
                 }
@@ -565,11 +571,17 @@ public class Main {
         boolean isExit = manager.isExitOnLastRemoved();
         manager.setExitOnLastRemoved(false);
 
-        for (String r : toRemove)
-            removeLoadedImageSet(r, toRetain);
+        if (!toRemove.isEmpty()) {
+            for (String r : toRemove) {
+                removeLoadedImageSet(r, toRetain);
+            }
+        }
 
-        for (String a : toAdd)
-            addImageSet(a);
+        if (!toAdd.isEmpty()) {
+            for (String a : toAdd) {
+                addImageSet(a);
+            }
+        }
 
         // Clear any items that were added to this collection during the loading sequence
         failedConfigurations.clear();

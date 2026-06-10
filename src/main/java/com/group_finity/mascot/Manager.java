@@ -191,14 +191,16 @@ public class Manager {
 
             noMascots = mascots.isEmpty();
 
-            // Advance the mascots' time
-            for (final Mascot mascot : mascots) {
-                mascot.tick();
-            }
+            if (!noMascots) {
+                // Advance the mascots' time
+                for (final Mascot mascot : mascots) {
+                    mascot.tick();
+                }
 
-            // Advance the mascots' images and positions
-            for (final Mascot mascot : mascots) {
-                mascot.apply();
+                // Advance the mascots' images and positions
+                for (final Mascot mascot : mascots) {
+                    mascot.apply();
+                }
             }
         }
 
@@ -245,6 +247,9 @@ public class Manager {
      */
     public void setBehaviorAll(final String name) {
         synchronized (mascots) {
+            if (mascots.isEmpty()) {
+                return;
+            }
             for (final Mascot mascot : mascots) {
                 Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
                 try {
@@ -267,6 +272,9 @@ public class Manager {
      */
     public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
         synchronized (mascots) {
+            if (mascots.isEmpty()) {
+                return;
+            }
             for (final Mascot mascot : mascots) {
                 try {
                     if (mascot.getImageSet().equals(imageSet)) {
@@ -424,6 +432,10 @@ public class Manager {
      */
     public int getCount(String imageSet) {
         synchronized (mascots) {
+            if (mascots.isEmpty()) {
+                return 0;
+            }
+
             if (imageSet == null) {
                 return mascots.size();
             } else {
@@ -440,9 +452,11 @@ public class Manager {
      */
     public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
         synchronized (mascots) {
-            for (final Mascot mascot : mascots) {
-                if (mascot.getAffordances().contains(affordance)) {
-                    return new WeakReference<>(mascot);
+            if (!mascots.isEmpty()) {
+                for (final Mascot mascot : mascots) {
+                    if (mascot.getAffordances().contains(affordance)) {
+                        return new WeakReference<>(mascot);
+                    }
                 }
             }
         }
@@ -454,12 +468,14 @@ public class Manager {
         int count = 0;
 
         synchronized (mascots) {
-            for (final Mascot mascot : mascots) {
-                if (mascot.getAnchor().equals(anchor)) {
-                    count++;
-                }
-                if (count > 1) {
-                    return true;
+            if (!mascots.isEmpty()) {
+                for (final Mascot mascot : mascots) {
+                    if (mascot.getAnchor().equals(anchor)) {
+                        count++;
+                    }
+                    if (count > 1) {
+                        return true;
+                    }
                 }
             }
         }

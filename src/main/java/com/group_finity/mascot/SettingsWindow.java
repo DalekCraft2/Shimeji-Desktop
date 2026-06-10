@@ -152,16 +152,23 @@ public class SettingsWindow extends JDialog {
         sldOpacity.setValue((int) (opacity * 100));
         sldScaling.setValue((int) (scaling * 10));
 
-        for (String item : settings.interactiveWindows)
-            if (!item.trim().isEmpty()) {
-                listData.add(item);
+
+        if (!settings.interactiveWindows.isEmpty()) {
+            for (String item : settings.interactiveWindows) {
+                if (!item.trim().isEmpty()) {
+                    listData.add(item);
+                }
             }
-        lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
-        for (String item : settings.interactiveWindowsBlacklist)
-            if (!item.trim().isEmpty()) {
-                blacklistData.add(item);
+            lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
+        }
+        if (!settings.interactiveWindowsBlacklist.isEmpty()) {
+            for (String item : settings.interactiveWindowsBlacklist) {
+                if (!item.trim().isEmpty()) {
+                    blacklistData.add(item);
+                }
             }
-        lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
+            lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
+        }
 
         chkWindowModeEnabled.setSelected(windowedMode);
         spnWindowWidth.setBackground(txtBackgroundColor.getBackground());

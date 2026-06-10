@@ -118,10 +118,12 @@ public class ScanInteract extends BorderedAction {
     @Override
     protected Animation getAnimation() throws VariableException {
         List<Animation> animations = getAnimations();
-        for (Animation animation : animations) {
-            if (turning == animation.isTurn() &&
-                    animation.isEffective(getVariables())) {
-                return animation;
+        if (!animations.isEmpty()) {
+            for (Animation animation : animations) {
+                if (turning == animation.isTurn() &&
+                        animation.isEffective(getVariables())) {
+                    return animation;
+                }
             }
         }
 
@@ -130,7 +132,7 @@ public class ScanInteract extends BorderedAction {
 
     protected boolean hasTurningAnimation() {
         if (hasTurning == null) {
-            hasTurning = getAnimations().stream().anyMatch(Animation::isTurn);
+            hasTurning = !getAnimations().isEmpty() && getAnimations().stream().anyMatch(Animation::isTurn);
         }
         return hasTurning;
     }

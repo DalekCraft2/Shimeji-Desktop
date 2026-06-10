@@ -90,13 +90,13 @@ public class ImageSetChooser extends JDialog {
                     builderFactory.setIgnoringComments(true);
                     DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
-                    final Document information;
+                    final Document infoDocument;
                     try (InputStream input = Files.newInputStream(infoFile)) {
-                        information = builder.parse(input);
+                        infoDocument = builder.parse(input);
                     }
 
                     Configuration configuration = new Configuration();
-                    configuration.load(new Entry(information.getDocumentElement()), imageSet, true);
+                    configuration.load(new Entry(infoDocument.getDocumentElement()), imageSet, true);
 
                     if (configuration.containsInformationKey(configuration.getSchema().getString("Name"))) {
                         caption = configuration.getInformation(configuration.getSchema().getString("Name"));
@@ -300,9 +300,12 @@ public class ImageSetChooser extends JDialog {
     private void useSelectedButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useSelectedButtonActionPerformed
         imageSets.clear();
 
-        for (ImageSetPanel obj : lstImageSets.getSelectedValuesList()) {
-            if (obj != null) {
-                imageSets.add(obj.getImageSetName());
+        List<ImageSetPanel> selectedValues = lstImageSets.getSelectedValuesList();
+        if (!selectedValues.isEmpty()) {
+            for (ImageSetPanel obj : selectedValues) {
+                if (obj != null) {
+                    imageSets.add(obj.getImageSetName());
+                }
             }
         }
 

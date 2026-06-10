@@ -108,10 +108,12 @@ public class Move extends BorderedAction {
         // had to expose both animations and variables for this
         // is there a better way?
         List<Animation> animations = getAnimations();
-        for (Animation animation : animations) {
-            if (turning == animation.isTurn() &&
-                    animation.isEffective(getVariables())) {
-                return animation;
+        if (!animations.isEmpty()) {
+            for (Animation animation : animations) {
+                if (turning == animation.isTurn() &&
+                        animation.isEffective(getVariables())) {
+                    return animation;
+                }
             }
         }
 
@@ -120,7 +122,7 @@ public class Move extends BorderedAction {
 
     protected boolean hasTurningAnimation() {
         if (hasTurning == null) {
-            hasTurning = getAnimations().stream().anyMatch(Animation::isTurn);
+            hasTurning = !getAnimations().isEmpty() && getAnimations().stream().anyMatch(Animation::isTurn);
         }
         return hasTurning;
     }

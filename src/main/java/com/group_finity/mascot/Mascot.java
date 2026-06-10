@@ -273,14 +273,16 @@ public class Mascot {
                         // Draw hotspots
                         g.setColor(Color.BLUE);
                         synchronized (getHotspotLock()) {
-                            for (Hotspot hotspot : getHotspots()) {
-                                Shape shape = hotspot.getShape();
-                                if (shape instanceof Rectangle rectangle) {
-                                    int x = lookRight ? width - rectangle.x - rectangle.width : rectangle.x;
-                                    g.drawRect(x, rectangle.y, rectangle.width - 1, rectangle.height - 1);
-                                } else if (shape instanceof Ellipse2D ellipse) {
-                                    double x = lookRight ? width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
-                                    g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
+                            if (!getHotspots().isEmpty()) {
+                                for (Hotspot hotspot : getHotspots()) {
+                                    Shape shape = hotspot.getShape();
+                                    if (shape instanceof Rectangle rectangle) {
+                                        int x = lookRight ? width - rectangle.x - rectangle.width : rectangle.x;
+                                        g.drawRect(x, rectangle.y, rectangle.width - 1, rectangle.height - 1);
+                                    } else if (shape instanceof Ellipse2D ellipse) {
+                                        double x = lookRight ? width - ellipse.getX() - ellipse.getWidth() : ellipse.getX();
+                                        g.drawOval((int) x, (int) ellipse.getY(), (int) ellipse.getWidth(), (int) ellipse.getHeight());
+                                    }
                                 }
                             }
                         }
@@ -607,11 +609,15 @@ public class Mascot {
 
     private void refreshCursor(Point position) {
         synchronized (hotspotLock) {
-            boolean useHand = hotspots.stream().anyMatch(hotspot ->
-                    hotspot.contains(this, position) &&
-                            Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
+            if (hotspots.isEmpty()) {
+                refreshCursor(false);
+            } else {
+                boolean useHand = hotspots.stream().anyMatch(hotspot ->
+                        hotspot.contains(this, position) &&
+                                Main.getInstance().getConfiguration(imageSet).isBehaviorEnabled(hotspot.getBehaviour(), this));
 
-            refreshCursor(useHand);
+                refreshCursor(useHand);
+            }
         }
     }
 

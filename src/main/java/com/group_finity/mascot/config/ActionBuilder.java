@@ -102,51 +102,66 @@ public class ActionBuilder implements IActionBuilder {
         }
 
         List<Entry> animationNodes = actionNode.selectChildren(schema.getString("Animation"));
-        AnimationBuilder[] animationBuilderArray = new AnimationBuilder[animationNodes.size()];
-        for (int i = 0; i < animationNodes.size(); i++) {
-            Entry node = animationNodes.get(i);
-            try {
-                animationBuilderArray[i] = new AnimationBuilder(configuration, node, imageSet);
-            } catch (ConfigurationException e) {
-                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadAnimationErrorMessage"), e);
+        if (animationNodes.isEmpty()) {
+            animationBuilders = List.of();
+        } else {
+            AnimationBuilder[] animationBuilderArray = new AnimationBuilder[animationNodes.size()];
+            for (int i = 0; i < animationNodes.size(); i++) {
+                Entry animationNode = animationNodes.get(i);
+                try {
+                    animationBuilderArray[i] = new AnimationBuilder(configuration, animationNode, imageSet);
+                } catch (ConfigurationException e) {
+                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadAnimationErrorMessage"), e);
+                }
             }
+            animationBuilders = List.of(animationBuilderArray);
         }
-        animationBuilders = List.of(animationBuilderArray);
 
         boolean isComplexAction = type == TYPE_SEQUENCE || type == TYPE_SELECT;
 
         /*
-        To estimate the number of ActionReference and Action tags combined, we subtract the number of Animation tags
-        from the total number of children. We could alternatively call selectChildren() for both ActionReference and
-        Action and then add the sizes of the returned lists to get a more accurate answer, but that might slow things
-        down if this action has a lot of children.
+        To estimate the number of ActionReference and Action nodes combined, we calculate the number of remaining
+        children (the total number of children minus the number of Animation nodes). We could alternatively
+        call selectChildren() for both ActionReference and Action and then add the sizes of the returned lists
+        to get a more accurate answer, but that might slow things down if this action has a lot of children.
+
+        If the number of remaining children is greater than 0, there may be some Action and ActionReference nodes
+        that we need to load.
          */
-        List<IActionBuilder> tempActionRefs = new ArrayList<>(actionNode.getChildren().size() - animationNodes.size());
-        for (final Entry node : actionNode.getChildren()) {
-            if (node.getName().equals(schema.getString("ActionReference"))) {
-                // Do not allow non-ComplexAction-type actions to have child actions
-                if (!isComplexAction) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
-                }
-                try {
-                    tempActionRefs.add(new ActionRef(configuration, node));
-                } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionReferenceErrorMessage"), node.getAttributes()), e);
-                }
-            } else if (node.getName().equals(schema.getString("Action"))) {
-                // Do not allow non-ComplexAction-type actions to have child actions
-                if (!isComplexAction) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
-                }
-                try {
-                    tempActionRefs.add(new ActionBuilder(configuration, node, imageSet));
-                } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), node.getAttributes()), e);
+        int remainingChildren = actionNode.getChildren().size() - animationNodes.size();
+        if (remainingChildren > 0) {
+            List<IActionBuilder> tempActionRefs = null;
+            for (final Entry node : actionNode.getChildren()) {
+                boolean isReference = node.getName().equals(schema.getString("ActionReference"));
+                if (isReference || node.getName().equals(schema.getString("Action"))) {
+                    // Do not allow non-ComplexAction-type actions to have child actions
+                    if (!isComplexAction) {
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), type));
+                    }
+                    if (tempActionRefs == null) {
+                        // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory.
+                        // Use the number of remaining children as the initial capacity so the list's internal
+                        // array doesn't have to be resized.
+                        tempActionRefs = new ArrayList<>(remainingChildren);
+                    }
+                    try {
+                        tempActionRefs.add(isReference ?
+                                new ActionRef(configuration, node) :
+                                new ActionBuilder(configuration, node, imageSet));
+                    } catch (ConfigurationException e) {
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionReferenceErrorMessage"), node.getAttributes()), e);
+                    }
                 }
             }
+            if (tempActionRefs == null) {
+                actionRefs = List.of();
+            } else {
+                // Make list immutable
+                actionRefs = List.copyOf(tempActionRefs);
+            }
+        } else {
+            actionRefs = List.of();
         }
-        // Make list immutable
-        actionRefs = List.copyOf(tempActionRefs);
 
         // Ensure that ComplexAction-type actions have child actions
         if (isComplexAction && actionRefs.isEmpty()) {
@@ -286,11 +301,13 @@ public class ActionBuilder implements IActionBuilder {
                 throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
             }
         }
-        for (final Map.Entry<String, String> param : params.entrySet()) {
-            try {
-                variables.put(param.getKey(), Variable.parse(param.getValue()));
-            } catch (final VariableException e) {
-                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+        if (!params.isEmpty()) {
+            for (final Map.Entry<String, String> param : params.entrySet()) {
+                try {
+                    variables.put(param.getKey(), Variable.parse(param.getValue()));
+                } catch (final VariableException e) {
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                }
             }
         }
         return variables;

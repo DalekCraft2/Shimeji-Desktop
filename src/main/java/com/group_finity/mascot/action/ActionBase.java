@@ -75,8 +75,10 @@ public abstract class ActionBase implements Action {
         getVariables().init();
 
         // Initialize the animations
-        for (final Animation animation : animations) {
-            animation.init();
+        if (!animations.isEmpty()) {
+            for (final Animation animation : animations) {
+                animation.init();
+            }
         }
     }
 
@@ -112,8 +114,10 @@ public abstract class ActionBase implements Action {
         getVariables().resetValues();
 
         // Clear cached animation condition values (each frame)
-        for (final Animation animation : getAnimations()) {
-            animation.resetCondition();
+        if (!getAnimations().isEmpty()) {
+            for (final Animation animation : getAnimations()) {
+                animation.resetCondition();
+            }
         }
     }
 
@@ -143,9 +147,11 @@ public abstract class ActionBase implements Action {
     }
 
     protected Animation getAnimation() throws VariableException {
-        for (final Animation animation : getAnimations()) {
-            if (animation.isEffective(getVariables())) {
-                return animation;
+        if (!getAnimations().isEmpty()) {
+            for (final Animation animation : getAnimations()) {
+                if (animation.isEffective(getVariables())) {
+                    return animation;
+                }
             }
         }
 

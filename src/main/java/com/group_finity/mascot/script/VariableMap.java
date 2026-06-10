@@ -34,8 +34,10 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
      * @see Variable#init()
      */
     public void init() {
-        for (final Variable o : rawMap.values()) {
-            o.init();
+        if (!rawMap.isEmpty()) {
+            for (final Variable o : rawMap.values()) {
+                o.init();
+            }
         }
     }
 
@@ -46,26 +48,15 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
      * @see Variable#resetValue()
      */
     public void resetValues() {
-        for (final Variable o : rawMap.values()) {
-            o.resetValue();
+        if (!rawMap.isEmpty()) {
+            for (final Variable o : rawMap.values()) {
+                o.resetValue();
+            }
         }
     }
 
-    /**
-     * The entry set instance of this {@code VariableMap}.
-     *
-     * @see #entrySet()
-     */
-    private Set<Map.Entry<String, Object>> entrySet;
-
     @Override
-    public Set<Map.Entry<String, Object>> entrySet() {
-        Set<Map.Entry<String, Object>> es;
-        return (es = entrySet) == null ? (entrySet = new EntrySet()) : es;
-    }
-
-    @Override
-    public Object put(final String key, final Object value) {
+    public Object put(String key, Object value) {
         Object result;
 
         if (value instanceof Variable variable) {
@@ -75,6 +66,20 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         }
 
         return result;
+    }
+
+    /**
+     * The entry set instance of this {@code VariableMap}.
+     *
+     * @see #entrySet()
+     * @see EntrySet
+     */
+    private Set<Map.Entry<String, Object>> entrySet;
+
+    @Override
+    public Set<Map.Entry<String, Object>> entrySet() {
+        Set<Map.Entry<String, Object>> es;
+        return (es = entrySet) == null ? (entrySet = new EntrySet()) : es;
     }
 
     final class EntrySet extends AbstractSet<Map.Entry<String, Object>> {
@@ -129,7 +134,7 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
         }
 
         @Override
-        public Object setValue(final Object value) {
+        public Object setValue(Object value) {
             throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("SetValueNotSupportedErrorMessage"));
         }
     }

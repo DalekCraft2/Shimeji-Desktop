@@ -76,11 +76,13 @@ public class BehaviorRef implements IBehaviorBuilder {
         }
 
         // Verify that all parameters can be parsed
-        for (final Map.Entry<String, String> param : params.entrySet()) {
-            try {
-                Variable.parse(param.getValue());
-            } catch (final VariableException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+        if (!params.isEmpty()) {
+            for (final Map.Entry<String, String> param : params.entrySet()) {
+                try {
+                    Variable.parse(param.getValue());
+                } catch (final VariableException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                }
             }
         }
     }
@@ -112,10 +114,12 @@ public class BehaviorRef implements IBehaviorBuilder {
             return false;
         }
 
-        for (final String condition : conditions) {
-            if (condition != null) {
-                if (!(Boolean) Variable.parse(condition).get(context)) {
-                    return false;
+        if (!conditions.isEmpty()) {
+            for (final String condition : conditions) {
+                if (condition != null) {
+                    if (!(Boolean) Variable.parse(condition).get(context)) {
+                        return false;
+                    }
                 }
             }
         }

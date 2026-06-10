@@ -59,12 +59,13 @@ public class ComplexMove extends BorderedAction {
     public void init(final Mascot mascot) throws VariableException {
         super.init(mascot);
 
-        for (String characteristic : getCharacteristics().split(",")) {
-            if (characteristic.equals(getSchema().getString("Breed"))) {
-                breedEnabled = true;
-            }
-            if (characteristic.equals(getSchema().getString("Scan"))) {
-                scanEnabled = true;
+        if (!getCharacteristics().isEmpty()) {
+            for (String characteristic : getCharacteristics().split(",")) {
+                if (characteristic.equals(getSchema().getString("Breed"))) {
+                    breedEnabled = true;
+                } else if (characteristic.equals(getSchema().getString("Scan"))) {
+                    scanEnabled = true;
+                }
             }
         }
 
@@ -210,10 +211,12 @@ public class ComplexMove extends BorderedAction {
         // had to expose both animations and variables for this
         // is there a better way?
         List<Animation> animations = getAnimations();
-        for (Animation animation : animations) {
-            if (turning == animation.isTurn() &&
-                    animation.isEffective(getVariables())) {
-                return animation;
+        if (!animations.isEmpty()) {
+            for (Animation animation : animations) {
+                if (turning == animation.isTurn() &&
+                        animation.isEffective(getVariables())) {
+                    return animation;
+                }
             }
         }
 
@@ -222,7 +225,7 @@ public class ComplexMove extends BorderedAction {
 
     protected boolean hasTurningAnimation() {
         if (hasTurning == null) {
-            hasTurning = getAnimations().stream().anyMatch(Animation::isTurn);
+            hasTurning = !getAnimations().isEmpty() && getAnimations().stream().anyMatch(Animation::isTurn);
         }
         return hasTurning;
     }

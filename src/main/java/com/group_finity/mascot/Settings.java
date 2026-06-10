@@ -75,13 +75,15 @@ public class Settings {
         // Settings in tray menu and mascot popup menu
         language = Locale.forLanguageTag(properties.getProperty("Language", Locale.getDefault().toLanguageTag()));
         disabledBehaviors.clear();
-        for (String key : properties.stringPropertyNames()) {
-            // Make sure the key's length is longer than "DisabledBehaviours." to prevent an IndexOutOfBoundsException
-            if (key.startsWith("DisabledBehaviours.") && key.length() > "DisabledBehaviours.".length()) {
-                String imageSet = key.substring(key.indexOf('.') + 1);
-                List<String> list = getStringListProperty(properties, key, "/");
-                if (!list.isEmpty())
-                    disabledBehaviors.put(imageSet, list);
+        if (!properties.isEmpty()) {
+            for (String key : properties.stringPropertyNames()) {
+                // Make sure the key's length is longer than "DisabledBehaviours." to prevent an IndexOutOfBoundsException
+                if (key.startsWith("DisabledBehaviours.") && key.length() > "DisabledBehaviours.".length()) {
+                    String imageSet = key.substring(key.indexOf('.') + 1);
+                    List<String> list = getStringListProperty(properties, key, "/");
+                    if (!list.isEmpty())
+                        disabledBehaviors.put(imageSet, list);
+                }
             }
         }
         breeding = getBooleanProperty(properties, "Breeding", true);
@@ -164,8 +166,8 @@ public class Settings {
 
     private int[] getIntArrayProperty(Properties properties, String key, String separator, int[] defaultValue) {
         if (properties.containsKey(key)) {
+            String[] splitArray = properties.getProperty(key).split(separator);
             try {
-                String[] splitArray = properties.getProperty(key).split(separator);
                 return Arrays.stream(splitArray).mapToInt(Integer::parseInt).toArray();
             } catch (NumberFormatException ignored) {
             }
@@ -197,8 +199,10 @@ public class Settings {
 
         // Settings in tray menu and mascot popup menu
         properties.setProperty("Language", language.toLanguageTag());
-        for (Map.Entry<String, List<String>> entry : disabledBehaviors.entrySet()) {
-            properties.setProperty("DisabledBehaviours." + entry.getKey(), String.join("/", entry.getValue()));
+        if (!disabledBehaviors.isEmpty()) {
+            for (Map.Entry<String, List<String>> entry : disabledBehaviors.entrySet()) {
+                properties.setProperty("DisabledBehaviours." + entry.getKey(), String.join("/", entry.getValue()));
+            }
         }
         for (String key : properties.stringPropertyNames()) {
             // Make sure the key's length is longer than "DisabledBehaviours." to prevent an IndexOutOfBoundsException

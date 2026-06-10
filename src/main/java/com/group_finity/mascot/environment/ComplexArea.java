@@ -29,10 +29,14 @@ public class ComplexArea {
      * to the new bounds of the corresponding {@code Area} objects
      */
     public void set(Map<String, Rectangle> rectangles) {
-        // Retain the areas with the same names
-        retain(rectangles.keySet());
-        for (Map.Entry<String, Rectangle> e : rectangles.entrySet()) {
-            set(e.getKey(), e.getValue());
+        if (rectangles.isEmpty()) {
+            areas.clear();
+        } else {
+            // Retain the areas with the same names
+            retain(rectangles.keySet());
+            for (Map.Entry<String, Rectangle> e : rectangles.entrySet()) {
+                set(e.getKey(), e.getValue());
+            }
         }
     }
 
@@ -47,12 +51,14 @@ public class ComplexArea {
     public void set(String name, final Rectangle value) {
         // Should I exclude an area which matches exactly?
         // This seems to occur when mirroring
-        for (Area area : areas.values()) {
-            if (area.getLeft() == value.x &&
-                    area.getTop() == value.y &&
-                    area.getWidth() == value.width &&
-                    area.getHeight() == value.height) {
-                return;
+        if (!areas.isEmpty()) {
+            for (Area area : areas.values()) {
+                if (area.getLeft() == value.x &&
+                        area.getTop() == value.y &&
+                        area.getWidth() == value.width &&
+                        area.getHeight() == value.height) {
+                    return;
+                }
             }
         }
 
@@ -92,11 +98,13 @@ public class ComplexArea {
     public FloorCeiling getBottomBorder(Point location) {
         FloorCeiling ret = null;
 
-        for (Area area : areas.values()) {
-            if (area.getTopBorder().isOn(location)) {
-                return null;
-            } else if (area.getBottomBorder().isOn(location)) {
-                ret = area.getBottomBorder();
+        if (!areas.isEmpty()) {
+            for (Area area : areas.values()) {
+                if (area.getTopBorder().isOn(location)) {
+                    return null;
+                } else if (area.getBottomBorder().isOn(location)) {
+                    ret = area.getBottomBorder();
+                }
             }
         }
 
@@ -117,11 +125,13 @@ public class ComplexArea {
     public FloorCeiling getTopBorder(Point location) {
         FloorCeiling ret = null;
 
-        for (Area area : areas.values()) {
-            if (area.getBottomBorder().isOn(location)) {
-                return null;
-            } else if (area.getTopBorder().isOn(location)) {
-                ret = area.getTopBorder();
+        if (!areas.isEmpty()) {
+            for (Area area : areas.values()) {
+                if (area.getBottomBorder().isOn(location)) {
+                    return null;
+                } else if (area.getTopBorder().isOn(location)) {
+                    ret = area.getTopBorder();
+                }
             }
         }
 
@@ -142,11 +152,13 @@ public class ComplexArea {
     public Wall getLeftBorder(Point location) {
         Wall ret = null;
 
-        for (Area area : areas.values()) {
-            if (area.getRightBorder().isOn(location)) {
-                return null;
-            } else if (area.getLeftBorder().isOn(location)) {
-                ret = area.getLeftBorder();
+        if (!areas.isEmpty()) {
+            for (Area area : areas.values()) {
+                if (area.getRightBorder().isOn(location)) {
+                    return null;
+                } else if (area.getLeftBorder().isOn(location)) {
+                    ret = area.getLeftBorder();
+                }
             }
         }
 
@@ -167,11 +179,13 @@ public class ComplexArea {
     public Wall getRightBorder(Point location) {
         Wall ret = null;
 
-        for (Area area : areas.values()) {
-            if (area.getLeftBorder().isOn(location)) {
-                return null;
-            } else if (area.getRightBorder().isOn(location)) {
-                ret = area.getRightBorder();
+        if (!areas.isEmpty()) {
+            for (Area area : areas.values()) {
+                if (area.getLeftBorder().isOn(location)) {
+                    return null;
+                } else if (area.getRightBorder().isOn(location)) {
+                    ret = area.getRightBorder();
+                }
             }
         }
 
