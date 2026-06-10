@@ -151,7 +151,9 @@ public class ActionBuilder implements IActionBuilder {
                                 new ActionRef(configuration, node) :
                                 new ActionBuilder(configuration, node, imageSet));
                     } catch (ConfigurationException e) {
-                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionReferenceErrorMessage"), node.getAttributes()), e);
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                                isReference ? "FailedLoadActionReferenceErrorMessage" : "FailedLoadActionErrorMessage"
+                        ), node.getAttributes()), e);
                     }
                 }
             }
