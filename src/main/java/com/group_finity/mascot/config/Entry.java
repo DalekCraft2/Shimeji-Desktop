@@ -18,7 +18,7 @@ public class Entry {
 
     private List<Entry> children;
 
-    private final Map<String, List<Entry>> selected = new HashMap<>();
+    private Map<String, List<Entry>> selected;
 
     public Entry(final Element element) {
         this.element = element;
@@ -33,7 +33,7 @@ public class Entry {
     }
 
     public boolean hasAttribute(final String attributeName) {
-        return element.hasAttribute(attributeName);
+        return element.hasAttributes() && element.hasAttribute(attributeName);
     }
 
     public Map<String, String> getAttributes() {
@@ -64,23 +64,34 @@ public class Entry {
     }
 
     public boolean hasChild(final String tagName) {
-        return getChildren().stream().anyMatch(child -> child.getName().equals(tagName));
+        return element.hasChildNodes() && getChildren().stream().anyMatch(child -> child.getName().equals(tagName));
     }
 
     public List<Entry> selectChildren(final String tagName) {
-        List<Entry> children = selected.get(tagName);
+        if (!element.hasChildNodes()) {
+            /* If we have no child nodes, don't bother adding List.of() to the selected map.
+            Instead, just return List.of() directly to save memory. */
+            return List.of();
+        } else if (selected == null) {
+            selected = new HashMap<>();
+        }
+
+        List<Entry> children;
+        children = selected.get(tagName);
         if (children != null) {
             return children;
         }
 
-        if (element.hasChildNodes()) {
-            children = new ArrayList<>();
-            for (final Entry child : getChildren()) {
-                if (child.getName().equals(tagName)) {
-                    children.add(child);
+        for (final Entry child : getChildren()) {
+            if (child.getName().equals(tagName)) {
+                // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory
+                if (children == null) {
+                    children = new ArrayList<>();
                 }
+                children.add(child);
             }
-        } else {
+        }
+        if (children == null) {
             children = List.of();
         }
 
@@ -95,15 +106,42 @@ public class Entry {
         }
 
         if (element.hasChildNodes()) {
-            final NodeList childNodes = element.getChildNodes();
-            children = new ArrayList<>(childNodes.getLength());
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                final Node childNode = childNodes.item(i);
-                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                    children.add(new Entry((Element) childNode));
+            /* According to the ElementTraversal documentation, all objects
+            that implement Element must also implement ElementTraversal,
+            so this condition should always evaluate to true. */
+            if (element instanceof ElementTraversal elementTraversal) {
+                int childElementCount = elementTraversal.getChildElementCount();
+                /* It's possible for element.hasChildNodes() to return true even if there are no child elements,
+                because not all child nodes are guaranteed to be elements.
+                Therefore, ensure that the number of element children is greater than 0. */
+                if (childElementCount > 0) {
+                    Entry[] childrenArray = new Entry[childElementCount];
+                    int i = 0;
+                    Element child = elementTraversal.getFirstElementChild();
+                    while (i < childElementCount && child != null) {
+                        childrenArray[i] = new Entry(child);
+                        child = ((ElementTraversal) child).getNextElementSibling();
+                        i++;
+                    }
+                    children = List.of(childrenArray);
+                }
+            } else {
+                // Leave this implementation here as a fallback, just in case our
+                // internal element doesn't implement ElementTraversal for whatever reason
+                final NodeList childNodes = element.getChildNodes();
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                    final Node childNode = childNodes.item(i);
+                    if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                        if (children == null) {
+                            // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory
+                            children = new ArrayList<>(childNodes.getLength());
+                        }
+                        children.add(new Entry((Element) childNode));
+                    }
                 }
             }
-        } else {
+        }
+        if (children == null) {
             children = List.of();
         }
 
