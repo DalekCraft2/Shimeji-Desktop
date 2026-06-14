@@ -30,14 +30,58 @@ import java.util.ResourceBundle;
  */
 public class AnimationBuilder {
     private static final Logger log = LoggerFactory.getLogger(AnimationBuilder.class);
-    private final String condition;
-    private final String imageSet;
-    private final List<Pose> poses;
-    private final List<Hotspot> hotspots;
+
+    /**
+     * The parent {@link Configuration} object of this {@code AnimationBuilder}.
+     */
     private final Configuration configuration;
+
+    /**
+     * The name of the image set with which this animation is associated.
+     */
+    private final String imageSet;
+
+    /**
+     * The condition that must evaluate to {@code true} for this animation to be applied to a mascot.
+     * This will be parsed into a {@link Variable} when this animation is built.
+     * <p>
+     * If this attribute is absent from the Animation node, the animation will always be able to be applied to a mascot.
+     * Effectively, this means the condition is defaulted to {@code true}.
+     */
+    private final String condition;
+
+    /**
+     * A sequence of poses through which this animation will iterate. This must not be empty.
+     */
+    private final List<Pose> poses;
+
+    /**
+     * The hotspots that this animation will apply to a mascot.
+     */
+    private final List<Hotspot> hotspots;
+
+    /**
+     * Whether this animation is used for when a mascot changes walking direction.
+     * If this attribute is not present in the Animation node, it is defaulted to {@code false}.
+     */
     private final boolean turn;
+
+    /**
+     * The duration of this animation. This value will equal the sum of the durations in {@link #poses}.
+     *
+     * @see Pose#duration()
+     */
     private final int duration;
 
+    /**
+     * Creates a new {@code AnimationBuilder} from the data contained within the specified Animation node.
+     *
+     * @param configuration the parent {@link Configuration} object of this {@code AnimationBuilder}
+     * @param animationNode the Animation node from which to load this animation
+     * @param imageSet the name of the image set with which this animation is associated
+     * @throws ConfigurationException if an error occurs whilst reading the Animation node, or if the Animation
+     * node has no Pose nodes within its children
+     */
     public AnimationBuilder(final Configuration configuration, final Entry animationNode, final String imageSet) throws ConfigurationException {
         this.imageSet = imageSet;
         this.configuration = configuration;
@@ -90,6 +134,16 @@ public class AnimationBuilder {
         }
     }
 
+    /**
+     * Loads a pose from the specified XML node.
+     *
+     * @param poseNode the Pose node from which to load the pose
+     * @return the loaded pose
+     * @throws IOException if an error occurs whilst reading from the image/sound paths in the Pose node
+     * @throws ArrayIndexOutOfBoundsException if the Pose node's ImageAnchor or Velocity attribute
+     * contains fewer than 2 entries when {@code split(",")} is called on it
+     * @throws NumberFormatException if an attribute that is expected to be numeric cannot be parsed
+     */
     private Pose loadPose(final Entry poseNode) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("Loading pose: {}", poseNode.getAttributes());
@@ -171,6 +225,17 @@ public class AnimationBuilder {
         return pose;
     }
 
+    /**
+     * Loads a hotspot from the specified XML node.
+     *
+     * @param hotspotNode the Hotspot node from which to load the hotspot
+     * @return the loaded hotspot
+     * @throws ArrayIndexOutOfBoundsException if either the Origin or Size attributes contain fewer than 2 entries
+     * when {@code split(",")} is called on them
+     * @throws NumberFormatException if an attribute that is expected to be numeric cannot be parsed
+     * @throws IllegalArgumentException if the Hotspot node's Shape attribute has an unsupported value
+     * (i.e., it is neither "Rectangle" nor "Ellipse")
+     */
     private Hotspot loadHotspot(final Entry hotspotNode) {
         if (log.isDebugEnabled()) {
             log.debug("Loading hotspot: {}", hotspotNode.getAttributes());
@@ -211,6 +276,15 @@ public class AnimationBuilder {
         return hotspot;
     }
 
+    /**
+     * Ensures the validity of any data loaded by this {@code AnimationBuilder} object that
+     * could not be validated when this {@code AnimationBuilder} object was being initialized.
+     * Specifically, this ensures that none of the {@link Hotspot} objects in this {@code AnimationBuilder}
+     * reference nonexistent behaviors.
+     *
+     * @throws ConfigurationException if a hotspot in this animation references a nonexistent behavior
+     * @see ActionBuilder#validate()
+     */
     public void validate() throws ConfigurationException {
         if (hotspots.isEmpty()) {
             return;
@@ -223,6 +297,12 @@ public class AnimationBuilder {
         }
     }
 
+    /**
+     * Builds this animation.
+     *
+     * @return the built animation
+     * @throws AnimationInstantiationException if this animation's condition fails to be parsed into a {@link Variable}
+     */
     public Animation buildAnimation() throws AnimationInstantiationException {
         try {
             return new Animation(condition == null ? null : Variable.parse(condition), poses, hotspots, turn, duration);

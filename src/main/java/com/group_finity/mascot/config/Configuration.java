@@ -25,19 +25,81 @@ import java.util.*;
 public class Configuration {
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
+    /**
+     * The English configuration schema. This is used for Shimeji-ee's configuration files.
+     */
     private static final ResourceBundle SCHEMA_EN = ResourceBundle.getBundle("schema", Locale.US);
+
+    /**
+     * The Japanese configuration schema. This is used for the original Shimeji's configuration files.
+     */
     private static final ResourceBundle SCHEMA_JA = ResourceBundle.getBundle("schema", Locale.JAPAN);
 
+    /**
+     * A map of user-defined constants that are added to the script context when
+     * determining whether a behavior's conditions evaluate to {@code true}.
+     *
+     * @see #buildNextBehavior(String, Mascot)
+     */
     private final Map<String, String> constants = new LinkedHashMap<>(2);
+
+    /**
+     * The builders for the top-level actions that have been loaded by this {@code Configuration}.
+     *
+     * @see #getActionBuilders()
+     */
     private final Map<String, ActionBuilder> actionBuilders = new LinkedHashMap<>();
+
+    /**
+     * The builders for the top-level behaviors that have been loaded by this {@code Configuration}.
+     *
+     * @see #getBehaviorBuilders()
+     * @see #getBehaviorNames()
+     */
     private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
+
+    /**
+     * A map of information about this {@code Configuration}.
+     */
+    // TODO: Consider refactoring this into multiple fields
     private final Map<String, String> information = new LinkedHashMap<>(8);
+
+    /**
+     * The schema used by this {@code Configuration}.
+     * <p>
+     * This value is overwritten whenever {@link #load} is called. If a caller intends to use this schema after
+     * {@code load} has been called, the caller should store the schema in a variable to avoid potential issues
+     * caused by this schema being changed from future calls to {@code load}.
+     *
+     * @see #SCHEMA_EN
+     * @see #SCHEMA_JA
+     * @see #getSchema()
+     */
     private ResourceBundle schema;
 
+    /**
+     * Creates a new {@code Configuration} from the data contained within the specified XML node.
+     *
+     * @param configurationNode the XML node from which to load the configuration. This should be the root node
+     * of a configuration file.
+     * @param imageSet the name of this {@code Configuration} object's associated image set
+     * @throws ConfigurationException if an error occurs whilst reading the configuration node, or if the
+     * configuration node contains invalid data
+     */
     public void load(final Entry configurationNode, final String imageSet) throws ConfigurationException {
         load(configurationNode, imageSet, false);
     }
 
+    /**
+     * Creates a new {@code Configuration} from the data contained within the specified XML node.
+     *
+     * @param configurationNode the XML node from which to load the configuration. This should be the root node
+     * of a configuration file.
+     * @param imageSet the name of this {@code Configuration} object's associated image set
+     * @param onlyLoadInfo whether to only read Information nodes when loading this {@code Configuration}
+     * @throws ConfigurationException if an error occurs whilst reading the configuration node, or if the
+     * configuration node contains invalid data
+     */
     public void load(final Entry configurationNode, final String imageSet, boolean onlyLoadInfo) throws ConfigurationException {
         log.debug("Reading configuration file...");
 
@@ -110,6 +172,16 @@ public class Configuration {
         log.debug("Configuration loaded successfully");
     }
 
+    /**
+     * Loads behaviors from the specified BehaviorList/Condition node.
+     * If a Condition node is present in the specified node's children, then the specified list of conditions is copied,
+     * the new condition is appended to it, and the method recurses using the new Condition node and the copied list.
+     *
+     * @param list the BehaviorList/Condition node from which to load behaviors
+     * @param conditions a list containing the conditions from the specified node and all of its parent nodes.
+     * The behaviors in the specified node can only be executed when all of these conditions evaluate to {@code true}.
+     * @throws ConfigurationException if a behavior in the specified list cannot be loaded or a condition cannot be parsed
+     */
     private void loadBehaviors(final Entry list, final List<String> conditions) throws ConfigurationException {
         List<Entry> children = list.getChildren();
         if (children.isEmpty()) {
@@ -156,6 +228,11 @@ public class Configuration {
         }
     }
 
+    /**
+     * Loads information about this {@code Configuration} from the specified Information node.
+     *
+     * @param infoNode the node from which to load the information
+     */
     private void loadInformation(final Entry infoNode) {
         List<Entry> children = infoNode.getChildren();
         if (children.isEmpty()) {
@@ -184,6 +261,23 @@ public class Configuration {
         }
     }
 
+    /**
+     * Ensures the validity of any data loaded by this {@code Configuration} object that
+     * could not be validated when this {@code Configuration} object was still loading data.
+     * Specifically, this ensures that the actions, hotspots, and behaviors loaded by this
+     * {@code Configuration} object do not contain references to nonexistent actions/behaviors.
+     * It also ensures that all four required behaviors ({@link UserBehavior#BEHAVIORNAME_CHASEMOUSE ChaseMouse},
+     * {@link UserBehavior#BEHAVIORNAME_FALL Fall}, {@link UserBehavior#BEHAVIORNAME_DRAGGED Dragged}, and
+     * {@link UserBehavior#BEHAVIORNAME_THROWN Thrown}) are present.
+     * <p>
+     * This should be called after all data has been loaded into this {@code Configuration} object.
+     *
+     * @throws ConfigurationException if an action, hotspot, or behavior in this {@code Configuration} contains a
+     * reference to a nonexistent action/behavior, or at least one of the required behaviors is missing
+     * @see ActionBuilder#validate()
+     * @see AnimationBuilder#validate()
+     * @see BehaviorBuilder#validate()
+     */
     public void validate() throws ConfigurationException {
         if (!actionBuilders.isEmpty()) {
             for (final ActionBuilder builder : actionBuilders.values()) {
@@ -226,6 +320,18 @@ public class Configuration {
         }
     }
 
+    /**
+     * Creates a new instance of the action with the specified name, and adds the specified parameters
+     * to its context. If a parameter name is present in both the specified parameters and the specified
+     * action's existing parameters, the existing parameter will be overwritten by the specified parameter.
+     *
+     * @param name the name of the action to build
+     * @param params a map of parameter names and values to add to the context of the built action
+     * @return the built action
+     * @throws ActionInstantiationException if the action with the specified name does not exist or otherwise fails
+     * to be built
+     * @see ActionBuilder#buildAction(Map)
+     */
     public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
         final ActionBuilder builder = actionBuilders.get(name);
         if (builder == null) {
@@ -235,9 +341,41 @@ public class Configuration {
         return builder.buildAction(params);
     }
 
+    /**
+     * Builds the next behavior for the behavior with the specified name. The returned behavior will be randomly chosen
+     * based on the frequencies of the candidates for the next behavior. Behaviors with larger frequencies have a
+     * greater chance of being chosen.
+     * <p>
+     * The candidates for the next behavior are selected from the specified behavior's
+     * {@linkplain BehaviorBuilder#getNextBehaviorBuilders() next behavior list}. If the specified behavior is
+     * {@linkplain BehaviorBuilder#isNextAdditive() next additive}, other top-level behaviors may be added to the
+     * list of candidates as well.
+     * <p>
+     * In order to be a candidate for the next behavior, a behavior must fulfill three requirements:
+     * <ul>
+     *     <li>It must have a frequency greater than 0.</li>
+     *     <li>It must be effective (meaning that all of its conditions must evaluate to {@code true}).</li>
+     *     <li>It must be enabled for the image set used by the specified mascot.</li>
+     * </ul>
+     * <p>
+     * If there are no candidates for the next behavior, then the specified mascot's position will be set above
+     * the top of the screen, and the "Fall" behavior will be returned.
+     *
+     * @param previousName the name of the behavior whose next behavior should be built
+     * @param mascot the mascot to use when checking the enabled states of the specified behavior's children
+     * @return the built behavior, or the "Fall" behavior if there are no candidates for the next behavior
+     * @throws BehaviorInstantiationException if the next behavior fails to be built
+     * @see IBehaviorBuilder#buildBehavior()
+     * @see IBehaviorBuilder#getFrequency()
+     * @see BehaviorBuilder#isNextAdditive()
+     * @see BehaviorBuilder#isEffective(VariableMap)
+     * @see BehaviorRef#isEffective(VariableMap)
+     */
     public Behavior buildNextBehavior(final String previousName, final Mascot mascot) throws BehaviorInstantiationException {
         final VariableMap context = new VariableMap();
-        context.putAll(constants); // put first so they can't override mascot
+        if (!constants.isEmpty()) {
+            context.putAll(constants); // put first so they can't override mascot
+        }
         context.put("mascot", mascot);
 
         final Collection<IBehaviorBuilder> candidates = new ArrayList<>();
@@ -250,6 +388,8 @@ public class Configuration {
             prevBehaviorBuilder = null;
         }
 
+        // If the previous behavior builder is next additive,
+        // allow the top-level behaviors to be candidates for the next behavior
         if (prevBehaviorBuilder == null || prevBehaviorBuilder.isNextAdditive()) {
             for (final BehaviorBuilder behaviorBuilder : behaviorBuilders.values()) {
                 try {
@@ -263,6 +403,8 @@ public class Configuration {
             }
         }
 
+        // If the previous behavior has next behaviors, iterate through them to find valid candidates
+        // for the next behavior
         if (prevBehaviorBuilder != null && !prevBehaviorBuilder.getNextBehaviorBuilders().isEmpty()) {
             for (final BehaviorRef behaviorRef : prevBehaviorBuilder.getNextBehaviorBuilders()) {
                 try {
@@ -276,6 +418,8 @@ public class Configuration {
             }
         }
 
+        // If there are no candidates for the next behavior, set the mascot's position
+        // to be above the top of the screen, and return the "Fall" behavior
         if (totalFrequency == 0) {
             Area area = Main.getInstance().getSettings().multiscreen
                     ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
@@ -293,9 +437,26 @@ public class Configuration {
             }
         }
 
+        /* TODO: Move the fallback "Fall" behavior code down here to replace this null return,
+            because this can be reached if a behavior has a negative frequency.
+            Also, ensure that frequencies are not negative when loading behaviors. */
         return null;
     }
 
+    /**
+     * Creates a new instance of the behavior with the specified name.
+     * If the specified behavior is not enabled for the specified mascot, the mascot's position will be set above the
+     * top of the screen, and the "Fall" behavior will be returned.
+     *
+     * @param name the name of the behavior to build
+     * @param mascot the mascot to use when checking whether the specified behavior is enabled
+     * @return the built behavior, or the "Fall" behavior if the specified behavior is not enabled for the
+     * specified mascot
+     * @throws BehaviorInstantiationException if a behavior with the specified name does not exist, or the specified
+     * behavior fails to be built
+     * @see #isBehaviorEnabled(String, Mascot)
+     * @see BehaviorBuilder#buildBehavior()
+     */
     public Behavior buildBehavior(final String name, final Mascot mascot) throws BehaviorInstantiationException {
         if (behaviorBuilders.containsKey(name)) {
             if (isBehaviorEnabled(name, mascot)) {
@@ -312,6 +473,15 @@ public class Configuration {
         }
     }
 
+    /**
+     * Creates a new instance of the behavior with the specified name.
+     *
+     * @param name the name of the behavior to build
+     * @return the built behavior
+     * @throws BehaviorInstantiationException if a behavior with the specified name does not exist, or the specified
+     * behavior fails to be built
+     * @see BehaviorBuilder#buildBehavior()
+     */
     public Behavior buildBehavior(final String name) throws BehaviorInstantiationException {
         if (behaviorBuilders.containsKey(name)) {
             return behaviorBuilders.get(name).buildBehavior();
@@ -320,6 +490,14 @@ public class Configuration {
         }
     }
 
+    /**
+     * Checks whether the behavior associated with the specified behavior builder is enabled for the specified mascot.
+     *
+     * @param builder the builder of the behavior whose enabled state is to be checked
+     * @param mascot the mascot to use when checking whether the specified behavior is enabled
+     * @return {@code true} if the specified behavior is enabled for the image set used by the specified mascot;
+     * {@code false} otherwise
+     */
     public boolean isBehaviorEnabled(final BehaviorBuilder builder, final Mascot mascot) {
         if (builder.isToggleable() && Main.getInstance().getSettings().disabledBehaviors.containsKey(mascot.getImageSet())) {
             return !Main.getInstance().getSettings().disabledBehaviors.get(mascot.getImageSet()).contains(builder.getName());
@@ -327,6 +505,14 @@ public class Configuration {
         return true;
     }
 
+    /**
+     * Checks whether the behavior with the specified name is enabled for the specified mascot.
+     *
+     * @param name the name of the behavior whose enabled state is to be checked
+     * @param mascot the mascot to use when checking whether the specified behavior is enabled
+     * @return {@code true} if the specified behavior is enabled for the image set used by the specified mascot;
+     * {@code false} otherwise
+     */
     public boolean isBehaviorEnabled(final String name, final Mascot mascot) {
         if (behaviorBuilders.containsKey(name)) {
             return isBehaviorEnabled(behaviorBuilders.get(name), mascot);
@@ -335,6 +521,13 @@ public class Configuration {
         }
     }
 
+    /**
+     * Checks whether the behavior with the specified name is hidden from the "Set Behavior" submenu in the mascot
+     * context menu.
+     *
+     * @param name the name of the behavior whose hidden state is to be checked
+     * @return {@code true} if the specified behavior is hidden from the "Set Behavior" submenu; {@code false} otherwise
+     */
     public boolean isBehaviorHidden(final String name) {
         if (behaviorBuilders.containsKey(name)) {
             return behaviorBuilders.get(name).isHidden();
@@ -343,6 +536,13 @@ public class Configuration {
         }
     }
 
+    /**
+     * Checks whether the behavior with the specified name can be toggled via the "Allowed Behaviors" submenu in the
+     * mascot context menu.
+     *
+     * @param name the name of the behavior whose toggleability is to be checked
+     * @return {@code true} if the specified behavior can be toggled; {@code false} otherwise
+     */
     public boolean isBehaviorToggleable(final String name) {
         if (behaviorBuilders.containsKey(name)) {
             return behaviorBuilders.get(name).isToggleable();
@@ -351,26 +551,65 @@ public class Configuration {
         }
     }
 
+    /**
+     * Gets the builders for the top-level actions that have been loaded by this {@code Configuration}.
+     *
+     * @return the top-level action builders loaded by this {@code Configuration}
+     */
     Map<String, ActionBuilder> getActionBuilders() {
         return actionBuilders;
     }
 
+    /**
+     * Gets the builders for the top-level behaviors that have been loaded by this {@code Configuration}.
+     *
+     * @return the top-level behavior builders loaded by this {@code Configuration}
+     * @see #getBehaviorNames()
+     */
     Map<String, BehaviorBuilder> getBehaviorBuilders() {
         return behaviorBuilders;
     }
 
+    /**
+     * Gets the names of the top-level behaviors that have been loaded by this {@code Configuration}.
+     *
+     * @return the names of the top-level behaviors that have been loaded by this {@code Configuration}
+     */
     public Set<String> getBehaviorNames() {
         return behaviorBuilders.keySet();
     }
 
+    /**
+     * Checks whether the information of this {@code Configuration} contains the specified key.
+     *
+     * @param key the key whose presence in the information of this {@code Configuration} is to be tested
+     * @return {@code true} if the information of this {@code Configuration} contains a mapping for the specified key;
+     * {@code false} otherwise
+     */
     public boolean containsInformationKey(String key) {
         return information.containsKey(key);
     }
 
+    /**
+     * Gets the information value that is mapped to the specified key.
+     *
+     * @param key the key whose associated value is to be returned
+     * @return the specified key's associated value, or {@code null} if the information of this {@code Configuration}
+     * does not contain a mapping for the specified key
+     */
     public String getInformation(String key) {
         return information.get(key);
     }
 
+    /**
+     * Gets the schema used by this {@code Configuration}.
+     * <p>
+     * This value is overwritten whenever {@link #load} is called. If a caller intends to use this schema after
+     * {@code load} has been called, the caller should store the schema in a variable to avoid potential issues
+     * caused by this schema being changed from future calls to {@code load}.
+     *
+     * @return the schema used by this {@code Configuration}
+     */
     public ResourceBundle getSchema() {
         return schema;
     }

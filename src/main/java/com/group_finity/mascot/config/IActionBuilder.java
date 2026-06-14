@@ -5,30 +5,36 @@ import com.group_finity.mascot.action.Action;
 import java.util.Map;
 
 /**
- * An object that builds actions and action references.
+ * An object that builds actions.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @see ActionBuilder
+ * @see ActionRef
  */
 public interface IActionBuilder {
 
     /**
-     * Ensures that this action and all of its children do not reference nonexistent actions.
-     * Should be called after all actions have been loaded from {@code actions.xml}.
+     * Ensures the validity of any data loaded by this {@code IActionBuilder} object that
+     * could not be validated when this {@code IActionBuilder} object was being initialized.
+     * <p>
+     * This should be called after all data has been loaded into the parent
+     * {@link Configuration} object of this {@code IActionBuilder}.
      *
-     * @throws ConfigurationException if the action or one of its children references a nonexistent action
+     * @throws ConfigurationException if this {@code IActionBuilder} object contains invalid data
+     * @see ActionBuilder#validate()
+     * @see ActionRef#validate()
      */
     void validate() throws ConfigurationException;
 
     /**
-     * Builds the action and all of its children actions/action references using the given parameters.
+     * Builds this action and adds the specified parameters to its context.
      *
-     * @param params a {@link Map} of attributes. This will contain the attributes from all actions in this action's
-     * inheritance tree, as well as the non-functional attributes from the behavior corresponding to the root action
-     * (non-functional referring to attributes that are not read by the program when building the behavior).
+     * @param params a map of parameter names and values to add to the context of the built action
      * @return the built action
-     * @throws ActionInstantiationException if the action contains an action reference without a corresponding
-     * action, an action's class can not be instantiated, or a script inside the action fails to be compiled
+     * @throws ActionInstantiationException if this action fails to be built
+     * @see ActionBuilder#buildAction(Map)
+     * @see ActionRef#buildAction(Map)
      */
     Action buildAction(final Map<String, String> params) throws ActionInstantiationException;
 }

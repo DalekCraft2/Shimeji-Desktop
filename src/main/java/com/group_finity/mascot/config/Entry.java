@@ -10,32 +10,88 @@ import java.util.*;
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
+ * @see Element
  */
 public class Entry {
+    /**
+     * The delegate XML element used by this {@code Entry}.
+     */
     private final Element element;
 
+    /**
+     * The attributes of this {@code Entry}.
+     * This is only initialized if needed, to save time and memory.
+     *
+     * @see #getAttributes()
+     * @see #getAttribute(String)
+     * @see #hasAttribute(String)
+     */
     private Map<String, String> attributes;
 
+    /**
+     * The child nodes of this {@code Entry}.
+     * This is only initialized if needed, to save time and memory.
+     *
+     * @see #getChildren()
+     * @see #selectChildren(String)
+     * @see #hasChild(String)
+     */
     private List<Entry> children;
 
+    /**
+     * A map that groups the child nodes of this {@code Entry} object by their tag names.
+     * This is only initialized if needed, to save time and memory.
+     */
     private Map<String, List<Entry>> selected;
 
+    /**
+     * Creates a new {@code Entry} with the specified delegate XML element.
+     *
+     * @param element the delegate XML element used by this {@code Entry}
+     */
     public Entry(final Element element) {
         this.element = element;
     }
 
+    /**
+     * Gets the tag name of this {@code Entry}.
+     *
+     * @return the tag name of this {@code Entry}
+     * @see Element#getTagName()
+     */
     public String getName() {
         return element.getTagName();
     }
 
+    /**
+     * Gets the text content of this {@code Entry}.
+     *
+     * @return the text content of this {@code Entry}
+     * @see Element#getTextContent()
+     */
     public String getText() {
         return element.getTextContent();
     }
 
+    /**
+     * Checks whether this {@code Entry} has an attribute with the specified name.
+     *
+     * @param attributeName the name of the attribute to check
+     * @return {@code true} if an attribute with the specified name is present on this {@code Entry};
+     * {@code false} otherwise
+     * @see Element#hasAttribute(String)
+     */
     public boolean hasAttribute(final String attributeName) {
         return element.hasAttributes() && element.hasAttribute(attributeName);
     }
 
+    /**
+     * Gets a map containing the names and values of the attributes of this {@code Entry}.
+     *
+     * @return a map containing the attributes of this {@code Entry}, or an empty map
+     * if this {@code Entry} contains no attributes
+     * @see Element#getAttributes()
+     */
     public Map<String, String> getAttributes() {
         if (attributes != null) {
             return attributes;
@@ -55,6 +111,14 @@ public class Entry {
         return attributes;
     }
 
+    /**
+     * Gets the value of the attribute with the specified name.
+     *
+     * @param attributeName the name of the attribute whose value is to be returned
+     * @return the value of the attribute with the specified name, or {@code null} if
+     * this {@code Entry} does not contain an attribute with the specified name
+     * @see Element#getAttributeNode(String)
+     */
     public String getAttribute(final String attributeName) {
         final Attr attribute = element.getAttributeNode(attributeName);
         if (attribute == null) {
@@ -63,10 +127,24 @@ public class Entry {
         return attribute.getValue();
     }
 
+    /**
+     * Checks whether this {@code Entry} has a child node with the specified name.
+     *
+     * @param tagName the name of the child node to check
+     * @return {@code true} if this {@code Entry} has a child node with the specified name;
+     * {@code false} otherwise
+     */
     public boolean hasChild(final String tagName) {
         return element.hasChildNodes() && getChildren().stream().anyMatch(child -> child.getName().equals(tagName));
     }
 
+    /**
+     * Gets a list of all child nodes in this {@code Entry} that have the specified name.
+     *
+     * @param tagName the name of the nodes that should be collected into the returned list
+     * @return a list of all child nodes with the specified name, or an empty list if this {@code Entry}
+     * has no child nodes with the specified name
+     */
     public List<Entry> selectChildren(final String tagName) {
         if (!element.hasChildNodes()) {
             /* If we have no child nodes, don't bother adding List.of() to the selected map.
@@ -100,6 +178,12 @@ public class Entry {
         return children;
     }
 
+    /**
+     * Gets all child nodes of this {@code Entry}.
+     *
+     * @return a list of this {@code Entry} object's child nodes, or an empty list if this {@code Entry}
+     * does not have child nodes
+     */
     public List<Entry> getChildren() {
         if (children != null) {
             return children;

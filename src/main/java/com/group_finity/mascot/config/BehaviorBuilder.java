@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * An object that builds behaviors.
+ * An implementation of {@link IBehaviorBuilder} that stores all information about a behavior
+ * so the behavior can be quickly built when needed.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
@@ -21,26 +22,102 @@ public class BehaviorBuilder implements IBehaviorBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(BehaviorBuilder.class);
 
+    /**
+     * The parent {@link Configuration} object of this {@code BehaviorBuilder}.
+     */
     private final Configuration configuration;
 
+    /**
+     * The name of this {@code BehaviorBuilder}. This value must be unique
+     * among the top-level behaviors within this behavior's parent {@link Configuration}.
+     *
+     * @see #getName()
+     */
     private final String name;
 
+    /**
+     * The name of the action referenced by this {@code BehaviorBuilder}.
+     * An {@link ActionBuilder} with this name must exist within the parent {@link Configuration} of this
+     * {@code BehaviorBuilder} by the time {@link #validate()} is called.
+     * <p>
+     * If this attribute is not present in the Behavior node, it is defaulted to the behavior's name.
+     */
     private final String actionName;
 
+    /**
+     * The frequency, or weight, of this behavior. This is used in conjunction with the frequencies of other behaviors
+     * to calculate the probability of this behavior being executed. Larger values make it more likely, and smaller
+     * values make it less likely. A value of 0 will make this behavior never execute unless it is specifically
+     * referenced by an action or another behavior.
+     *
+     * @see #getFrequency()
+     */
     private final int frequency;
 
+    /**
+     * The conditions for this {@code BehaviorBuilder}.
+     * All of these must evaluate to {@code true} in order for this behavior to be executed.
+     * <p>
+     * Note that these conditions are not stored as {@link Variable} objects, because they are re-parsed every time
+     * {@link #isEffective(VariableMap)} is called. This means that the values they had when they were last evaluated
+     * are not stored internally, so it makes no difference which variant of {@linkplain Variable#parse(String) script syntax}
+     * (i.e., {@code ${...}} or {@code #{...}}) is used for them.
+     *
+     * @see #isEffective(VariableMap)
+     */
     private final List<String> conditions;
 
+    /**
+     * Whether this behavior is hidden from the "Set Behavior" submenu in the mascot context menu.
+     * If this attribute is not present in the Behavior node, it is defaulted to {@code false}.
+     *
+     * @see #isHidden()
+     */
     private final boolean hidden;
 
+    /**
+     * Whether this behavior can be toggled via the "Allowed Behaviors" submenu in the mascot context menu.
+     * If this behavior is one of the four required behaviors ({@link UserBehavior#BEHAVIORNAME_CHASEMOUSE ChaseMouse},
+     * {@link UserBehavior#BEHAVIORNAME_FALL Fall}, {@link UserBehavior#BEHAVIORNAME_DRAGGED Dragged}, or
+     * {@link UserBehavior#BEHAVIORNAME_THROWN Thrown}), or if this attribute is not present in the Behavior node,
+     * it is defaulted to {@code false}.
+     *
+     * @see #isToggleable()
+     */
     private final boolean toggleable;
 
+    /**
+     * Whether this behavior allows other top-level behaviors (i.e., other {@code BehaviorBuilder} objects) to be
+     * candidates for this behavior's next behavior, in addition to the behaviors in {@link #nextBehaviorBuilders}.
+     *
+     * @see #frequency
+     * @see #nextBehaviorBuilders
+     * @see #isNextAdditive()
+     */
     private final boolean nextAdditive;
 
+    /**
+     * A list of references to the behaviors that may execute after this behavior has finished executing.
+     *
+     * @see #getNextBehaviorBuilders()
+     */
     private final List<BehaviorRef> nextBehaviorBuilders;
 
+    /**
+     * The parameters to add to the context of this behavior's associated action.
+     * These will be parsed into {@link Variable} objects when this behavior is built.
+     */
     private final Map<String, String> params;
 
+    /**
+     * Creates a new {@code BehaviorBuilder} from the data contained within the specified Behavior node.
+     *
+     * @param configuration the parent {@link Configuration} object of this {@code BehaviorBuilder}
+     * @param behaviorNode the Behavior node from which to load this behavior
+     * @param conditions the conditions that must all evaluate to {@code true} for this behavior to be executed
+     * @throws ConfigurationException if one of the Behavior node's attributes cannot be parsed into a {@link Variable}
+     * @throws NumberFormatException if the Behavior node's Frequency attribute cannot be parsed as an int
+     */
     public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
         ResourceBundle schema = configuration.getSchema();
@@ -141,6 +218,16 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         return "Behavior[name=" + name + ",frequency=" + frequency + ",actionName=" + actionName + "]";
     }
 
+    /**
+     * Loads behaviors from the specified NextBehaviorList/Condition node.
+     * If a Condition node is present in the specified node's children, then the specified list of conditions is copied,
+     * the new condition is appended to it, and the method recurses using the new Condition node and the copied list.
+     *
+     * @param list the NextBehaviorList/Condition node from which to load behaviors
+     * @param conditions a list containing the conditions from the specified node and all of its parent nodes.
+     * The behaviors in the specified node can only be executed when all of these conditions evaluate to {@code true}.
+     * @throws ConfigurationException if a behavior in the specified list cannot be loaded or a condition cannot be parsed
+     */
     private void loadBehaviors(final Entry list, final List<String> conditions, final List<BehaviorRef> nextBehaviorBuilders) throws ConfigurationException {
         List<Entry> children = list.getChildren();
         if (children.isEmpty()) {
@@ -182,10 +269,16 @@ public class BehaviorBuilder implements IBehaviorBuilder {
     }
 
     /**
-     * Ensures that this behavior and all of its children do not reference nonexistent actions or behaviors.
-     * Should be called after all behaviors have been loaded from {@code behaviors.xml}.
+     * Ensures the validity of any data loaded by this {@code BehaviorBuilder} object that
+     * could not be validated when this {@code BehaviorBuilder} object was being initialized.
+     * Specifically, this ensures that this behavior does not reference a nonexistent action,
+     * and that none of this behavior's next behaviors reference a nonexistent behavior.
+     * <p>
+     * This should be called after all data has been loaded into the parent
+     * {@link Configuration} object of this {@code BehaviorBuilder}.
      *
-     * @throws ConfigurationException if the behavior or one of its children references a nonexistent action or behavior
+     * @throws ConfigurationException if this behavior references a nonexistent action,
+     * or one of this behavior's next behaviors references a nonexistent behavior
      */
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
@@ -211,6 +304,18 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         }
     }
 
+    /**
+     * Builds this behavior and its corresponding top-level action, and adds the specified parameters
+     * to the action's context. If a parameter name is present in both the specified parameters and this behavior's
+     * existing parameters, the existing parameter will be overwritten by the specified parameter.
+     *
+     * @param params a map of parameter names and values to add to the context of this behavior's corresponding action
+     * @return the built behavior
+     * @throws BehaviorInstantiationException if this behavior's corresponding action fails to be built
+     * @see BehaviorBuilder#buildBehavior()
+     * @see BehaviorRef#buildBehavior()
+     * @see ActionBuilder#buildAction(Map)
+     */
     public Behavior buildBehavior(final Map<String, String> params) throws BehaviorInstantiationException {
         final Map<String, String> newParams;
         if (this.params.isEmpty() && params.isEmpty()) {
@@ -230,6 +335,15 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         }
     }
 
+    /**
+     * Checks whether this behavior's conditions all evaluate to {@code true}
+     * using the supplied context.
+     *
+     * @param context the context to use when evaluating this behavior's conditions
+     * @return {@code true} if the conditions all evaluated to {@code true}; {@code false} otherwise
+     * @throws VariableException if one of the conditions fails to be evaluated
+     * @see Variable#get(VariableMap)
+     */
     public boolean isEffective(final VariableMap context) throws VariableException {
         if (frequency == 0) {
             return false;
@@ -248,27 +362,67 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         return true;
     }
 
+    /**
+     * Gets the name of this {@code BehaviorBuilder}. The caller must verify that the returned
+     * value is unique among the top-level behaviors within this {@code BehaviorBuilder} object's
+     * parent {@link Configuration}.
+     *
+     * @return the name of this {@code BehaviorBuilder}
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the frequency, or weight, of this behavior. This is used in conjunction with the frequencies of other
+     * behaviors to calculate the probability of this behavior being executed. Larger values make it more likely,
+     * and smaller values make it less likely. If the returned value is 0, this behavior will never execute unless
+     * it is specifically referenced by an action or another behavior.
+     *
+     * @return the frequency of this behavior
+     */
     @Override
     public int getFrequency() {
         return frequency;
     }
 
+    /**
+     * Gets whether this behavior is hidden from the "Set Behavior" submenu in the mascot context menu.
+     *
+     * @return {@code true} if this behavior is hidden from the "Set Behavior" submenu; {@code false} otherwise
+     */
     public boolean isHidden() {
         return hidden;
     }
 
+    /**
+     * Gets whether this behavior can be toggled via the "Allowed Behaviors" submenu in the mascot context menu.
+     *
+     * @return {@code true} if this behavior can be toggled via the "Allowed Behaviors" submenu;
+     * {@code false} otherwise
+     */
     public boolean isToggleable() {
         return toggleable;
     }
 
+    /**
+     * Gets whether this behavior allows other top-level behaviors (i.e., other {@code BehaviorBuilder} objects) to be
+     * candidates for this behavior's next behavior, in addition to the behaviors in {@link #nextBehaviorBuilders}.
+     *
+     * @return {@code true} if this behavior allows other top-level behaviors to be candidates
+     * for its next behavior; {@code false} otherwise
+     * @see #getFrequency()
+     * @see #getNextBehaviorBuilders()
+     */
     public boolean isNextAdditive() {
         return nextAdditive;
     }
 
+    /**
+     * Gets a list of references to the behaviors that may execute after this behavior has finished executing.
+     *
+     * @return a list of references to the behaviors that may be executed after this behavior has finished executing
+     */
     public List<BehaviorRef> getNextBehaviorBuilders() {
         return nextBehaviorBuilders;
     }
