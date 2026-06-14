@@ -30,7 +30,7 @@ public class ActionBuilder implements IActionBuilder {
 
     // Action type values
     /**
-     * The type of this action is specified in {@link #className}.
+     * The type of this action is specified in the Action node's Class attribute.
      */
     private static final int TYPE_EMBEDDED = 1;
     /**
@@ -74,8 +74,8 @@ public class ActionBuilder implements IActionBuilder {
 
     /**
      * The type of this action, which determines the specific class that this action uses.
-     * If this action's type is {@code Embedded}, this action will use the {@link #className}
-     * field to determine what class to use.
+     * If this action's type is {@code Embedded}, this action will use the Action node's
+     * Class attribute to determine what class to use.
      *
      * @see #TYPE_EMBEDDED
      * @see #TYPE_MOVE
@@ -85,12 +85,6 @@ public class ActionBuilder implements IActionBuilder {
      * @see #TYPE_SELECT
      */
     private final int type;
-
-    /**
-     * The fully qualified name of the class used by this action.
-     * This is only used if this action's {@link #type} is {@code Embedded}.
-     */
-    private final String className;
 
     /**
      * The class used by this action.
@@ -155,14 +149,9 @@ public class ActionBuilder implements IActionBuilder {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), typeString));
         }
 
-        className = actionNode.getAttribute(schema.getString("Class"));
-
-        if (log.isDebugEnabled()) {
-            log.debug("Loading action: {}", this);
-        }
-
         if (type == TYPE_EMBEDDED) {
             // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
+            String className = actionNode.getAttribute(schema.getString("Class"));
             try {
                 cls = Class.forName(className).asSubclass(Action.class);
                 if (cls.isAnnotationPresent(Deprecated.class)) {
@@ -175,6 +164,10 @@ public class ActionBuilder implements IActionBuilder {
             }
         } else {
             cls = null;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Loading action: {}", this);
         }
 
         // No need to check whether the attributes map is empty like in BehaviorBuilder,
@@ -267,7 +260,7 @@ public class ActionBuilder implements IActionBuilder {
     @Override
     public String toString() {
         String typeString = switch (type) {
-            case TYPE_EMBEDDED -> schema.getString("Embedded");
+            case TYPE_EMBEDDED -> schema.getString("Embedded") + ",className=" + cls.getName();
             case TYPE_MOVE -> schema.getString("Move");
             case TYPE_STAY -> schema.getString("Stay");
             case TYPE_ANIMATE -> schema.getString("Animate");
@@ -275,7 +268,7 @@ public class ActionBuilder implements IActionBuilder {
             case TYPE_SELECT -> schema.getString("Select");
             default -> throw new IllegalStateException("Unexpected type: " + type);
         };
-        return "Action[name=" + name + ",type=" + typeString + ",className=" + className + "]";
+        return "Action[name=" + name + ",type=" + typeString + ']';
     }
 
     /**
@@ -357,14 +350,18 @@ public class ActionBuilder implements IActionBuilder {
 
                     return cls.getConstructor().newInstance();
                 } catch (final NoSuchMethodException e) {
-                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassConstructorNotFoundErrorMessage"), className), e);
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "ClassConstructorNotFoundErrorMessage"), cls.getName()), e);
                 } catch (final IllegalAccessException e) {
-                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("CannotAccessClassActionErrorMessage"), className), e);
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "CannotAccessClassActionErrorMessage"), cls.getName()), e);
                 } catch (final InstantiationException e) {
-                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), className), e);
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedClassActionInitialiseErrorMessage"), cls.getName()), e);
                 } catch (final InvocationTargetException e) {
                     // TODO: Think of a unique error message for this without wording it confusingly
-                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedClassActionInitialiseErrorMessage"), className), e);
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedClassActionInitialiseErrorMessage"), cls.getName()), e);
                 }
             }
             case TYPE_MOVE -> {
