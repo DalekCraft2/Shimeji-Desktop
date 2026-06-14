@@ -116,7 +116,7 @@ public class ActionBuilder implements IActionBuilder {
      * If this action's type is an implementation of {@link ComplexAction}, it must have child actions.
      * Otherwise, it must have no child actions.
      */
-    private final List<IActionBuilder> actionRefs;
+    private final List<IActionBuilder> childActionBuilders;
 
     /**
      * The schema used by this action.
@@ -245,17 +245,17 @@ public class ActionBuilder implements IActionBuilder {
                 }
             }
             if (tempActionRefs == null) {
-                actionRefs = List.of();
+                childActionBuilders = List.of();
             } else {
                 // Make list immutable
-                actionRefs = List.copyOf(tempActionRefs);
+                childActionBuilders = List.copyOf(tempActionRefs);
             }
         } else {
-            actionRefs = List.of();
+            childActionBuilders = List.of();
         }
 
         // Ensure that ComplexAction-type actions have child actions
-        if (isComplexAction && actionRefs.isEmpty()) {
+        if (isComplexAction && childActionBuilders.isEmpty()) {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), typeString));
         }
 
@@ -296,7 +296,7 @@ public class ActionBuilder implements IActionBuilder {
     @Override
     public void validate() throws ConfigurationException {
         // TODO: Ensure that action parameters like "TargetBehavior" reference existing behaviors
-        for (final IActionBuilder ref : actionRefs) {
+        for (final IActionBuilder ref : childActionBuilders) {
             try {
                 ref.validate();
             } catch (ConfigurationException e) {
@@ -394,13 +394,13 @@ public class ActionBuilder implements IActionBuilder {
      * @throws ActionInstantiationException if one of the child actions fails to be built
      */
     private Action[] createActions() throws ActionInstantiationException {
-        if (actionRefs.isEmpty()) {
+        if (childActionBuilders.isEmpty()) {
             return EMPTY_ACTION_ARRAY;
         }
 
-        final Action[] actions = new Action[actionRefs.size()];
-        for (int i = 0; i < actionRefs.size(); i++) {
-            actions[i] = actionRefs.get(i).buildAction(Map.of());
+        final Action[] actions = new Action[childActionBuilders.size()];
+        for (int i = 0; i < childActionBuilders.size(); i++) {
+            actions[i] = childActionBuilders.get(i).buildAction(Map.of());
         }
         return actions;
     }
