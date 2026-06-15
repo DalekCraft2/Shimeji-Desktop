@@ -277,7 +277,7 @@ public class Main {
             return false;
         }
         try {
-            Path actionsFile = getActionsFile(imageSet);
+            Path actionsFile = getActionsFilePath(imageSet);
 
             log.info("Reading action file \"{}\" for image set \"{}\"", actionsFile, imageSet);
 
@@ -302,7 +302,7 @@ public class Main {
             We will use this schema when determining this image set's child image sets. */
             ResourceBundle actionsSchema = configuration.getSchema();
 
-            Path behaviorsFile = getBehaviorsFile(imageSet);
+            Path behaviorsFile = getBehaviorsFilePath(imageSet);
 
             log.info("Reading behavior file \"{}\" for image set \"{}\"", behaviorsFile, imageSet);
 
@@ -314,7 +314,7 @@ public class Main {
             configuration.load(new Entry(behaviorsDocument.getDocumentElement()), imageSet);
 
             try {
-                Path infoFile = getInfoFile(imageSet);
+                Path infoFile = getInfoFilePath(imageSet);
 
                 log.info("Reading information file \"{}\" for image set \"{}\"", infoFile, imageSet);
 
@@ -381,7 +381,7 @@ public class Main {
         return false;
     }
 
-    public static Path getActionsFile(String imageSet) throws FileNotFoundException {
+    public static Path getActionsFilePath(String imageSet) throws FileNotFoundException {
         Path[] configDirs = {
                 IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
                 CONFIG_DIRECTORY.resolve(imageSet),
@@ -400,7 +400,7 @@ public class Main {
         throw new FileNotFoundException("Could not find action file for image set: " + imageSet);
     }
 
-    public static Path getBehaviorsFile(String imageSet) throws FileNotFoundException {
+    public static Path getBehaviorsFilePath(String imageSet) throws FileNotFoundException {
         Path[] configDirs = {
                 IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
                 CONFIG_DIRECTORY.resolve(imageSet),
@@ -419,7 +419,7 @@ public class Main {
         throw new FileNotFoundException("Could not find behavior file for image set: " + imageSet);
     }
 
-    public static Path getInfoFile(String imageSet) throws FileNotFoundException {
+    public static Path getInfoFilePath(String imageSet) throws FileNotFoundException {
         Path[] configDirs = {
                 IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
                 CONFIG_DIRECTORY.resolve(imageSet),

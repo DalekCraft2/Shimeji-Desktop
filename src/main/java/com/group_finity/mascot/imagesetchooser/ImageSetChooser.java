@@ -76,16 +76,16 @@ public class ImageSetChooser extends JDialog {
                 String imageSet = imageSetDir.getFileName().toString();
 
                 // Determine actions file
-                Path actionsFile = Main.getActionsFile(imageSet);
+                Path actionsFile = Main.getActionsFilePath(imageSet);
 
                 // Determine behaviours file
-                Path behaviorsFile = Main.getBehaviorsFile(imageSet);
+                Path behaviorsFile = Main.getBehaviorsFilePath(imageSet);
 
                 Path imageFile = imageSetDir.resolve("shime1.png");
                 String caption = imageSet;
                 try {
                     // Determine information file
-                    Path infoFile = Main.getInfoFile(imageSet);
+                    Path infoFile = Main.getInfoFilePath(imageSet);
 
                     DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
                     builderFactory.setIgnoringComments(true);
