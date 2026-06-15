@@ -44,13 +44,18 @@ public class ActionRef implements IActionBuilder {
      *
      * @param configuration the parent {@link Configuration} object of this {@code ActionRef}
      * @param refNode the ActionReference node from which to load this action
-     * @throws ConfigurationException if one of the ActionReference node's attributes cannot be parsed
-     * into a {@link Variable}
+     * @throws ConfigurationException if the ActionReference node's Name attribute is not specified, or
+     * one of the ActionReference node's attributes cannot be parsed into a {@link Variable}
      */
     public ActionRef(final Configuration configuration, final Entry refNode) throws ConfigurationException {
         this.configuration = configuration;
 
+        // Ensure that the Name attribute is present
         name = refNode.getAttribute(configuration.getSchema().getString("Name"));
+        if (name == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), configuration.getSchema().getString("Name")));
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Loading action reference: {}", this);

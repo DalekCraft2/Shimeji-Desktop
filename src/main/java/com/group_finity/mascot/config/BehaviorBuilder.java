@@ -121,10 +121,22 @@ public class BehaviorBuilder implements IBehaviorBuilder {
     public BehaviorBuilder(final Configuration configuration, final Entry behaviorNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
         ResourceBundle schema = configuration.getSchema();
+        // Ensure that the Name attribute is present
         name = behaviorNode.getAttribute(schema.getString("Name"));
+        if (name == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Name")));
+        }
         actionName = behaviorNode.hasAttribute(schema.getString("Action")) ?
                 behaviorNode.getAttribute(schema.getString("Action")) : name;
-        frequency = Integer.parseInt(behaviorNode.getAttribute(schema.getString("Frequency")));
+        // Ensure that the Frequency attribute is present
+        String frequencyText = behaviorNode.getAttribute(schema.getString("Frequency"));
+        if (frequencyText == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Frequency")));
+        }
+        // TODO: Ensure that frequencies are not negative when loading behaviors and behavior references
+        frequency = Integer.parseInt(frequencyText);
         hidden = behaviorNode.hasAttribute(schema.getString("Hidden")) &&
                 Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Hidden")));
 
@@ -132,6 +144,7 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             log.debug("Loading behavior: {}", this);
         }
 
+        // If the Condition attribute is present, add it to the list of conditions
         if (behaviorNode.hasAttribute(schema.getString("Condition"))) {
             String condition = behaviorNode.getAttribute(schema.getString("Condition"));
             try {
@@ -163,6 +176,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             toggleable = Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Toggleable")));
         }
 
+        // Copy the Behavior node's attributes and remove any attributes that are used by the program.
+        // This will leave us with only the custom user-defined attributes, if any exist.
         Map<String, String> tempParams = new LinkedHashMap<>(behaviorNode.getAttributes());
         tempParams.remove(schema.getString("Name"));
         tempParams.remove(schema.getString("Action"));
@@ -176,10 +191,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         } else {
             // Don't use Map.copyOf() so LinkedHashMap behavior is preserved
             params = tempParams;
-        }
 
-        // Verify that all parameters can be parsed
-        if (!params.isEmpty()) {
+            // Verify that all parameters can be parsed
             for (final Map.Entry<String, String> param : params.entrySet()) {
                 try {
                     Variable.parse(param.getValue());
@@ -190,6 +203,7 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             }
         }
 
+        // If there are any NextBehaviorList nodes in the Behavior node's children, load the behaviors from them
         List<Entry> nextLists = behaviorNode.selectChildren(schema.getString("NextBehaviourList"));
         if (nextLists.isEmpty()) {
             nextAdditive = true;
@@ -199,7 +213,13 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             List<BehaviorRef> nextBehaviorBuilders = new ArrayList<>();
 
             for (final Entry nextList : nextLists) {
-                nextAdditive = Boolean.parseBoolean(nextList.getAttribute(schema.getString("Add")));
+                // Ensure that the Add attribute is present
+                String addText = nextList.getAttribute(schema.getString("Add"));
+                if (addText == null) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "MissingRequiredAttributeErrorMessage"), schema.getString("Add")));
+                }
+                nextAdditive = Boolean.parseBoolean(addText);
 
                 loadBehaviors(nextList, List.of(), nextBehaviorBuilders);
             }

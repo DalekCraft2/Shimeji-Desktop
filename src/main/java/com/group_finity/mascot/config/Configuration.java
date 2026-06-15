@@ -120,8 +120,17 @@ public class Configuration {
             List<Entry> constantNodes = configurationNode.selectChildren(schema.getString("Constant"));
             if (!constantNodes.isEmpty()) {
                 for (Entry constantNode : constantNodes) {
-                    constants.put(constantNode.getAttribute(schema.getString("Name")),
-                            constantNode.getAttribute(schema.getString("Value")));
+                    String name = constantNode.getAttribute(schema.getString("Name"));
+                    if (name == null) {
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                                "MissingRequiredAttributeForNodeErrorMessage"), schema.getString("Name"), constantNode.getName()));
+                    }
+                    String value = constantNode.getAttribute(schema.getString("Value"));
+                    if (value == null) {
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                                "MissingRequiredAttributeForNodeErrorMessage"), schema.getString("Value"), constantNode.getName()));
+                    }
+                    constants.put(name, value);
                 }
             }
 

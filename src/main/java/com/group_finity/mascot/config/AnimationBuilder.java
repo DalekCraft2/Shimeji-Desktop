@@ -80,7 +80,7 @@ public class AnimationBuilder {
      * @param animationNode the Animation node from which to load this animation
      * @param imageSet the name of the image set with which this animation is associated
      * @throws ConfigurationException if an error occurs whilst reading the Animation node, or if the Animation
-     * node has no Pose nodes within its children
+     * node contains invalid data
      */
     public AnimationBuilder(final Configuration configuration, final Entry animationNode, final String imageSet) throws ConfigurationException {
         this.imageSet = imageSet;
@@ -102,6 +102,7 @@ public class AnimationBuilder {
             }
         }
 
+        // Ensure that the animation has poses, and then load the poses.
         List<Entry> poseNodes = animationNode.selectChildren(schema.getString("Pose"));
         if (poseNodes.isEmpty()) {
             throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString(
@@ -112,14 +113,17 @@ public class AnimationBuilder {
             Entry poseNode = poseNodes.get(i);
             try {
                 poseArray[i] = loadPose(poseNode);
-            } catch (IOException | RuntimeException e) {
+            } catch (ConfigurationException | IOException | RuntimeException e) {
                 throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
                         "FailedLoadPoseErrorMessage"), poseNode.getAttributes()), e);
             }
         }
         poses = List.of(poseArray);
+        // Calculate the duration of the animation here so each Animation instance
+        // doesn't have to run a for-loop to calculate its duration
         duration = poses.stream().mapToInt(Pose::duration).sum();
 
+        // Load any hotspots in this animation
         List<Entry> hotspotNodes = animationNode.selectChildren(schema.getString("Hotspot"));
         if (hotspotNodes.isEmpty()) {
             hotspots = List.of();
@@ -129,7 +133,7 @@ public class AnimationBuilder {
                 Entry hotspotNode = hotspotNodes.get(i);
                 try {
                     hotspotArray[i] = loadHotspot(hotspotNode);
-                } catch (RuntimeException e) {
+                } catch (ConfigurationException | RuntimeException e) {
                     throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
                             "FailedLoadHotspotErrorMessage"), hotspotNode.getAttributes()), e);
                 }
@@ -143,39 +147,41 @@ public class AnimationBuilder {
      *
      * @param poseNode the Pose node from which to load the pose
      * @return the loaded pose
+     * @throws ConfigurationException if a required attribute is not specified on the Pose node
      * @throws IOException if an error occurs whilst reading from the image/sound paths in the Pose node
      * @throws ArrayIndexOutOfBoundsException if the Pose node's ImageAnchor or Velocity attribute
      * contains fewer than 2 entries when {@code split(",")} is called on it
      * @throws NumberFormatException if an attribute that is expected to be numeric cannot be parsed
      */
-    private Pose loadPose(final Entry poseNode) throws IOException {
+    private Pose loadPose(final Entry poseNode) throws ConfigurationException, IOException {
         if (log.isDebugEnabled()) {
             log.debug("Loading pose: {}", poseNode.getAttributes());
         }
 
         ResourceBundle schema = configuration.getSchema();
 
-        final Path imagePath = poseNode.hasAttribute(schema.getString("Image")) ?
-                Path.of(imageSet, poseNode.getAttribute(schema.getString("Image"))) : null;
-        final Path imageRightPath = poseNode.hasAttribute(schema.getString("ImageRight")) ?
-                Path.of(imageSet, poseNode.getAttribute(schema.getString("ImageRight"))) : null;
-        final String anchorText = poseNode.getAttribute(schema.getString("ImageAnchor"));
-        final String velocityText = poseNode.getAttribute(schema.getString("Velocity"));
-        final String durationText = poseNode.getAttribute(schema.getString("Duration"));
-        final String soundText = poseNode.getAttribute(schema.getString("Sound"));
-        final String volumeText = poseNode.hasAttribute(schema.getString("Volume")) ?
-                poseNode.getAttribute(schema.getString("Volume")) : "0";
-
-        final double opacity = Main.getInstance().getSettings().opacity;
         final double scaling = Main.getInstance().getSettings().scaling;
-        final Filter filter = Main.getInstance().getSettings().filter;
 
+        // Only try loading an image pair if the Image attribute is present
         String imageKey = null;
-        if (imagePath != null) {
+        if (poseNode.hasAttribute(schema.getString("Image"))) {
+            final Path imagePath = Path.of(imageSet, poseNode.getAttribute(schema.getString("Image")));
+            // The ImageRight attribute is optional
+            final Path imageRightPath = poseNode.hasAttribute(schema.getString("ImageRight")) ?
+                    Path.of(imageSet, poseNode.getAttribute(schema.getString("ImageRight"))) : null;
+
+            // The ImageAnchor attribute is required, but only if the Image attribute is present
+            final String anchorText = poseNode.getAttribute(schema.getString("ImageAnchor"));
+            if (anchorText == null) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "MissingRequiredAttributeErrorMessage"), schema.getString("ImageAnchor")));
+            }
             final String[] anchorCoordinates = anchorText.split(",");
             final int anchorX = Integer.parseInt(anchorCoordinates[0]);
             final int anchorY = Integer.parseInt(anchorCoordinates[1]);
 
+            final Filter filter = Main.getInstance().getSettings().filter;
+            final double opacity = Main.getInstance().getSettings().opacity;
             try {
                 imageKey = ImagePairs.load(imagePath, imageRightPath, anchorX, anchorY, scaling, filter, opacity);
                 ImagePairs.addUsage(imageKey, imageSet);
@@ -189,6 +195,12 @@ public class AnimationBuilder {
             }
         }
 
+        // Ensure that the Velocity attribute is present, and parse the individual int components from it
+        final String velocityText = poseNode.getAttribute(schema.getString("Velocity"));
+        if (velocityText == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Velocity")));
+        }
         final String[] velocityCoordinates = velocityText.split(",");
         int dx = Integer.parseInt(velocityCoordinates[0]);
         int dy = Integer.parseInt(velocityCoordinates[1]);
@@ -199,10 +211,18 @@ public class AnimationBuilder {
         scaledDx = dx != 0 && scaledDx == 0 ? dx < 0 ? -1 : 1 : scaledDx;
         scaledDy = dy != 0 && scaledDy == 0 ? dy < 0 ? -1 : 1 : scaledDy;
 
+        // Ensure that the Duration attribute is present
+        final String durationText = poseNode.getAttribute(schema.getString("Duration"));
+        if (durationText == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Duration")));
+        }
         final int duration = Integer.parseInt(durationText);
 
+        // Only try loading a sound if the Sound attribute is present
         String soundKey = null;
-        if (soundText != null) {
+        if (poseNode.hasAttribute(schema.getString("Sound"))) {
+            final String soundText = poseNode.getAttribute(schema.getString("Sound"));
             try {
                 Path soundPath;
                 if (Files.isRegularFile(Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText))) {
@@ -213,7 +233,10 @@ public class AnimationBuilder {
                     soundPath = Main.SOUND_DIRECTORY.resolve(soundText);
                 }
 
-                float volume = Float.parseFloat(volumeText);
+                // The Volume attribute is optional and defaults to 0.
+                // I would change it to default to 1, but that would affect backwards compatibility.
+                float volume = poseNode.hasAttribute(schema.getString("Volume")) ?
+                        Float.parseFloat(poseNode.getAttribute(schema.getString("Volume"))) : 0;
                 soundKey = Sounds.load(soundPath.toString(), volume);
                 Sounds.addUsage(soundKey, imageSet);
             } catch (NumberFormatException | LineUnavailableException | UnsupportedAudioFileException | IOException e) {
@@ -236,34 +259,49 @@ public class AnimationBuilder {
      *
      * @param hotspotNode the Hotspot node from which to load the hotspot
      * @return the loaded hotspot
+     * @throws ConfigurationException if a required attribute is not specified on the Hotspot node
      * @throws ArrayIndexOutOfBoundsException if either the Origin or Size attributes contain fewer than 2 entries
      * when {@code split(",")} is called on them
      * @throws NumberFormatException if an attribute that is expected to be numeric cannot be parsed
      * @throws IllegalArgumentException if the Hotspot node's Shape attribute has an unsupported value
      * (i.e., it is neither "Rectangle" nor "Ellipse")
      */
-    private Hotspot loadHotspot(final Entry hotspotNode) {
+    private Hotspot loadHotspot(final Entry hotspotNode) throws ConfigurationException {
         if (log.isDebugEnabled()) {
             log.debug("Loading hotspot: {}", hotspotNode.getAttributes());
         }
 
         ResourceBundle schema = configuration.getSchema();
 
+        // Ensure that the Shape, Origin, and Size attributes are present. The Behavior attribute is optional.
         final String shapeText = hotspotNode.getAttribute(schema.getString("Shape"));
+        if (shapeText == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Shape")));
+        }
         final String originText = hotspotNode.getAttribute(schema.getString("Origin"));
+        if (originText == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Origin")));
+        }
         final String sizeText = hotspotNode.getAttribute(schema.getString("Size"));
+        if (sizeText == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Size")));
+        }
         final String behaviorText = hotspotNode.getAttribute(schema.getString("Behaviour"));
 
         final double scaling = Main.getInstance().getSettings().scaling;
 
+        // Parse the int components from Origin and Size
         final String[] originCoordinates = originText.split(",");
         final String[] sizeCoordinates = sizeText.split(",");
-
         final int originX = (int) Math.round(Integer.parseInt(originCoordinates[0]) * scaling);
         final int originY = (int) Math.round(Integer.parseInt(originCoordinates[1]) * scaling);
         final int width = (int) Math.round(Integer.parseInt(sizeCoordinates[0]) * scaling);
         final int height = (int) Math.round(Integer.parseInt(sizeCoordinates[1]) * scaling);
 
+        // Ensure the Shape attribute has a supported value, and create a shape using the Origin and Size components
         Shape shape;
         if (shapeText.equalsIgnoreCase("Rectangle")) {
             shape = new Rectangle(originX, originY, width, height);

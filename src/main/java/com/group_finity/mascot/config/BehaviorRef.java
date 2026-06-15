@@ -78,13 +78,24 @@ public class BehaviorRef implements IBehaviorBuilder {
     public BehaviorRef(final Configuration configuration, final Entry refNode, final List<String> conditions) throws ConfigurationException {
         this.configuration = configuration;
         ResourceBundle schema = configuration.getSchema();
+        // Ensure that the Name and Frequency attributes are present
         name = refNode.getAttribute(schema.getString("Name"));
-        frequency = Integer.parseInt(refNode.getAttribute(schema.getString("Frequency")));
+        if (name == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Name")));
+        }
+        String frequencyText = refNode.getAttribute(schema.getString("Frequency"));
+        if (frequencyText == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Frequency")));
+        }
+        frequency = Integer.parseInt(frequencyText);
 
         if (log.isDebugEnabled()) {
             log.debug("Loading behavior reference: {}", this);
         }
 
+        // If the Condition attribute is present, add it to the list of conditions
         if (refNode.hasAttribute(schema.getString("Condition"))) {
             String condition = refNode.getAttribute(schema.getString("Condition"));
             try {
@@ -105,6 +116,8 @@ public class BehaviorRef implements IBehaviorBuilder {
             this.conditions = List.copyOf(conditions);
         }
 
+        // Copy the BehaviorReference node's attributes and remove any attributes that are used by the program.
+        // This will leave us with only the custom user-defined attributes, if any exist.
         Map<String, String> tempParams = new LinkedHashMap<>(refNode.getAttributes());
         tempParams.remove(schema.getString("Name"));
         tempParams.remove(schema.getString("Action"));
@@ -118,10 +131,8 @@ public class BehaviorRef implements IBehaviorBuilder {
         } else {
             // Don't use Map.copyOf() so LinkedHashMap behavior is preserved
             params = tempParams;
-        }
 
-        // Verify that all parameters can be parsed
-        if (!params.isEmpty()) {
+            // Verify that all parameters can be parsed
             for (final Map.Entry<String, String> param : params.entrySet()) {
                 try {
                     Variable.parse(param.getValue());

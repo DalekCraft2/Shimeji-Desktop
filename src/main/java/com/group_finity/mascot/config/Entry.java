@@ -216,8 +216,8 @@ public class Entry {
                 for (int i = 0; i < childNodes.getLength(); i++) {
                     final Node childNode = childNodes.item(i);
                     if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                        // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory
                         if (children == null) {
-                            // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory
                             children = new ArrayList<>(childNodes.getLength());
                         }
                         children.add(new Entry((Element) childNode));

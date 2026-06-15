@@ -66,7 +66,7 @@ public class ActionBuilder implements IActionBuilder {
      * If this {@code ActionBuilder} is a top-level action, this value must be unique
      * among the top-level actions within this action's parent {@link Configuration}.
      * <p>
-     * If this {@code ActionBuilder} is an anonymous action, this value is not used.
+     * If this {@code ActionBuilder} is an anonymous action, this value is {@code null}.
      *
      * @see #getName()
      */
@@ -128,11 +128,43 @@ public class ActionBuilder implements IActionBuilder {
      * contains invalid data
      */
     public ActionBuilder(final Configuration configuration, final Entry actionNode, final String imageSet) throws ConfigurationException {
-        schema = configuration.getSchema();
-        // TODO: Require that this be non-null for top-level actions, and don't bother setting it for anonymous actions
-        name = actionNode.getAttribute(schema.getString("Name"));
+        this(configuration, actionNode, imageSet, false);
+    }
 
+    /**
+     * Creates a new {@code ActionBuilder} from the data contained within the specified Action node.
+     *
+     * @param configuration the parent {@link Configuration} object of this {@code ActionBuilder}
+     * @param actionNode the Action node from which to load this action. This can be either a top-level Action node
+     * or an anonymous Action node.
+     * @param imageSet the name of the image set with which this action is associated
+     * @param isAnonymous whether this {@code ActionBuilder} is an anonymous action
+     * @throws ConfigurationException if an error occurs whilst reading the Action node, or if the Action node
+     * contains invalid data
+     * @throws NullPointerException if the value of a required attribute is {@code null}
+     */
+    public ActionBuilder(final Configuration configuration, final Entry actionNode, final String imageSet,
+                         final boolean isAnonymous) throws ConfigurationException {
+        schema = configuration.getSchema();
+
+        if (isAnonymous) {
+            // Anonymous actions do not have names. They are anonymous.
+            name = null;
+        } else {
+            // The Name attribute is required for top-level actions
+            name = actionNode.getAttribute(schema.getString("Name"));
+            if (name == null) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "MissingRequiredAttributeErrorMessage"), schema.getString("Name")));
+            }
+        }
+
+        // Ensure that the Type attribute is present, and that it has a supported value
         String typeString = actionNode.getAttribute(schema.getString("Type"));
+        if (typeString == null) {
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Type")));
+        }
         if (typeString.equals(schema.getString("Embedded"))) {
             type = TYPE_EMBEDDED;
         } else if (typeString.equals(schema.getString("Move"))) {
@@ -150,11 +182,18 @@ public class ActionBuilder implements IActionBuilder {
                     "UnknownActionTypeErrorMessage"), typeString));
         }
 
+        // If the type is Embedded, ensure that the Class attribute is present
+        // and that it points to a subclass of Action
         if (type == TYPE_EMBEDDED) {
-            // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
             String className = actionNode.getAttribute(schema.getString("Class"));
+            if (className == null) {
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "MissingRequiredAttributeErrorMessage"), schema.getString("Class")));
+            }
+            // Check the class here instead of when the action is built so the user is notified of the configuration errors sooner
             try {
                 cls = Class.forName(className).asSubclass(Action.class);
+                // Warn the user if they're using a deprecated action class
                 if (cls.isAnnotationPresent(Deprecated.class)) {
                     log.warn("Image set \"{}\" uses deprecated action class: {}", imageSet, cls.getName());
                 }
@@ -187,6 +226,7 @@ public class ActionBuilder implements IActionBuilder {
             }
         }
 
+        // Create builders for the animations in this action
         List<Entry> animationNodes = actionNode.selectChildren(schema.getString("Animation"));
         if (animationNodes.isEmpty()) {
             animationBuilders = List.of();
@@ -226,8 +266,8 @@ public class ActionBuilder implements IActionBuilder {
                         throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
                                 "ChildActionsNotSupportedErrorMessage"), typeString));
                     }
+                    // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory.
                     if (tempActionRefs == null) {
-                        // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory.
                         // Use the number of remaining children as the initial capacity so the list's internal
                         // array doesn't have to be resized.
                         tempActionRefs = new ArrayList<>(remainingChildren);
@@ -235,7 +275,7 @@ public class ActionBuilder implements IActionBuilder {
                     try {
                         tempActionRefs.add(isReference ?
                                 new ActionRef(configuration, node) :
-                                new ActionBuilder(configuration, node, imageSet));
+                                new ActionBuilder(configuration, node, imageSet, true));
                     } catch (ConfigurationException | RuntimeException e) {
                         throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
                                 isReference ? "FailedLoadActionReferenceErrorMessage" : "FailedLoadActionErrorMessage"
@@ -266,6 +306,8 @@ public class ActionBuilder implements IActionBuilder {
 
     @Override
     public String toString() {
+        // If the action's name is null, it must be an anonymous action
+        String nameString = name == null ? "anonymous" : "name=" + name;
         String typeString = switch (type) {
             case TYPE_EMBEDDED -> schema.getString("Embedded") + ",className=" + cls.getName();
             case TYPE_MOVE -> schema.getString("Move");
@@ -275,7 +317,7 @@ public class ActionBuilder implements IActionBuilder {
             case TYPE_SELECT -> schema.getString("Select");
             default -> throw new IllegalStateException("Unexpected type: " + type);
         };
-        return "Action[name=" + name + ",type=" + typeString + ']';
+        return "Action[" + nameString + ',' + typeString + ']';
     }
 
     /**
@@ -471,9 +513,10 @@ public class ActionBuilder implements IActionBuilder {
      * returned value is unique among the top-level actions within this {@code ActionBuilder} object's
      * parent {@link Configuration}.
      * <p>
-     * If this {@code ActionBuilder} is for an anonymous action, then this action's name is unused.
+     * If this {@code ActionBuilder} is for an anonymous action, then this action's name is {@code null}.
      *
-     * @return the name of this {@code ActionBuilder}
+     * @return the name of this {@code ActionBuilder}, or {@code null} if this {@code ActionBuilder} is an
+     * anonymous action
      */
     public String getName() {
         return name;
