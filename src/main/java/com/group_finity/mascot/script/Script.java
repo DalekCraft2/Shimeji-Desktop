@@ -78,8 +78,11 @@ public class Script extends Variable {
     }
 
     /**
-     * Clears the cached value of this script if {@link #allowValueReset} is {@code true}.
+     * Clears the cached value of this script if {@link #allowValueReset} is {@code true},
+     * so the value may be reevaluated when {@link #get(VariableMap)} is next called.
      * Called at the start of each frame.
+     *
+     * @see #get(VariableMap)
      */
     @Override
     public void resetValue() {

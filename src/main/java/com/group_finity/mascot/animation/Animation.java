@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Animation {
     /**
-     * The condition that must pass for this animation to become active.
+     * The condition that must evaluate to {@code true} for this animation to become active.
      * If this is {@code null}, the condition will be treated as if it evaluates to {@code true},
      * meaning this animation will always be able to become active.
      *
@@ -26,7 +26,7 @@ public class Animation {
     private final Variable condition;
 
     /**
-     * A sequence of poses through which this animation will iterate when it is active. Must not be empty.
+     * A sequence of poses through which this animation will iterate when it is active. This must not be empty.
      *
      * @see #getPoseAt(int)
      */
@@ -56,7 +56,7 @@ public class Animation {
     /**
      * Creates a new Animation.
      *
-     * @param condition the condition that must pass for this animation to become active
+     * @param condition the condition that must evaluate to {@code true} for this animation to become active
      * @param poses a sequence of poses through which this animation will iterate when it is active. Must not be empty.
      * @param hotspots the hotspots that this animation will apply to a mascot when it is active
      * @param turn whether this animation is used for when a mascot changes walking direction
@@ -89,9 +89,11 @@ public class Animation {
     }
 
     /**
-     * Clears the cached value of whether this animation's condition passed.
+     * Clears the cached value of this animation's condition so it may be reevaluated when
+     * {@link #isEffective(VariableMap)} is next called.
      * Called at the start of each frame.
      *
+     * @see #isEffective(VariableMap)
      * @see Variable#resetValue()
      */
     public void resetCondition() {
@@ -102,10 +104,10 @@ public class Animation {
     }
 
     /**
-     * Checks whether this animation's condition passes using the supplied context.
+     * Checks whether this animation's condition evaluates to {@code true} using the supplied context.
      *
      * @param variables the context to use when evaluating this animation's condition
-     * @return {@code true} if the condition passed, otherwise {@code false}
+     * @return {@code true} if the condition evaluated to {@code true}, otherwise {@code false}
      * @throws VariableException if the condition fails to be evaluated
      * @see Variable#get(VariableMap)
      */

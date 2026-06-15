@@ -74,8 +74,11 @@ public abstract class Variable {
     public abstract void init();
 
     /**
-     * Clears the cached value of this variable if necessary.
+     * Clears the cached value of this variable if necessary, so it may be reevaluated when
+     * {@link #get(VariableMap)} is next called.
      * Called at the start of each frame.
+     *
+     * @see #get(VariableMap)
      */
     public abstract void resetValue();
 
