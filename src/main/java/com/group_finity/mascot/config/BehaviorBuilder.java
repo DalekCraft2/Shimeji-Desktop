@@ -184,7 +184,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
                 try {
                     Variable.parse(param.getValue());
                 } catch (final VariableException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedParameterEvaluationErrorMessage"), param.getKey()), e);
                 }
             }
         }
@@ -243,7 +244,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
                         // Verify that the condition can be parsed
                         Variable.parse(condition);
                     } catch (final VariableException e) {
-                        throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+                        throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString(
+                                "FailedConditionEvaluationErrorMessage"), e);
                     }
 
                     if (conditions.isEmpty()) {
@@ -261,8 +263,9 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             } else if (node.getName().equals(schema.getString("BehaviourReference"))) {
                 try {
                     nextBehaviorBuilders.add(new BehaviorRef(configuration, node, conditions));
-                } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadBehaviourReferenceErrorMessage"), node.getAttributes()), e);
+                } catch (ConfigurationException | RuntimeException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedLoadBehaviourReferenceErrorMessage"), node.getAttributes()), e);
                 }
             }
         }
@@ -282,14 +285,16 @@ public class BehaviorBuilder implements IBehaviorBuilder {
      */
     public void validate() throws ConfigurationException {
         if (!configuration.getActionBuilders().containsKey(actionName)) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoActionFoundErrorMessage"), actionName));
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "NoActionFoundErrorMessage"), actionName));
         }
         if (!nextBehaviorBuilders.isEmpty()) {
             for (final BehaviorRef ref : nextBehaviorBuilders) {
                 try {
                     ref.validate();
                 } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), ref), e);
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedValidateBehaviourErrorMessage"), ref), e);
                 }
             }
         }
@@ -300,7 +305,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         try {
             return new UserBehavior(name, configuration.buildAction(actionName, params), configuration);
         } catch (final ActionInstantiationException e) {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), actionName), name, e);
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "FailedInitialiseCorrespondingActionErrorMessage"), actionName), name, e);
         }
     }
 
@@ -331,7 +337,8 @@ public class BehaviorBuilder implements IBehaviorBuilder {
         try {
             return new UserBehavior(name, configuration.buildAction(actionName, newParams), configuration);
         } catch (final ActionInstantiationException e) {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedInitialiseCorrespondingActionErrorMessage"), actionName), name, e);
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "FailedInitialiseCorrespondingActionErrorMessage"), actionName), name, e);
         }
     }
 

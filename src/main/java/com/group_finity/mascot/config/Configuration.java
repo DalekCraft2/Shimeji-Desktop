@@ -136,12 +136,14 @@ public class Configuration {
                             final ActionBuilder action;
                             try {
                                 action = new ActionBuilder(this, actionNode, imageSet);
-                            } catch (ConfigurationException e) {
-                                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadActionErrorMessage"), actionNode.getAttributes()), e);
+                            } catch (ConfigurationException | RuntimeException e) {
+                                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                                        "FailedLoadActionErrorMessage"), actionNode.getAttributes()), e);
                             }
 
                             if (actionBuilders.containsKey(action.getName())) {
-                                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateActionErrorMessage"), action.getName()));
+                                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                                        "DuplicateActionErrorMessage"), action.getName()));
                             }
 
                             actionBuilders.put(action.getName(), action);
@@ -196,7 +198,8 @@ public class Configuration {
                         // Verify that the condition can be parsed
                         Variable.parse(condition);
                     } catch (final VariableException e) {
-                        throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+                        throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString(
+                                "FailedConditionEvaluationErrorMessage"), e);
                     }
 
                     if (conditions.isEmpty()) {
@@ -215,12 +218,14 @@ public class Configuration {
                 final BehaviorBuilder behavior;
                 try {
                     behavior = new BehaviorBuilder(this, node, conditions);
-                } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadBehaviourErrorMessage"), node.getAttributes()), e);
+                } catch (ConfigurationException | RuntimeException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedLoadBehaviourErrorMessage"), node.getAttributes()), e);
                 }
 
                 if (behaviorBuilders.containsKey(behavior.getName())) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("DuplicateBehaviourErrorMessage"), behavior.getName()));
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "DuplicateBehaviourErrorMessage"), behavior.getName()));
                 }
 
                 behaviorBuilders.put(behavior.getName(), behavior);
@@ -248,8 +253,10 @@ public class Configuration {
                     nodeName.equals(schema.getString("Scripter")) ||
                     nodeName.equals(schema.getString("Commissioner")) ||
                     nodeName.equals(schema.getString("Support"))) {
-                String nameText = node.hasAttribute(schema.getString("Name")) ? node.getAttribute(schema.getString("Name")) : null;
-                String linkText = node.hasAttribute(schema.getString("URL")) ? node.getAttribute(schema.getString("URL")) : null;
+                String nameText = node.hasAttribute(schema.getString("Name")) ?
+                        node.getAttribute(schema.getString("Name")) : null;
+                String linkText = node.hasAttribute(schema.getString("URL")) ?
+                        node.getAttribute(schema.getString("URL")) : null;
 
                 if (nameText != null) {
                     information.put(nodeName + schema.getString("Name"), nameText);
@@ -284,7 +291,8 @@ public class Configuration {
                 try {
                     builder.validate();
                 } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateActionErrorMessage"), builder), e);
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedValidateActionErrorMessage"), builder), e);
                 }
             }
         }
@@ -293,7 +301,8 @@ public class Configuration {
                 try {
                     builder.validate();
                 } catch (ConfigurationException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateBehaviourErrorMessage"), builder), e);
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedValidateBehaviourErrorMessage"), builder), e);
                 }
             }
         }
@@ -316,7 +325,8 @@ public class Configuration {
             }
         }
         if (stringBuilder != null) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("MissingRequiredBehaviourErrorMessage"), stringBuilder));
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "MissingRequiredBehaviourErrorMessage"), stringBuilder));
         }
     }
 
@@ -335,7 +345,8 @@ public class Configuration {
     public Action buildAction(final String name, final Map<String, String> params) throws ActionInstantiationException {
         final ActionBuilder builder = actionBuilders.get(name);
         if (builder == null) {
-            throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoCorrespondingActionFoundErrorMessage"), name));
+            throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "NoCorrespondingActionFoundErrorMessage"), name));
         }
 
         return builder.buildAction(params);
@@ -469,7 +480,8 @@ public class Configuration {
                 return buildBehavior(schema.getString(UserBehavior.BEHAVIORNAME_FALL));
             }
         } else {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name), name);
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "NoBehaviourFoundErrorMessage"), name), name);
         }
     }
 
@@ -486,7 +498,8 @@ public class Configuration {
         if (behaviorBuilders.containsKey(name)) {
             return behaviorBuilders.get(name).buildBehavior();
         } else {
-            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), name), name);
+            throw new BehaviorInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "NoBehaviourFoundErrorMessage"), name), name);
         }
     }
 

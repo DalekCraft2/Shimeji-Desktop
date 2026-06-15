@@ -97,13 +97,15 @@ public class AnimationBuilder {
                 // Verify that the condition can be parsed
                 Variable.parse(condition);
             } catch (final VariableException e) {
-                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString(
+                        "FailedConditionEvaluationErrorMessage"), e);
             }
         }
 
         List<Entry> poseNodes = animationNode.selectChildren(schema.getString("Pose"));
         if (poseNodes.isEmpty()) {
-            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("NoPosesInAnimationErrorMessage"));
+            throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString(
+                    "NoPosesInAnimationErrorMessage"));
         }
         Pose[] poseArray = new Pose[poseNodes.size()];
         for (int i = 0; i < poseNodes.size(); i++) {
@@ -111,7 +113,8 @@ public class AnimationBuilder {
             try {
                 poseArray[i] = loadPose(poseNode);
             } catch (IOException | RuntimeException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadPoseErrorMessage"), poseNode.getAttributes()), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "FailedLoadPoseErrorMessage"), poseNode.getAttributes()), e);
             }
         }
         poses = List.of(poseArray);
@@ -127,7 +130,8 @@ public class AnimationBuilder {
                 try {
                     hotspotArray[i] = loadHotspot(hotspotNode);
                 } catch (RuntimeException e) {
-                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadHotspotErrorMessage"), hotspotNode.getAttributes()), e);
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedLoadHotspotErrorMessage"), hotspotNode.getAttributes()), e);
                 }
             }
             hotspots = List.of(hotspotArray);
@@ -180,7 +184,8 @@ public class AnimationBuilder {
                 if (imageRightPath != null) {
                     imagePairString += ", " + imageRightPath;
                 }
-                throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadImageErrorMessage"), imagePairString), e);
+                throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "FailedLoadImageErrorMessage"), imagePairString), e);
             }
         }
 
@@ -212,7 +217,8 @@ public class AnimationBuilder {
                 soundKey = Sounds.load(soundPath.toString(), volume);
                 Sounds.addUsage(soundKey, imageSet);
             } catch (NumberFormatException | LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-                throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString("FailedLoadSoundErrorMessage"), soundText), e);
+                throw new IOException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "FailedLoadSoundErrorMessage"), soundText), e);
             }
         }
 
@@ -264,7 +270,8 @@ public class AnimationBuilder {
         } else if (shapeText.equalsIgnoreCase("Ellipse")) {
             shape = new Ellipse2D.Float(originX, originY, width, height);
         } else {
-            throw new IllegalArgumentException(String.format(Main.getInstance().getLanguageBundle().getString("HotspotShapeNotSupportedErrorMessage"), shapeText));
+            throw new IllegalArgumentException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "HotspotShapeNotSupportedErrorMessage"), shapeText));
         }
 
         final Hotspot hotspot = new Hotspot(behaviorText, shape);
@@ -292,7 +299,8 @@ public class AnimationBuilder {
         for (Hotspot hotspot : hotspots) {
             String behavior = hotspot.getBehaviour();
             if (behavior != null && !configuration.getBehaviorNames().contains(behavior)) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoBehaviourFoundErrorMessage"), behavior));
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "NoBehaviourFoundErrorMessage"), behavior));
             }
         }
     }
@@ -307,7 +315,8 @@ public class AnimationBuilder {
         try {
             return new Animation(condition == null ? null : Variable.parse(condition), poses, hotspots, turn, duration);
         } catch (final VariableException e) {
-            throw new AnimationInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedConditionEvaluationErrorMessage"), e);
+            throw new AnimationInstantiationException(Main.getInstance().getLanguageBundle().getString(
+                    "FailedConditionEvaluationErrorMessage"), e);
         }
     }
 }

@@ -146,7 +146,8 @@ public class ActionBuilder implements IActionBuilder {
         } else if (typeString.equals(schema.getString("Select"))) {
             type = TYPE_SELECT;
         } else {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("UnknownActionTypeErrorMessage"), typeString));
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "UnknownActionTypeErrorMessage"), typeString));
         }
 
         if (type == TYPE_EMBEDDED) {
@@ -158,9 +159,11 @@ public class ActionBuilder implements IActionBuilder {
                     log.warn("Image set \"{}\" uses deprecated action class: {}", imageSet, cls.getName());
                 }
             } catch (final ClassNotFoundException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassNotFoundErrorMessage"), className), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "ClassNotFoundErrorMessage"), className), e);
             } catch (final ClassCastException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ClassIsNotActionErrorMessage"), className), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "ClassIsNotActionErrorMessage"), className), e);
             }
         } else {
             cls = null;
@@ -179,7 +182,8 @@ public class ActionBuilder implements IActionBuilder {
             try {
                 Variable.parse(param.getValue());
             } catch (final VariableException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "FailedParameterEvaluationErrorMessage"), param.getKey()), e);
             }
         }
 
@@ -193,7 +197,8 @@ public class ActionBuilder implements IActionBuilder {
                 try {
                     animationBuilderArray[i] = new AnimationBuilder(configuration, animationNode, imageSet);
                 } catch (ConfigurationException e) {
-                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedLoadAnimationErrorMessage"), e);
+                    throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString(
+                            "FailedLoadAnimationErrorMessage"), e);
                 }
             }
             animationBuilders = List.of(animationBuilderArray);
@@ -218,7 +223,8 @@ public class ActionBuilder implements IActionBuilder {
                 if (isReference || node.getName().equals(schema.getString("Action"))) {
                     // Do not allow non-ComplexAction-type actions to have child actions
                     if (!isComplexAction) {
-                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("ChildActionsNotSupportedErrorMessage"), typeString));
+                        throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                                "ChildActionsNotSupportedErrorMessage"), typeString));
                     }
                     if (tempActionRefs == null) {
                         // Only initialize a new ArrayList if we need to; otherwise, use List.of() to save memory.
@@ -230,7 +236,7 @@ public class ActionBuilder implements IActionBuilder {
                         tempActionRefs.add(isReference ?
                                 new ActionRef(configuration, node) :
                                 new ActionBuilder(configuration, node, imageSet));
-                    } catch (ConfigurationException e) {
+                    } catch (ConfigurationException | RuntimeException e) {
                         throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
                                 isReference ? "FailedLoadActionReferenceErrorMessage" : "FailedLoadActionErrorMessage"
                         ), node.getAttributes()), e);
@@ -249,7 +255,8 @@ public class ActionBuilder implements IActionBuilder {
 
         // Ensure that ComplexAction-type actions have child actions
         if (isComplexAction && childActionBuilders.isEmpty()) {
-            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("NoChildActionsErrorMessage"), typeString));
+            throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "NoChildActionsErrorMessage"), typeString));
         }
 
         if (log.isDebugEnabled()) {
@@ -293,14 +300,16 @@ public class ActionBuilder implements IActionBuilder {
             try {
                 ref.validate();
             } catch (ConfigurationException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedValidateActionErrorMessage"), ref), e);
+                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "FailedValidateActionErrorMessage"), ref), e);
             }
         }
         for (final AnimationBuilder animationBuilder : animationBuilders) {
             try {
                 animationBuilder.validate();
             } catch (ConfigurationException e) {
-                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString("FailedValidateAnimationErrorMessage"), e);
+                throw new ConfigurationException(Main.getInstance().getLanguageBundle().getString(
+                        "FailedValidateAnimationErrorMessage"), e);
             }
         }
     }
@@ -325,7 +334,8 @@ public class ActionBuilder implements IActionBuilder {
         try {
             animations = createAnimations();
         } catch (AnimationInstantiationException e) {
-            throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString("FailedCreateAnimationErrorMessage"), e);
+            throw new ActionInstantiationException(Main.getInstance().getLanguageBundle().getString(
+                    "FailedCreateAnimationErrorMessage"), e);
         }
 
         // Create Child Actions
@@ -338,14 +348,14 @@ public class ActionBuilder implements IActionBuilder {
                         return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
                              IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-                        // NOTE There seems to be no constructor, so move on to the next
+                        // NOTE: There seems to be no constructor, so move on to the next
                     }
 
                     try {
                         return cls.getConstructor(ResourceBundle.class, VariableMap.class).newInstance(schema, variables);
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
                              IllegalArgumentException | InstantiationException | InvocationTargetException e) {
-                        // NOTE There seems to be no constructor, so move on to the next
+                        // NOTE: There seems to be no constructor, so move on to the next
                     }
 
                     return cls.getConstructor().newInstance();
@@ -437,7 +447,8 @@ public class ActionBuilder implements IActionBuilder {
             try {
                 variables.put(param.getKey(), Variable.parse(param.getValue()));
             } catch (final VariableException e) {
-                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                        "FailedParameterEvaluationErrorMessage"), param.getKey()), e);
             }
         }
         if (!params.isEmpty()) {
@@ -445,7 +456,8 @@ public class ActionBuilder implements IActionBuilder {
                 try {
                     variables.put(param.getKey(), Variable.parse(param.getValue()));
                 } catch (final VariableException e) {
-                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                    throw new ActionInstantiationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedParameterEvaluationErrorMessage"), param.getKey()), e);
                 }
             }
         }
