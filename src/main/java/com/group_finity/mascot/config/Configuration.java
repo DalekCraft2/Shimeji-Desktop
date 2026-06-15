@@ -429,29 +429,24 @@ public class Configuration {
             }
         }
 
-        // If there are no candidates for the next behavior, set the mascot's position
-        // to be above the top of the screen, and return the "Fall" behavior
-        if (totalFrequency == 0) {
-            Area area = Main.getInstance().getSettings().multiscreen
-                    ? mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
-            // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
-            mascot.getAnchor().setLocation((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256);
-            return buildBehavior(schema.getString(UserBehavior.BEHAVIORNAME_FALL));
-        }
+        if (totalFrequency > 0) {
+            double random = Math.random() * totalFrequency;
 
-        double random = Math.random() * totalFrequency;
-
-        for (final IBehaviorBuilder behaviorBuilder : candidates) {
-            random -= behaviorBuilder.getFrequency();
-            if (random < 0) {
-                return behaviorBuilder.buildBehavior();
+            for (final IBehaviorBuilder behaviorBuilder : candidates) {
+                random -= behaviorBuilder.getFrequency();
+                if (random < 0) {
+                    return behaviorBuilder.buildBehavior();
+                }
             }
         }
 
-        /* TODO: Move the fallback "Fall" behavior code down here to replace this null return,
-            because this can be reached if a behavior has a negative frequency.
-            Also, ensure that frequencies are not negative when loading behaviors. */
-        return null;
+        // If there are no candidates for the next behavior, set the mascot's position
+        // to be above the top of the screen, and return the "Fall" behavior
+        Area area = Main.getInstance().getSettings().multiscreen ?
+                mascot.getEnvironment().getScreen() : mascot.getEnvironment().getWorkArea();
+        // Subtract 2 from the width and add 1 to the left border X value so the mascot doesn't start climbing the walls instead of falling
+        mascot.getAnchor().setLocation((int) (Math.random() * (area.getWidth() - 2)) + area.getLeft() + 1, area.getTop() - 256);
+        return buildBehavior(schema.getString(UserBehavior.BEHAVIORNAME_FALL));
     }
 
     /**
