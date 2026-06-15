@@ -99,11 +99,12 @@ public class ImageSetChooser extends JDialog {
                     Configuration configuration = new Configuration();
                     configuration.load(new Entry(infoDocument.getDocumentElement()), imageSet, true);
 
-                    if (configuration.containsInformationKey(configuration.getSchema().getString("Name"))) {
-                        caption = configuration.getInformation(configuration.getSchema().getString("Name"));
+                    ResourceBundle schema = configuration.getSchema();
+                    if (configuration.containsInformationKey(schema.getString("Name"))) {
+                        caption = configuration.getInformation(schema.getString("Name"));
                     }
-                    if (configuration.containsInformationKey(configuration.getSchema().getString("PreviewImage"))) {
-                        imageFile = imageSetDir.resolve(configuration.getInformation(configuration.getSchema().getString("PreviewImage")));
+                    if (configuration.containsInformationKey(schema.getString("PreviewImage"))) {
+                        imageFile = imageSetDir.resolve(configuration.getInformation(schema.getString("PreviewImage")));
                     }
 
                 } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
