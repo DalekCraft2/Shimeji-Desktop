@@ -436,6 +436,23 @@ public class Main {
         throw new FileNotFoundException("Could not find information file for image set: " + imageSet);
     }
 
+    public static Path getSoundFilePath(String imageSet, String soundFile) throws FileNotFoundException {
+        Path[] soundDirs = {
+                IMAGE_DIRECTORY.resolve(imageSet).resolve(SOUND_DIRECTORY),
+                SOUND_DIRECTORY.resolve(imageSet),
+                SOUND_DIRECTORY
+        };
+
+        for (Path dir : soundDirs) {
+            Path filePath = dir.resolve(soundFile);
+            if (Files.isRegularFile(filePath)) {
+                return filePath;
+            }
+        }
+
+        throw new FileNotFoundException("Could not find sound file \"" + soundFile + "\" for image set \"" + imageSet + "\"");
+    }
+
     /**
      * Creates a {@link Mascot} with a randomly selected image set.
      */

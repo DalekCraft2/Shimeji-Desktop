@@ -17,7 +17,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -224,15 +223,7 @@ public class AnimationBuilder {
         if (poseNode.hasAttribute(schema.getString("Sound"))) {
             final String soundText = poseNode.getAttribute(schema.getString("Sound"));
             try {
-                Path soundPath;
-                if (Files.isRegularFile(Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText))) {
-                    soundPath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(Main.SOUND_DIRECTORY).resolve(soundText);
-                } else if (Files.isRegularFile(Main.SOUND_DIRECTORY.resolve(imageSet).resolve(soundText))) {
-                    soundPath = Main.SOUND_DIRECTORY.resolve(imageSet).resolve(soundText);
-                } else {
-                    soundPath = Main.SOUND_DIRECTORY.resolve(soundText);
-                }
-
+                Path soundPath = Main.getSoundFilePath(imageSet, soundText);
                 // The Volume attribute is optional and defaults to 0.
                 // I would change it to default to 1, but that would affect backwards compatibility.
                 float volume = poseNode.hasAttribute(schema.getString("Volume")) ?
