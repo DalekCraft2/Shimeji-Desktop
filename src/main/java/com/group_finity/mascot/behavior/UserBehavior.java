@@ -28,14 +28,33 @@ public class UserBehavior implements Behavior {
     private static final Logger log = LoggerFactory.getLogger(UserBehavior.class);
 
     /**
-     * Action that matches the "Gather Around Mouse!" context menu command
+     * The name of the behavior that is applied to a mascot if the "Follow Cursor" context menu item is selected.
+     * <p>
+     * This behavior is required in all configurations.
      */
     public static final String BEHAVIORNAME_CHASEMOUSE = "ChaseMouse";
 
+    /**
+     * The name of the behavior that is used as a fallback if a mascot's current action throws a {@link LostGroundException},
+     * or if a mascot's current behavior does not have a next behavior. The action associated with this behavior is
+     * expected to use the {@link com.group_finity.mascot.action.Fall Fall} class.
+     * <p>
+     * This behavior is required in all configurations.
+     */
     public static final String BEHAVIORNAME_FALL = "Fall";
 
+    /**
+     * The name of the behavior that is applied to a mascot if the cursor begins dragging them.
+     * <p>
+     * This behavior is required in all configurations.
+     */
     public static final String BEHAVIORNAME_DRAGGED = "Dragged";
 
+    /**
+     * The name of the behavior that is applied to a mascot if the cursor stops dragging them.
+     * <p>
+     * This behavior is required in all configurations.
+     */
     public static final String BEHAVIORNAME_THROWN = "Thrown";
 
     /**
@@ -57,14 +76,37 @@ public class UserBehavior implements Behavior {
         ACTIVE
     }
 
+    /**
+     * The name of this {@code UserBehavior}. This value should be the same as the name of the
+     * {@link com.group_finity.mascot.config.BehaviorBuilder BehaviorBuilder} that built this behavior.
+     *
+     * @see #getName()
+     */
     private final String name;
 
+    /**
+     * The {@link Action} associated with this {@code UserBehavior}.
+     */
     private final Action action;
 
+    /**
+     * The parent {@link Configuration} of this {@code UserBehavior}.
+     */
     private final Configuration configuration;
 
+    /**
+     * The {@link Mascot} that is currently executing this {@code UserBehavior}.
+     */
     private Mascot mascot;
 
+    /**
+     * Creates a new {@code UserBehavior}.
+     *
+     * @param name the name of this {@code UserBehavior}. This value should be the same as the name of the
+     * {@link com.group_finity.mascot.config.BehaviorBuilder BehaviorBuilder} that built this behavior.
+     * @param action the {@link Action} associated with this {@code UserBehavior}
+     * @param configuration the parent {@link Configuration} of this {@code UserBehavior}
+     */
     public UserBehavior(final String name, final Action action, final Configuration configuration) {
         this.name = name;
         this.action = action;
@@ -276,10 +318,21 @@ public class UserBehavior implements Behavior {
         }
     }
 
+    /**
+     * Gets the name of this {@code UserBehavior}. The returned value will be the same as the name of the
+     * {@link com.group_finity.mascot.config.BehaviorBuilder BehaviorBuilder} that built this behavior.
+     *
+     * @return the name of this {@code UserBehavior}
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the {@link MascotEnvironment} of the associated {@link Mascot} of this {@code UserBehavior}.
+     *
+     * @return the {@link MascotEnvironment} of the associated {@link Mascot} of this {@code UserBehavior}
+     */
     protected MascotEnvironment getEnvironment() {
         return mascot.getEnvironment();
     }
