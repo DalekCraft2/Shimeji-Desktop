@@ -1,6 +1,5 @@
 package com.group_finity.mascot;
 
-import com.group_finity.mascot.behavior.Behavior;
 import com.group_finity.mascot.behavior.BehaviorExecutionException;
 import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.config.Configuration;
@@ -14,11 +13,9 @@ import java.util.*;
 import java.util.List;
 
 /**
- * An object that manages the list of {@link Mascot Mascots} and takes timing.
- * If each {@link Mascot} moves asynchronously, there will be various problems (such as when throwing a window),
- * so this class adjusts the timing of the entire mascot.
- * <p>
- * The {@link #tick()} method first retrieves the latest environment information and then moves all {@link Mascot Mascots}.
+ * An object that manages a list of {@link Mascot} objects and coordinates their timing.
+ * Since having each mascot move asynchronously would cause issues (such as when moving a window),
+ * this class synchronizes their overall timing.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
@@ -27,7 +24,13 @@ public class Manager {
     private static final Logger log = LoggerFactory.getLogger(Manager.class);
 
     /**
-     * The interval between each tick, in milliseconds.
+     * The minimum interval between calls to {@link #tick()}, in milliseconds.
+     * This specifies the duration between the start of one tick and the start of
+     * the next, rather than the end of one tick and the start of the next.
+     * <p>
+     * It is possible for the intervals between some ticks to be longer than this
+     * value if this {@code Manager} contains many {@link Mascot} objects through
+     * which it needs to iterate.
      */
     public static final int TICK_INTERVAL = 40;
 
@@ -37,29 +40,35 @@ public class Manager {
     private final List<Mascot> mascots = new ArrayList<>();
 
     /**
-     * List of {@link Mascot Mascots} to be added.
-     * To prevent {@link ConcurrentModificationException}, {@link Mascot} additions are reflected all at once every {@link #tick()}.
+     * The {@link Mascot} objects that should be added to this {@code Manager}.
+     * To prevent {@link ConcurrentModificationException}, {@link Mascot} additions are reflected all at once
+     * whenever {@link #tick()} is called.
      *
      * @see #add(Mascot)
      */
     private final Set<Mascot> added = new LinkedHashSet<>();
 
     /**
-     * List of {@link Mascot Mascots} to be removed.
-     * To prevent {@link ConcurrentModificationException}, {@link Mascot} removals are reflected all at once every {@link #tick()}.
+     * The {@link Mascot} objects that should be removed from this {@code Manager}.
+     * To prevent {@link ConcurrentModificationException}, {@link Mascot} removals are reflected all at once
+     * whenever {@link #tick()} is called.
      *
      * @see #remove(Mascot)
      */
     private final Set<Mascot> removed = new LinkedHashSet<>();
 
     /**
-     * Whether the program should exit when the last {@link Mascot} is deleted.
-     * If you fail to create a tray icon, the process will remain forever unless you close the program when the {@link Mascot} disappears.
+     * Whether the program should exit when the last {@link Mascot} is removed from this {@code Manager}.
+     * If, for example, it is not possible to access the tray icon menu, then the process will continue running
+     * indefinitely unless we terminate the program after the last mascot is removed.
      */
     private boolean exitOnLastRemoved = true;
 
     /**
-     * Whether this {@code Manager} is enabled. If set to {@code false}, {@link #tick()} will not be called.
+     * Whether this {@code Manager} is enabled. If this {@code Manager} is enabled, it can update the
+     * environment's information and advance the timings of its mascots. The internal thread of this {@code Manager}
+     * will continue running regardless of the value of this field, but it will not call {@link #tick()}
+     * if this is set to {@code false}.
      *
      * @see #isEnabled()
      * @see #setEnabled(boolean)
@@ -67,10 +76,13 @@ public class Manager {
     private boolean enabled = true;
 
     /**
-     * Thread that loops {@link #tick()}.
+     * Thread that calls {@link #tick()} every {@value #TICK_INTERVAL} milliseconds.
      */
     private Thread thread;
 
+    /**
+     * Creates a new {@code Manager}.
+     */
     public Manager() {
         /*
         JDK bug: https://bugs.openjdk.org/browse/JDK-6435126
@@ -96,16 +108,27 @@ public class Manager {
         };
     }
 
+    /**
+     * Gets whether the program should exit when the last {@link Mascot} is removed from this {@code Manager}.
+     *
+     * @return {@code true} if the program should exit when the last {@code Mascot} is removed; {@code false} otherwise
+     */
     public boolean isExitOnLastRemoved() {
         return exitOnLastRemoved;
     }
 
+    /**
+     * Sets whether the program should exit when the last {@link Mascot} is removed from this {@code Manager}.
+     *
+     * @param exitOnLastRemoved {@code true} to make the program exit when the last {@code Mascot} is removed;
+     * {@code false} to keep the program running
+     */
     public void setExitOnLastRemoved(boolean exitOnLastRemoved) {
         this.exitOnLastRemoved = exitOnLastRemoved;
     }
 
     /**
-     * Starts the thread.
+     * Starts the internal thread of this {@code Manager} so it may begin updating the timings of its mascots.
      */
     public void start() {
         if (thread != null && thread.isAlive()) {
@@ -114,7 +137,8 @@ public class Manager {
         }
 
         thread = new Thread(() -> {
-            // I think nanoTime() is used instead of currentTimeMillis() because it may be more accurate on some systems that way.
+            // I think nanoTime() is used instead of currentTimeMillis()
+            // because it may be more accurate on some systems that way.
 
             // Previous time
             long prev = System.nanoTime() / 1000000;
@@ -126,6 +150,8 @@ public class Manager {
                     cur = System.nanoTime() / 1000000;
                     if (cur - prev >= TICK_INTERVAL) {
                         if (cur <= prev + TICK_INTERVAL * 2) {
+                            // If the current time is behind by multiple increments of TICK_INTERVAL,
+                            // increment the previous time by TICK_INTERVAL so we do two ticks back-to-back
                             prev += TICK_INTERVAL;
                         } else {
                             prev = cur;
@@ -151,7 +177,7 @@ public class Manager {
     }
 
     /**
-     * Stops the thread.
+     * Stops the internal thread of this {@code Manager} so it no longer updates the timings of its mascots.
      */
     public void stop() {
         if (thread == null || !thread.isAlive()) {
@@ -166,7 +192,8 @@ public class Manager {
     }
 
     /**
-     * Advances the {@link Mascot Mascots} by one frame.
+     * Updates the {@link com.group_finity.mascot.environment.Environment Environment} information
+     * and advances all {@link Mascot} objects by one tick.
      */
     private void tick() {
         // Update the environmental information first
@@ -211,10 +238,10 @@ public class Manager {
     }
 
     /**
-     * Adds a {@link Mascot}.
-     * Addition is done at the next {@link #tick()} timing.
+     * Adds a {@link Mascot} to this {@code Manager}.
+     * Addition is done during the next call to {@link #tick()}.
      *
-     * @param mascot the {@link Mascot} to add
+     * @param mascot the {@code Mascot} to add
      */
     public void add(final Mascot mascot) {
         synchronized (added) {
@@ -225,10 +252,10 @@ public class Manager {
     }
 
     /**
-     * Removes a {@link Mascot}.
-     * Removal is done at the next {@link #tick()} timing.
+     * Removes a {@link Mascot} from this {@code Manager}.
+     * Removal is done during the next call to {@link #tick()}.
      *
-     * @param mascot the {@link Mascot} to remove
+     * @param mascot the {@code Mascot} to remove
      */
     public void remove(final Mascot mascot) {
         synchronized (added) {
@@ -241,9 +268,10 @@ public class Manager {
     }
 
     /**
-     * Sets the {@link Behavior} for all {@link Mascot Mascots}.
+     * Applies the specified behavior to all mascots in this {@code Manager}.
+     * If the specified behavior fails to be applied to a mascot, that mascot is disposed.
      *
-     * @param name the name of the {@link Behavior}
+     * @param name the name of the behavior to apply to all mascots
      */
     public void setBehaviorAll(final String name) {
         synchronized (mascots) {
@@ -264,11 +292,12 @@ public class Manager {
     }
 
     /**
-     * Sets the {@link Behavior} for all {@link Mascot Mascots} with the specified image set.
+     * Applies the specified behavior to all mascots in this {@code Manager} that use the specified image set.
+     * If the specified behavior fails to be applied to a mascot, that mascot is disposed.
      *
-     * @param configuration the {@link Configuration} to use to build the {@link Behavior}
-     * @param name the name of the {@link Behavior}
-     * @param imageSet the image set for which to check
+     * @param configuration the configuration to use to build the behavior with the specified name
+     * @param name the name of the behavior to apply to all mascots with the specified image set
+     * @param imageSet the name of the image set for which to check
      */
     public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
         synchronized (mascots) {
@@ -291,6 +320,7 @@ public class Manager {
 
     /**
      * Dismisses mascots until one remains.
+     * The remaining mascot will be the first mascot in this {@code Manager} object's internal list of mascots.
      */
     public void remainOne() {
         synchronized (mascots) {
@@ -304,7 +334,7 @@ public class Manager {
     /**
      * Dismisses all mascots except for the one specified.
      *
-     * @param mascot the mascot to not dismiss
+     * @param mascot the mascot to retain
      */
     public void remainOne(Mascot mascot) {
         synchronized (mascots) {
@@ -319,9 +349,11 @@ public class Manager {
     }
 
     /**
-     * Dismisses mascots which use the specified image set until one mascot remains.
+     * Dismisses mascots that use the specified image set until one mascot with that image set remains.
+     * The remaining mascot will be the first mascot with the specified image set in this {@code Manager}
+     * object's internal list of mascots.
      *
-     * @param imageSet the image set for which to check
+     * @param imageSet the name of the image set whose mascots should be disposed
      */
     public void remainOne(String imageSet) {
         synchronized (mascots) {
@@ -342,7 +374,7 @@ public class Manager {
      * Dismisses mascots that use the specified image set until only the specified mascot remains.
      *
      * @param imageSet the image set for which to check
-     * @param mascot the mascot to not dismiss
+     * @param mascot the mascot to retain
      */
     public void remainOne(String imageSet, Mascot mascot) {
         synchronized (mascots) {
@@ -374,7 +406,7 @@ public class Manager {
     }
 
     /**
-     * Disposes all {@link Mascot Mascots}.
+     * Disposes all mascots in this {@code Manager}.
      */
     public void disposeAll() {
         synchronized (mascots) {
@@ -384,6 +416,13 @@ public class Manager {
         }
     }
 
+    /**
+     * Checks whether all mascots in this {@code Manager} are paused.
+     * Returns {@code false} if this {@code Manager} has no mascots.
+     *
+     * @return {@code true} if all mascots in this manager are paused; {@code false} if any mascot is unpaused
+     * or if this {@code Manager} has no mascots
+     */
     public boolean isPaused() {
         synchronized (mascots) {
             if (mascots.isEmpty()) {
@@ -393,6 +432,9 @@ public class Manager {
         }
     }
 
+    /**
+     * Toggles the paused state of all mascots in this {@code Manager}.
+     */
     public void togglePauseAll() {
         synchronized (mascots) {
             if (mascots.isEmpty()) {
@@ -407,28 +449,42 @@ public class Manager {
         }
     }
 
+    /**
+     * Gets whether this {@code Manager} is enabled. If this {@code Manager} is enabled, it can update the
+     * environment's information and advance the timings of its mascots.
+     *
+     * @return {@code true} if this {@code Manager} is enabled; {@code false} otherwise
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Sets whether this {@code Manager} is enabled. If this {@code Manager} is enabled, it can update the
+     * environment's information and advance the timings of its mascots.
+     *
+     * @param enabled {@code true} to enable this {@code Manager}; {@code false} to disable it
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     /**
-     * Gets the current number of {@link Mascot Mascots}.
+     * Gets the total number of mascots in this {@code Manager}.
      *
-     * @return the current number of {@link Mascot Mascots}
+     * @return the total number of mascots in this {@code Manager}
      */
     public int getCount() {
         return getCount(null);
     }
 
     /**
-     * Gets the current number of {@link Mascot Mascots} with the given image set.
+     * Gets the number of mascots in this {@code Manager} that use the specified image set.
+     * If the specified image set is {@code null}, this returns the total number of mascots in this {@code Manager}.
      *
-     * @param imageSet the image set for which to check
-     * @return the current number of {@link Mascot Mascots}
+     * @param imageSet the image set for which to check, or {@code null} to get the total number of mascots
+     * in this {@code Manager}
+     * @return the number of mascots that use the specified image set
      */
     public int getCount(String imageSet) {
         synchronized (mascots) {
@@ -445,10 +501,11 @@ public class Manager {
     }
 
     /**
-     * Returns a Mascot with the given affordance.
+     * Gets a weak reference to a mascot that is currently broadcasting the specified affordance.
      *
      * @param affordance the affordance for which to check
-     * @return a {@link WeakReference} to a mascot with the required affordance, or {@code null} if none was found
+     * @return a {@link WeakReference} to a mascot that is broadcasting the specified affordance,
+     * or {@code null} if none was found
      */
     public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
         synchronized (mascots) {
@@ -464,6 +521,12 @@ public class Manager {
         return null;
     }
 
+    /**
+     * Checks whether there are at least two mascots whose anchors are at the specified point.
+     *
+     * @param anchor the point to check
+     * @return whether there are at least two mascots whose anchors are at the specified point
+     */
     public boolean hasOverlappingMascotsAtPoint(Point anchor) {
         int count = 0;
 
