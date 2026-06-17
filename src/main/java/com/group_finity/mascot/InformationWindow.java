@@ -114,7 +114,8 @@ public class InformationWindow extends JFrame implements Localizable {
                     String url = st.nextToken();
                     if (JOptionPane.showConfirmDialog(
                             this,
-                            languageBundle.getString("ConfirmVisitWebsiteMessage") + "\n" + languageBundle.getString("ExerciseCautionAndBewareSusLinksMessage") + "\n" + url,
+                            languageBundle.getString("ConfirmVisitWebsiteMessage") + "\n" +
+                                    languageBundle.getString("ExerciseCautionAndBewareSusLinksMessage") + "\n" + url,
                             languageBundle.getString("VisitWebsite"),
                             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                         try {
@@ -127,11 +128,11 @@ public class InformationWindow extends JFrame implements Localizable {
                                 } else {
                                     log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
                                 }
-                                JOptionPane.showMessageDialog(this, String.format(languageBundle.getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
+                                Main.showError(this, String.format(languageBundle.getString("FailedOpenWebBrowserErrorMessage"), url));
                             }
                         } catch (UnsupportedOperationException | URISyntaxException | IOException ex) {
                             log.error("Failed to open URL \"{}\"", url, ex);
-                            JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                            Main.showError(this, String.format(languageBundle.getString("FailedOpenWebBrowserErrorMessage"), url), ex);
                         }
                     }
                 }

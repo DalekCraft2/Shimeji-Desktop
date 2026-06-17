@@ -218,11 +218,11 @@ public class SettingsWindow extends JDialog implements Localizable {
                 } else {
                     log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
                 }
-                JOptionPane.showMessageDialog(this, String.format(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
+                Main.showError(this, String.format(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage"), url));
             }
         } catch (UnsupportedOperationException | URISyntaxException | IOException e) {
             log.error("Failed to open URL \"{}\"", url, e);
-            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            Main.showError(this, String.format(Main.getInstance().getLanguageBundle().getString("FailedOpenWebBrowserErrorMessage"), url), e);
         }
     }
 

@@ -28,6 +28,7 @@ import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,6 +39,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -127,28 +129,42 @@ public class Main {
     }
 
     public static void showError(String message) {
-        // TODO: Call this on the EDT safely without letting other windows appear in front of it before it's closed
-        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
+        showError(message, null);
     }
 
     public static void showError(String message, Throwable exception) {
-        StringBuilder messageBuilder = new StringBuilder(message);
-        do {
-            Class<? extends Throwable> exceptionClass = exception.getClass();
-            if (exceptionClass.getModule().getName().equals(Main.class.getModule().getName()) &&
-                    exceptionClass != com.group_finity.mascot.platform.x11.X.X11Exception.class) {
-                // If it's a Shimeji exception, only append the exception message
-                messageBuilder.append("\n").append(exception.getMessage());
-            } else if (exception instanceof SAXParseException sax) {
-                messageBuilder.append("\nLine ").append(sax.getLineNumber()).append(": ").append(exception.getMessage());
-            } else {
-                messageBuilder.append("\n").append(exception);
+        showError(frame, message, exception);
+    }
+
+    public static void showError(Component parentComponent, String message) {
+        showError(parentComponent, message, null);
+    }
+
+    public static void showError(Component parentComponent, String message, Throwable exception) {
+        ResourceBundle languageBundle = INSTANCE.languageBundle;
+        if (exception != null) {
+            StringBuilder messageBuilder = new StringBuilder(message);
+            do {
+                Class<? extends Throwable> exceptionClass = exception.getClass();
+                if (exceptionClass.getModule().getName().equals(Main.class.getModule().getName()) &&
+                        exceptionClass != com.group_finity.mascot.platform.x11.X.X11Exception.class) {
+                    // If it's a Shimeji exception, only append the exception message
+                    messageBuilder.append("\n").append(exception.getMessage());
+                } else if (exception instanceof SAXParseException sax) {
+                    messageBuilder.append("\nLine ").append(sax.getLineNumber()).append(": ").append(exception.getMessage());
+                } else {
+                    messageBuilder.append("\n").append(exception);
+                }
+                exception = exception.getCause();
             }
-            exception = exception.getCause();
+            while (exception != null);
+            messageBuilder.append("\n").append(languageBundle == null ?
+                    "See log for more details." : languageBundle.getString("SeeLogForDetails"));
+            message = messageBuilder.toString();
         }
-        while (exception != null);
-        message = messageBuilder.toString();
-        showError(message + "\n" + INSTANCE.languageBundle.getString("SeeLogForDetails"));
+        String title = languageBundle == null ? "Error" : languageBundle.getString("Error");
+        // TODO: Call this on the EDT safely without letting other windows appear in front of it before it's closed
+        JOptionPane.showMessageDialog(parentComponent, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
     static void main() throws InterruptedException, InvocationTargetException {
