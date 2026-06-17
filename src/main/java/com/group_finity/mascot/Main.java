@@ -149,16 +149,16 @@ public class Main {
                 if (exceptionClass.getModule().getName().equals(Main.class.getModule().getName()) &&
                         exceptionClass != com.group_finity.mascot.platform.x11.X.X11Exception.class) {
                     // If it's a Shimeji exception, only append the exception message
-                    messageBuilder.append("\n").append(exception.getMessage());
+                    messageBuilder.append(System.lineSeparator()).append(exception.getMessage());
                 } else if (exception instanceof SAXParseException sax) {
-                    messageBuilder.append("\nLine ").append(sax.getLineNumber()).append(": ").append(exception.getMessage());
+                    messageBuilder.append(System.lineSeparator()).append("Line ").append(sax.getLineNumber()).append(": ").append(exception.getMessage());
                 } else {
-                    messageBuilder.append("\n").append(exception);
+                    messageBuilder.append(System.lineSeparator()).append(exception);
                 }
                 exception = exception.getCause();
             }
             while (exception != null);
-            messageBuilder.append("\n").append(languageBundle == null ?
+            messageBuilder.append(System.lineSeparator()).append(languageBundle == null ?
                     "See log for more details." : languageBundle.getString("SeeLogForDetails"));
             message = messageBuilder.toString();
         }

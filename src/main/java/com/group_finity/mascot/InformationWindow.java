@@ -114,8 +114,8 @@ public class InformationWindow extends JFrame implements Localizable {
                     String url = st.nextToken();
                     if (JOptionPane.showConfirmDialog(
                             this,
-                            languageBundle.getString("ConfirmVisitWebsiteMessage") + "\n" +
-                                    languageBundle.getString("ExerciseCautionAndBewareSusLinksMessage") + "\n" + url,
+                            languageBundle.getString("ConfirmVisitWebsiteMessage") + System.lineSeparator() +
+                                    languageBundle.getString("ExerciseCautionAndBewareSusLinksMessage") + System.lineSeparator() + url,
                             languageBundle.getString("VisitWebsite"),
                             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                         try {
