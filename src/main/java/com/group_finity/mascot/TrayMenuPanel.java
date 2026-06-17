@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  *
  * @author DalekCraft
  */
-public class TrayMenuPanel extends javax.swing.JPanel {
+public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
 
     private final boolean useSystemTray;
 
@@ -35,12 +35,12 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     public TrayMenuPanel(boolean useSystemTray) {
         this.useSystemTray = useSystemTray;
         initComponents();
-        refreshComponentText();
+        localize(Main.getInstance().getLanguageBundle());
         initComponentStates();
     }
 
-    private void refreshComponentText() {
-        ResourceBundle language = Main.getInstance().getLanguageBundle();
+    @Override
+    public void localize(ResourceBundle languageBundle) {
         Manager manager = Main.getInstance().getManager();
 
         Container topLevelAncestor = getTopLevelAncestor();
@@ -48,7 +48,7 @@ public class TrayMenuPanel extends javax.swing.JPanel {
             Settings settings = Main.getInstance().getSettings();
             String title = settings.shimejiEeNameOverride;
             if (title.isEmpty()) {
-                title = language.getString("ShimejiEE");
+                title = languageBundle.getString("ShimejiEE");
             }
             if (topLevelAncestor instanceof JDialog jDialog) {
                 jDialog.setTitle(title);
@@ -56,22 +56,22 @@ public class TrayMenuPanel extends javax.swing.JPanel {
                 jFrame.setTitle(title);
             }
         }
-        btnCallShimeji.setText(language.getString("CallShimeji"));
-        btnFollowCursor.setText(language.getString("FollowCursor"));
-        btnReduceToOne.setText(language.getString("ReduceToOne"));
-        btnRestoreWindows.setText(language.getString("RestoreWindows"));
-        btnAllowedBehaviors.setText(language.getString("AllowedBehaviours"));
-        chkBreeding.setText(language.getString("BreedingCloning"));
-        chkTransient.setText(language.getString("BreedingTransient"));
-        chkTransformation.setText(language.getString("Transformation"));
-        chkThrowing.setText(language.getString("ThrowingWindows"));
-        chkSounds.setText(language.getString("SoundEffects"));
-        chkMultiscreen.setText(language.getString("Multiscreen"));
-        btnChooseShimeji.setText(language.getString("ChooseShimeji"));
-        btnSettings.setText(language.getString("Settings"));
-        btnLanguage.setText(language.getString("Language"));
-        btnPauseAll.setText(manager.isPaused() ? language.getString("ResumeAnimations") : language.getString("PauseAnimations"));
-        btnDismissAll.setText(language.getString("DismissAll"));
+        btnCallShimeji.setText(languageBundle.getString("CallShimeji"));
+        btnFollowCursor.setText(languageBundle.getString("FollowCursor"));
+        btnReduceToOne.setText(languageBundle.getString("ReduceToOne"));
+        btnRestoreWindows.setText(languageBundle.getString("RestoreWindows"));
+        btnAllowedBehaviors.setText(languageBundle.getString("AllowedBehaviours"));
+        chkBreeding.setText(languageBundle.getString("BreedingCloning"));
+        chkTransient.setText(languageBundle.getString("BreedingTransient"));
+        chkTransformation.setText(languageBundle.getString("Transformation"));
+        chkThrowing.setText(languageBundle.getString("ThrowingWindows"));
+        chkSounds.setText(languageBundle.getString("SoundEffects"));
+        chkMultiscreen.setText(languageBundle.getString("Multiscreen"));
+        btnChooseShimeji.setText(languageBundle.getString("ChooseShimeji"));
+        btnSettings.setText(languageBundle.getString("Settings"));
+        btnLanguage.setText(languageBundle.getString("Language"));
+        btnPauseAll.setText(manager.isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
+        btnDismissAll.setText(languageBundle.getString("DismissAll"));
     }
 
     void refreshPauseText() {
@@ -647,88 +647,88 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLanguageMouseReleased
 
     private void itmEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEnglishActionPerformed
-        updateLanguage(Locale.UK);
+        updateLocale(Locale.UK);
     }//GEN-LAST:event_itmEnglishActionPerformed
 
     private void itmArabicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmArabicActionPerformed
-        updateLanguage("ar-SA");
+        updateLocale("ar-SA");
     }//GEN-LAST:event_itmArabicActionPerformed
 
     private void itmCatalanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCatalanActionPerformed
-        updateLanguage("ca-ES");
+        updateLocale("ca-ES");
     }//GEN-LAST:event_itmCatalanActionPerformed
 
     private void itmGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmGermanActionPerformed
-        updateLanguage(Locale.GERMANY);
+        updateLocale(Locale.GERMANY);
     }//GEN-LAST:event_itmGermanActionPerformed
 
     private void itmSpanishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmSpanishActionPerformed
-        updateLanguage("es-ES");
+        updateLocale("es-ES");
     }//GEN-LAST:event_itmSpanishActionPerformed
 
     private void itmFrenchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmFrenchActionPerformed
-        updateLanguage(Locale.FRANCE);
+        updateLocale(Locale.FRANCE);
     }//GEN-LAST:event_itmFrenchActionPerformed
 
     private void itmCroatianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCroatianActionPerformed
-        updateLanguage("hr-HR");
+        updateLocale("hr-HR");
     }//GEN-LAST:event_itmCroatianActionPerformed
 
     private void itmItalianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmItalianActionPerformed
-        updateLanguage(Locale.ITALY);
+        updateLocale(Locale.ITALY);
     }//GEN-LAST:event_itmItalianActionPerformed
 
     private void itmDutchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmDutchActionPerformed
-        updateLanguage("nl-NL");
+        updateLocale("nl-NL");
     }//GEN-LAST:event_itmDutchActionPerformed
 
     private void itmPolishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmPolishActionPerformed
-        updateLanguage("pl-PL");
+        updateLocale("pl-PL");
     }//GEN-LAST:event_itmPolishActionPerformed
 
     private void itmBrazilianPortugueseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmBrazilianPortugueseActionPerformed
-        updateLanguage("pt-BR");
+        updateLocale("pt-BR");
     }//GEN-LAST:event_itmBrazilianPortugueseActionPerformed
 
     private void itmPortugueseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmPortugueseActionPerformed
-        updateLanguage("pt-PT");
+        updateLocale("pt-PT");
     }//GEN-LAST:event_itmPortugueseActionPerformed
 
     private void itmRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmRussianActionPerformed
-        updateLanguage("ru-RU");
+        updateLocale("ru-RU");
     }//GEN-LAST:event_itmRussianActionPerformed
 
     private void itmRomanianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmRomanianActionPerformed
-        updateLanguage("ro-RO");
+        updateLocale("ro-RO");
     }//GEN-LAST:event_itmRomanianActionPerformed
 
     private void itmSerbianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmSerbianActionPerformed
-        updateLanguage("sr-RS");
+        updateLocale("sr-RS");
     }//GEN-LAST:event_itmSerbianActionPerformed
 
     private void itmFinnishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmFinnishActionPerformed
-        updateLanguage("fi-FI");
+        updateLocale("fi-FI");
     }//GEN-LAST:event_itmFinnishActionPerformed
 
     private void itmVietnameseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmVietnameseActionPerformed
-        updateLanguage("vi-VN");
+        updateLocale("vi-VN");
     }//GEN-LAST:event_itmVietnameseActionPerformed
 
     private void itmChineseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmChineseActionPerformed
-        updateLanguage(Locale.SIMPLIFIED_CHINESE);
+        updateLocale(Locale.SIMPLIFIED_CHINESE);
     }//GEN-LAST:event_itmChineseActionPerformed
 
     private void itmChineseTraditionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmChineseTraditionalActionPerformed
-        updateLanguage(Locale.TRADITIONAL_CHINESE);
+        updateLocale(Locale.TRADITIONAL_CHINESE);
     }//GEN-LAST:event_itmChineseTraditionalActionPerformed
 
     private void itmKoreanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmKoreanActionPerformed
         // FIXME: Korean characters do not display properly in the font used by Swing
-        updateLanguage(Locale.KOREA);
+        updateLocale(Locale.KOREA);
     }//GEN-LAST:event_itmKoreanActionPerformed
 
     private void itmJapaneseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmJapaneseActionPerformed
-        updateLanguage(Locale.JAPAN);
+        updateLocale(Locale.JAPAN);
     }//GEN-LAST:event_itmJapaneseActionPerformed
 
     private void btnPauseAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseAllActionPerformed
@@ -746,30 +746,62 @@ public class TrayMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDismissAllActionPerformed
 
 
-    private void updateLanguage(Locale locale) {
+    private void updateLocale(Locale locale) {
+        // If we are using the system tray, dispose the tray menu window
+        // because it should only persist when the system tray setting is disabled
         if (useSystemTray)
             ((Window) getTopLevelAncestor()).dispose();
+
         Settings settings = Main.getInstance().getSettings();
         if (!settings.language.equals(locale)) {
             settings.language = locale;
+            // Load the resource bundle for the specified language
             Main.getInstance().loadLanguage(locale);
+
+            // Update all LanguageUpdatable windows using the new language bundle
+            ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
+            // TODO: Update the component orientations to fit the new locale
+            for (Window window : Window.getWindows()) {
+                window.invalidate();
+                if (window instanceof Localizable lu) {
+                    lu.localize(languageBundle);
+                }
+            }
+            // Only update the tray menu's text if it's persistent (i.e., the Use System Tray setting is disabled)
             if (!useSystemTray) {
-                refreshComponentText();
+                // Needs to be called separately for this class because this class isn't a subclass of Window
+                localize(languageBundle);
                 // Recalculate the size of the window, because the buttons may be different sizes than before
                 repackWindow();
             }
         }
     }
 
-    private void updateLanguage(String languageTag) {
+    private void updateLocale(String languageTag) {
+        // If we are using the system tray, dispose the tray menu window
+        // because it should only persist when the system tray setting is disabled
         if (useSystemTray)
             ((Window) getTopLevelAncestor()).dispose();
+
         Settings settings = Main.getInstance().getSettings();
         if (!settings.language.toLanguageTag().equals(languageTag)) {
-            settings.language = Locale.forLanguageTag(languageTag);
-            Main.getInstance().loadLanguage(Locale.forLanguageTag(languageTag));
+            Locale locale = Locale.forLanguageTag(languageTag);
+            settings.language = locale;
+            // Load the resource bundle for the specified language
+            Main.getInstance().loadLanguage(locale);
+
+            // Update all LanguageUpdatable windows using the new language bundle
+            ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
+            for (Window window : Window.getWindows()) {
+                window.invalidate();
+                if (window instanceof Localizable lu) {
+                    lu.localize(languageBundle);
+                }
+            }
+            // Only update the tray menu's text if it's persistent (i.e., the Use System Tray setting is disabled)
             if (!useSystemTray) {
-                refreshComponentText();
+                // Needs to be called separately for this class because this class isn't a subclass of Window
+                localize(languageBundle);
                 // Recalculate the size of the window, because the buttons may be different sizes than before
                 repackWindow();
             }

@@ -25,8 +25,14 @@ import java.util.StringTokenizer;
  * @author Kilkakon
  * @since 1.0.21
  */
-public class InformationWindow extends JFrame {
+public class InformationWindow extends JFrame implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(InformationWindow.class);
+
+    private String displayName;
+    private String artistHtml;
+    private String scripterHtml;
+    private String commissionerHtml;
+    private String supportHtml;
 
     /**
      * Creates new form InformationWindow
@@ -45,9 +51,97 @@ public class InformationWindow extends JFrame {
             }
         }
 
-        // text
-        final ResourceBundle language = Main.getInstance().getLanguageBundle();
-        setTitle(config.containsInformationKey("Name") ? config.getInformation("Name") : language.getString("Information"));
+        // Store these in instance variables so we can reuse them if we need to relocalize the window
+        displayName = config.containsInformationKey("Name") ? config.getInformation("Name") : null;
+
+        if (config.containsInformationKey("ArtistName")) {
+            artistHtml = "";
+            if (config.containsInformationKey("ArtistURL")) {
+                artistHtml += "<a href=\"";
+                artistHtml += config.getInformation("ArtistURL");
+                artistHtml += "\">";
+            }
+            artistHtml += config.getInformation("ArtistName");
+            if (config.containsInformationKey("ArtistURL")) {
+                artistHtml += "</a>";
+            }
+        }
+        if (config.containsInformationKey("ScripterName")) {
+            scripterHtml = "";
+            if (config.containsInformationKey("ScripterURL")) {
+                scripterHtml += "<a href=\"";
+                scripterHtml += config.getInformation("ScripterURL");
+                scripterHtml += "\">";
+            }
+            scripterHtml += config.getInformation("ScripterName");
+            if (config.containsInformationKey("ScripterURL")) {
+                scripterHtml += "</a>";
+            }
+        }
+        if (config.containsInformationKey("CommissionerName")) {
+            commissionerHtml = "";
+            if (config.containsInformationKey("CommissionerURL")) {
+                commissionerHtml += "<a href=\"";
+                commissionerHtml += config.getInformation("CommissionerURL");
+                commissionerHtml += "\">";
+            }
+            commissionerHtml += config.getInformation("CommissionerName");
+            if (config.containsInformationKey("CommissionerURL")) {
+                commissionerHtml += "</a>";
+            }
+        }
+        if (config.containsInformationKey("SupportName")) {
+            supportHtml = "";
+            if (config.containsInformationKey("SupportURL")) {
+                supportHtml += "<a href=\"";
+                supportHtml += config.getInformation("SupportURL");
+                supportHtml += "\">";
+            }
+            supportHtml += config.getInformation("SupportName");
+            if (config.containsInformationKey("SupportURL")) {
+                supportHtml += "</a>";
+            }
+        }
+
+        // Localize
+        localize(Main.getInstance().getLanguageBundle());
+
+        pnlEditorPane.addHyperlinkListener(e -> {
+            final ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
+                if (st.hasMoreTokens()) {
+                    String url = st.nextToken();
+                    if (JOptionPane.showConfirmDialog(
+                            this,
+                            languageBundle.getString("ConfirmVisitWebsiteMessage") + "\n" + languageBundle.getString("ExerciseCautionAndBewareSusLinksMessage") + "\n" + url,
+                            languageBundle.getString("VisitWebsite"),
+                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        try {
+                            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                                desktop.browse(new URI(url));
+                            } else {
+                                if (desktop == null) {
+                                    log.warn("Can not open URL \"{}\", as desktop operations are not supported on this platform", url);
+                                } else {
+                                    log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
+                                }
+                                JOptionPane.showMessageDialog(this, String.format(languageBundle.getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (UnsupportedOperationException | URISyntaxException | IOException ex) {
+                            log.error("Failed to open URL \"{}\"", url, ex);
+                            JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void localize(ResourceBundle languageBundle) {
+        setTitle(displayName == null ? languageBundle.getString("Information") : displayName);
 
         StringBuilder html = new StringBuilder("<center style=\"font:");
         if (lblSplashImage.getFont().getStyle() == Font.BOLD) {
@@ -63,101 +157,32 @@ public class InformationWindow extends JFrame {
         html.append("pt ");
         html.append(lblSplashImage.getFont().getFontName());
         html.append("\">");
-        if (config.containsInformationKey("ArtistName")) {
-            String artistHtml = "";
-            if (config.containsInformationKey("ArtistURL")) {
-                artistHtml += "<a href=\"";
-                artistHtml += config.getInformation("ArtistURL");
-                artistHtml += "\">";
-            }
-            artistHtml += config.getInformation("ArtistName");
-            if (config.containsInformationKey("ArtistURL")) {
-                artistHtml += "</a>";
-            }
-            html.append(String.format(language.getString("ArtBy"), artistHtml));
+        if (artistHtml != null) {
+            html.append(String.format(languageBundle.getString("ArtBy"), artistHtml));
         }
-        if (config.containsInformationKey("ScripterName")) {
-            if (config.containsInformationKey("ArtistName")) {
+        if (scripterHtml != null) {
+            if (artistHtml != null) {
                 html.append(" - ");
             }
-            String scripterHtml = "";
-            if (config.containsInformationKey("ScripterURL")) {
-                scripterHtml += "<a href=\"";
-                scripterHtml += config.getInformation("ScripterURL");
-                scripterHtml += "\">";
-            }
-            scripterHtml += config.getInformation("ScripterName");
-            if (config.containsInformationKey("ScripterURL")) {
-                scripterHtml += "</a>";
-            }
-            html.append(String.format(language.getString("ScriptedBy"), scripterHtml));
+            html.append(String.format(languageBundle.getString("ScriptedBy"), scripterHtml));
         }
-        if (config.containsInformationKey("CommissionerName")) {
-            if (config.containsInformationKey("ArtistName") || config.containsInformationKey("ScripterName")) {
+        if (commissionerHtml != null) {
+            if (artistHtml != null || scripterHtml != null) {
                 html.append(" - ");
             }
-            String commissionerHtml = "";
-            if (config.containsInformationKey("CommissionerURL")) {
-                commissionerHtml += "<a href=\"";
-                commissionerHtml += config.getInformation("CommissionerURL");
-                commissionerHtml += "\">";
-            }
-            commissionerHtml += config.getInformation("CommissionerName");
-            if (config.containsInformationKey("CommissionerURL")) {
-                commissionerHtml += "</a>";
-            }
-            html.append(String.format(language.getString("CommissionedBy"), commissionerHtml));
+            html.append(String.format(languageBundle.getString("CommissionedBy"), commissionerHtml));
         }
-        if (config.containsInformationKey("SupportName")) {
-            if (config.containsInformationKey("ArtistName") || config.containsInformationKey("ScripterName") || config.containsInformationKey("CommissionerName")) {
+        if (supportHtml != null) {
+            if (artistHtml != null || scripterHtml != null || commissionerHtml != null) {
                 html.append(" - ");
             }
-            String supportHtml = "";
-            if (config.containsInformationKey("SupportURL")) {
-                supportHtml += "<a href=\"";
-                supportHtml += config.getInformation("SupportURL");
-                supportHtml += "\">";
-            }
-            supportHtml += config.getInformation("SupportName");
-            if (config.containsInformationKey("SupportURL")) {
-                supportHtml += "</a>";
-            }
-            html.append(String.format(language.getString("SupportAt"), supportHtml));
+            html.append(String.format(languageBundle.getString("SupportAt"), supportHtml));
         }
         html.append("</center>");
 
         pnlEditorPane.setText(html.toString());
-        pnlEditorPane.addHyperlinkListener(e -> {
-            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
-                if (st.hasMoreTokens()) {
-                    String url = st.nextToken();
-                    if (JOptionPane.showConfirmDialog(
-                            this,
-                            language.getString("ConfirmVisitWebsiteMessage") + "\n" + language.getString("ExerciseCautionAndBewareSusLinksMessage") + "\n" + url,
-                            language.getString("VisitWebsite"),
-                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                        try {
-                            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                                desktop.browse(new URI(url));
-                            } else {
-                                if (desktop == null) {
-                                    log.warn("Can not open URL \"{}\", as desktop operations are not supported on this platform", url);
-                                } else {
-                                    log.warn("Can not open URL \"{}\", as the desktop browse operation is not supported on this platform", url);
-                                }
-                                JOptionPane.showMessageDialog(this, String.format(language.getString("FailedOpenWebBrowserErrorMessage"), url), "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        } catch (UnsupportedOperationException | URISyntaxException | IOException ex) {
-                            log.error("Failed to open URL \"{}\"", url, ex);
-                            JOptionPane.showMessageDialog(this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            }
-        });
-        btnClose.setText(language.getString("Close"));
+
+        btnClose.setText(languageBundle.getString("Close"));
     }
 
     public void display() {

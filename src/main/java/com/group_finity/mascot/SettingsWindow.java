@@ -36,7 +36,7 @@ import java.util.stream.IntStream;
 /**
  * @author Kilkakon
  */
-public class SettingsWindow extends JDialog {
+public class SettingsWindow extends JDialog implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(SettingsWindow.class);
     private final ArrayList<String> listData = new ArrayList<>();
     private final ArrayList<String> blacklistData = new ArrayList<>();
@@ -83,45 +83,7 @@ public class SettingsWindow extends JDialog {
         }
 
         // localisation
-        ResourceBundle language = Main.getInstance().getLanguageBundle();
-        setTitle(language.getString("Settings"));
-        pnlTabs.setTitleAt(0, language.getString("General"));
-        pnlTabs.setTitleAt(1, language.getString("InteractiveWindows"));
-        pnlTabs.setTitleAt(2, language.getString("WindowMode"));
-        pnlTabs.setTitleAt(3, language.getString("About"));
-        lblShimejiEE.setText(language.getString("ShimejiEE"));
-        lblDevelopedBy.setText(language.getString("DevelopedBy"));
-        chkShowTrayIcon.setText(language.getString("ShowTrayIcon"));
-        chkAlwaysShowShimejiChooser.setText(language.getString("AlwaysShowShimejiChooser"));
-        chkAlwaysShowInformationScreen.setText(language.getString("AlwaysShowInformationScreen"));
-        chkDrawShimejiBounds.setText(language.getString("DrawShimejiBounds"));
-        lblOpacity.setText(language.getString("Opacity"));
-        lblScaling.setText(language.getString("Scaling"));
-        lblFilter.setText(language.getString("FilterOptions"));
-        radFilterNearest.setText(language.getString("NearestNeighbour"));
-        radFilterHqx.setText(language.getString("Filter"));
-        radFilterBicubic.setText(language.getString("BicubicFilter"));
-        pnlInteractiveTabs.setTitleAt(0, language.getString("Whitelist"));
-        pnlInteractiveTabs.setTitleAt(1, language.getString("Blacklist"));
-        btnAddInteractiveWindow.setText(language.getString("Add"));
-        btnRemoveInteractiveWindow.setText(language.getString("Remove"));
-        chkWindowModeEnabled.setText(language.getString("WindowedModeEnabled"));
-        lblDimensions.setText(language.getString("Dimensions"));
-        lblBackground.setText(language.getString("Background"));
-        lblBackgroundColor.setText(language.getString("Colour"));
-        lblBackgroundImageCaption.setText(language.getString("Image"));
-        btnBackgroundColorChange.setText(language.getString("Change"));
-        btnBackgroundImageChange.setText(language.getString("Change"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeCentre"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeFill"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeFit"));
-        cmbBackgroundImageMode.addItem(language.getString("BackgroundModeStretch"));
-        btnBackgroundImageRemove.setText(language.getString("Remove"));
-        lblShimejiEE.setText(language.getString("ShimejiEE"));
-        lblDevelopedBy.setText(language.getString("DevelopedBy"));
-        btnWebsite.setText(language.getString("Website"));
-        btnDone.setText(language.getString("Done"));
-        btnCancel.setText(language.getString("Cancel"));
+        localize(Main.getInstance().getLanguageBundle());
 
         // load existing settings
         Settings settings = Main.getInstance().getSettings();
@@ -192,6 +154,50 @@ public class SettingsWindow extends JDialog {
         cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
         IntStream.range(0, backgroundModes.length).filter(i -> backgroundMode == backgroundModes[i]).findFirst().ifPresent(i -> cmbBackgroundImageMode.setSelectedIndex(i));
         btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
+    }
+
+    @Override
+    public void localize(ResourceBundle languageBundle) {
+        setTitle(languageBundle.getString("Settings"));
+        pnlTabs.setTitleAt(0, languageBundle.getString("General"));
+        pnlTabs.setTitleAt(1, languageBundle.getString("InteractiveWindows"));
+        pnlTabs.setTitleAt(2, languageBundle.getString("WindowMode"));
+        pnlTabs.setTitleAt(3, languageBundle.getString("About"));
+        lblShimejiEE.setText(languageBundle.getString("ShimejiEE"));
+        lblDevelopedBy.setText(languageBundle.getString("DevelopedBy"));
+        chkShowTrayIcon.setText(languageBundle.getString("ShowTrayIcon"));
+        chkAlwaysShowShimejiChooser.setText(languageBundle.getString("AlwaysShowShimejiChooser"));
+        chkAlwaysShowInformationScreen.setText(languageBundle.getString("AlwaysShowInformationScreen"));
+        chkDrawShimejiBounds.setText(languageBundle.getString("DrawShimejiBounds"));
+        lblOpacity.setText(languageBundle.getString("Opacity"));
+        lblScaling.setText(languageBundle.getString("Scaling"));
+        lblFilter.setText(languageBundle.getString("FilterOptions"));
+        radFilterNearest.setText(languageBundle.getString("NearestNeighbour"));
+        radFilterHqx.setText(languageBundle.getString("Filter"));
+        radFilterBicubic.setText(languageBundle.getString("BicubicFilter"));
+        pnlInteractiveTabs.setTitleAt(0, languageBundle.getString("Whitelist"));
+        pnlInteractiveTabs.setTitleAt(1, languageBundle.getString("Blacklist"));
+        btnAddInteractiveWindow.setText(languageBundle.getString("Add"));
+        btnRemoveInteractiveWindow.setText(languageBundle.getString("Remove"));
+        chkWindowModeEnabled.setText(languageBundle.getString("WindowedModeEnabled"));
+        lblDimensions.setText(languageBundle.getString("Dimensions"));
+        lblBackground.setText(languageBundle.getString("Background"));
+        lblBackgroundColor.setText(languageBundle.getString("Colour"));
+        lblBackgroundImageCaption.setText(languageBundle.getString("Image"));
+        btnBackgroundColorChange.setText(languageBundle.getString("Change"));
+        btnBackgroundImageChange.setText(languageBundle.getString("Change"));
+        cmbBackgroundImageMode.setModel(new DefaultComboBoxModel<>(new String[]{
+                languageBundle.getString("BackgroundModeCentre"),
+                languageBundle.getString("BackgroundModeFill"),
+                languageBundle.getString("BackgroundModeFit"),
+                languageBundle.getString("BackgroundModeStretch")
+        }));
+        btnBackgroundImageRemove.setText(languageBundle.getString("Remove"));
+        lblShimejiEE.setText(languageBundle.getString("ShimejiEE"));
+        lblDevelopedBy.setText(languageBundle.getString("DevelopedBy"));
+        btnWebsite.setText(languageBundle.getString("Website"));
+        btnDone.setText(languageBundle.getString("Done"));
+        btnCancel.setText(languageBundle.getString("Cancel"));
     }
 
     public void display() {

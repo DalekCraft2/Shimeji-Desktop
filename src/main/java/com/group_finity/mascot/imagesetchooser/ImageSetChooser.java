@@ -1,5 +1,6 @@
 package com.group_finity.mascot.imagesetchooser;
 
+import com.group_finity.mascot.Localizable;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.config.ConfigurationException;
@@ -21,10 +22,8 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * Chooser used to select the Shimeji image sets in use.
@@ -32,7 +31,7 @@ import java.util.ResourceBundle;
  * @author Shimeji-ee Group
  * @since 1.0.2
  */
-public class ImageSetChooser extends JDialog {
+public class ImageSetChooser extends JDialog implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(ImageSetChooser.class);
 
     /**
@@ -55,6 +54,7 @@ public class ImageSetChooser extends JDialog {
     public ImageSetChooser(Frame owner, boolean modal) {
         super(owner, modal);
         initComponents();
+        localize(Main.getInstance().getLanguageBundle());
 
         List<String> activeImageSets = readSettings();
 
@@ -136,8 +136,12 @@ public class ImageSetChooser extends JDialog {
         lstImageSets.setVisibleRowCount(Math.min(numRows, lstImageSets.getVisibleRowCount()));
     }
 
-    public List<String> display() {
-        ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
+    private int[] convertIntegers(Collection<Integer> integers) {
+        return integers.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    @Override
+    public void localize(ResourceBundle languageBundle) {
         setTitle(languageBundle.getString("ShimejiImageSetChooser"));
         jLabel1.setText(languageBundle.getString("SelectImageSetsToUse"));
         useSelectedButton.setText(languageBundle.getString("UseSelected"));
@@ -145,6 +149,9 @@ public class ImageSetChooser extends JDialog {
         cancelButton.setText(languageBundle.getString("Cancel"));
         clearAllLabel.setText(languageBundle.getString("ClearAll"));
         selectAllLabel.setText(languageBundle.getString("SelectAll"));
+    }
+
+    public List<String> display() {
         setLocationRelativeTo(null);
         setVisible(true);
         if (closeProgram) {
@@ -325,10 +332,6 @@ public class ImageSetChooser extends JDialog {
     private void cancelButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private int[] convertIntegers(Collection<Integer> integers) {
-        return integers.stream().mapToInt(Integer::intValue).toArray();
-    }
 
     static class CustomListSelectionModel extends DefaultListSelectionModel {
         private int i0 = -1;

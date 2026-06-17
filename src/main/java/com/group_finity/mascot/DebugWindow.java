@@ -6,9 +6,26 @@ import java.util.ResourceBundle;
 /**
  * @author Kilkakon
  */
-public class DebugWindow extends JFrame {
+public class DebugWindow extends JFrame implements Localizable {
     public DebugWindow() {
         initComponents();
+        localize(Main.getInstance().getLanguageBundle());
+    }
+
+    @Override
+    public void localize(ResourceBundle languageBundle) {
+        lblBehavior.setText(languageBundle.getString("Behaviour"));
+        lblShimejiX.setText(languageBundle.getString("ShimejiX"));
+        lblShimejiY.setText(languageBundle.getString("ShimejiY"));
+        lblActiveIE.setText(languageBundle.getString("ActiveIE"));
+        lblWindowX.setText(languageBundle.getString("WindowX"));
+        lblWindowY.setText(languageBundle.getString("WindowY"));
+        lblWindowWidth.setText(languageBundle.getString("WindowWidth"));
+        lblWindowHeight.setText(languageBundle.getString("WindowHeight"));
+        lblEnvironmentX.setText(languageBundle.getString("EnvironmentX"));
+        lblEnvironmentY.setText(languageBundle.getString("EnvironmentY"));
+        lblEnvironmentWidth.setText(languageBundle.getString("EnvironmentWidth"));
+        lblEnvironmentHeight.setText(languageBundle.getString("EnvironmentHeight"));
     }
 
     /**
@@ -248,26 +265,6 @@ public class DebugWindow extends JFrame {
 
     void setEnvironmentHeight(int height) {
         lblEnvironmentHeightValue.setText(String.format("%d", height));
-    }
-
-    @Override
-    public void setVisible(boolean b) {
-        if (b) {
-            ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
-            lblBehavior.setText(languageBundle.getString("Behaviour"));
-            lblShimejiX.setText(languageBundle.getString("ShimejiX"));
-            lblShimejiY.setText(languageBundle.getString("ShimejiY"));
-            lblActiveIE.setText(languageBundle.getString("ActiveIE"));
-            lblWindowX.setText(languageBundle.getString("WindowX"));
-            lblWindowY.setText(languageBundle.getString("WindowY"));
-            lblWindowWidth.setText(languageBundle.getString("WindowWidth"));
-            lblWindowHeight.setText(languageBundle.getString("WindowHeight"));
-            lblEnvironmentX.setText(languageBundle.getString("EnvironmentX"));
-            lblEnvironmentY.setText(languageBundle.getString("EnvironmentY"));
-            lblEnvironmentWidth.setText(languageBundle.getString("EnvironmentWidth"));
-            lblEnvironmentHeight.setText(languageBundle.getString("EnvironmentHeight"));
-        }
-        super.setVisible(b);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
