@@ -145,7 +145,7 @@ public class BehaviorRef implements IBehaviorBuilder {
 
     @Override
     public String toString() {
-        return "BehaviorRef[name=" + name + ",frequency=" + frequency + "]";
+        return "BehaviorRef[name=" + name + ",frequency=" + frequency + ']';
     }
 
     /**

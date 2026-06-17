@@ -466,7 +466,7 @@ public class Main {
             }
         }
 
-        throw new FileNotFoundException("Could not find sound file \"" + soundFile + "\" for image set \"" + imageSet + "\"");
+        throw new FileNotFoundException("Could not find sound file \"" + soundFile + "\" for image set \"" + imageSet + '"');
     }
 
     /**

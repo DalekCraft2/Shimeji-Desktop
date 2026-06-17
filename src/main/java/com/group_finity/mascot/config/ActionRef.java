@@ -77,7 +77,7 @@ public class ActionRef implements IActionBuilder {
 
     @Override
     public String toString() {
-        return "ActionRef[name=" + name + "]";
+        return "ActionRef[name=" + name + ']';
     }
 
     /**

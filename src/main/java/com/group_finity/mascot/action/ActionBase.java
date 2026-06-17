@@ -52,9 +52,9 @@ public abstract class ActionBase implements Action {
     @Override
     public String toString() {
         try {
-            return "Action[className=" + getClass().getSimpleName() + ",name=" + getName() + "]";
+            return "Action[className=" + getClass().getSimpleName() + ",name=" + getName() + ']';
         } catch (final VariableException e) {
-            return "Action[className=" + getClass().getSimpleName() + ",name=" + null + "]";
+            return "Action[className=" + getClass().getSimpleName() + ",name=" + null + ']';
         }
     }
 

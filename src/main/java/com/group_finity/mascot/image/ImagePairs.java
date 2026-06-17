@@ -52,7 +52,11 @@ public final class ImagePairs {
      */
     public static String load(final Path path, final Path rightPath, final int anchorX, final int anchorY,
                               final double scaling, final Filter filter, final double opacity) throws IOException {
-        String key = anchorX + "," + anchorY + ":" + path.toString() + (rightPath == null ? "" : ":" + rightPath);
+        String key = anchorX + ',' + anchorY + ':' + path.toString();
+        if (rightPath != null) {
+            key += ':' + rightPath.toString();
+        }
+
         if (imagePairs.containsKey(key)) {
             return key;
         }

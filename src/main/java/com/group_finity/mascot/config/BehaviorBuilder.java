@@ -236,7 +236,7 @@ public class BehaviorBuilder implements IBehaviorBuilder {
 
     @Override
     public String toString() {
-        return "Behavior[name=" + name + ",frequency=" + frequency + ",actionName=" + actionName + "]";
+        return "Behavior[name=" + name + ",frequency=" + frequency + ",actionName=" + actionName + ']';
     }
 
     /**

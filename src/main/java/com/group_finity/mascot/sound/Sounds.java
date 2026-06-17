@@ -54,7 +54,7 @@ public final class Sounds {
      * @throws IOException if an error occurs when creating an {@code AudioInputStream} or when reading the sound file
      */
     public static String load(final String fileName, final float volume) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
-        String key = fileName + ":" + volume;
+        String key = fileName + ':' + volume;
         if (SOUNDS.containsKey(key)) {
             return key;
         }

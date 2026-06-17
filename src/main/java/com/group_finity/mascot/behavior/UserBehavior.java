@@ -115,7 +115,7 @@ public class UserBehavior implements Behavior {
 
     @Override
     public String toString() {
-        return "Behavior[name=" + name + "]";
+        return "Behavior[name=" + name + ']';
     }
 
     @Override

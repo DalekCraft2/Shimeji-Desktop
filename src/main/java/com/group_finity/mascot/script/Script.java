@@ -69,7 +69,7 @@ public class Script extends Variable {
 
     @Override
     public String toString() {
-        return allowValueReset ? "#{" + source + "}" : "${" + source + "}";
+        return (allowValueReset ? "#{" : "${") + source + '}';
     }
 
     @Override
