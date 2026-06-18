@@ -33,9 +33,17 @@ public class MoveWithTurn extends Move {
             return getAnimations().getLast();
         } else {
             List<Animation> animations = getAnimations();
-            for (int index = 0; index < animations.size() - 1; index++) {
-                if (animations.get(index).isEffective(getVariables())) {
-                    return animations.get(index);
+            if (!animations.isEmpty()) {
+                getVariableLock().readLock().lock();
+                try {
+                    for (int index = 0; index < animations.size() - 1; index++) {
+                        Animation animation = animations.get(index);
+                        if (animation.isEffective(getVariables())) {
+                            return animation;
+                        }
+                    }
+                } finally {
+                    getVariableLock().readLock().unlock();
                 }
             }
         }

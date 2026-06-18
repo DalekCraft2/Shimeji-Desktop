@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * A skeletal implementation of {@link Environment} that provides base functionality
@@ -28,7 +30,7 @@ public abstract class AbstractEnvironment implements Environment {
     /**
      * A lock used for synchronizing access to {@link #screenRect} and {@link #screenRects}.
      */
-    protected static final Object screenRectLock = new Object();
+    protected static final ReadWriteLock screenRectLock = new ReentrantReadWriteLock();
 
     /**
      * Whether to enable automatically calling {@link #updateScreenRect()} every 5 seconds to update the
@@ -85,9 +87,12 @@ public abstract class AbstractEnvironment implements Environment {
             virtualBounds = virtualBounds.union(bounds);
         }
 
-        synchronized (screenRectLock) {
+        screenRectLock.writeLock().lock();
+        try {
             AbstractEnvironment.screenRects = screenRects;
             screenRect = virtualBounds;
+        } finally {
+            screenRectLock.writeLock().unlock();
         }
     }
 
@@ -106,10 +111,14 @@ public abstract class AbstractEnvironment implements Environment {
 
     @Override
     public void tick() {
-        synchronized (screenRectLock) {
+        screenRectLock.readLock().lock();
+        try {
             screen.set(screenRect);
             complexScreen.set(screenRects);
+        } finally {
+            screenRectLock.readLock().unlock();
         }
+
         PointerInfo info = MouseInfo.getPointerInfo();
         if (info != null) {
             cursor.set(info.getLocation());

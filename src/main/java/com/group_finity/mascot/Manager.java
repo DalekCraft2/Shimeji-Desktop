@@ -11,6 +11,8 @@ import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * An object that manages a list of {@link Mascot} objects and coordinates their timing.
@@ -56,6 +58,11 @@ public class Manager {
      * @see #remove(Mascot)
      */
     private final Set<Mascot> removed = new LinkedHashSet<>();
+
+    /**
+     * A lock used for synchronizing access to {@link #mascots}.
+     */
+    private final ReadWriteLock mascotLock = new ReentrantReadWriteLock();
 
     /**
      * Whether the program should exit when the last {@link Mascot} is removed from this {@code Manager}.
@@ -201,7 +208,8 @@ public class Manager {
 
         boolean noMascots;
 
-        synchronized (mascots) {
+        mascotLock.writeLock().lock();
+        try {
             synchronized (added) {
                 // Add the mascots that should be added
                 if (!added.isEmpty()) {
@@ -215,7 +223,12 @@ public class Manager {
                     removed.clear();
                 }
             }
+        } finally {
+            mascotLock.writeLock().unlock();
+        }
 
+        mascotLock.readLock().lock();
+        try {
             noMascots = mascots.isEmpty();
 
             if (!noMascots) {
@@ -229,6 +242,8 @@ public class Manager {
                     mascot.apply();
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
 
         if (exitOnLastRemoved && noMascots) {
@@ -274,7 +289,8 @@ public class Manager {
      * @param name the name of the behavior to apply to all mascots
      */
     public void setBehaviorAll(final String name) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             if (mascots.isEmpty()) {
                 return;
             }
@@ -288,6 +304,8 @@ public class Manager {
                     mascot.dispose();
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -300,7 +318,8 @@ public class Manager {
      * @param imageSet the name of the image set for which to check
      */
     public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             if (mascots.isEmpty()) {
                 return;
             }
@@ -315,6 +334,8 @@ public class Manager {
                     mascot.dispose();
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -323,11 +344,14 @@ public class Manager {
      * The remaining mascot will be the first mascot in this {@code Manager} object's internal list of mascots.
      */
     public void remainOne() {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i > 0; i--) {
                 mascots.get(i).dispose();
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -337,7 +361,8 @@ public class Manager {
      * @param mascot the mascot to retain
      */
     public void remainOne(Mascot mascot) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i >= 0; i--) {
                 Mascot m = mascots.get(i);
@@ -345,6 +370,8 @@ public class Manager {
                     m.dispose();
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -356,7 +383,8 @@ public class Manager {
      * @param imageSet the name of the image set whose mascots should be disposed
      */
     public void remainOne(String imageSet) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             int totalMascots = mascots.size();
             boolean isFirst = true;
             for (int i = totalMascots - 1; i >= 0; i--) {
@@ -367,6 +395,8 @@ public class Manager {
                     m.dispose();
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -377,7 +407,8 @@ public class Manager {
      * @param mascot the mascot to retain
      */
     public void remainOne(String imageSet, Mascot mascot) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i >= 0; i--) {
                 Mascot m = mascots.get(i);
@@ -385,6 +416,8 @@ public class Manager {
                     m.dispose();
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -394,7 +427,8 @@ public class Manager {
      * @param imageSet the image set for which to check
      */
     public void remainNone(String imageSet) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i >= 0; i--) {
                 Mascot m = mascots.get(i);
@@ -402,6 +436,8 @@ public class Manager {
                     m.dispose();
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -409,10 +445,13 @@ public class Manager {
      * Disposes all mascots in this {@code Manager}.
      */
     public void disposeAll() {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             for (int i = mascots.size() - 1; i >= 0; i--) {
                 mascots.get(i).dispose();
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -424,11 +463,14 @@ public class Manager {
      * or if this {@code Manager} has no mascots
      */
     public boolean isPaused() {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             if (mascots.isEmpty()) {
                 return false;
             }
             return mascots.stream().allMatch(Mascot::isPaused);
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -436,7 +478,8 @@ public class Manager {
      * Toggles the paused state of all mascots in this {@code Manager}.
      */
     public void togglePauseAll() {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             if (mascots.isEmpty()) {
                 return;
             }
@@ -446,6 +489,8 @@ public class Manager {
             for (final Mascot mascot : mascots) {
                 mascot.setPausedNoCallback(!isPaused);
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -487,7 +532,8 @@ public class Manager {
      * @return the number of mascots that use the specified image set
      */
     public int getCount(String imageSet) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             if (mascots.isEmpty()) {
                 return 0;
             }
@@ -497,6 +543,8 @@ public class Manager {
             } else {
                 return (int) mascots.stream().filter(m -> m.getImageSet().equals(imageSet)).count();
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
     }
 
@@ -508,7 +556,8 @@ public class Manager {
      * or {@code null} if none was found
      */
     public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             if (!mascots.isEmpty()) {
                 for (final Mascot mascot : mascots) {
                     if (mascot.getAffordances().contains(affordance)) {
@@ -516,6 +565,8 @@ public class Manager {
                     }
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
 
         return null;
@@ -530,7 +581,8 @@ public class Manager {
     public boolean hasOverlappingMascotsAtPoint(Point anchor) {
         int count = 0;
 
-        synchronized (mascots) {
+        mascotLock.readLock().lock();
+        try {
             if (!mascots.isEmpty()) {
                 for (final Mascot mascot : mascots) {
                     if (mascot.getAnchor().equals(anchor)) {
@@ -541,6 +593,8 @@ public class Manager {
                     }
                 }
             }
+        } finally {
+            mascotLock.readLock().unlock();
         }
 
         return false;

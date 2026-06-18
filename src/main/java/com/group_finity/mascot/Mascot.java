@@ -28,6 +28,8 @@ import java.awt.geom.Ellipse2D;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Mascot object.
@@ -160,7 +162,7 @@ public class Mascot {
 
     private final List<String> affordances = new ArrayList<>(5);
 
-    private final Object hotspotLock = new Object();
+    private final ReadWriteLock hotspotLock = new ReentrantReadWriteLock();
 
     private final List<Hotspot> hotspots = new ArrayList<>(5);
 
@@ -191,7 +193,7 @@ public class Mascot {
     /**
      * A lock used for synchronizing access to {@link #prevImageSize} and {@link #prevImageAnchor}.
      */
-    private final Object imageFieldLock = new Object();
+    private final ReadWriteLock imageFieldLock = new ReentrantReadWriteLock();
 
     private boolean needsRepaint = true;
 
@@ -272,7 +274,9 @@ public class Mascot {
 
                         // Draw hotspots
                         g.setColor(Color.BLUE);
-                        synchronized (getHotspotLock()) {
+                        ReadWriteLock lock = getHotspotLock();
+                        lock.readLock().lock();
+                        try {
                             if (!getHotspots().isEmpty()) {
                                 for (Hotspot hotspot : getHotspots()) {
                                     Shape shape = hotspot.getShape();
@@ -285,6 +289,8 @@ public class Mascot {
                                     }
                                 }
                             }
+                        } finally {
+                            lock.readLock().unlock();
                         }
 
                         // Draw bounds
@@ -294,8 +300,11 @@ public class Mascot {
                         // Draw image anchor
                         g.setColor(Color.GREEN);
                         Point imageAnchor;
-                        synchronized (imageFieldLock) {
+                        imageFieldLock.readLock().lock();
+                        try {
                             imageAnchor = prevImageAnchor;
+                        } finally {
+                            imageFieldLock.readLock().unlock();
                         }
                         if (imageAnchor != null) {
                             // Because the image anchor is a single point, it is drawn as a circle and several lines for visibility
@@ -608,7 +617,8 @@ public class Mascot {
     }
 
     private void refreshCursor(Point position) {
-        synchronized (hotspotLock) {
+        hotspotLock.readLock().lock();
+        try {
             if (hotspots.isEmpty()) {
                 refreshCursor(false);
             } else {
@@ -618,6 +628,8 @@ public class Mascot {
 
                 refreshCursor(useHand);
             }
+        } finally {
+            hotspotLock.readLock().unlock();
         }
     }
 
@@ -661,9 +673,12 @@ public class Mascot {
         this.image = image;
 
         if (image != null) {
-            synchronized (imageFieldLock) {
+            imageFieldLock.writeLock().lock();
+            try {
                 prevImageAnchor = image.getCenter();
                 prevImageSize = image.getSize();
+            } finally {
+                imageFieldLock.writeLock().unlock();
             }
         }
 
@@ -690,9 +705,12 @@ public class Mascot {
         // The image anchor has already been adjusted for scaling.
         Point imageAnchor;
         Dimension imageSize;
-        synchronized (imageFieldLock) {
+        imageFieldLock.readLock().lock();
+        try {
             imageAnchor = prevImageAnchor;
             imageSize = prevImageSize;
+        } finally {
+            imageFieldLock.readLock().unlock();
         }
         int x = anchor.x;
         int y = anchor.y;
@@ -743,7 +761,7 @@ public class Mascot {
         return affordances;
     }
 
-    public Object getHotspotLock() {
+    public ReadWriteLock getHotspotLock() {
         return hotspotLock;
     }
 

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * Action for resisting being dragged.
@@ -78,9 +79,13 @@ public class Regist extends ActionBase {
 
     @Override
     protected void refreshHotspots() {
-        synchronized (getMascot().getHotspotLock()) {
+        ReadWriteLock lock = getMascot().getHotspotLock();
+        lock.writeLock().lock();
+        try {
             // action does not support hotspots
             getMascot().clearHotspots();
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 

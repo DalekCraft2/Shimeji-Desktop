@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Abstract class that implements common functionality of actions.
@@ -38,6 +40,8 @@ public abstract class ActionBase implements Action {
     private final List<Animation> animations;
 
     private final VariableMap variables;
+
+    private final ReadWriteLock variableLock = new ReentrantReadWriteLock();
 
     private Mascot mascot;
 
@@ -68,11 +72,16 @@ public abstract class ActionBase implements Action {
         setTime(0);
 
         // Add mascot and action to the variable map, so they can be used in the script
-        getVariables().put("mascot", mascot);
-        getVariables().put("action", this);
+        putVariable("mascot", mascot);
+        putVariable("action", this);
 
         // Initialize variable values
-        getVariables().init();
+        variableLock.writeLock().lock();
+        try {
+            getVariables().init();
+        } finally {
+            variableLock.writeLock().unlock();
+        }
 
         // Initialize the animations
         if (!animations.isEmpty()) {
@@ -111,7 +120,12 @@ public abstract class ActionBase implements Action {
 
     private void resetVariables() {
         // Clear cached variable values (each frame)
-        getVariables().resetValues();
+        variableLock.writeLock().lock();
+        try {
+            getVariables().resetValues();
+        } finally {
+            variableLock.writeLock().unlock();
+        }
 
         // Clear cached animation condition values (each frame)
         if (!getAnimations().isEmpty()) {
@@ -124,17 +138,19 @@ public abstract class ActionBase implements Action {
     protected abstract void tick() throws LostGroundException, VariableException;
 
     protected void refreshHotspots() {
-        synchronized (getMascot().getHotspotLock()) {
-            try {
-                Animation animation = getAnimation();
-                if (animation != null) {
-                    // This clears and sets the mascot's hotspots
-                    getMascot().setHotspots(animation.getHotspots());
-                }
-            } catch (VariableException e) {
-                // Clear the hotspots if we failed to get the animation
-                getMascot().clearHotspots();
+        ReadWriteLock lock = getMascot().getHotspotLock();
+        lock.writeLock().lock();
+        try {
+            Animation animation = getAnimation();
+            if (animation != null) {
+                // This clears and sets the mascot's hotspots
+                getMascot().setHotspots(animation.getHotspots());
             }
+        } catch (VariableException e) {
+            // Clear the hotspots if we failed to get the animation
+            getMascot().clearHotspots();
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
@@ -148,10 +164,15 @@ public abstract class ActionBase implements Action {
 
     protected Animation getAnimation() throws VariableException {
         if (!getAnimations().isEmpty()) {
-            for (final Animation animation : getAnimations()) {
-                if (animation.isEffective(getVariables())) {
-                    return animation;
+            variableLock.readLock().lock();
+            try {
+                for (final Animation animation : getAnimations()) {
+                    if (animation.isEffective(getVariables())) {
+                        return animation;
+                    }
                 }
+            } finally {
+                variableLock.readLock().unlock();
             }
         }
 
@@ -163,9 +184,16 @@ public abstract class ActionBase implements Action {
     }
 
     protected void putVariable(final String key, final Object value) {
-        synchronized (getVariables()) {
+        variableLock.writeLock().lock();
+        try {
             getVariables().put(key, value);
+        } finally {
+            variableLock.writeLock().unlock();
         }
+    }
+
+    protected ReadWriteLock getVariableLock() {
+        return variableLock;
     }
 
     protected Mascot getMascot() {
@@ -209,11 +237,15 @@ public abstract class ActionBase implements Action {
     }
 
     protected <T> T eval(final String name, final Class<T> type, final T defaultValue) throws VariableException {
-        synchronized (getVariables()) {
+        variableLock.readLock().lock();
+        try {
+            // Get the raw Variable object so we can throw a VariableException if it fails to evaluate
             final Variable variable = getVariables().getRawMap().get(name);
             if (variable != null) {
                 return type.cast(variable.get(getVariables()));
             }
+        } finally {
+            variableLock.readLock().unlock();
         }
 
         return defaultValue;

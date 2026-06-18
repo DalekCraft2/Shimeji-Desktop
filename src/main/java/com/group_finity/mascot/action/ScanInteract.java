@@ -119,11 +119,16 @@ public class ScanInteract extends BorderedAction {
     protected Animation getAnimation() throws VariableException {
         List<Animation> animations = getAnimations();
         if (!animations.isEmpty()) {
-            for (Animation animation : animations) {
-                if (turning == animation.isTurn() &&
-                        animation.isEffective(getVariables())) {
-                    return animation;
+            getVariableLock().readLock().lock();
+            try {
+                for (Animation animation : animations) {
+                    if (turning == animation.isTurn() &&
+                            animation.isEffective(getVariables())) {
+                        return animation;
+                    }
                 }
+            } finally {
+                getVariableLock().readLock().unlock();
             }
         }
 
