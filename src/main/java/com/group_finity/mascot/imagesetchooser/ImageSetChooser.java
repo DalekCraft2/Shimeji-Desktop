@@ -75,14 +75,12 @@ public class ImageSetChooser extends JDialog implements Localizable {
             for (Path imageSetDir : imageSetDirs) {
                 String imageSet = imageSetDir.getFileName().toString();
 
-                // Determine actions file
                 Path actionsFile = Main.getActionsFilePath(imageSet);
 
-                // Determine behaviours file
                 Path behaviorsFile = Main.getBehaviorsFilePath(imageSet);
 
-                Path imageFile = imageSetDir.resolve("shime1.png");
-                String caption = imageSet;
+                Path imageFile;
+                String caption;
                 try {
                     // Determine information file
                     Path infoFile = Main.getInfoFilePath(imageSet);
@@ -99,14 +97,16 @@ public class ImageSetChooser extends JDialog implements Localizable {
                     Configuration configuration = new Configuration();
                     configuration.load(new Entry(infoDocument.getDocumentElement()), imageSet, true);
 
-                    ResourceBundle schema = configuration.getSchema();
-                    if (configuration.containsInformationKey(schema.getString("Name"))) {
-                        caption = configuration.getInformation(schema.getString("Name"));
+                    if (configuration.getDisplayName() != null) {
+                        caption = configuration.getDisplayName();
+                    } else {
+                        caption = imageSet;
                     }
-                    if (configuration.containsInformationKey(schema.getString("PreviewImage"))) {
-                        imageFile = imageSetDir.resolve(configuration.getInformation(schema.getString("PreviewImage")));
+                    if (configuration.getPreviewImagePath() != null) {
+                        imageFile = imageSetDir.resolve(configuration.getPreviewImagePath());
+                    } else {
+                        imageFile = imageSetDir.resolve("shime1.png");
                     }
-
                 } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
                          RuntimeException ex) {
                     imageFile = imageSetDir.resolve("shime1.png");

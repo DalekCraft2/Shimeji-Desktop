@@ -6,6 +6,7 @@
 package com.group_finity.mascot;
 
 import com.group_finity.mascot.config.Configuration;
+import com.group_finity.mascot.config.Contributor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
@@ -28,6 +30,7 @@ import java.util.StringTokenizer;
 public class InformationWindow extends JFrame implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(InformationWindow.class);
 
+    // Store these in instance variables so we can reuse them if we need to relocalize the window
     private String displayName;
     private String artistHtml;
     private String scripterHtml;
@@ -43,62 +46,70 @@ public class InformationWindow extends JFrame implements Localizable {
 
     public void init(final String imageSet, final Configuration config) {
         // load image
-        if (config.containsInformationKey("SplashImage")) {
-            Path splashImagePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(config.getInformation("SplashImage"));
+        if (config.getSplashImagePath() != null) {
+            Path splashImagePath = Main.IMAGE_DIRECTORY.resolve(imageSet).resolve(config.getSplashImagePath());
             if (Files.isRegularFile(splashImagePath)) {
                 Icon icon = new ImageIcon(splashImagePath.toString());
                 lblSplashImage.setIcon(icon);
             }
         }
 
-        // Store these in instance variables so we can reuse them if we need to relocalize the window
-        displayName = config.containsInformationKey("Name") ? config.getInformation("Name") : null;
+        displayName = config.getDisplayName();
 
-        if (config.containsInformationKey("ArtistName")) {
+        Map<Contributor.Type, Contributor> contributors = config.getContributors();
+
+        Contributor artist = contributors.get(Contributor.Type.ARTIST);
+        if (artist != null) {
             artistHtml = "";
-            if (config.containsInformationKey("ArtistURL")) {
+            if (artist.url() != null) {
                 artistHtml += "<a href=\"";
-                artistHtml += config.getInformation("ArtistURL");
+                artistHtml += artist.url();
                 artistHtml += "\">";
             }
-            artistHtml += config.getInformation("ArtistName");
-            if (config.containsInformationKey("ArtistURL")) {
+            artistHtml += artist.name();
+            if (artist.url() != null) {
                 artistHtml += "</a>";
             }
         }
-        if (config.containsInformationKey("ScripterName")) {
+
+        Contributor scripter = contributors.get(Contributor.Type.SCRIPTER);
+        if (scripter != null) {
             scripterHtml = "";
-            if (config.containsInformationKey("ScripterURL")) {
+            if (scripter.url() != null) {
                 scripterHtml += "<a href=\"";
-                scripterHtml += config.getInformation("ScripterURL");
+                scripterHtml += scripter.url();
                 scripterHtml += "\">";
             }
-            scripterHtml += config.getInformation("ScripterName");
-            if (config.containsInformationKey("ScripterURL")) {
+            scripterHtml += scripter.name();
+            if (scripter.url() != null) {
                 scripterHtml += "</a>";
             }
         }
-        if (config.containsInformationKey("CommissionerName")) {
+
+        Contributor commissioner = contributors.get(Contributor.Type.COMMISSIONER);
+        if (commissioner != null) {
             commissionerHtml = "";
-            if (config.containsInformationKey("CommissionerURL")) {
+            if (commissioner.url() != null) {
                 commissionerHtml += "<a href=\"";
-                commissionerHtml += config.getInformation("CommissionerURL");
+                commissionerHtml += commissioner.url();
                 commissionerHtml += "\">";
             }
-            commissionerHtml += config.getInformation("CommissionerName");
-            if (config.containsInformationKey("CommissionerURL")) {
+            commissionerHtml += commissioner.name();
+            if (commissioner.url() != null) {
                 commissionerHtml += "</a>";
             }
         }
-        if (config.containsInformationKey("SupportName")) {
+
+        Contributor support = contributors.get(Contributor.Type.SUPPORT);
+        if (support != null) {
             supportHtml = "";
-            if (config.containsInformationKey("SupportURL")) {
+            if (support.url() != null) {
                 supportHtml += "<a href=\"";
-                supportHtml += config.getInformation("SupportURL");
+                supportHtml += support.url();
                 supportHtml += "\">";
             }
-            supportHtml += config.getInformation("SupportName");
-            if (config.containsInformationKey("SupportURL")) {
+            supportHtml += support.name();
+            if (support.url() != null) {
                 supportHtml += "</a>";
             }
         }

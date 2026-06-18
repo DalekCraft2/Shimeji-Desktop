@@ -12,6 +12,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -58,11 +59,48 @@ public class Configuration {
      */
     private final Map<String, BehaviorBuilder> behaviorBuilders = new LinkedHashMap<>();
 
+    // Information
     /**
-     * A map of information about this {@code Configuration}.
+     * The user-visible name displayed on the ImageSetChooser and the InformationWindow.
+     * If this is not defined in any of the Information nodes loaded by this {@code Configuration},
+     * then the ImageSetChooser will display the name of the image set's folder, and the
+     * InformationWindow will have "Information" as its title.
+     *
+     * @see #getDisplayName()
      */
-    // TODO: Consider refactoring this into multiple fields
-    private final Map<String, String> information = new LinkedHashMap<>(8);
+    private String displayName;
+
+    /**
+     * The path to the image displayed for this image set on the ImageSetChooser, relative to the image set's folder.
+     * If this is not defined in any of the Information nodes loaded by this {@code Configuration},
+     * the ImageSetChooser will use the {@code shime1.png} file.
+     *
+     * @see #getPreviewImagePath()
+     */
+    private Path previewImagePath;
+
+    /**
+     * The path to the image displayed for this image set on the InformationWindow, relative to the image set's folder.
+     * If this is not defined in any of the Information nodes loaded by this {@code Configuration},
+     * the InformationWindow will not appear.
+     *
+     * @see #getSplashImagePath()
+     */
+    private Path splashImagePath;
+
+    /**
+     * The contributors who are credited for the creation of this image set.
+     * This includes the artist of the image set, the scripter of the configuration files,
+     * the person who commissioned the creation of the image set, and a URL to a webpage
+     * for supporting the creators of the image set.
+     * <p>
+     * Due to the original implementation of this only allowing one of each type of contributor,
+     * this field is currently an {@code EnumMap}.
+     *
+     * @see #getContributors()
+     * @see Contributor.Type
+     */
+    private final Map<Contributor.Type, Contributor> contributors = new EnumMap<>(Contributor.Type.class);
 
     /**
      * The schema used by this {@code Configuration}.
@@ -254,24 +292,51 @@ public class Configuration {
         }
         for (final Entry node : children) {
             String nodeName = node.getName();
-            if (nodeName.equals(schema.getString("Name")) ||
-                    nodeName.equals(schema.getString("PreviewImage")) ||
-                    nodeName.equals(schema.getString("SplashImage"))) {
-                information.put(nodeName, node.getText());
+            if (nodeName.equals(schema.getString("Name"))) {
+                if (displayName != null) {
+                    log.warn("Information tag {} is defined multiple times; overwriting previous value {} with {}",
+                            nodeName, displayName, node.getText());
+                }
+                displayName = node.getText();
+            } else if (nodeName.equals(schema.getString("PreviewImage"))) {
+                if (previewImagePath != null) {
+                    log.warn("Information tag {} is defined multiple times; overwriting previous value {} with {}",
+                            nodeName, previewImagePath, node.getText());
+                }
+                previewImagePath = Path.of(node.getText());
+            } else if (nodeName.equals(schema.getString("SplashImage"))) {
+                if (splashImagePath != null) {
+                    log.warn("Information tag {} is defined multiple times; overwriting previous value {} with {}",
+                            nodeName, splashImagePath, node.getText());
+                }
+                splashImagePath = Path.of(node.getText());
             } else if (nodeName.equals(schema.getString("Artist")) ||
                     nodeName.equals(schema.getString("Scripter")) ||
                     nodeName.equals(schema.getString("Commissioner")) ||
                     nodeName.equals(schema.getString("Support"))) {
+                Contributor.Type type = null;
+                if (nodeName.equals(schema.getString("Artist")))
+                    type = Contributor.Type.ARTIST;
+                else if (nodeName.equals(schema.getString("Scripter")))
+                    type = Contributor.Type.SCRIPTER;
+                else if (nodeName.equals(schema.getString("Commissioner")))
+                    type = Contributor.Type.COMMISSIONER;
+                else if (nodeName.equals(schema.getString("Support")))
+                    type = Contributor.Type.SUPPORT;
+
                 String nameText = node.hasAttribute(schema.getString("Name")) ?
                         node.getAttribute(schema.getString("Name")) : null;
                 String linkText = node.hasAttribute(schema.getString("URL")) ?
                         node.getAttribute(schema.getString("URL")) : null;
 
                 if (nameText != null) {
-                    information.put(nodeName + schema.getString("Name"), nameText);
-                    if (linkText != null) {
-                        information.put(nodeName + schema.getString("URL"), linkText);
+                    Contributor contributor = new Contributor(type, nameText, linkText);
+
+                    if (contributors.containsKey(type)) {
+                        log.warn("Information tag {} is defined multiple times; overwriting previous value {} with {}",
+                                nodeName, contributors.get(type), contributor);
                     }
+                    contributors.put(type, contributor);
                 }
             }
         }
@@ -597,25 +662,46 @@ public class Configuration {
     }
 
     /**
-     * Checks whether the information of this {@code Configuration} contains the specified key.
+     * Gets the user-visible name displayed on the ImageSetChooser and InformationWindow.
      *
-     * @param key the key whose presence in the information of this {@code Configuration} is to be tested
-     * @return {@code true} if the information of this {@code Configuration} contains a mapping for the specified key;
-     * {@code false} otherwise
+     * @return the user-visible name displayed on the ImageSetChooser and InformationWindow, or
      */
-    public boolean containsInformationKey(String key) {
-        return information.containsKey(key);
+    public String getDisplayName() {
+        return displayName;
     }
 
     /**
-     * Gets the information value that is mapped to the specified key.
+     * Gets the path to the image displayed for this image set on the ImageSetChooser,
+     * relative to the image set's folder.
      *
-     * @param key the key whose associated value is to be returned
-     * @return the specified key's associated value, or {@code null} if the information of this {@code Configuration}
-     * does not contain a mapping for the specified key
+     * @return the relative path to the image displayed for this image set on the ImageSetChooser,
+     * or {@code null} if {@code shime1.png} should be displayed.
      */
-    public String getInformation(String key) {
-        return information.get(key);
+    public Path getPreviewImagePath() {
+        return previewImagePath;
+    }
+
+    /**
+     * Gets the path to the image displayed for this image set on the InformationWindow,
+     * relative to the image set's folder.
+     *
+     * @return the relative path to the image displayed for this image set on the InformationWindow,
+     * or {@code null} if the InformationWindow should not appear for this image set.
+     */
+    public Path getSplashImagePath() {
+        return splashImagePath;
+    }
+
+    /**
+     * Gets the contributors who are credited for the creation of this image set.
+     * This includes the artist of the image set, the scripter of the configuration files,
+     * the person who commissioned the creation of the image set, and a URL to a webpage
+     * for supporting the creators of the image set.
+     *
+     * @return the contributors who are credited for the creation of this image set
+     */
+    public Map<Contributor.Type, Contributor> getContributors() {
+        return contributors;
     }
 
     /**

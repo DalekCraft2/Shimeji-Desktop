@@ -232,7 +232,7 @@ public class Main {
 
         // Create mascots
         for (String imageSet : imageSets) {
-            if (configurations.get(imageSet).containsInformationKey("SplashImage") &&
+            if (configurations.get(imageSet).getSplashImagePath() != null &&
                     (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
                 SwingUtilities.invokeLater(() -> {
                     InformationWindow info = new InformationWindow();
@@ -690,7 +690,7 @@ public class Main {
         } else if (!failedConfigurations.contains(imageSet)) {
             if (loadConfiguration(imageSet)) {
                 imageSets.add(imageSet);
-                if (configurations.get(imageSet).containsInformationKey("SplashImage") &&
+                if (configurations.get(imageSet).getSplashImagePath() != null &&
                         (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
                     InformationWindow info = new InformationWindow();
                     info.init(imageSet, configurations.get(imageSet));
