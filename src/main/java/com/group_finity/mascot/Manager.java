@@ -223,12 +223,7 @@ public class Manager {
                     removed.clear();
                 }
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
 
-        mascotLock.readLock().lock();
-        try {
             noMascots = mascots.isEmpty();
 
             if (!noMascots) {
@@ -243,7 +238,7 @@ public class Manager {
                 }
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
 
         if (exitOnLastRemoved && noMascots) {
