@@ -284,7 +284,7 @@ public class Manager {
      * @param name the name of the behavior to apply to all mascots
      */
     public void setBehaviorAll(final String name) {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             if (mascots.isEmpty()) {
                 return;
@@ -300,7 +300,7 @@ public class Manager {
                 }
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -313,7 +313,7 @@ public class Manager {
      * @param imageSet the name of the image set for which to check
      */
     public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             if (mascots.isEmpty()) {
                 return;
@@ -330,7 +330,7 @@ public class Manager {
                 }
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -339,14 +339,14 @@ public class Manager {
      * The remaining mascot will be the first mascot in this {@code Manager} object's internal list of mascots.
      */
     public void remainOne() {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i > 0; i--) {
                 mascots.get(i).dispose();
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -356,7 +356,7 @@ public class Manager {
      * @param mascot the mascot to retain
      */
     public void remainOne(Mascot mascot) {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i >= 0; i--) {
@@ -366,7 +366,7 @@ public class Manager {
                 }
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -378,7 +378,7 @@ public class Manager {
      * @param imageSet the name of the image set whose mascots should be disposed
      */
     public void remainOne(String imageSet) {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             int totalMascots = mascots.size();
             boolean isFirst = true;
@@ -391,7 +391,7 @@ public class Manager {
                 }
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -402,7 +402,7 @@ public class Manager {
      * @param mascot the mascot to retain
      */
     public void remainOne(String imageSet, Mascot mascot) {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i >= 0; i--) {
@@ -412,7 +412,7 @@ public class Manager {
                 }
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -422,7 +422,7 @@ public class Manager {
      * @param imageSet the image set for which to check
      */
     public void remainNone(String imageSet) {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             int totalMascots = mascots.size();
             for (int i = totalMascots - 1; i >= 0; i--) {
@@ -432,7 +432,7 @@ public class Manager {
                 }
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -440,13 +440,13 @@ public class Manager {
      * Disposes all mascots in this {@code Manager}.
      */
     public void disposeAll() {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             for (int i = mascots.size() - 1; i >= 0; i--) {
                 mascots.get(i).dispose();
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
@@ -473,7 +473,7 @@ public class Manager {
      * Toggles the paused state of all mascots in this {@code Manager}.
      */
     public void togglePauseAll() {
-        mascotLock.readLock().lock();
+        mascotLock.writeLock().lock();
         try {
             if (mascots.isEmpty()) {
                 return;
@@ -485,7 +485,7 @@ public class Manager {
                 mascot.setPausedNoCallback(!isPaused);
             }
         } finally {
-            mascotLock.readLock().unlock();
+            mascotLock.writeLock().unlock();
         }
     }
 
