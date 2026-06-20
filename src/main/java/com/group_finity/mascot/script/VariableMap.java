@@ -135,7 +135,27 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 
         @Override
         public Object setValue(Object value) {
-            throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString("SetValueNotSupportedErrorMessage"));
+            throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString(
+                    "SetValueNotSupportedErrorMessage"));
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Map.Entry<?, ?> e
+                    && Objects.equals(getKey(), e.getKey())
+                    && Objects.equals(getValue(), e.getValue());
+        }
+
+        @Override
+        public int hashCode() {
+            Object value = getValue();
+            return (getKey() == null ? 0 : getKey().hashCode()) ^
+                    (value == null ? 0 : value.hashCode());
+        }
+
+        @Override
+        public String toString() {
+            return getKey() + '=' + getValue();
         }
     }
 }
