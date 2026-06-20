@@ -6,6 +6,8 @@ import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.CompiledScript;
 import javax.script.ScriptException;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * An implementation of {@link Variable} that represents a scripted value. The value can be evaluated by being supplied
@@ -50,6 +52,21 @@ public class Script extends Variable {
     private Object value;
 
     /**
+     * A lock used to allow concurrent access to {@link #value}.
+     */
+    private final ReadWriteLock valueLock = new ReentrantReadWriteLock();
+
+    /**
+     * Whether {@link #value} needs to be reevaluated.
+     * <p>
+     * It is better to use a boolean field to check this rather than checking whether {@code value == null},
+     * because it is possible that {@code value} could evaluate to {@code null}. If {@link #get(VariableMap)}
+     * were called after {@code value} had evaluated to {@code null}, and the method used a {@code null} check
+     * to determine whether to reevaluate it, then it would try to reevaluate it a second time, which is undesired.
+     */
+    private boolean needsReevaluation = true;
+
+    /**
      * Creates a new Script.
      *
      * @param source the source that will be compiled into a script
@@ -63,7 +80,8 @@ public class Script extends Variable {
         try {
             compiled = ENGINE.compile(this.source);
         } catch (final ScriptException e) {
-            throw new VariableException(String.format(Main.getInstance().getLanguageBundle().getString("ScriptCompilationErrorMessage"), this.source), e);
+            throw new VariableException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "ScriptCompilationErrorMessage"), this.source), e);
         }
     }
 
@@ -73,8 +91,14 @@ public class Script extends Variable {
     }
 
     @Override
-    public synchronized void init() {
-        value = null;
+    public void init() {
+        valueLock.writeLock().lock();
+        try {
+            value = null;
+            needsReevaluation = true;
+        } finally {
+            valueLock.writeLock().unlock();
+        }
     }
 
     /**
@@ -87,22 +111,42 @@ public class Script extends Variable {
     @Override
     public void resetValue() {
         if (allowValueReset) {
-            synchronized (this) {
+            valueLock.writeLock().lock();
+            try {
                 value = null;
+                needsReevaluation = true;
+            } finally {
+                valueLock.writeLock().unlock();
             }
         }
     }
 
     @Override
-    public synchronized Object get(final VariableMap variables) throws VariableException {
-        if (value != null) {
-            return value;
+    public Object get(final VariableMap variables) throws VariableException {
+        valueLock.readLock().lock();
+        try {
+            if (!needsReevaluation) {
+                return value;
+            }
+        } finally {
+            valueLock.readLock().unlock();
         }
 
+        valueLock.writeLock().lock();
         try {
+            // Check needsReevaluation again, in case another thread
+            // acquired the lock and modified the value before we could
+            if (!needsReevaluation) {
+                return value;
+            }
+
             value = compiled.eval(variables);
+            needsReevaluation = false;
         } catch (final ScriptException e) {
-            throw new VariableException(String.format(Main.getInstance().getLanguageBundle().getString("ScriptEvaluationErrorMessage"), source), e);
+            throw new VariableException(String.format(Main.getInstance().getLanguageBundle().getString(
+                    "ScriptEvaluationErrorMessage"), source), e);
+        } finally {
+            valueLock.writeLock().unlock();
         }
 
         return value;
