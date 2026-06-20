@@ -28,7 +28,7 @@ public abstract class AbstractEnvironment implements Environment {
     protected static Map<String, Rectangle> screenRects = new HashMap<>();
 
     /**
-     * A lock used for synchronizing access to {@link #screenRect} and {@link #screenRects}.
+     * A lock used to allow concurrent access to {@link #screenRect} and {@link #screenRects}.
      */
     protected static final ReadWriteLock screenRectLock = new ReentrantReadWriteLock();
 

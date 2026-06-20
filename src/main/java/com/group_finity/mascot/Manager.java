@@ -60,7 +60,7 @@ public class Manager {
     private final Set<Mascot> removed = new LinkedHashSet<>();
 
     /**
-     * A lock used for synchronizing access to {@link #mascots}.
+     * A lock used to allow concurrent access to {@link #mascots}.
      */
     private final ReadWriteLock mascotLock = new ReentrantReadWriteLock();
 

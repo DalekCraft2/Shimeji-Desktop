@@ -191,7 +191,9 @@ public class Mascot {
     private Point prevImageAnchor = null;
 
     /**
-     * A lock used for synchronizing access to {@link #prevImageSize} and {@link #prevImageAnchor}.
+     * A lock used to allow concurrent access to {@link #prevImageSize} and {@link #prevImageAnchor}.
+     * This is necessary due to the EDT reading from those fields to draw the mascot bounds when
+     * Draw Shimeji Bounds is enabled.
      */
     private final ReadWriteLock imageFieldLock = new ReentrantReadWriteLock();
 
