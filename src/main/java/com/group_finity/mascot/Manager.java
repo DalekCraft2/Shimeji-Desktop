@@ -273,8 +273,6 @@ public class Manager {
             removed.add(mascot);
         }
         mascot.setManager(null);
-        // Clear affordances so the mascot is not participating in any interactions, as that can cause an NPE
-        mascot.getAffordances().clear();
     }
 
     /**

@@ -612,6 +612,7 @@ public class Mascot {
         });
 
         animating = false;
+        // Clear affordances so the mascot is not participating in any interactions, as that can cause an NPE
         affordances.clear();
         if (manager != null) {
             manager.remove(this);
