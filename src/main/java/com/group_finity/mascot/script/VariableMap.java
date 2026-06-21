@@ -56,6 +56,37 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
     }
 
     @Override
+    public int size() {
+        return rawMap.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return rawMap.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return rawMap.containsKey(key);
+    }
+
+    // Use AbstractMap implementation for containsValue()
+
+    @Override
+    public Object get(Object key) {
+        Variable result = rawMap.get(key);
+        if (result == null) {
+            return null;
+        }
+
+        try {
+            return result.get(this);
+        } catch (final VariableException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Object put(String key, Object value) {
         Object result;
 
@@ -67,6 +98,23 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 
         return result;
     }
+
+    @Override
+    public Object remove(Object key) {
+        return rawMap.remove(key);
+    }
+
+    @Override
+    public void clear() {
+        rawMap.clear();
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return rawMap.keySet();
+    }
+
+    // Use AbstractMap implementation for values()
 
     /**
      * The entry set instance of this {@code VariableMap}.
@@ -85,12 +133,12 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
     final class EntrySet extends AbstractSet<Map.Entry<String, Object>> {
         @Override
         public Iterator<Map.Entry<String, Object>> iterator() {
-            return new EntryIterator(getRawMap().entrySet().iterator());
+            return new EntryIterator(rawMap.entrySet().iterator());
         }
 
         @Override
         public int size() {
-            return getRawMap().size();
+            return rawMap.size();
         }
     }
 
