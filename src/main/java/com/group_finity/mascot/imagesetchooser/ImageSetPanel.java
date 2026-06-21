@@ -28,11 +28,11 @@ public class ImageSetPanel extends JPanel {
     }
 
     public ImageSetPanel(String imageSet, String actions,
-                         String behaviors, Path imageLocation, String caption) {
+                         String behaviors, Path imageLocation, String title) {
         initComponents();
 
         this.imageSet = imageSet;
-        this.caption.setText(caption);
+        this.title.setText(title);
         actionsFile.setText(actions);
         behaviorsFile.setText(behaviors);
         try (InputStream input = Files.newInputStream(imageLocation)) {
@@ -66,7 +66,7 @@ public class ImageSetPanel extends JPanel {
         image = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         pnlLabels = new javax.swing.JPanel();
-        caption = new javax.swing.JLabel();
+        title = new javax.swing.JLabel();
         actionsFile = new javax.swing.JLabel();
         behaviorsFile = new javax.swing.JLabel();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
@@ -89,9 +89,9 @@ public class ImageSetPanel extends JPanel {
         pnlLabels.setOpaque(false);
         pnlLabels.setLayout(new javax.swing.BoxLayout(pnlLabels, javax.swing.BoxLayout.PAGE_AXIS));
 
-        caption.setFont(caption.getFont().deriveFont(caption.getFont().getStyle() | java.awt.Font.BOLD));
-        caption.setText("Builder");
-        pnlLabels.add(caption);
+        title.setFont(title.getFont().deriveFont(title.getFont().getStyle() | java.awt.Font.BOLD));
+        title.setText("Builder");
+        pnlLabels.add(title);
 
         actionsFile.setText("img/Builder/conf/actions.xml");
         pnlLabels.add(actionsFile);
@@ -121,7 +121,6 @@ public class ImageSetPanel extends JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel actionsFile;
     private javax.swing.JLabel behaviorsFile;
-    private javax.swing.JLabel caption;
     private javax.swing.JCheckBox checkbox;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
@@ -129,6 +128,7 @@ public class ImageSetPanel extends JPanel {
     private javax.swing.JLabel image;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel pnlLabels;
+    private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 
 }

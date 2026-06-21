@@ -104,11 +104,11 @@
             <Property name="axis" type="int" value="3"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="caption">
+            <Component class="javax.swing.JLabel" name="title">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
                   <FontInfo relative="true">
-                    <Font bold="true" component="caption" property="font" relativeSize="true" size="0"/>
+                    <Font bold="true" component="title" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Builder"/>

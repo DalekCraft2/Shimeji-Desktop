@@ -80,7 +80,7 @@ public class ImageSetChooser extends JDialog implements Localizable {
                 Path behaviorsFile = Main.getBehaviorsFilePath(imageSet);
 
                 Path imageFile;
-                String caption;
+                String title;
                 try {
                     // Determine information file
                     Path infoFile = Main.getInfoFilePath(imageSet);
@@ -98,9 +98,9 @@ public class ImageSetChooser extends JDialog implements Localizable {
                     configuration.load(new Entry(infoDocument.getDocumentElement()), imageSet, true);
 
                     if (configuration.getDisplayName() != null) {
-                        caption = configuration.getDisplayName();
+                        title = configuration.getDisplayName();
                     } else {
-                        caption = imageSet;
+                        title = imageSet;
                     }
                     if (configuration.getPreviewImagePath() != null) {
                         imageFile = imageSetDir.resolve(configuration.getPreviewImagePath());
@@ -110,11 +110,11 @@ public class ImageSetChooser extends JDialog implements Localizable {
                 } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
                          RuntimeException ex) {
                     imageFile = imageSetDir.resolve("shime1.png");
-                    caption = imageSet;
+                    title = imageSet;
                 }
 
                 listData.add(new ImageSetPanel(imageSet, actionsFile.toString(),
-                        behaviorsFile.toString(), imageFile, caption));
+                        behaviorsFile.toString(), imageFile, title));
                 // Is this set initially selected?
                 if (activeImageSets.contains(imageSet) || selectAllSets) {
                     selectedIndices.add(index);
