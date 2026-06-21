@@ -1,7 +1,5 @@
 package com.group_finity.mascot.script;
 
-import com.group_finity.mascot.Main;
-
 import javax.script.Bindings;
 import java.util.*;
 
@@ -183,8 +181,15 @@ public class VariableMap extends AbstractMap<String, Object> implements Bindings
 
         @Override
         public Object setValue(Object value) {
-            throw new UnsupportedOperationException(Main.getInstance().getLanguageBundle().getString(
-                    "SetValueNotSupportedErrorMessage"));
+            Object result;
+
+            if (value instanceof Variable variable) {
+                result = rawEntry.setValue(variable);
+            } else {
+                result = rawEntry.setValue(new Constant(value));
+            }
+
+            return result;
         }
 
         @Override
