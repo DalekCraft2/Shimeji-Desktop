@@ -424,38 +424,34 @@ public class Mascot {
         JCheckBoxMenuItem toggleItem;
         final Configuration config = Main.getInstance().getConfiguration(imageSet);
         for (final String behaviorName : config.getBehaviorNames()) {
-            try {
-                if (!config.isBehaviorHidden(behaviorName)) {
-                    // If there is a language property for the behavior name, use the translated behavior name as the
-                    // behavior's display name; otherwise, insert spaces between the individual words in the behavior
-                    // name and use that as the display name
-                    String displayName = languageBundle.containsKey(behaviorName) ? languageBundle.getString(behaviorName) :
-                            behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
+            if (!config.isBehaviorHidden(behaviorName)) {
+                // If there is a language property for the behavior name, use the translated behavior name as the
+                // behavior's display name; otherwise, insert spaces between the individual words in the behavior
+                // name and use that as the display name
+                String displayName = languageBundle.containsKey(behaviorName) ? languageBundle.getString(behaviorName) :
+                        behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
 
-                    boolean behaviorEnabled = config.isBehaviorEnabled(behaviorName, this);
-                    if (behaviorEnabled && !behaviorName.contains("/")) {
-                        item = new JMenuItem(displayName);
-                        item.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(final ActionEvent e) {
-                                try {
-                                    setBehavior(config.buildBehavior(behaviorName));
-                                } catch (BehaviorInstantiationException | BehaviorExecutionException ex) {
-                                    log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorName, this, ex);
-                                    Main.showError(String.format(languageBundle.getString("FailedSetBehaviourErrorMessage"), behaviorName, this), ex);
-                                }
+                boolean behaviorEnabled = config.isBehaviorEnabled(behaviorName, this);
+                if (behaviorEnabled && !behaviorName.contains("/")) {
+                    item = new JMenuItem(displayName);
+                    item.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(final ActionEvent e) {
+                            try {
+                                setBehavior(config.buildBehavior(behaviorName));
+                            } catch (BehaviorInstantiationException | BehaviorExecutionException ex) {
+                                log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorName, this, ex);
+                                Main.showError(String.format(languageBundle.getString("FailedSetBehaviourErrorMessage"), behaviorName, this), ex);
                             }
-                        });
-                        setBehaviorMenu.add(item);
-                    }
-                    if (config.isBehaviorToggleable(behaviorName) && !behaviorName.contains("/")) {
-                        toggleItem = new JCheckBoxMenuItem(displayName, behaviorEnabled);
-                        toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(behaviorName, this, e.getStateChange() == ItemEvent.SELECTED));
-                        allowedBehaviorsMenu.add(toggleItem);
-                    }
+                        }
+                    });
+                    setBehaviorMenu.add(item);
                 }
-            } catch (RuntimeException e) {
-                // just skip if something goes wrong
+                if (config.isBehaviorToggleable(behaviorName) && !behaviorName.contains("/")) {
+                    toggleItem = new JCheckBoxMenuItem(displayName, behaviorEnabled);
+                    toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(behaviorName, this, e.getStateChange() == ItemEvent.SELECTED));
+                    allowedBehaviorsMenu.add(toggleItem);
+                }
             }
         }
         // Create the MenuScrollers after adding all the items to the menus,
