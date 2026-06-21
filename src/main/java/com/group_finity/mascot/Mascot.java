@@ -13,7 +13,6 @@ import com.group_finity.mascot.image.MascotImage;
 import com.group_finity.mascot.menu.MenuScroller;
 import com.group_finity.mascot.platform.NativeFactory;
 import com.group_finity.mascot.platform.TranslucentWindow;
-import com.group_finity.mascot.script.VariableMap;
 import com.group_finity.mascot.sound.Sounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,7 +204,7 @@ public class Mascot {
      */
     private boolean prevDrawShimejiBounds = false;
 
-    private VariableMap variables = null;
+    private Map<String, Object> variables = null;
 
     public Mascot(final String imageSet) {
         id = lastId.incrementAndGet();
@@ -852,9 +851,9 @@ public class Mascot {
         }
     }
 
-    public VariableMap getVariables() {
+    public Map<String, Object> getVariables() {
         if (variables == null) {
-            variables = new VariableMap();
+            variables = new LinkedHashMap<>();
         }
         return variables;
     }
