@@ -179,7 +179,7 @@ class X11Environment extends AbstractEnvironment {
     }
 
     private WindowStatus getWindowStatus(Window window) {
-        int curDesktop;
+        Integer curDesktop;
         Integer desktop;
         List<Integer> state;
         List<Integer> type;
@@ -200,7 +200,7 @@ class X11Environment extends AbstractEnvironment {
             return WindowStatus.IGNORED;
         }
         // System.out.println("ID: " + window.getID() + "; Title: " + getWindowTitle(window) + "; State: " + state + "; Type: " + type);
-        boolean badDesktop = desktop != null && desktop != curDesktop;
+        boolean badDesktop = desktop != null && !desktop.equals(curDesktop);
         if (!badDesktop && !checkState(state) && !checkType(type)) {
             if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
                 // Window is maximized and is therefore invalid

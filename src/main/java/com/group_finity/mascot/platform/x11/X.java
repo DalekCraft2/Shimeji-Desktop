@@ -261,19 +261,16 @@ public class X {
          */
         public Integer getActiveDesktopNumber() throws X11Exception {
             Window root = getRootWindow();
-            int curDesktop;
 
             try {
-                curDesktop = root.getIntProperty(X11.XA_CARDINAL, "_NET_CURRENT_DESKTOP");
+                return root.getIntProperty(X11.XA_CARDINAL, "_NET_CURRENT_DESKTOP");
             } catch (X11Exception e) {
                 try {
-                    curDesktop = root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
+                    return root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
                 } catch (X11Exception e1) {
                     throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
                 }
             }
-
-            return curDesktop;
         }
 
         /**
