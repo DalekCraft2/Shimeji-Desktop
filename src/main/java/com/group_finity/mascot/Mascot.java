@@ -426,9 +426,15 @@ public class Mascot {
         for (final String behaviorName : config.getBehaviorNames()) {
             try {
                 if (!config.isBehaviorHidden(behaviorName)) {
-                    String caption = behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
-                    if (config.isBehaviorEnabled(behaviorName, this) && !behaviorName.contains("/")) {
-                        item = new JMenuItem(languageBundle.containsKey(behaviorName) ? languageBundle.getString(behaviorName) : caption);
+                    // If there is a language property for the behavior name, use the translated behavior name as the
+                    // behavior's display name; otherwise, insert spaces between the individual words in the behavior
+                    // name and use that as the display name
+                    String displayName = languageBundle.containsKey(behaviorName) ? languageBundle.getString(behaviorName) :
+                            behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
+
+                    boolean behaviorEnabled = config.isBehaviorEnabled(behaviorName, this);
+                    if (behaviorEnabled && !behaviorName.contains("/")) {
+                        item = new JMenuItem(displayName);
                         item.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(final ActionEvent e) {
@@ -443,7 +449,7 @@ public class Mascot {
                         setBehaviorMenu.add(item);
                     }
                     if (config.isBehaviorToggleable(behaviorName) && !behaviorName.contains("/")) {
-                        toggleItem = new JCheckBoxMenuItem(caption, config.isBehaviorEnabled(behaviorName, this));
+                        toggleItem = new JCheckBoxMenuItem(displayName, behaviorEnabled);
                         toggleItem.addItemListener(e -> Main.getInstance().setMascotBehaviorEnabled(behaviorName, this, e.getStateChange() == ItemEvent.SELECTED));
                         allowedBehaviorsMenu.add(toggleItem);
                     }
