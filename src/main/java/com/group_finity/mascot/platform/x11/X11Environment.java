@@ -36,6 +36,8 @@ class X11Environment extends AbstractEnvironment {
      */
     private final Area activeWindow = new Area();
 
+    private String activeWindowTitle = "";
+
     private Window activeWindowObject = null;
 
     /**
@@ -119,6 +121,8 @@ class X11Environment extends AbstractEnvironment {
             // If the active window has changed, reset the active window's deltas to 0
             activeWindow.resetDeltas();
         }
+
+        activeWindowTitle = getWindowTitle(activeWindowObject);
     }
 
     private boolean isInteractive(final Window window) {
@@ -332,7 +336,7 @@ class X11Environment extends AbstractEnvironment {
 
     @Override
     public String getActiveWindowTitle() {
-        return getWindowTitle(activeWindowObject);
+        return activeWindowTitle;
     }
 
     @Override

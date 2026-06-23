@@ -36,6 +36,8 @@ class WindowsEnvironment extends AbstractEnvironment {
 
     private final Area activeWindow = new Area();
 
+    private String activeWindowTitle = "";
+
     private HWND activeWindowHandle = null;
 
     private String[] windowTitles = null;
@@ -81,6 +83,8 @@ class WindowsEnvironment extends AbstractEnvironment {
             // If the active window has changed, reset the active window's deltas to 0
             activeWindow.resetDeltas();
         }
+
+        activeWindowTitle = WindowUtils.getWindowTitle(activeWindowHandle);
     }
 
     private boolean isInteractive(final HWND hWnd) {
@@ -263,7 +267,7 @@ class WindowsEnvironment extends AbstractEnvironment {
 
     @Override
     public String getActiveWindowTitle() {
-        return WindowUtils.getWindowTitle(activeWindowHandle);
+        return activeWindowTitle;
     }
 
     @Override
