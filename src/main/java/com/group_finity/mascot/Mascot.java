@@ -961,7 +961,9 @@ public class Mascot {
      */
     public void setBehavior(final Behavior behavior) throws BehaviorExecutionException {
         this.behavior = behavior;
-        this.behavior.init(this);
+        if (this.behavior != null) {
+            this.behavior.init(this);
+        }
     }
 
     /**
