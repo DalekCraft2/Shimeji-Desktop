@@ -254,6 +254,17 @@ public class Manager {
      * @param mascot the {@code Mascot} to add
      */
     public void add(final Mascot mascot) {
+        Manager oldManager = mascot.getManager();
+        // Don't do anything if the mascot is already managed by this manager
+        if (equals(oldManager)) {
+            return;
+        }
+
+        // If the mascot was managed by another manager, remove it from that manager
+        if (oldManager != null) {
+            oldManager.remove(mascot);
+        }
+
         synchronized (added) {
             added.add(mascot);
             removed.remove(mascot);
