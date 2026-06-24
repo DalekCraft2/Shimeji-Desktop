@@ -15,13 +15,14 @@ import java.awt.event.MouseEvent;
  * {@linkplain BehaviorBuilder#getNextBehaviorBuilders() list of behaviors}, which are set per-behavior. The likelihood
  * of a behavior being chosen to execute next is affected by its {@linkplain BehaviorBuilder#getFrequency() frequency}.
  * <p>
- * Similarly to actions, behaviors can also be set to only execute when certain conditions are met.
- * <p>
- * Used with {@link Mascot#setBehavior(Behavior)}.
+ * Similarly to actions, behaviors can also be set to only execute when certain conditions are met. However, unlike
+ * actions, behaviors only evaluate their conditions to determine whether to <i>start</i> executing, whereas actions
+ * evaluate their conditions on every tick to determine whether to <i>continue</i> executing.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  * @see com.group_finity.mascot.action.Action
+ * @see Mascot#setBehavior(Behavior)
  */
 public interface Behavior {
 
@@ -44,7 +45,7 @@ public interface Behavior {
     void next() throws BehaviorExecutionException;
 
     /**
-     * Called when a mouse button is pressed.
+     * Called when a mouse button is pressed on the window of this behavior's associated {@link Mascot}.
      *
      * @param e the event created by a mouse button being pressed
      * @throws BehaviorExecutionException if the next behavior fails to initialize
@@ -53,7 +54,7 @@ public interface Behavior {
     void mousePressed(MouseEvent e) throws BehaviorExecutionException;
 
     /**
-     * Called when a mouse button is released.
+     * Called when a mouse button is released on the window of this behavior's associated {@link Mascot}.
      *
      * @param e the event created by a mouse button being released
      * @throws BehaviorExecutionException if the next behavior fails to initialize
