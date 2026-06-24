@@ -471,8 +471,8 @@ public class Mascot {
     }
 
     /**
-     * Creates and displays the context menu of this {@code Mascot}, and positions it relative to
-     * the specified coordinates.
+     * Creates and displays the context menu of this {@code Mascot} at the position {@code (x, y)}, in the coordinate
+     * space of the window of this {@code Mascot}.
      *
      * @param x the x-coordinate at which the popup should be positioned, relative to the window of this {@code Mascot}
      * @param y the y-coordinate at which the popup should be positioned, relative to the window of this {@code Mascot}
