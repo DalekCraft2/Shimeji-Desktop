@@ -1242,6 +1242,10 @@ public class Mascot {
      * @see TrayMenu#refreshPauseText()
      */
     public void setPaused(final boolean paused) {
+        if (this.paused == paused) {
+            return;
+        }
+
         this.paused = paused;
         Main.getInstance().getTrayMenu().refreshPauseText();
     }
