@@ -39,9 +39,16 @@ public class ImageSetChooser extends JDialog implements Localizable {
      * This is used to save memory by only allocating one empty array.
      */
     private static final ImageSetPanel[] EMPTY_PANEL_ARRAY = new ImageSetPanel[0];
+
+    /**
+     * The currently selected image sets.
+     */
     private final List<String> imageSets = new ArrayList<>();
-    private boolean closeProgram = true; // Whether the program closes on dispose
-    private boolean selectAllSets = false; // Default all to selected
+
+    /**
+     * Whether the "Cancel" or "Close" buttons were pressed instead of the "Use Selected" or "Use all" buttons.
+     */
+    private boolean selectionCancelled = true;
 
     /**
      * Creates new form ImageSetChooser
@@ -56,7 +63,9 @@ public class ImageSetChooser extends JDialog implements Localizable {
         initComponents();
         localize(Main.getInstance().getLanguageBundle());
 
-        List<String> activeImageSets = readSettings();
+        // Load settings
+        List<String> activeImageSets = new ArrayList<>(Main.getInstance().getSettings().activeImageSets);
+        boolean selectAllSets = activeImageSets.isEmpty(); // if no active ones, activate them all!
 
         List<ImageSetPanel> listData = new ArrayList<>();
         Collection<Integer> selectedIndices = new ArrayList<>();
@@ -154,20 +163,10 @@ public class ImageSetChooser extends JDialog implements Localizable {
     public List<String> display() {
         setLocationRelativeTo(null);
         setVisible(true);
-        if (closeProgram) {
+        if (selectionCancelled) {
             return null;
         }
         return imageSets;
-    }
-
-    private List<String> readSettings() {
-        List<String> activeImageSets = new ArrayList<>(Main.getInstance().getSettings().activeImageSets);
-        selectAllSets = activeImageSets.isEmpty(); // if no active ones, activate them all!
-        return activeImageSets;
-    }
-
-    private void saveSettings() {
-        Main.getInstance().getSettings().activeImageSets = imageSets;
     }
 
     /**
@@ -318,14 +317,14 @@ public class ImageSetChooser extends JDialog implements Localizable {
             }
         }
 
-        saveSettings();
-        closeProgram = false;
+        Main.getInstance().getSettings().activeImageSets = imageSets;
+        selectionCancelled = false;
         dispose();
     }//GEN-LAST:event_useSelectedButtonActionPerformed
 
     private void useAllButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useAllButtonActionPerformed
-        saveSettings();
-        closeProgram = false;
+        Main.getInstance().getSettings().activeImageSets = imageSets;
+        selectionCancelled = false;
         dispose();
     }//GEN-LAST:event_useAllButtonActionPerformed
 
