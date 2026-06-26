@@ -562,11 +562,13 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         chooser.setIconImage(Main.getIcon());
         Collection<String> result = chooser.display();
 
-        /*
-         * We're on the Event Dispatch Thread here,
-         * so do this on a separate thread to avoid making the UI unresponsive.
-         */
-        Main.getExecutorService().submit(() -> Main.getInstance().setActiveImageSets(result));
+        if (result != null) {
+            /*
+             * We're on the Event Dispatch Thread here,
+             * so do this on a separate thread to avoid making the UI unresponsive.
+             */
+            Main.getExecutorService().submit(() -> Main.getInstance().setActiveImageSets(result));
+        }
 
         Main.getInstance().getManager().setEnabled(true);
     }//GEN-LAST:event_btnChooseShimejiActionPerformed
