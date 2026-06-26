@@ -478,27 +478,85 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCallShimejiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallShimejiActionPerformed
-        Main.getExecutorService().submit(() -> Main.getInstance().createMascot());
-        if (useSystemTray)
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                Main.getInstance().createMascot();
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                if (useSystemTray) {
+                    return;
+                }
+                refreshPauseText();
+            }
+        };
+        worker.execute();
+        if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
+        }
     }//GEN-LAST:event_btnCallShimejiActionPerformed
 
     private void btnFollowCursorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFollowCursorActionPerformed
-        Main.getExecutorService().submit(() -> Main.getInstance().getManager().setBehaviorAll(UserBehavior.BEHAVIORNAME_CHASEMOUSE));
-        if (useSystemTray)
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                Main.getInstance().getManager().setBehaviorAll(UserBehavior.BEHAVIORNAME_CHASEMOUSE);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                if (useSystemTray) {
+                    return;
+                }
+                // Refresh the pause text in case any mascots had to be disposed
+                // because the behavior failed to initialize for them
+                refreshPauseText();
+            }
+        };
+        worker.execute();
+        if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
+        }
     }//GEN-LAST:event_btnFollowCursorActionPerformed
 
     private void btnReduceToOneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReduceToOneActionPerformed
-        Main.getExecutorService().submit(() -> Main.getInstance().getManager().remainOne());
-        if (useSystemTray)
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                Main.getInstance().getManager().remainOne();
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                if (useSystemTray) {
+                    return;
+                }
+                refreshPauseText();
+            }
+        };
+        worker.execute();
+        if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
+        }
     }//GEN-LAST:event_btnReduceToOneActionPerformed
 
     private void btnRestoreWindowsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreWindowsActionPerformed
-        Main.getExecutorService().submit(() -> NativeFactory.getInstance().getEnvironment().restoreWindows());
-        if (useSystemTray)
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                NativeFactory.getInstance().getEnvironment().restoreWindows();
+                return null;
+            }
+        };
+        worker.execute();
+        if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
+        }
     }//GEN-LAST:event_btnRestoreWindowsActionPerformed
 
     private void behaviorPopupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_behaviorPopupPopupMenuWillBecomeInvisible
@@ -567,7 +625,22 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
              * We're on the Event Dispatch Thread here,
              * so do this on a separate thread to avoid making the UI unresponsive.
              */
-            Main.getExecutorService().submit(() -> Main.getInstance().setActiveImageSets(result));
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                @Override
+                protected Void doInBackground() {
+                    Main.getInstance().setActiveImageSets(result);
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    if (useSystemTray) {
+                        return;
+                    }
+                    refreshPauseText();
+                }
+            };
+            worker.execute();
         }
 
         Main.getInstance().getManager().setEnabled(true);
@@ -605,21 +678,35 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
          * We're on the Event Dispatch Thread here,
          * so do this on a separate thread to avoid making the UI unresponsive.
          */
-        Main.getExecutorService().submit(() -> {
-            if (!windowedMode && dialog.isEnvironmentReloadRequired()) {
-                NativeFactory.getInstance().getEnvironment().dispose();
-                NativeFactory.resetInstance();
-                NativeFactory.getInstance().getEnvironment().init();
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                if (!windowedMode && dialog.isEnvironmentReloadRequired()) {
+                    NativeFactory.getInstance().getEnvironment().dispose();
+                    NativeFactory.resetInstance();
+                    NativeFactory.getInstance().getEnvironment().init();
+                }
+                // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
+                if (dialog.isEnvironmentReloadRequired() || dialog.isImageReloadRequired()) {
+                    // need to reload the image sets as the images have rescaled
+                    Main.getInstance().reloadAllImageSets();
+                }
+                if (dialog.isInteractiveWindowReloadRequired()) {
+                    NativeFactory.getInstance().getEnvironment().refreshCache();
+                }
+
+                return null;
             }
-            // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
-            if (dialog.isEnvironmentReloadRequired() || dialog.isImageReloadRequired()) {
-                // need to reload the image sets as the images have rescaled
-                Main.getInstance().reloadAllImageSets();
+
+            @Override
+            protected void done() {
+                if (useSystemTray) {
+                    return;
+                }
+                refreshPauseText();
             }
-            if (dialog.isInteractiveWindowReloadRequired()) {
-                NativeFactory.getInstance().getEnvironment().refreshCache();
-            }
-        });
+        };
+        worker.execute();
 
         manager.setEnabled(true);
     }//GEN-LAST:event_btnSettingsActionPerformed
@@ -730,10 +817,22 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
         }
-        Main.getInstance().getManager().togglePauseAll();
-        if (!useSystemTray) {
-            refreshPauseText();
-        }
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                Main.getInstance().getManager().togglePauseAll();
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                if (useSystemTray) {
+                    return;
+                }
+                refreshPauseText();
+            }
+        };
+        worker.execute();
     }//GEN-LAST:event_btnPauseAllActionPerformed
 
     private void btnDismissAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDismissAllActionPerformed

@@ -41,9 +41,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
 
 /**
@@ -111,8 +108,6 @@ public class Main {
 
     private static JFrame frame;
 
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
-
     private final TrayMenu trayMenu = new TrayMenu();
 
     // TODO: Refactor this away entirely.
@@ -122,10 +117,6 @@ public class Main {
 
     static JFrame getFrame() {
         return frame;
-    }
-
-    static ExecutorService getExecutorService() {
-        return executorService;
     }
 
     public static void showError(String message) {
@@ -727,15 +718,6 @@ public class Main {
     }
 
     public void exit() {
-        try {
-            executorService.shutdownNow();
-
-            if (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
-                log.warn("The executor service did not terminate in the allotted time.");
-            }
-        } catch (final SecurityException | InterruptedException e) {
-            log.error("Failed to shutdown the executor service.", e);
-        }
         manager.disposeAll();
         manager.stop();
         System.exit(0);
