@@ -502,12 +502,9 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_btnRestoreWindowsActionPerformed
 
     private void behaviorPopupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_behaviorPopupPopupMenuWillBecomeInvisible
-        Point mousePosition = getMousePosition();
+        Point mousePosition = btnAllowedBehaviors.getMousePosition();
         if (mousePosition != null) {
-            btnAllowedBehaviors.setEnabled(!(mousePosition.x > btnAllowedBehaviors.getX() &&
-                    mousePosition.x < btnAllowedBehaviors.getX() + btnAllowedBehaviors.getWidth() &&
-                    mousePosition.y > btnAllowedBehaviors.getY() &&
-                    mousePosition.y < btnAllowedBehaviors.getY() + btnAllowedBehaviors.getHeight()));
+            btnAllowedBehaviors.setEnabled(!btnAllowedBehaviors.contains(mousePosition));
         } else {
             btnAllowedBehaviors.setEnabled(true);
         }
@@ -626,12 +623,9 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_btnSettingsActionPerformed
 
     private void languagePopupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_languagePopupPopupMenuWillBecomeInvisible
-        Point mousePosition = getMousePosition();
+        Point mousePosition = btnLanguage.getMousePosition();
         if (mousePosition != null) {
-            btnLanguage.setEnabled(!(mousePosition.x > btnLanguage.getX() &&
-                    mousePosition.x < btnLanguage.getX() + btnLanguage.getWidth() &&
-                    mousePosition.y > btnLanguage.getY() &&
-                    mousePosition.y < btnLanguage.getY() + btnLanguage.getHeight()));
+            btnLanguage.setEnabled(!btnLanguage.contains(mousePosition));
         } else {
             btnLanguage.setEnabled(true);
         }
