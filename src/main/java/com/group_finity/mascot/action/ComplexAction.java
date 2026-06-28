@@ -59,8 +59,9 @@ public abstract class ComplexAction extends ActionBase {
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
-        if (getAction().hasNext()) {
-            getAction().next();
+        Action action = getAction();
+        if (action.hasNext()) {
+            action.next();
         }
     }
 
