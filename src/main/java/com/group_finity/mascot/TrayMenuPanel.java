@@ -23,6 +23,32 @@ import java.util.ResourceBundle;
  */
 public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
 
+    private static final Locale SAUDI_ARABIA = Locale.forLanguageTag("ar-SA");
+
+    private static final Locale SPAIN_CATALAN = Locale.forLanguageTag("ca-ES");
+
+    private static final Locale SPAIN = Locale.forLanguageTag("es-ES");
+
+    private static final Locale CROATIA = Locale.forLanguageTag("hr-HR");
+
+    private static final Locale NETHERLANDS = Locale.forLanguageTag("nl-NL");
+
+    private static final Locale POLAND = Locale.forLanguageTag("pl-PL");
+
+    private static final Locale BRAZILIAN_PORTUGUESE = Locale.forLanguageTag("pt-BR");
+
+    private static final Locale PORTUGAL = Locale.forLanguageTag("pt-PT");
+
+    private static final Locale RUSSIA = Locale.forLanguageTag("ru-RU");
+
+    private static final Locale ROMANIA = Locale.forLanguageTag("ro-RO");
+
+    private static final Locale SERBIA = Locale.forLanguageTag("sr-RS");
+
+    private static final Locale FINLAND = Locale.forLanguageTag("fi-FI");
+
+    private static final Locale VIETNAM = Locale.forLanguageTag("vi-VN");
+
     private final boolean useSystemTray;
 
     /**
@@ -89,48 +115,48 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         chkSounds.setSelected(settings.sounds);
         chkMultiscreen.setSelected(settings.multiscreen);
 
-        String languageTag = settings.language.toLanguageTag();
-        if (languageTag.equals(Locale.UK.toLanguageTag())) {
+        Locale locale = settings.language;
+        if (locale.equals(Locale.UK)) {
             itmEnglish.setSelected(true);
-        } else if (languageTag.equals("ar-SA")) {
+        } else if (locale.equals(SAUDI_ARABIA)) {
             itmArabic.setSelected(true);
-        } else if (languageTag.equals("ca-ES")) {
+        } else if (locale.equals(SPAIN_CATALAN)) {
             itmCatalan.setSelected(true);
-        } else if (languageTag.equals(Locale.GERMANY.toLanguageTag())) {
+        } else if (locale.equals(Locale.GERMANY)) {
             itmGerman.setSelected(true);
-        } else if (languageTag.equals("es-ES")) {
+        } else if (locale.equals(SPAIN)) {
             itmSpanish.setSelected(true);
-        } else if (languageTag.equals(Locale.FRANCE.toLanguageTag())) {
+        } else if (locale.equals(Locale.FRANCE)) {
             itmFrench.setSelected(true);
-        } else if (languageTag.equals("hr-HR")) {
+        } else if (locale.equals(CROATIA)) {
             itmCroatian.setSelected(true);
-        } else if (languageTag.equals(Locale.ITALY.toLanguageTag())) {
+        } else if (locale.equals(Locale.ITALY)) {
             itmItalian.setSelected(true);
-        } else if (languageTag.equals("nl-NL")) {
+        } else if (locale.equals(NETHERLANDS)) {
             itmDutch.setSelected(true);
-        } else if (languageTag.equals("pl-PL")) {
+        } else if (locale.equals(POLAND)) {
             itmPolish.setSelected(true);
-        } else if (languageTag.equals("pt-BR")) {
+        } else if (locale.equals(BRAZILIAN_PORTUGUESE)) {
             itmBrazilianPortuguese.setSelected(true);
-        } else if (languageTag.equals("pt-PT")) {
+        } else if (locale.equals(PORTUGAL)) {
             itmPortuguese.setSelected(true);
-        } else if (languageTag.equals("ru-RU")) {
+        } else if (locale.equals(RUSSIA)) {
             itmRussian.setSelected(true);
-        } else if (languageTag.equals("ro-RO")) {
+        } else if (locale.equals(ROMANIA)) {
             itmRomanian.setSelected(true);
-        } else if (languageTag.equals("sr-RS")) {
+        } else if (locale.equals(SERBIA)) {
             itmSerbian.setSelected(true);
-        } else if (languageTag.equals("fi-FI")) {
+        } else if (locale.equals(FINLAND)) {
             itmFinnish.setSelected(true);
-        } else if (languageTag.equals("vi-VN")) {
+        } else if (locale.equals(VIETNAM)) {
             itmVietnamese.setSelected(true);
-        } else if (languageTag.equals(Locale.SIMPLIFIED_CHINESE.toLanguageTag())) {
+        } else if (locale.equals(Locale.SIMPLIFIED_CHINESE)) {
             itmChinese.setSelected(true);
-        } else if (languageTag.equals(Locale.TRADITIONAL_CHINESE.toLanguageTag())) {
+        } else if (locale.equals(Locale.TRADITIONAL_CHINESE)) {
             itmChineseTraditional.setSelected(true);
-        } else if (languageTag.equals(Locale.KOREA.toLanguageTag())) {
+        } else if (locale.equals(Locale.KOREA)) {
             itmKorean.setSelected(true);
-        } else if (languageTag.equals(Locale.JAPAN.toLanguageTag())) {
+        } else if (locale.equals(Locale.JAPAN)) {
             itmJapanese.setSelected(true);
         }
     }
@@ -734,11 +760,11 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_itmEnglishActionPerformed
 
     private void itmArabicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmArabicActionPerformed
-        updateLocale("ar-SA");
+        updateLocale(SAUDI_ARABIA);
     }//GEN-LAST:event_itmArabicActionPerformed
 
     private void itmCatalanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCatalanActionPerformed
-        updateLocale("ca-ES");
+        updateLocale(SPAIN_CATALAN);
     }//GEN-LAST:event_itmCatalanActionPerformed
 
     private void itmGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmGermanActionPerformed
@@ -746,7 +772,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_itmGermanActionPerformed
 
     private void itmSpanishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmSpanishActionPerformed
-        updateLocale("es-ES");
+        updateLocale(SPAIN);
     }//GEN-LAST:event_itmSpanishActionPerformed
 
     private void itmFrenchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmFrenchActionPerformed
@@ -754,7 +780,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_itmFrenchActionPerformed
 
     private void itmCroatianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCroatianActionPerformed
-        updateLocale("hr-HR");
+        updateLocale(CROATIA);
     }//GEN-LAST:event_itmCroatianActionPerformed
 
     private void itmItalianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmItalianActionPerformed
@@ -762,39 +788,39 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_itmItalianActionPerformed
 
     private void itmDutchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmDutchActionPerformed
-        updateLocale("nl-NL");
+        updateLocale(NETHERLANDS);
     }//GEN-LAST:event_itmDutchActionPerformed
 
     private void itmPolishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmPolishActionPerformed
-        updateLocale("pl-PL");
+        updateLocale(POLAND);
     }//GEN-LAST:event_itmPolishActionPerformed
 
     private void itmBrazilianPortugueseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmBrazilianPortugueseActionPerformed
-        updateLocale("pt-BR");
+        updateLocale(BRAZILIAN_PORTUGUESE);
     }//GEN-LAST:event_itmBrazilianPortugueseActionPerformed
 
     private void itmPortugueseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmPortugueseActionPerformed
-        updateLocale("pt-PT");
+        updateLocale(PORTUGAL);
     }//GEN-LAST:event_itmPortugueseActionPerformed
 
     private void itmRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmRussianActionPerformed
-        updateLocale("ru-RU");
+        updateLocale(RUSSIA);
     }//GEN-LAST:event_itmRussianActionPerformed
 
     private void itmRomanianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmRomanianActionPerformed
-        updateLocale("ro-RO");
+        updateLocale(ROMANIA);
     }//GEN-LAST:event_itmRomanianActionPerformed
 
     private void itmSerbianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmSerbianActionPerformed
-        updateLocale("sr-RS");
+        updateLocale(SERBIA);
     }//GEN-LAST:event_itmSerbianActionPerformed
 
     private void itmFinnishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmFinnishActionPerformed
-        updateLocale("fi-FI");
+        updateLocale(FINLAND);
     }//GEN-LAST:event_itmFinnishActionPerformed
 
     private void itmVietnameseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmVietnameseActionPerformed
-        updateLocale("vi-VN");
+        updateLocale(VIETNAM);
     }//GEN-LAST:event_itmVietnameseActionPerformed
 
     private void itmChineseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmChineseActionPerformed
@@ -855,37 +881,6 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
             // Update all LanguageUpdatable windows using the new language bundle
             ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
             // TODO: Update the component orientations to fit the new locale
-            for (Window window : Window.getWindows()) {
-                window.invalidate();
-                if (window instanceof Localizable lu) {
-                    lu.localize(languageBundle);
-                }
-            }
-            // Only update the tray menu's text if it's persistent (i.e., the Use System Tray setting is disabled)
-            if (!useSystemTray) {
-                // Needs to be called separately for this class because this class isn't a subclass of Window
-                localize(languageBundle);
-                // Recalculate the size of the window, because the buttons may be different sizes than before
-                repackWindow();
-            }
-        }
-    }
-
-    private void updateLocale(String languageTag) {
-        // If we are using the system tray, dispose the tray menu window
-        // because it should only persist when the system tray setting is disabled
-        if (useSystemTray)
-            ((Window) getTopLevelAncestor()).dispose();
-
-        Settings settings = Main.getInstance().getSettings();
-        if (!settings.language.toLanguageTag().equals(languageTag)) {
-            Locale locale = Locale.forLanguageTag(languageTag);
-            settings.language = locale;
-            // Load the resource bundle for the specified language
-            Main.getInstance().loadLanguage(locale);
-
-            // Update all LanguageUpdatable windows using the new language bundle
-            ResourceBundle languageBundle = Main.getInstance().getLanguageBundle();
             for (Window window : Window.getWindows()) {
                 window.invalidate();
                 if (window instanceof Localizable lu) {
