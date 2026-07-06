@@ -192,10 +192,6 @@ public class Manager {
             return;
         }
         thread.interrupt();
-        try {
-            thread.join();
-        } catch (InterruptedException ignored) {
-        }
     }
 
     /**
