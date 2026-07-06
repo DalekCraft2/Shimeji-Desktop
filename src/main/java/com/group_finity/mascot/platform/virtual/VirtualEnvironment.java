@@ -3,6 +3,7 @@ package com.group_finity.mascot.platform.virtual;
 import com.group_finity.mascot.Main;
 import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.environment.Area;
+import com.group_finity.mascot.environment.ComplexArea;
 import com.group_finity.mascot.image.ImageUtils;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Virtual desktop environment.
@@ -26,6 +30,27 @@ class VirtualEnvironment extends AbstractEnvironment {
     private JFrame display;
 
     private final Area activeWindow = new Area();
+
+    private final List<Area> screenList = List.of(getScreen());
+
+    private final ComplexArea complexScreen = new ComplexArea() {
+        @Override
+        public void set(Map<String, Rectangle> rectangles) {
+        }
+
+        @Override
+        public void set(String name, Rectangle value) {
+        }
+
+        @Override
+        public void retain(Collection<String> areaNames) {
+        }
+
+        @Override
+        public Collection<Area> getAreas() {
+            return screenList;
+        }
+    };
 
     private boolean isInitializing = false;
 
@@ -145,6 +170,11 @@ class VirtualEnvironment extends AbstractEnvironment {
     @Override
     public Area getWorkArea() {
         return getScreen();
+    }
+
+    @Override
+    public ComplexArea getComplexScreen() {
+        return complexScreen;
     }
 
     @Override

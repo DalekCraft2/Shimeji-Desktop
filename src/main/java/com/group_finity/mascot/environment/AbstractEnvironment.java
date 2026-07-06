@@ -120,7 +120,7 @@ public abstract class AbstractEnvironment implements Environment {
         screenRectLock.readLock().lock();
         try {
             screen.set(screenRect);
-            complexScreen.set(screenRects);
+            getComplexScreen().set(screenRects);
         } finally {
             screenRectLock.readLock().unlock();
         }
@@ -140,7 +140,7 @@ public abstract class AbstractEnvironment implements Environment {
 
     @Override
     public Collection<Area> getScreens() {
-        return complexScreen.getAreas();
+        return getComplexScreen().getAreas();
     }
 
     @Override
