@@ -229,20 +229,23 @@ class WindowsEnvironment extends AbstractEnvironment {
     }
 
     /**
-     * Gets the work area. This area is the display area excluding the taskbar.
+     * Gets the bounds of the work area. This area is the display area excluding the taskbar.
      *
-     * @return work area
+     * @param dpiAware {@code true} if the bounds should be scaled to match the DPI of the graphics environment;
+     * {@code false} if the bounds should not be scaled
+     * @return the bounds of the work area
      */
     private static Rectangle getWorkAreaRect(boolean dpiAware) {
         if (dpiAware) {
+            // Swing scales the bounds already, so we can use it here to make things simpler
             GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()
                     .getDefaultScreenDevice().getDefaultConfiguration();
             Rectangle rect = config.getBounds();
             Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
             rect.x += insets.left;
             rect.y += insets.top;
-            rect.width -= insets.right;
-            rect.height -= insets.bottom;
+            rect.width -= insets.left + insets.right;
+            rect.height -= insets.top + insets.bottom;
             return rect;
         } else {
             // Get the primary display monitor handle

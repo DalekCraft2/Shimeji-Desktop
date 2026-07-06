@@ -312,6 +312,11 @@ class X11Environment extends AbstractEnvironment {
         return type.stream().anyMatch(badTypeList::contains);
     }
 
+    /**
+     * Gets the bounds of the work area. This area is the display area excluding the taskbar.
+     *
+     * @return the bounds of the work area
+     */
     private Rectangle getWorkAreaRect() {
         GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice().getDefaultConfiguration();
@@ -319,8 +324,8 @@ class X11Environment extends AbstractEnvironment {
         Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
         rect.x += insets.left;
         rect.y += insets.top;
-        rect.width -= insets.right;
-        rect.height -= insets.bottom;
+        rect.width -= insets.left + insets.right;
+        rect.height -= insets.top + insets.bottom;
         return rect;
     }
 
