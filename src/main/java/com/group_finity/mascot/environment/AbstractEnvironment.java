@@ -19,31 +19,31 @@ public abstract class AbstractEnvironment implements Environment {
      * A {@link Rectangle} representing the union of the bounds of all active displays.
      * This is used to update the bounds of {@link #screen} every tick.
      */
-    protected static Rectangle screenRect = new Rectangle(new Point(0, 0), Toolkit.getDefaultToolkit().getScreenSize());
+    protected Rectangle screenRect;
 
     /**
      * A map of {@link Rectangle} objects representing the bounds of all active displays.
      * This is used to update the bounds of the {@link Area} objects in {@link #complexScreen} every tick.
      */
-    protected static Map<String, Rectangle> screenRects = new HashMap<>();
+    protected Map<String, Rectangle> screenRects;
 
     /**
      * A lock used to allow concurrent access to {@link #screenRect} and {@link #screenRects}.
      */
-    protected static final ReadWriteLock screenRectLock = new ReentrantReadWriteLock();
+    protected final ReadWriteLock screenRectLock = new ReentrantReadWriteLock();
 
     /**
      * Whether to enable automatically calling {@link #updateScreenRect()} every 5 seconds to update the
      * {@link #screenRects} and {@link #screenRect} fields. This should be set to {@code false} if a
      * subclass chooses to override the screen updating functionality.
      */
-    protected static boolean autoUpdateScreenRect = true;
+    protected boolean autoUpdateScreenRect = true;
 
     /**
      * A thread that calls {@link #updateScreenRect()} every 5 seconds,
      * if {@link #autoUpdateScreenRect} is {@code true}.
      */
-    private static final Thread thread = new Thread(() -> {
+    private final Thread thread = new Thread(() -> {
         try {
             while (true) {
                 if (autoUpdateScreenRect)
@@ -53,6 +53,11 @@ public abstract class AbstractEnvironment implements Environment {
         } catch (final InterruptedException ignored) {
         }
     }, "ScreenRectUpdater");
+
+    {
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MIN_PRIORITY);
+    }
 
     /**
      * The area of the screen.
@@ -74,7 +79,7 @@ public abstract class AbstractEnvironment implements Environment {
      * Recalculates the bounds of all active displays and the union of those bounds, and assigns the values to
      * {@link #screenRects} and {@link #screenRect} respectively.
      */
-    private static void updateScreenRect() {
+    private void updateScreenRect() {
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final GraphicsDevice[] gs = ge.getScreenDevices();
 
@@ -89,7 +94,7 @@ public abstract class AbstractEnvironment implements Environment {
 
         screenRectLock.writeLock().lock();
         try {
-            AbstractEnvironment.screenRects = screenRects;
+            this.screenRects = screenRects;
             screenRect = virtualBounds;
         } finally {
             screenRectLock.writeLock().unlock();
@@ -100,9 +105,10 @@ public abstract class AbstractEnvironment implements Environment {
     public void init() {
         autoUpdateScreenRect = true;
 
+        // Call this here to ensure that the screen rects are initialized before tick() is called
+        updateScreenRect();
+
         if (!thread.isAlive()) {
-            thread.setDaemon(true);
-            thread.setPriority(Thread.MIN_PRIORITY);
             thread.start();
         }
 
@@ -145,5 +151,12 @@ public abstract class AbstractEnvironment implements Environment {
     @Override
     public Location getCursor() {
         return cursor;
+    }
+
+    @Override
+    public void dispose() {
+        if (thread.isAlive()) {
+            thread.interrupt();
+        }
     }
 }

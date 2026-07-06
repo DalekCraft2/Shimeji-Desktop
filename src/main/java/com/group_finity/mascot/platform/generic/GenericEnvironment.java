@@ -51,8 +51,4 @@ class GenericEnvironment extends AbstractEnvironment {
     public void refreshCache() {
         // I feel so refreshed
     }
-
-    @Override
-    public void dispose() {
-    }
 }

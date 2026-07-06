@@ -349,8 +349,4 @@ class WindowsEnvironment extends AbstractEnvironment {
         windowTitles = null;
         windowTitlesBlacklist = null;
     }
-
-    @Override
-    public void dispose() {
-    }
 }

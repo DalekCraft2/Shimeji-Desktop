@@ -360,8 +360,4 @@ class MacEnvironment extends AbstractEnvironment {
     @Override
     public void refreshCache() {
     }
-
-    @Override
-    public void dispose() {
-    }
 }

@@ -126,12 +126,15 @@ class VirtualEnvironment extends AbstractEnvironment {
          *  changing it whilst a Mascot is using it.
          */
         // SwingUtilities.invokeLater(() -> {
-        getScreen().setRect(0, 0, display.getContentPane().getWidth(), display.getContentPane().getHeight());
+        Container contentPane = display.getContentPane();
+        getScreen().setRect(0, 0, contentPane.getWidth(), contentPane.getHeight());
 
+        // Use MouseInfo.getPointerInfo() instead of display.getMousePosition() because the latter only returns a
+        // non-null value if the cursor is over the component
         PointerInfo info = MouseInfo.getPointerInfo();
         if (info != null) {
             Point point = info.getLocation();
-            SwingUtilities.convertPointFromScreen(point, display.getContentPane());
+            SwingUtilities.convertPointFromScreen(point, contentPane);
             getCursor().set(point);
         } else {
             getCursor().set(0, 0);
@@ -176,11 +179,12 @@ class VirtualEnvironment extends AbstractEnvironment {
 
     @Override
     public void dispose() {
-        if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(this::dispose);
-            return;
+        super.dispose();
+        if (SwingUtilities.isEventDispatchThread()) {
+            display.dispose();
+        } else {
+            SwingUtilities.invokeLater(display::dispose);
         }
-        display.dispose();
     }
 
     void addMascot(final VirtualTranslucentPanel mascotPanel) {
@@ -188,10 +192,11 @@ class VirtualEnvironment extends AbstractEnvironment {
             SwingUtilities.invokeLater(() -> addMascot(mascotPanel));
             return;
         }
-        if (display.getContentPane().getSize().width > 0 && display.getContentPane().getSize().height > 0) {
+        Container contentPane = display.getContentPane();
+        if (contentPane.getWidth() > 0 && contentPane.getHeight() > 0) {
             display.setPreferredSize(display.getSize());
             display.getRootPane().setPreferredSize(display.getRootPane().getSize());
-            display.getContentPane().setPreferredSize(display.getContentPane().getSize());
+            contentPane.setPreferredSize(contentPane.getSize());
         }
         display.add(mascotPanel);
     }
