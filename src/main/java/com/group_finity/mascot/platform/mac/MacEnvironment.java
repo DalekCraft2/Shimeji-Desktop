@@ -302,11 +302,6 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public Area getWorkArea() {
-        return getScreen();
-    }
-
-    @Override
     public Area getActiveWindow() {
         return activeWindow;
     }

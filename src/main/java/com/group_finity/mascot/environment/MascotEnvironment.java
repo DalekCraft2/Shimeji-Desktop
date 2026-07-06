@@ -49,7 +49,7 @@ public class MascotEnvironment {
      * The work area typically encompasses all of a given screen except for the taskbar.
      *
      * @return the work area containing this environment's {@link Mascot}
-     * @see Environment#getWorkArea()
+     * @see Environment#getWorkAreaAt(Point)
      */
     public Area getWorkArea() {
         return getWorkArea(false);
@@ -61,17 +61,18 @@ public class MascotEnvironment {
      *
      * @param forceRefresh whether to force the current work area to be recalculated
      * @return the work area containing this environment's {@link Mascot}
-     * @see Environment#getWorkArea()
+     * @see Environment#getWorkAreaAt(Point)
      */
     public Area getWorkArea(boolean forceRefresh) {
+        Point anchor = mascot.getAnchor();
         Area implWorkArea = null;
         if (currentWorkArea != null) {
             if (forceRefresh || Main.getInstance().getSettings().multiscreen) {
                 // NOTE For Windows multi-monitor support: The Windows work area is smaller than the main screen.
                 // If the current screen includes a work area and the mascot is included in the work area, give priority to the work area.
-                implWorkArea = impl.getWorkArea();
+                implWorkArea = impl.getWorkAreaAt(anchor);
                 if (currentWorkArea != implWorkArea && currentWorkArea.contains(implWorkArea)) {
-                    if (implWorkArea.contains(mascot.getAnchor())) {
+                    if (implWorkArea.contains(anchor)) {
                         currentWorkArea = implWorkArea;
                         return currentWorkArea;
                     }
@@ -79,7 +80,7 @@ public class MascotEnvironment {
 
                 // NOTE For Windows multi-monitor support: The mascot may be included on multiple monitors at the same time,
                 // in which case the current monitor takes priority.
-                if (currentWorkArea.contains(mascot.getAnchor())) {
+                if (currentWorkArea.contains(anchor)) {
                     return currentWorkArea;
                 }
             } else {
@@ -88,18 +89,18 @@ public class MascotEnvironment {
         }
 
         if (implWorkArea == null) {
-            implWorkArea = impl.getWorkArea();
+            implWorkArea = impl.getWorkAreaAt(anchor);
         }
 
         // First check whether the mascot is included in the work area
-        if (implWorkArea.contains(mascot.getAnchor())) {
+        if (implWorkArea.contains(anchor)) {
             currentWorkArea = implWorkArea;
             return currentWorkArea;
         }
 
         // Check whether any monitor contains the mascot
         for (Area area : impl.getScreens()) {
-            if (area.contains(mascot.getAnchor())) {
+            if (area.contains(anchor)) {
                 currentWorkArea = area;
                 return currentWorkArea;
             }
@@ -381,12 +382,13 @@ public class MascotEnvironment {
         }
 
         if (count == 0) {
-            Area workArea = getWorkArea();
-            if (workArea.getTopBorder().isOn(location)) {
-                return true;
-            }
-            if (workArea.getBottomBorder().isOn(location)) {
-                return true;
+            for (Area area : impl.getComplexWorkArea().getAreas()) {
+                if (area.getTopBorder().isOn(location)) {
+                    count++;
+                }
+                if (area.getBottomBorder().isOn(location)) {
+                    count++;
+                }
             }
         }
 
@@ -423,12 +425,13 @@ public class MascotEnvironment {
         }
 
         if (count == 0) {
-            Area workArea = getWorkArea();
-            if (workArea.getLeftBorder().isOn(location)) {
-                return true;
-            }
-            if (workArea.getRightBorder().isOn(location)) {
-                return true;
+            for (Area area : impl.getComplexWorkArea().getAreas()) {
+                if (area.getLeftBorder().isOn(location)) {
+                    count++;
+                }
+                if (area.getRightBorder().isOn(location)) {
+                    count++;
+                }
             }
         }
 

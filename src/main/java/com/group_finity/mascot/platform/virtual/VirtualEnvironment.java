@@ -168,8 +168,13 @@ class VirtualEnvironment extends AbstractEnvironment {
     }
 
     @Override
-    public Area getWorkArea() {
+    public Area getWorkAreaAt(int x, int y) {
         return getScreen();
+    }
+
+    @Override
+    public ComplexArea getComplexWorkArea() {
+        return complexScreen;
     }
 
     @Override

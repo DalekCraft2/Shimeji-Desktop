@@ -24,12 +24,32 @@ public interface Environment {
     void tick();
 
     /**
-     * Gets the work area.
+     * Gets the work area that contains the specified point.
      * The work area typically encompasses all of a given screen except for the taskbar.
      *
-     * @return the work area
+     * @param point the specified point
+     * @return the work area that contains the specified point
      */
-    Area getWorkArea();
+    default Area getWorkAreaAt(Point point) {
+        return getWorkAreaAt(point.x, point.y);
+    }
+
+    /**
+     * Gets the work area that contains the specified location {@code (x, y)}.
+     * The work area typically encompasses all of a given screen except for the taskbar.
+     *
+     * @param x the x-coordinate of the specified location
+     * @param y the y-coordinate of the specified location
+     * @return the work area that contains the specified location
+     */
+    Area getWorkAreaAt(int x, int y);
+
+    /**
+     * Gets a {@link ComplexArea} representing the areas of all work areas.
+     *
+     * @return a {@link ComplexArea} representing the areas of all work areas
+     */
+    ComplexArea getComplexWorkArea();
 
     /**
      * Gets the area of the screen.

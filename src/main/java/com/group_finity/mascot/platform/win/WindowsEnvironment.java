@@ -32,8 +32,6 @@ import java.util.LinkedHashMap;
 class WindowsEnvironment extends AbstractEnvironment {
     private final HashMap<HWND, Boolean> interactiveCache = new LinkedHashMap<>();
 
-    private final Area workArea = new Area(false);
-
     private final Area activeWindow = new Area();
 
     private String activeWindowTitle = "";
@@ -68,7 +66,6 @@ class WindowsEnvironment extends AbstractEnvironment {
     public void tick() {
         super.tick();
 
-        workArea.set(getWorkAreaRect(true));
         long prevWindowId = getActiveWindowId();
         // Get DPI-unaware window rectangle
         final Rectangle windowRect = getWindowRect(findActiveWindow(), true);
@@ -256,11 +253,6 @@ class WindowsEnvironment extends AbstractEnvironment {
 
             return monitorInfo.rcWork.toRectangle();
         }
-    }
-
-    @Override
-    public Area getWorkArea() {
-        return workArea;
     }
 
     @Override

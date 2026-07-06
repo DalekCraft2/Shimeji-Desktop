@@ -40,13 +40,6 @@ class X11Environment extends AbstractEnvironment {
 
     private Window activeWindowObject = null;
 
-    /**
-     * Current screen. Never changes after initial assignment.
-     * {@link AbstractEnvironment} and {@link ComplexArea} handle detection
-     * and dual monitor behavior.
-     */
-    private final Area workArea = new Area(false);
-
     private String[] windowTitles = null;
     private String[] windowTitlesBlacklist = null;
 
@@ -107,7 +100,6 @@ class X11Environment extends AbstractEnvironment {
     public void tick() {
         super.tick();
 
-        workArea.set(getWorkAreaRect());
         long prevWindowId = getActiveWindowId();
         final Rectangle windowRect = getWindowBounds(findActiveWindow());
         if (windowRect == null) {
@@ -327,11 +319,6 @@ class X11Environment extends AbstractEnvironment {
         rect.width -= insets.left + insets.right;
         rect.height -= insets.top + insets.bottom;
         return rect;
-    }
-
-    @Override
-    public Area getWorkArea() {
-        return workArea;
     }
 
     @Override
