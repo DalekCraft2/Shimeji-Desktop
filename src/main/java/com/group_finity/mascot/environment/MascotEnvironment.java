@@ -92,13 +92,15 @@ public class MascotEnvironment {
             implWorkArea = impl.getWorkAreaAt(anchor);
         }
 
-        // First check whether the mascot is included in the work area
+        // If the mascot's anchor is within the bounds of implWorkArea,
+        // set the current work area to implWorkArea
         if (implWorkArea.contains(anchor)) {
             currentWorkArea = implWorkArea;
             return currentWorkArea;
         }
 
-        // Check whether any monitor contains the mascot
+        // Otherwise, if the mascot's anchor is within the bounds of any of the active displays,
+        // set the current work area to that display's bounds
         for (Area area : impl.getScreens()) {
             if (area.contains(anchor)) {
                 currentWorkArea = area;
@@ -106,6 +108,7 @@ public class MascotEnvironment {
             }
         }
 
+        // Otherwise, set the current work area to implWorkArea
         currentWorkArea = implWorkArea;
         return currentWorkArea;
     }
@@ -164,15 +167,19 @@ public class MascotEnvironment {
      * if the {@link Mascot} is not on any ceiling
      */
     public Border getCeiling(boolean ignoreSeparator) {
+        Point anchor = mascot.getAnchor();
+
         Area activeIe = getActiveIE();
-        if (activeIe.getBottomBorder().isOn(mascot.getAnchor())) {
-            return activeIe.getBottomBorder();
+        Border activeIeBorder = activeIe.getBottomBorder();
+        if (activeIeBorder.isOn(anchor)) {
+            return activeIeBorder;
         }
 
         Area workArea = getWorkArea();
-        if (workArea.getTopBorder().isOn(mascot.getAnchor())) {
+        Border workAreaBorder = workArea.getTopBorder();
+        if (workAreaBorder.isOn(anchor)) {
             if (!ignoreSeparator || isScreenTopBottom()) {
-                return workArea.getTopBorder();
+                return workAreaBorder;
             }
         }
 
@@ -203,15 +210,19 @@ public class MascotEnvironment {
      * if the {@link Mascot} is not on any floor
      */
     public Border getFloor(boolean ignoreSeparator) {
+        Point anchor = mascot.getAnchor();
+
         Area activeIe = getActiveIE();
-        if (activeIe.getTopBorder().isOn(mascot.getAnchor())) {
-            return activeIe.getTopBorder();
+        Border activeIeBorder = activeIe.getTopBorder();
+        if (activeIeBorder.isOn(anchor)) {
+            return activeIeBorder;
         }
 
         Area workArea = getWorkArea();
-        if (workArea.getBottomBorder().isOn(mascot.getAnchor())) {
+        Border workAreaBorder = workArea.getBottomBorder();
+        if (workAreaBorder.isOn(anchor)) {
             if (!ignoreSeparator || isScreenTopBottom()) {
-                return workArea.getBottomBorder();
+                return workAreaBorder;
             }
         }
 
@@ -240,28 +251,20 @@ public class MascotEnvironment {
      * if the {@link Mascot} is not on any wall
      */
     public Border getWall(boolean ignoreSeparator) {
+        boolean isLookRight = mascot.isLookRight();
+        Point anchor = mascot.getAnchor();
+
         Area activeIe = getActiveIE();
-        if (mascot.isLookRight()) {
-            if (activeIe.getLeftBorder().isOn(mascot.getAnchor())) {
-                return activeIe.getLeftBorder();
-            }
+        Border activeIeBorder = isLookRight ? activeIe.getLeftBorder() : activeIe.getRightBorder();
+        if (activeIeBorder.isOn(anchor)) {
+            return activeIeBorder;
+        }
 
-            Area workArea = getWorkArea();
-            if (workArea.getRightBorder().isOn(mascot.getAnchor())) {
-                if (!ignoreSeparator || isScreenLeftRight()) {
-                    return workArea.getRightBorder();
-                }
-            }
-        } else {
-            if (activeIe.getRightBorder().isOn(mascot.getAnchor())) {
-                return activeIe.getRightBorder();
-            }
-
-            Area workArea = getWorkArea();
-            if (workArea.getLeftBorder().isOn(mascot.getAnchor())) {
-                if (!ignoreSeparator || isScreenLeftRight()) {
-                    return workArea.getLeftBorder();
-                }
+        Area workArea = getWorkArea();
+        Border workAreaBorder = isLookRight ? workArea.getRightBorder() : workArea.getLeftBorder();
+        if (workAreaBorder.isOn(anchor)) {
+            if (!ignoreSeparator || isScreenLeftRight()) {
+                return workAreaBorder;
             }
         }
 
