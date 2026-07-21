@@ -689,15 +689,24 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
             Main.getInstance().getTrayMenu().createTrayIcon();
         }
 
+        boolean environmentReloadRequired = dialog.isEnvironmentReloadRequired();
+        boolean imageReloadRequired = dialog.isImageReloadRequired();
+        boolean interactiveWindowReloadRequired = dialog.isInteractiveWindowReloadRequired();
+
         boolean windowedMode = Main.getInstance().getSettings().windowedMode;
-        if (windowedMode && dialog.isEnvironmentReloadRequired()) {
-            /*
-             * If in windowed mode, initialize the environment on the EDT before loading any mascots
-             * so the mascots spawn at the correct positions
-             */
+        if (environmentReloadRequired) {
+            // Dispose the environment here, regardless of whether it was windowed.
+            // It's okay if dispose() doesn't need to be called on the EDT for the current environment,
+            // because that method shouldn't take long to return.
             NativeFactory.getInstance().getEnvironment().dispose();
-            NativeFactory.resetInstance();
-            NativeFactory.getInstance().getEnvironment().init();
+            if (windowedMode) {
+                /*
+                 * If in windowed mode, initialize the environment on the EDT before loading any mascots
+                 * so the mascots spawn at the correct positions
+                 */
+                NativeFactory.resetInstance();
+                NativeFactory.getInstance().getEnvironment().init();
+            }
         }
 
         /*
@@ -707,17 +716,23 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                if (!windowedMode && dialog.isEnvironmentReloadRequired()) {
-                    NativeFactory.getInstance().getEnvironment().dispose();
+                if (environmentReloadRequired && !windowedMode) {
+                    /*
+                     * If not in windowed mode, initialize the environment on the worker thread
+                     * because it's not necessary to do it on the EDT
+                     */
                     NativeFactory.resetInstance();
                     NativeFactory.getInstance().getEnvironment().init();
                 }
                 // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
-                if (dialog.isEnvironmentReloadRequired() || dialog.isImageReloadRequired()) {
-                    // need to reload the image sets as the images have rescaled
+                if (environmentReloadRequired || imageReloadRequired) {
+                    // Reload the image sets if the scaling/opacity settings were changed
+                    // or if the environment was reloaded
                     Main.getInstance().reloadAllImageSets();
                 }
-                if (dialog.isInteractiveWindowReloadRequired()) {
+                // Only refresh interactive window cache if the environment wasn't reloaded,
+                // because reloading the environment already refreshes the cache
+                if (interactiveWindowReloadRequired && !environmentReloadRequired) {
                     NativeFactory.getInstance().getEnvironment().refreshCache();
                 }
 
