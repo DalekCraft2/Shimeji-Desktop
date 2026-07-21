@@ -683,71 +683,72 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         SettingsWindow dialog = new SettingsWindow(Main.getFrame(), true);
         dialog.setIconImage(Main.getIcon());
         dialog.init();
-        dialog.display();
-
-        if (dialog.isTrayMenuReloadRequired()) {
-            Main.getInstance().getTrayMenu().createTrayIcon();
-        }
-
-        boolean environmentReloadRequired = dialog.isEnvironmentReloadRequired();
-        boolean imageReloadRequired = dialog.isImageReloadRequired();
-        boolean interactiveWindowReloadRequired = dialog.isInteractiveWindowReloadRequired();
-
-        boolean windowedMode = Main.getInstance().getSettings().windowedMode;
-        if (environmentReloadRequired) {
-            // Dispose the environment here, regardless of whether it was windowed.
-            // It's okay if dispose() doesn't need to be called on the EDT for the current environment,
-            // because that method shouldn't take long to return.
-            NativeFactory.getInstance().getEnvironment().dispose();
-            if (windowedMode) {
-                /*
-                 * If in windowed mode, initialize the environment on the EDT before loading any mascots
-                 * so the mascots spawn at the correct positions
-                 */
-                NativeFactory.resetInstance();
-                NativeFactory.getInstance().getEnvironment().init();
+        // Only do the following code if the settings window wasn't cancelled
+        if (dialog.display()) {
+            if (dialog.isTrayMenuReloadRequired()) {
+                Main.getInstance().getTrayMenu().createTrayIcon();
             }
-        }
 
-        /*
-         * We're on the Event Dispatch Thread here,
-         * so do this on a separate thread to avoid making the UI unresponsive.
-         */
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                if (environmentReloadRequired && !windowedMode) {
+            boolean environmentReloadRequired = dialog.isEnvironmentReloadRequired();
+            boolean imageReloadRequired = dialog.isImageReloadRequired();
+            boolean interactiveWindowReloadRequired = dialog.isInteractiveWindowReloadRequired();
+
+            boolean windowedMode = Main.getInstance().getSettings().windowedMode;
+            if (environmentReloadRequired) {
+                // Dispose the environment here, regardless of whether it was windowed.
+                // It's okay if dispose() doesn't need to be called on the EDT for the current environment,
+                // because that method shouldn't take long to return.
+                NativeFactory.getInstance().getEnvironment().dispose();
+                if (windowedMode) {
                     /*
-                     * If not in windowed mode, initialize the environment on the worker thread
-                     * because it's not necessary to do it on the EDT
+                     * If in windowed mode, initialize the environment on the EDT before loading any mascots
+                     * so the mascots spawn at the correct positions
                      */
                     NativeFactory.resetInstance();
                     NativeFactory.getInstance().getEnvironment().init();
                 }
-                // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
-                if (environmentReloadRequired || imageReloadRequired) {
-                    // Reload the image sets if the scaling/opacity settings were changed
-                    // or if the environment was reloaded
-                    Main.getInstance().reloadAllImageSets();
-                }
-                // Only refresh interactive window cache if the environment wasn't reloaded,
-                // because reloading the environment already refreshes the cache
-                if (interactiveWindowReloadRequired && !environmentReloadRequired) {
-                    NativeFactory.getInstance().getEnvironment().refreshCache();
-                }
-
-                return null;
             }
 
-            @Override
-            protected void done() {
-                if (useSystemTray) {
-                    return;
+            /*
+             * We're on the Event Dispatch Thread here,
+             * so do this on a separate thread to avoid making the UI unresponsive.
+             */
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                @Override
+                protected Void doInBackground() {
+                    if (environmentReloadRequired && !windowedMode) {
+                        /*
+                         * If not in windowed mode, initialize the environment on the worker thread
+                         * because it's not necessary to do it on the EDT
+                         */
+                        NativeFactory.resetInstance();
+                        NativeFactory.getInstance().getEnvironment().init();
+                    }
+                    // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
+                    if (environmentReloadRequired || imageReloadRequired) {
+                        // Reload the image sets if the scaling/opacity settings were changed
+                        // or if the environment was reloaded
+                        Main.getInstance().reloadAllImageSets();
+                    }
+                    // Only refresh interactive window cache if the environment wasn't reloaded,
+                    // because reloading the environment already refreshes the cache
+                    if (interactiveWindowReloadRequired && !environmentReloadRequired) {
+                        NativeFactory.getInstance().getEnvironment().refreshCache();
+                    }
+
+                    return null;
                 }
-                refreshPauseText();
-            }
-        };
-        worker.execute();
+
+                @Override
+                protected void done() {
+                    if (useSystemTray) {
+                        return;
+                    }
+                    refreshPauseText();
+                }
+            };
+            worker.execute();
+        }
 
         manager.setEnabled(true);
     }//GEN-LAST:event_btnSettingsActionPerformed

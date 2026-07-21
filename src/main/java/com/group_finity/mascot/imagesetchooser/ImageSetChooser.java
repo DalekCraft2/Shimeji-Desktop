@@ -46,9 +46,9 @@ public class ImageSetChooser extends JDialog implements Localizable {
     private final List<String> imageSets = new ArrayList<>();
 
     /**
-     * Whether the "Cancel" or "Close" buttons were pressed instead of the "Use Selected" or "Use all" buttons.
+     * Whether the "Use Selected" or "Use All" buttons were pressed instead of the "Cancel" or "Close" buttons.
      */
-    private boolean selectionCancelled = true;
+    private boolean selectionConfirmed = false;
 
     /**
      * Creates new form ImageSetChooser
@@ -163,10 +163,10 @@ public class ImageSetChooser extends JDialog implements Localizable {
     public List<String> display() {
         setLocationRelativeTo(null);
         setVisible(true);
-        if (selectionCancelled) {
-            return null;
+        if (selectionConfirmed) {
+            return imageSets;
         }
-        return imageSets;
+        return null;
     }
 
     /**
@@ -318,13 +318,13 @@ public class ImageSetChooser extends JDialog implements Localizable {
         }
 
         Main.getInstance().getSettings().activeImageSets = imageSets;
-        selectionCancelled = false;
+        selectionConfirmed = true;
         dispose();
     }//GEN-LAST:event_useSelectedButtonActionPerformed
 
     private void useAllButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useAllButtonActionPerformed
         Main.getInstance().getSettings().activeImageSets = imageSets;
-        selectionCancelled = false;
+        selectionConfirmed = true;
         dispose();
     }//GEN-LAST:event_useAllButtonActionPerformed
 

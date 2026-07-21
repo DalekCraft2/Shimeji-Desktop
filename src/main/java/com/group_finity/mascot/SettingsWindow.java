@@ -55,6 +55,12 @@ public class SettingsWindow extends JDialog implements Localizable {
     private final VirtualContentPanel.ResizeMode[] backgroundModes = VirtualContentPanel.ResizeMode.values();
 
     private boolean suppressTextChanged = true;
+
+    /**
+     * Whether the "Done" button was pressed instead of the "Cancel" or "Close" buttons.
+     */
+    private boolean selectionConfirmed = false;
+
     private boolean environmentReloadRequired = false;
     private boolean imageReloadRequired = false;
     private boolean interactiveWindowReloadRequired = false;
@@ -200,11 +206,13 @@ public class SettingsWindow extends JDialog implements Localizable {
         btnCancel.setText(languageBundle.getString("Cancel"));
     }
 
-    public void display() {
+    public boolean display() {
         setLocationRelativeTo(null);
         suppressTextChanged = false;
         setVisible(true);
         suppressTextChanged = true;
+
+        return selectionConfirmed;
     }
 
     private void browseToUrl(String url) {
@@ -812,6 +820,8 @@ public class SettingsWindow extends JDialog implements Localizable {
             settings.backgroundMode = backgroundMode;
             settings.backgroundImage = backgroundImage;
         }
+
+        selectionConfirmed = true;
 
         dispose();
     }//GEN-LAST:event_btnDoneActionPerformed
