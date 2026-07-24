@@ -22,6 +22,7 @@ import com.sun.jna.ptr.LongByReference;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Uses JNI to obtain environment information that is difficult to obtain with Java.
@@ -93,51 +94,61 @@ class WindowsEnvironment extends AbstractEnvironment {
         // Determine whether the window is interactive based on its title
         final String windowTitle = WindowUtils.getWindowTitle(hWnd);
 
-        // optimisation to remove empty windows from consideration without the loop.
+        // Optimization to remove empty window titles from consideration without the loop.
         if (windowTitle.isEmpty()) {
             interactiveCache.put(hWnd, false);
             return false;
         }
 
         // blacklist takes precedence over whitelist
-        boolean blacklistInUse = false;
         if (windowTitlesBlacklist == null) {
-            windowTitlesBlacklist = Main.getInstance().getSettings().interactiveWindowsBlacklist.toArray(Main.EMPTY_STRING_ARRAY);
+            List<String> blacklist = Main.getInstance().getSettings().interactiveWindowsBlacklist;
+            if (blacklist.isEmpty()) {
+                windowTitlesBlacklist = Main.EMPTY_STRING_ARRAY;
+            } else {
+                // Filter out empty titles in advance so we don't have to check for them in the for-loop below
+                windowTitlesBlacklist = blacklist.stream().filter(item -> !item.trim().isEmpty())
+                        .toArray(String[]::new);
+            }
         }
+        boolean blacklistIsEmpty = windowTitlesBlacklist.length == 0;
+        // If the window title contains any of the entries in the blacklist, the window is not interactive
         for (String title : windowTitlesBlacklist) {
-            if (!title.trim().isEmpty()) {
-                blacklistInUse = true;
-                if (windowTitle.contains(title)) {
-                    interactiveCache.put(hWnd, false);
-                    return false;
-                }
+            if (windowTitle.contains(title)) {
+                interactiveCache.put(hWnd, false);
+                return false;
             }
         }
 
         // whitelist
-        boolean whitelistInUse = false;
         if (windowTitles == null) {
-            windowTitles = Main.getInstance().getSettings().interactiveWindows.toArray(Main.EMPTY_STRING_ARRAY);
+            List<String> whitelist = Main.getInstance().getSettings().interactiveWindows;
+            if (whitelist.isEmpty()) {
+                windowTitles = Main.EMPTY_STRING_ARRAY;
+            } else {
+                // Filter out empty titles in advance so we don't have to check for them in the for-loop below
+                windowTitles = whitelist.stream().filter(item -> !item.trim().isEmpty())
+                        .toArray(String[]::new);
+            }
         }
+        boolean whitelistIsEmpty = windowTitles.length == 0;
+        // If the window title contains any of the entries in the whitelist, the window is interactive
         for (String title : windowTitles) {
-            if (!title.trim().isEmpty()) {
-                // Window is interactive
-                whitelistInUse = true;
-                if (windowTitle.contains(title)) {
-                    interactiveCache.put(hWnd, true);
-                    return true;
-                }
+            if (windowTitle.contains(title)) {
+                interactiveCache.put(hWnd, true);
+                return true;
             }
         }
 
-        if (whitelistInUse || !blacklistInUse) {
-            // Window is not interactive
-            interactiveCache.put(hWnd, false);
-            return false;
-        } else {
-            // Window is interactive
+        if (whitelistIsEmpty && !blacklistIsEmpty) {
+            // If the whitelist is empty and the blacklist is not,
+            // the window is interactive by default
             interactiveCache.put(hWnd, true);
             return true;
+        } else {
+            // Otherwise, the window is not interactive by default
+            interactiveCache.put(hWnd, false);
+            return false;
         }
     }
 
