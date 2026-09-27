@@ -11,13 +11,6 @@ import java.awt.*;
 public class Area {
 
     /**
-     * Whether this {@code Area} should calculate the delta values of {@link #left}, {@link #top}, {@link #right}, and
-     * {@link #bottom} whenever {@link #set} is called. If {@code false}, the getters for the delta values will always
-     * return 0.
-     */
-    private final boolean calcDeltas;
-
-    /**
      * Whether this {@code Area} is visible.
      * Generally, if this is {@code false}, {@link com.group_finity.mascot.Mascot Mascot} objects
      * should not be able to interact with this {@code Area}.
@@ -122,24 +115,6 @@ public class Area {
      * @see #getBottomBorder()
      */
     private final FloorCeiling bottomBorder = new FloorCeiling(this, true);
-
-    /**
-     * Creates a new {@code Area}. Calculating delta values is enabled by default.
-     */
-    public Area() {
-        calcDeltas = true;
-    }
-
-    /**
-     * Creates a new {@code Area}.
-     *
-     * @param calcDeltas Whether this {@code Area} should calculate the delta values of {@link #left}, {@link #top},
-     * {@link #right}, and {@link #bottom} whenever {@link #set} is called.
-     * If {@code false}, the getters for the delta values will always return 0.
-     */
-    public Area(boolean calcDeltas) {
-        this.calcDeltas = calcDeltas;
-    }
 
     /**
      * Gets whether this {@code Area} is visible.
@@ -252,7 +227,7 @@ public class Area {
      * @see #setDleft(int)
      */
     public int getDleft() {
-        return calcDeltas ? dleft : 0;
+        return dleft;
     }
 
     /**
@@ -262,9 +237,7 @@ public class Area {
      * @see #getDleft()
      */
     public void setDleft(final int dleft) {
-        if (calcDeltas) {
-            this.dleft = dleft;
-        }
+        this.dleft = dleft;
     }
 
     /**
@@ -276,7 +249,7 @@ public class Area {
      * @see #setDtop(int)
      */
     public int getDtop() {
-        return calcDeltas ? dtop : 0;
+        return dtop;
     }
 
     /**
@@ -286,9 +259,7 @@ public class Area {
      * @see #getDtop()
      */
     public void setDtop(final int dtop) {
-        if (calcDeltas) {
-            this.dtop = dtop;
-        }
+        this.dtop = dtop;
     }
 
     /**
@@ -300,7 +271,7 @@ public class Area {
      * @see #setDright(int)
      */
     public int getDright() {
-        return calcDeltas ? dright : 0;
+        return dright;
     }
 
     /**
@@ -310,9 +281,7 @@ public class Area {
      * @see #getDright()
      */
     public void setDright(final int dright) {
-        if (calcDeltas) {
-            this.dright = dright;
-        }
+        this.dright = dright;
     }
 
     /**
@@ -324,7 +293,7 @@ public class Area {
      * @see #setDbottom(int)
      */
     public int getDbottom() {
-        return calcDeltas ? dbottom : 0;
+        return dbottom;
     }
 
     /**
@@ -334,9 +303,7 @@ public class Area {
      * @see #getDbottom()
      */
     public void setDbottom(final int dbottom) {
-        if (calcDeltas) {
-            this.dbottom = dbottom;
-        }
+        this.dbottom = dbottom;
     }
 
     /**
@@ -428,12 +395,10 @@ public class Area {
      * @param bottom the new y-coordinate for the bottom border of this {@code Area}
      */
     public void set(final int left, final int top, final int right, final int bottom) {
-        if (calcDeltas) {
-            dleft = left - this.left;
-            dtop = top - this.top;
-            dright = right - this.right;
-            dbottom = bottom - this.bottom;
-        }
+        dleft = left - this.left;
+        dtop = top - this.top;
+        dright = right - this.right;
+        dbottom = bottom - this.bottom;
 
         this.left = left;
         this.top = top;
@@ -445,12 +410,10 @@ public class Area {
      * Resets all delta values in this {@code Area} to 0.
      */
     public void resetDeltas() {
-        if (calcDeltas) {
-            dleft = 0;
-            dtop = 0;
-            dright = 0;
-            dbottom = 0;
-        }
+        dleft = 0;
+        dtop = 0;
+        dright = 0;
+        dbottom = 0;
     }
 
     /**

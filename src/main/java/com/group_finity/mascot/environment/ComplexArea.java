@@ -64,8 +64,7 @@ public class ComplexArea {
 
         Area area = areas.get(name);
         if (area == null) {
-            // This class is only used for screen areas, so set calcDeltas to false for the Area objects
-            area = new Area(false);
+            area = new Area();
             areas.put(name, area);
         }
         area.set(value);

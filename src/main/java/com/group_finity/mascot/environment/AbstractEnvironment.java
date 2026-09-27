@@ -69,7 +69,7 @@ public abstract class AbstractEnvironment implements Environment {
      * The area of the screen.
      * This area is the union of the areas of all active displays.
      */
-    private final Area screen = new Area(false);
+    private final Area screen = new Area();
 
     /**
      * Represents the areas of all active displays.
