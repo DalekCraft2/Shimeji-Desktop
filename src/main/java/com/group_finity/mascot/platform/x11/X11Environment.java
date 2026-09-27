@@ -28,7 +28,15 @@ class X11Environment extends AbstractEnvironment {
      */
     private final Display display = new Display();
 
-    private final HashMap<Window, Boolean> interactiveCache = new LinkedHashMap<>();
+    /**
+     * Maps a window title to a boolean representing whether the title is valid.
+     * Windows with invalid titles cannot be interactive.
+     * This is cleared whenever {@link #refreshCache()} is invoked.
+     *
+     * @see #hasValidTitle(Window)
+     * @see #refreshCache()
+     */
+    private final HashMap<String, Boolean> validTitleCache = new LinkedHashMap<>();
 
     /**
      * Window for jump action targeting.
@@ -116,18 +124,29 @@ class X11Environment extends AbstractEnvironment {
         activeWindowTitle = getWindowTitle(activeWindowObject);
     }
 
-    private boolean isInteractive(final Window window) {
-        final Boolean cachedValue = interactiveCache.get(window);
+    /**
+     * Checks whether the title of the specified window is valid. For a window to be interactive, it must
+     * have a valid title.
+     * <p>
+     * A window's title is valid if it contains none of the entries from the {@code interactiveWindowsBlacklist}
+     * setting and contains at least one entry from the {@code interactiveWindows} setting. If the
+     * {@code interactiveWindows} list is empty, the title can still be valid if the {@code interactiveWindowsBlacklist}
+     * list is not empty.
+     *
+     * @param window the window whose title will be checked
+     * @return {@code true} if the title of the specified window is valid; {@code false} otherwise
+     */
+    private boolean hasValidTitle(final Window window) {
+        final String windowTitle = getWindowTitle(window);
+
+        final Boolean cachedValue = validTitleCache.get(windowTitle);
         if (cachedValue != null) {
             return cachedValue;
         }
 
-        // Determine whether the window is interactive based on its title
-        final String windowTitle = getWindowTitle(window);
-
         // Optimization to remove empty window titles from consideration without the loop.
         if (windowTitle.isEmpty()) {
-            interactiveCache.put(window, false);
+            validTitleCache.put(windowTitle, false);
             return false;
         }
 
@@ -143,10 +162,10 @@ class X11Environment extends AbstractEnvironment {
             }
         }
         boolean blacklistIsEmpty = windowTitlesBlacklist.length == 0;
-        // If the window title contains any of the entries in the blacklist, the window is not interactive
+        // If the window title contains any of the entries in the blacklist, the window title is invalid
         for (String title : windowTitlesBlacklist) {
             if (windowTitle.contains(title)) {
-                interactiveCache.put(window, false);
+                validTitleCache.put(windowTitle, false);
                 return false;
             }
         }
@@ -163,22 +182,22 @@ class X11Environment extends AbstractEnvironment {
             }
         }
         boolean whitelistIsEmpty = windowTitles.length == 0;
-        // If the window title contains any of the entries in the whitelist, the window is interactive
+        // If the window title contains any of the entries in the whitelist, the window title is valid
         for (String title : windowTitles) {
             if (windowTitle.contains(title)) {
-                interactiveCache.put(window, true);
+                validTitleCache.put(windowTitle, true);
                 return true;
             }
         }
 
         if (whitelistIsEmpty && !blacklistIsEmpty) {
             // If the whitelist is empty and the blacklist is not,
-            // the window is interactive by default
-            interactiveCache.put(window, true);
+            // the window title is valid by default
+            validTitleCache.put(windowTitle, true);
             return true;
         } else {
-            // Otherwise, the window is not interactive by default
-            interactiveCache.put(window, false);
+            // Otherwise, the window title is invalid by default
+            validTitleCache.put(windowTitle, false);
             return false;
         }
     }
@@ -216,7 +235,7 @@ class X11Environment extends AbstractEnvironment {
              * TODO: Find some X11 atom that is dedicated to a window being minimized,
              *  because _NET_WM_STATE_HIDDEN is used for both invisible windows and minimized windows
              */
-            if (isInteractive(window) && !state.contains(minimizedValue)) {
+            if (hasValidTitle(window) && !state.contains(minimizedValue)) {
                 // Window is valid
                 Rectangle windowRect = getWindowBounds(window);
                 /*
@@ -387,7 +406,7 @@ class X11Environment extends AbstractEnvironment {
 
     @Override
     public void refreshCache() {
-        interactiveCache.clear(); // Will be repopulated in the next isInteractive() call
+        validTitleCache.clear(); // Will be repopulated in the next hasValidTitle() call
         windowTitles = null;
         windowTitlesBlacklist = null;
     }

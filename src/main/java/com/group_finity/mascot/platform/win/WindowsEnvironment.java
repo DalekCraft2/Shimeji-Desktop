@@ -31,7 +31,15 @@ import java.util.List;
  * @author Shimeji-ee Group
  */
 class WindowsEnvironment extends AbstractEnvironment {
-    private final HashMap<HWND, Boolean> interactiveCache = new LinkedHashMap<>();
+    /**
+     * Maps a window title to a boolean representing whether the title is valid.
+     * Windows with invalid titles cannot be interactive.
+     * This is cleared whenever {@link #refreshCache()} is invoked.
+     *
+     * @see #hasValidTitle(HWND)
+     * @see #refreshCache()
+     */
+    private final HashMap<String, Boolean> validTitleCache = new LinkedHashMap<>();
 
     private final Area activeWindow = new Area();
 
@@ -85,18 +93,29 @@ class WindowsEnvironment extends AbstractEnvironment {
         activeWindowTitle = WindowUtils.getWindowTitle(activeWindowHandle);
     }
 
-    private boolean isInteractive(final HWND hWnd) {
-        final Boolean cachedValue = interactiveCache.get(hWnd);
+    /**
+     * Checks whether the title of the specified window is valid. For a window to be interactive, it must
+     * have a valid title.
+     * <p>
+     * A window's title is valid if it contains none of the entries from the {@code interactiveWindowsBlacklist}
+     * setting and contains at least one entry from the {@code interactiveWindows} setting. If the
+     * {@code interactiveWindows} list is empty, the title can still be valid if the {@code interactiveWindowsBlacklist}
+     * list is not empty.
+     *
+     * @param hWnd the window whose title will be checked
+     * @return {@code true} if the title of the specified window is valid; {@code false} otherwise
+     */
+    private boolean hasValidTitle(final HWND hWnd) {
+        final String windowTitle = WindowUtils.getWindowTitle(hWnd);
+
+        final Boolean cachedValue = validTitleCache.get(windowTitle);
         if (cachedValue != null) {
             return cachedValue;
         }
 
-        // Determine whether the window is interactive based on its title
-        final String windowTitle = WindowUtils.getWindowTitle(hWnd);
-
         // Optimization to remove empty window titles from consideration without the loop.
         if (windowTitle.isEmpty()) {
-            interactiveCache.put(hWnd, false);
+            validTitleCache.put(windowTitle, false);
             return false;
         }
 
@@ -112,10 +131,10 @@ class WindowsEnvironment extends AbstractEnvironment {
             }
         }
         boolean blacklistIsEmpty = windowTitlesBlacklist.length == 0;
-        // If the window title contains any of the entries in the blacklist, the window is not interactive
+        // If the window title contains any of the entries in the blacklist, the window title is invalid
         for (String title : windowTitlesBlacklist) {
             if (windowTitle.contains(title)) {
-                interactiveCache.put(hWnd, false);
+                validTitleCache.put(windowTitle, false);
                 return false;
             }
         }
@@ -132,22 +151,22 @@ class WindowsEnvironment extends AbstractEnvironment {
             }
         }
         boolean whitelistIsEmpty = windowTitles.length == 0;
-        // If the window title contains any of the entries in the whitelist, the window is interactive
+        // If the window title contains any of the entries in the whitelist, the window title is valid
         for (String title : windowTitles) {
             if (windowTitle.contains(title)) {
-                interactiveCache.put(hWnd, true);
+                validTitleCache.put(windowTitle, true);
                 return true;
             }
         }
 
         if (whitelistIsEmpty && !blacklistIsEmpty) {
             // If the whitelist is empty and the blacklist is not,
-            // the window is interactive by default
-            interactiveCache.put(hWnd, true);
+            // the window title is valid by default
+            validTitleCache.put(windowTitle, true);
             return true;
         } else {
-            // Otherwise, the window is not interactive by default
-            interactiveCache.put(hWnd, false);
+            // Otherwise, the window title is invalid by default
+            validTitleCache.put(windowTitle, false);
             return false;
         }
     }
@@ -157,7 +176,7 @@ class WindowsEnvironment extends AbstractEnvironment {
             // DWMWA_CLOAKED is not supported on Windows 7 and earlier, so check that we are on at least Windows 8
             if (VersionHelpers.IsWindows8OrGreater()) {
                 // metro apps can be closed or minimised and still be considered "visible" by User32
-                // have to consider the new cloaked variable instead
+                // have to consider the cloaked variable instead
                 LongByReference flagsRef = new LongByReference();
                 HRESULT result = Dwmapi.INSTANCE.DwmGetWindowAttribute(hWnd, Dwmapi.DWMWA_CLOAKED, flagsRef.getPointer(), 8);
                 if (result.equals(WinError.S_OK) && flagsRef.getValue() != 0) {
@@ -170,8 +189,7 @@ class WindowsEnvironment extends AbstractEnvironment {
                 return WindowStatus.INVALID;
             }
 
-            if (isInteractive(hWnd) && !User32Extra.INSTANCE.IsIconic(hWnd)) {
-                // Window is valid
+            if (hasValidTitle(hWnd) && !User32Extra.INSTANCE.IsIconic(hWnd)) {
                 Rectangle windowRect = getWindowRect(hWnd, true);
                 if (windowRect != null && getScreen().intersects(windowRect)) {
                     return WindowStatus.VALID;
@@ -351,7 +369,7 @@ class WindowsEnvironment extends AbstractEnvironment {
 
     @Override
     public void refreshCache() {
-        interactiveCache.clear(); // Will be repopulated in the next isInteractive() call
+        validTitleCache.clear(); // Will be repopulated in the next hasValidTitle() call
         windowTitles = null;
         windowTitlesBlacklist = null;
     }
