@@ -34,11 +34,22 @@ class MacEnvironment extends AbstractEnvironment {
     private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
 
     /**
-     * On Mac, you can take the active window, so mascots will react to it.
-     * <p>
-     * Therefore, in this class, give {@code activeWindow} an alias called {@link #frontmostWindow}.
+     * The area of the active window.
+     * If there is currently no active window, this area's position will be set to {@code (-1, -1)},
+     * and its dimensions will be set to {@code (0, 0)}.
+     *
+     * @see #frontmostWindow
+     * @see #getActiveWindow()
      */
     private final Area activeWindow = new Area();
+
+    /**
+     * On Mac, you can take the active window, so mascots will react to it.
+     * <p>
+     * Therefore, in this class, give {@link #activeWindow} an alias called {@code frontmostWindow}.
+     *
+     * @see #activeWindow
+     */
     private final Area frontmostWindow = activeWindow;
 
     private final int myPID = (int) ProcessHandle.current().pid();

@@ -41,14 +41,68 @@ class WindowsEnvironment extends AbstractEnvironment {
      */
     private final HashMap<String, Boolean> validTitleCache = new LinkedHashMap<>();
 
+    /**
+     * The area of the active window.
+     * If there is currently no active window, this area's position will be set to {@code (-1, -1)},
+     * and its dimensions will be set to {@code (0, 0)}.
+     *
+     * @see #activeWindowTitle
+     * @see #activeWindowHandle
+     * @see #getActiveWindow()
+     */
     private final Area activeWindow = new Area();
 
+    /**
+     * The title of the active window.
+     * If there is currently no active window, this value will be an empty string.
+     *
+     * @see #activeWindow
+     * @see #activeWindowHandle
+     * @see #getActiveWindowTitle()
+     */
     private String activeWindowTitle = "";
 
+    /**
+     * The native window handle for the active window.
+     * If there is currently no active window, this value will be {@code null}.
+     *
+     * @see #activeWindow
+     * @see #activeWindowTitle
+     * @see #getActiveWindowId()
+     */
     private HWND activeWindowHandle = null;
 
+    /**
+     * An array containing all whitelisted window titles.
+     * <p>
+     * If a window title contains any of the strings in this array, the window title may be valid.
+     * However, because the {@linkplain #windowTitlesBlacklist window title blacklist} takes priority over
+     * the whitelist, it is not guaranteed that the window title will be valid if it contains a string in this array.
+     * <p>
+     * If this array is empty, a window title can still be valid if the blacklist is not empty and does not contain
+     * any substrings of the window title.
+     * <p>
+     * This is initialized in {@link #hasValidTitle(HWND)} using the contents of the
+     * {@code interactiveWindows} setting, and set to {@code null} in {@link #refreshCache()}.
+     *
+     * @see #windowTitlesBlacklist
+     * @see #hasValidTitle(HWND)
+     * @see #refreshCache()
+     */
     private String[] windowTitles = null;
 
+    /**
+     * An array containing all blacklisted window titles.
+     * <p>
+     * If a window title contains any of the strings in this array, the window title is invalid.
+     * <p>
+     * This is initialized in {@link #hasValidTitle(HWND)} using the contents of the
+     * {@code interactiveWindowsBlacklist} setting, and set to {@code null} in {@link #refreshCache()}.
+     *
+     * @see #windowTitles
+     * @see #hasValidTitle(HWND)
+     * @see #refreshCache()
+     */
     private String[] windowTitlesBlacklist = null;
 
     /**
@@ -100,7 +154,7 @@ class WindowsEnvironment extends AbstractEnvironment {
      * A window's title is valid if it contains none of the entries from the {@code interactiveWindowsBlacklist}
      * setting and contains at least one entry from the {@code interactiveWindows} setting. If the
      * {@code interactiveWindows} list is empty, the title can still be valid if the {@code interactiveWindowsBlacklist}
-     * list is not empty.
+     * list is not empty and does not contain any substrings of the window title.
      *
      * @param hWnd the window whose title will be checked
      * @return {@code true} if the title of the specified window is valid; {@code false} otherwise

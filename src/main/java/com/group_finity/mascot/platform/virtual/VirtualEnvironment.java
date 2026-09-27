@@ -29,10 +29,28 @@ import java.util.Map;
 class VirtualEnvironment extends AbstractEnvironment {
     private JFrame display;
 
+    /**
+     * The area of the active window.
+     * Because the virtual environment does not support interaction with windows,
+     * this area's position is always {@code (-500, -500)}, and its dimensions are always {@code (0, 0)}.
+     * The area's visibility is initialized to {@code false}.
+     *
+     * @see #getActiveWindow()
+     */
     private final Area activeWindow = new Area();
 
+    /**
+     * An immutable singleton list containing the area returned by {@link #getScreen()},
+     * for use in this class's custom {@link ComplexArea}.
+     *
+     * @see #complexScreen
+     */
     private final List<Area> screenList = List.of(getScreen());
 
+    /**
+     * An anonymous instance of {@link ComplexArea} that is immutable
+     * and is optimized to contain a single {@link Area}.
+     */
     private final ComplexArea complexScreen = new ComplexArea() {
         @Override
         public void set(Map<String, Rectangle> rectangles) {
@@ -52,8 +70,16 @@ class VirtualEnvironment extends AbstractEnvironment {
         }
     };
 
+    /**
+     * Whether this {@code VirtualEnvironment} is in the process of initializing.
+     * If this is true when {@link #init()} is called, the method will return immediately.
+     */
     private boolean isInitializing = false;
 
+    /**
+     * Whether this {@code VirtualEnvironment} has finished initializing.
+     * If this is true when {@link #init()} is called, the method will return immediately.
+     */
     private boolean initialized = false;
 
     @Override
