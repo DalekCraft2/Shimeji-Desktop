@@ -106,21 +106,23 @@ class X11Environment extends AbstractEnvironment {
     private final int dockValue;
 
     /**
-     * Enumeration of the possible return statuses when checking whether
-     * a given window is valid to be interactive at any given moment.
+     * Enumeration of the possible return statuses from {@link #getWindowStatus(Window)}.
+     * Each status specifies whether a given window is interactive, whether it prevents
+     * other windows from being interactive, and whether it intersects with the bounds of the screen.
      *
      * @author LavenderSnek
+     * @see #getWindowStatus(Window)
      */
     private enum WindowStatus {
-        /** The window is valid and will prevent other windows from being valid. */
-        VALID,
-        /** The window is invalid and will prevent other windows from being valid. */
-        INVALID,
-        /** The window is invalid but will not prevent other windows from being valid. */
+        /** The window is interactive and prevents other windows from being interactive. */
+        INTERACTIVE,
+        /** The window is not interactive, and prevents interaction with any windows that are layered beneath it. */
+        OBSTRUCTIVE,
+        /** The window is not interactive but does not prevent other windows from being interactive. */
         IGNORED,
         /**
-         * The window is valid, but it is out of bounds and should be ignored.
-         * It will not prevent other windows from being valid.
+         * The window meets the criteria to be interactive, but it is out of bounds and should be ignored.
+         * It does not prevent other windows from being interactive.
          */
         OUT_OF_BOUNDS
     }
@@ -246,6 +248,14 @@ class X11Environment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Gets a {@link WindowStatus} representing whether the specified window is interactive, whether it
+     * prevents other windows from being interactive, and whether it intersects with the bounds of the screen.
+     *
+     * @param window the window whose status will be returned
+     * @return the status of the specified window
+     * @see WindowStatus
+     */
     private WindowStatus getWindowStatus(Window window) {
         Integer curDesktop;
         Integer desktop;
@@ -271,8 +281,8 @@ class X11Environment extends AbstractEnvironment {
         boolean badDesktop = desktop != null && !desktop.equals(curDesktop);
         if (!badDesktop && !checkState(state) && !checkType(type)) {
             if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
-                // Window is maximized and is therefore invalid
-                return WindowStatus.INVALID;
+                // Window is maximized and prevents the windows beneath it from being interactive
+                return WindowStatus.OBSTRUCTIVE;
             }
 
             /*
@@ -280,7 +290,6 @@ class X11Environment extends AbstractEnvironment {
              *  because _NET_WM_STATE_HIDDEN is used for both invisible windows and minimized windows
              */
             if (hasValidTitle(window) && !state.contains(minimizedValue)) {
-                // Window is valid
                 Rectangle windowRect = getWindowBounds(window);
                 /*
                  * TODO: Some Linux window managers don't seem to allow windows to be moved off screen, so this check
@@ -289,7 +298,8 @@ class X11Environment extends AbstractEnvironment {
                  *  and then check for windows that are that close to the edge.
                  */
                 if (getScreen().intersects(windowRect)) {
-                    return WindowStatus.VALID;
+                    // Window is interactive
+                    return WindowStatus.INTERACTIVE;
                 } else {
                     // Window is out of bounds and will be ignored
                     return WindowStatus.OUT_OF_BOUNDS;
@@ -297,7 +307,7 @@ class X11Environment extends AbstractEnvironment {
             }
         }
 
-        // Window is valid but not interactive according to user settings
+        // Window is ignored
         return WindowStatus.IGNORED;
     }
 
@@ -315,14 +325,14 @@ class X11Environment extends AbstractEnvironment {
         loop:
         for (Window window : allWindows) {
             switch (getWindowStatus(window)) {
-                case VALID:
+                case INTERACTIVE:
                     activeWindowObject = window;
                     break loop;
 
                 case IGNORED, OUT_OF_BOUNDS:
                     continue;
 
-                case INVALID: // The window is invalid, so abort the search here
+                case OBSTRUCTIVE: // The window blocks all windows beneath it, so abort the search here
                 default:
                     activeWindowObject = null;
                     break loop;
@@ -431,7 +441,7 @@ class X11Environment extends AbstractEnvironment {
         for (Window window : allWindows) {
             WindowStatus result = getWindowStatus(window);
             if (result == WindowStatus.OUT_OF_BOUNDS) {
-                // Valid interactive window found
+                // Out-of-bounds interactive window found
 
                 // Get the work area rectangle
                 final Rectangle workArea = getWorkAreaRect();

@@ -106,21 +106,23 @@ class WindowsEnvironment extends AbstractEnvironment {
     private String[] windowTitlesBlacklist = null;
 
     /**
-     * Enumeration of the possible return statuses when checking whether
-     * a given window is valid to be interactive at any given moment.
+     * Enumeration of the possible return statuses from {@link #getWindowStatus(HWND)}.
+     * Each status specifies whether a given window is interactive, whether it prevents
+     * other windows from being interactive, and whether it intersects with the bounds of the screen.
      *
      * @author LavenderSnek
+     * @see #getWindowStatus(HWND)
      */
     private enum WindowStatus {
-        /** The window is valid and will prevent other windows from being valid. */
-        VALID,
-        /** The window is invalid and will prevent other windows from being valid. */
-        INVALID,
-        /** The window is invalid but will not prevent other windows from being valid. */
+        /** The window is interactive and prevents other windows from being interactive. */
+        INTERACTIVE,
+        /** The window is not interactive, and prevents interaction with any windows that are layered beneath it. */
+        OBSTRUCTIVE,
+        /** The window is not interactive but does not prevent other windows from being interactive. */
         IGNORED,
         /**
-         * The window is valid, but it is out of bounds and should be ignored.
-         * It will not prevent other windows from being valid.
+         * The window meets the criteria to be interactive, but it is out of bounds and should be ignored.
+         * It does not prevent other windows from being interactive.
          */
         OUT_OF_BOUNDS
     }
@@ -225,6 +227,14 @@ class WindowsEnvironment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Gets a {@link WindowStatus} representing whether the specified window is interactive, whether it
+     * prevents other windows from being interactive, and whether it intersects with the bounds of the screen.
+     *
+     * @param hWnd the window whose status will be returned
+     * @return the status of the specified window
+     * @see WindowStatus
+     */
     private WindowStatus getWindowStatus(HWND hWnd) {
         if (User32.INSTANCE.IsWindowVisible(hWnd)) {
             // DWMWA_CLOAKED is not supported on Windows 7 and earlier, so check that we are on at least Windows 8
@@ -239,14 +249,15 @@ class WindowsEnvironment extends AbstractEnvironment {
             }
 
             if (User32Extra.INSTANCE.IsZoomed(hWnd)) {
-                // Window is maximized and is therefore invalid
-                return WindowStatus.INVALID;
+                // Window is maximized and prevents the windows beneath it from being interactive
+                return WindowStatus.OBSTRUCTIVE;
             }
 
             if (hasValidTitle(hWnd) && !User32Extra.INSTANCE.IsIconic(hWnd)) {
                 Rectangle windowRect = getWindowRect(hWnd, true);
                 if (windowRect != null && getScreen().intersects(windowRect)) {
-                    return WindowStatus.VALID;
+                    // Window is interactive
+                    return WindowStatus.INTERACTIVE;
                 } else {
                     // Window is out of bounds and will be ignored
                     return WindowStatus.OUT_OF_BOUNDS;
@@ -262,12 +273,12 @@ class WindowsEnvironment extends AbstractEnvironment {
         activeWindowHandle = null;
 
         User32.INSTANCE.EnumWindows((hWnd, data) -> switch (getWindowStatus(hWnd)) {
-            case VALID -> {
+            case INTERACTIVE -> {
                 activeWindowHandle = hWnd;
                 yield false;
             }
             case IGNORED, OUT_OF_BOUNDS -> true;
-            default -> { // The window is invalid, so abort the search here
+            default -> { // The window blocks all windows beneath it, so abort the search here
                 activeWindowHandle = null;
                 yield false;
             }
@@ -381,7 +392,7 @@ class WindowsEnvironment extends AbstractEnvironment {
             public boolean callback(HWND hWnd, Pointer data) {
                 WindowStatus result = getWindowStatus(hWnd);
                 if (result == WindowStatus.OUT_OF_BOUNDS) {
-                    // Valid interactive window found
+                    // Out-of-bounds interactive window found
 
                     // Get the work area rectangle
                     final Rectangle workArea = getWorkAreaRect(false);
