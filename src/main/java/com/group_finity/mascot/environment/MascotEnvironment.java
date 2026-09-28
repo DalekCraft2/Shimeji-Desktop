@@ -178,7 +178,7 @@ public class MascotEnvironment {
         Area workArea = getWorkArea();
         Border workAreaBorder = workArea.getTopBorder();
         if (workAreaBorder.isOn(anchor)) {
-            if (!ignoreSeparator || isScreenTopBottom()) {
+            if (!ignoreSeparator || isScreenTopBottom(anchor)) {
                 return workAreaBorder;
             }
         }
@@ -221,7 +221,7 @@ public class MascotEnvironment {
         Area workArea = getWorkArea();
         Border workAreaBorder = workArea.getBottomBorder();
         if (workAreaBorder.isOn(anchor)) {
-            if (!ignoreSeparator || isScreenTopBottom()) {
+            if (!ignoreSeparator || isScreenTopBottom(anchor)) {
                 return workAreaBorder;
             }
         }
@@ -263,7 +263,7 @@ public class MascotEnvironment {
         Area workArea = getWorkArea();
         Border workAreaBorder = isLookRight ? workArea.getRightBorder() : workArea.getLeftBorder();
         if (workAreaBorder.isOn(anchor)) {
-            if (!ignoreSeparator || isScreenLeftRight()) {
+            if (!ignoreSeparator || isScreenLeftRight(anchor)) {
                 return workAreaBorder;
             }
         }
@@ -354,17 +354,6 @@ public class MascotEnvironment {
     }
 
     /**
-     * Checks whether the mascot is on the top or bottom border of exactly one screen.
-     * Returns {@code false} if the mascot is on multiple top/bottom borders (i.e., the mascot is on the border between
-     * two screens).
-     *
-     * @return whether the mascot is on the top or bottom border of exactly one screen
-     */
-    private boolean isScreenTopBottom() {
-        return isScreenTopBottom(mascot.getAnchor());
-    }
-
-    /**
      * Checks whether the specified point lies on the top or bottom border of exactly one screen.
      * Returns {@code false} if the point is on multiple top/bottom borders (i.e., the point is on the border between
      * two screens).
@@ -396,16 +385,6 @@ public class MascotEnvironment {
         }
 
         return count == 1;
-    }
-
-    /**
-     * Checks whether the mascot is on the wall of exactly one screen.
-     * Returns {@code false} if the mascot is on multiple walls (i.e., the mascot is on the border between two screens).
-     *
-     * @return whether the mascot is on the wall of exactly one screen
-     */
-    private boolean isScreenLeftRight() {
-        return isScreenLeftRight(mascot.getAnchor());
     }
 
     /**
