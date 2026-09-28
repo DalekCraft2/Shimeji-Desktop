@@ -28,7 +28,6 @@ public class MascotEnvironment {
      * The work area containing this environment's {@link Mascot}.
      * The work area typically encompasses all of a given screen except for the taskbar.
      *
-     *
      * @see #refreshWorkArea()
      * @see #getWorkArea()
      * @see #getWorkArea(boolean)
