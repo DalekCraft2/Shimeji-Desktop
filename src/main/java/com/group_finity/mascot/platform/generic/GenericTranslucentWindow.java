@@ -7,12 +7,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
+ * An implementation of {@link TranslucentWindow} that provides generic support for most platforms.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
     /**
-     * Image to display.
+     * The image to display.
+     *
+     * @see #setImage(BufferedImage)
      */
     private BufferedImage image;
 

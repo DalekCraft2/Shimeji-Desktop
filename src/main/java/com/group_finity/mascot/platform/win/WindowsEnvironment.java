@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- * Uses JNI to obtain environment information that is difficult to obtain with Java.
+ * An implementation of {@link AbstractEnvironment} that provides access to the Windows native environment via JNA.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group

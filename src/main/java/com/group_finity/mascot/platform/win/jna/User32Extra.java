@@ -6,10 +6,16 @@ import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 
 /**
+ * Provides access to functions in the Windows {@code user32} library that aren't implemented in
+ * JNA's {@link com.sun.jna.platform.win32.User32 User32} interface.
+ *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
  */
 public interface User32Extra extends StdCallLibrary {
+    /**
+     * The instance of the {@code user32} library interface.
+     */
     User32Extra INSTANCE = Native.load("user32", User32Extra.class, W32APIOptions.DEFAULT_OPTIONS);
 
     /**

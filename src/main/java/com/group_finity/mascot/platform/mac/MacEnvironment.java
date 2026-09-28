@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Uses the Accessibility API to obtain environment information that is difficult to obtain using Java.
+ * An implementation of {@link AbstractEnvironment} that provides access to the macOS native environment via
+ * the macOS Accessibility API.
  *
  * @author nonowarn
  */

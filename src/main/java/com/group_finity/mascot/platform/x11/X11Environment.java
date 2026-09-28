@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Uses JNI to obtain environment information that is difficult to obtain with Java.
+ * An implementation of {@link AbstractEnvironment} that provides access to the X11 native environment via JNA.
  *
  * @author asdfman
  */

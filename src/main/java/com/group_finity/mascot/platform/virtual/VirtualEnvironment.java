@@ -21,12 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Virtual desktop environment.
+ * An implementation of {@link AbstractEnvironment} that provides access to a custom, Swing-based virtual environment.
  *
  * @author Kilkakon
  * @since 1.0.20
  */
 class VirtualEnvironment extends AbstractEnvironment {
+    /**
+     * The window that acts as the display for the virtual environment.
+     */
     private JFrame display;
 
     /**
@@ -72,13 +75,14 @@ class VirtualEnvironment extends AbstractEnvironment {
 
     /**
      * Whether this {@code VirtualEnvironment} is in the process of initializing.
-     * If this is true when {@link #init()} is called, the method will return immediately.
+     * {@link #init()} will return immediately if this is {@code true}.
      */
     private boolean isInitializing = false;
 
     /**
      * Whether this {@code VirtualEnvironment} has finished initializing.
-     * If this is true when {@link #init()} is called, the method will return immediately.
+     * {@link #init()} will return immediately if this is {@code true}, and
+     * {@link #tick()} will return immediately if this is {@code false}.
      */
     private boolean initialized = false;
 

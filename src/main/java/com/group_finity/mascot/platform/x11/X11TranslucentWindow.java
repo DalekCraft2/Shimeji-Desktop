@@ -16,17 +16,26 @@ import java.awt.event.HierarchyEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * Image window with alpha value.
- * {@link BufferedImage} set with {@link #setImage(BufferedImage)} can be displayed on the desktop.
+ * An implementation of {@link TranslucentWindow} that is specialized for X11.
  *
  * @author asdfman
  */
 class X11TranslucentWindow extends JWindow implements TranslucentWindow {
     /**
-     * Image to display.
+     * The image to display.
+     *
+     * @see #setImage(BufferedImage)
      */
     private BufferedImage image;
 
+    /**
+     * Whether this window is currently visible.
+     * <p>
+     * This field exists as a workaround to a bug involving {@link JWindow#setVisible(boolean)} on X11.
+     *
+     * @see #isVisible()
+     * @see #setVisible(boolean)
+     */
     private boolean visible;
 
     X11TranslucentWindow(X11.Display dpy, int dockValue) {

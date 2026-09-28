@@ -7,14 +7,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Virtual desktop translucent panel.
+ * An implementation of {@link TranslucentWindow} that is made for the virtual environment.
+ * Rather than being a proper window, this implementation is a {@link JPanel} that is contained by the
+ * virtual environment window.
  *
  * @author Kilkakon
  * @since 1.0.20
  */
 class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
     /**
-     * Image to display.
+     * The image to display.
      *
      * @see #setImage(BufferedImage)
      */

@@ -10,8 +10,11 @@ import com.group_finity.mascot.platform.x11.X11NativeFactory;
 import com.sun.jna.Platform;
 
 /**
- * Provides access to the native environment.
- * {@link #getInstance()} returns an instance of a Windows, Mac, Linux (X11), or general-purpose subclass depending on the execution environment.
+ * Provides utilities for accessing the native environment and creating translucent windows that are
+ * optimized for the current environment.
+ * <p>
+ * {@link #getInstance()} returns an instance of a Windows, Mac, Linux (X11), or general-purpose subclass
+ * depending on the execution environment.
  *
  * @author Yuki Yamada
  */
@@ -32,7 +35,11 @@ public abstract class NativeFactory {
     }
 
     /**
-     * Creates an instance of the subclass.
+     * Creates an instance of a {@code NativeFactory} subclass based on the current platform and user settings,
+     * or recreates the instance if an instance had already been created.
+     * <p>
+     * Before resetting the {@code NativeFactory} instance, the {@link Environment} should be disposed
+     * by calling {@link Environment#dispose()}.
      */
     public static void resetInstance() {
         boolean windowedMode = Main.getInstance().getSettings().windowedMode;
@@ -53,9 +60,9 @@ public abstract class NativeFactory {
     }
 
     /**
-     * Gets the {@link Environment} object.
+     * Gets the {@link Environment} instance.
      *
-     * @return the {@link Environment} object
+     * @return the {@link Environment} instance
      */
     public abstract Environment getEnvironment();
 

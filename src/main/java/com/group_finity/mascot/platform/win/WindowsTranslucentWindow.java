@@ -7,8 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Image window with alpha value.
- * {@link BufferedImage} set with {@link #setImage(BufferedImage)} can be displayed on the desktop.
+ * An implementation of {@link TranslucentWindow} that is specialized for Windows.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group
@@ -16,7 +15,9 @@ import java.awt.image.BufferedImage;
  */
 class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
     /**
-     * Image to display.
+     * The image to display.
+     *
+     * @see #setImage(BufferedImage)
      */
     private BufferedImage image;
 

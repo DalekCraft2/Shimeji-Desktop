@@ -4,7 +4,11 @@ import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.environment.Area;
 
 /**
- * Uses JNI to obtain environment information that is difficult to obtain with Java.
+ * A cross-platform implementation of {@link AbstractEnvironment} that provides access to basic information about
+ * the native environment.
+ * <p>
+ * Because this implementation is not specialized for any specific operating system, it only contains the functionality
+ * that is already present in {@code AbstractEnvironment}.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group

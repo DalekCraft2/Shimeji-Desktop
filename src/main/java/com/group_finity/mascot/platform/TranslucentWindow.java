@@ -4,8 +4,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Image window with alpha value.
- * {@link BufferedImage} set with {@link #setImage(BufferedImage)} can be displayed on the desktop.
+ * A window with translucency support that displays an image.
+ * The image that is displayed can be set by calling {@link #setImage(BufferedImage)}.
  *
  * @author Yuki Yamada
  * @author Shimeji-ee Group

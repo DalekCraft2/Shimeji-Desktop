@@ -8,11 +8,16 @@ import com.sun.jna.platform.win32.WinNT.HRESULT;
 import com.sun.jna.win32.StdCallLibrary;
 
 /**
- * Wraps up Dwmapi to get access to the new Cloaked variable.
+ * Provides access to the {@link #DwmGetWindowAttribute(HWND, int, Pointer, int)} function
+ * in the Windows {@code dwmapi} library.
+ * This mainly exists to get access to the {@link #DWMWA_CLOAKED} window attribute.
  *
  * @author Kilkakon
  */
 public interface Dwmapi extends StdCallLibrary {
+    /**
+     * The instance of the {@code dwmapi} library interface.
+     */
     Dwmapi INSTANCE = Native.load("dwmapi", Dwmapi.class);
 
     int DWMWA_NCRENDERING_ENABLED = 1;
