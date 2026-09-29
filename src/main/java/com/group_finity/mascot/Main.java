@@ -87,7 +87,12 @@ public class Main {
     private final Manager manager = new Manager();
     private List<String> imageSets = new ArrayList<>();
     private final Map<String, Configuration> configurations = new ConcurrentHashMap<>();
-    private final Map<String, List<String>> childImageSets = new ConcurrentHashMap<>();
+
+    /**
+     * Maps an image set name to a list of image sets that are dependencies of that image set.
+     * For as long as a given image set is selected and loaded, all of its dependencies must also be loaded.
+     */
+    private final Map<String, List<String>> dependencyMap = new ConcurrentHashMap<>();
 
     /**
      * A collection of configurations that failed to load.
@@ -195,9 +200,9 @@ public class Main {
 
         // Get the image sets to use
         if (!settings.alwaysShowShimejiChooser) {
-            for (String set : settings.activeImageSets)
-                if (!set.trim().isEmpty()) {
-                    imageSets.add(set.trim());
+            for (String imageSet : settings.activeImageSets)
+                if (!imageSet.trim().isEmpty()) {
+                    imageSets.add(imageSet.trim());
                 }
         }
 
@@ -299,14 +304,14 @@ public class Main {
 
             Configuration configuration = new Configuration();
 
-            // Store this Entry in a variable so we can reuse it when determining this image set's child image sets
+            // Store this Entry in a variable so we can reuse it when determining this image set's dependencies
             Entry actionsEntry = new Entry(actionsDocument.getDocumentElement());
             configuration.load(actionsEntry, imageSet);
 
             /* It's possible (albeit unlikely) that the different config files may use different schemas.
             Therefore, we need to save the action file's schema into a variable before loading any other files
             so the Configuration's schema doesn't get overwritten when loading those files.
-            We will use this schema when determining this image set's child image sets. */
+            We will use this schema when determining this image set's dependencies. */
             ResourceBundle actionsSchema = configuration.getSchema();
 
             Path behaviorsFile = getBehaviorsFilePath(imageSet);
@@ -339,9 +344,9 @@ public class Main {
 
             configurations.put(imageSet, configuration);
 
-            List<String> childMascots = new ArrayList<>();
+            List<String> dependencies = new ArrayList<>();
 
-            // Determine the child image sets for this image set
+            // Determine the dependencies for this image set
             List<Entry> actionLists = actionsEntry.selectChildren(actionsSchema.getString("ActionList"));
             if (!actionLists.isEmpty()) {
                 for (final Entry actionList : actionLists) {
@@ -349,21 +354,21 @@ public class Main {
                     if (!actionNodes.isEmpty()) {
                         for (final Entry actionNode : actionNodes) {
                             if (actionNode.hasAttribute(actionsSchema.getString("BornMascot"))) {
-                                String childImageSet = actionNode.getAttribute(actionsSchema.getString("BornMascot"));
-                                if (!childMascots.contains(childImageSet)) {
-                                    childMascots.add(childImageSet);
+                                String dependency = actionNode.getAttribute(actionsSchema.getString("BornMascot"));
+                                if (!dependencies.contains(dependency)) {
+                                    dependencies.add(dependency);
                                 }
-                                if (!configurations.containsKey(childImageSet)) {
-                                    loadConfiguration(childImageSet);
+                                if (!configurations.containsKey(dependency)) {
+                                    loadConfiguration(dependency);
                                 }
                             }
                             if (actionNode.hasAttribute(actionsSchema.getString("TransformMascot"))) {
-                                String childImageSet = actionNode.getAttribute(actionsSchema.getString("TransformMascot"));
-                                if (!childMascots.contains(childImageSet)) {
-                                    childMascots.add(childImageSet);
+                                String dependency = actionNode.getAttribute(actionsSchema.getString("TransformMascot"));
+                                if (!dependencies.contains(dependency)) {
+                                    dependencies.add(dependency);
                                 }
-                                if (!configurations.containsKey(childImageSet)) {
-                                    loadConfiguration(childImageSet);
+                                if (!configurations.containsKey(dependency)) {
+                                    loadConfiguration(dependency);
                                 }
                             }
                         }
@@ -371,7 +376,7 @@ public class Main {
                 }
             }
 
-            childImageSets.put(imageSet, childMascots);
+            dependencyMap.put(imageSet, dependencies);
 
             return true;
         } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
@@ -379,7 +384,7 @@ public class Main {
             log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
             showError(String.format(languageBundle.getString("FailedLoadConfigErrorMessage"), imageSet), e);
             configurations.remove(imageSet);
-            childImageSets.remove(imageSet);
+            dependencyMap.remove(imageSet);
             ImagePairs.removeAll(imageSet);
             Sounds.removeAll(imageSet);
             failedConfigurations.add(imageSet);
@@ -585,14 +590,14 @@ public class Main {
 
         Collection<String> toAdd = new ArrayList<>();
         Collection<String> toRetain = new ArrayList<>();
-        for (String set : newImageSets) {
-            if (!imageSets.contains(set)) {
-                toAdd.add(set);
+        for (String imageSet : newImageSets) {
+            if (!imageSets.contains(imageSet)) {
+                toAdd.add(imageSet);
             }
-            if (!toRetain.contains(set)) {
-                toRetain.add(set);
+            if (!toRetain.contains(imageSet)) {
+                toRetain.add(imageSet);
             }
-            populateCollectionWithChildSets(set, toRetain);
+            populateCollectionWithDependencies(imageSet, toRetain);
         }
 
         boolean isExit = manager.isExitOnLastRemoved();
@@ -622,26 +627,26 @@ public class Main {
     }
 
     /**
-     * Recursively populates the given collection with all child image sets of the given image set.
+     * Recursively populates the given collection with all dependencies of the given image set.
      *
-     * @param imageSet the image set whose children should be added to the collection
-     * @param childList the collection to populate
+     * @param imageSet the image set whose dependencies should be added to the collection
+     * @param dependencies the collection to populate
      */
-    private void populateCollectionWithChildSets(String imageSet, Collection<String> childList) {
-        if (childImageSets.containsKey(imageSet)) {
-            for (String set : childImageSets.get(imageSet)) {
-                if (!childList.contains(set)) {
-                    childList.add(set);
-                    populateCollectionWithChildSets(set, childList);
+    private void populateCollectionWithDependencies(String imageSet, Collection<String> dependencies) {
+        if (dependencyMap.containsKey(imageSet)) {
+            for (String dependency : dependencyMap.get(imageSet)) {
+                if (!dependencies.contains(dependency)) {
+                    dependencies.add(dependency);
+                    populateCollectionWithDependencies(dependency, dependencies);
                 }
             }
         }
     }
 
     /**
-     * Unloads the given image set and disposes of any mascots of that image set, unless it is a child image set of
+     * Unloads the given image set and disposes of any mascots of that image set, unless it is a dependency of
      * an image set that has been selected in the image set chooser.
-     * If the given image set has any children image sets that have not been selected in the image set chooser,
+     * If the given image set depends on any image sets that have not been selected in the image set chooser,
      * those image sets will also be unloaded and their mascots will be disposed.
      *
      * @param imageSet the image set to remove
@@ -656,13 +661,13 @@ public class Main {
             ImagePairs.removeAll(imageSet);
             Sounds.removeAll(imageSet);
 
-            if (childImageSets.containsKey(imageSet)) {
-                for (String set : childImageSets.get(imageSet)) {
-                    removeLoadedImageSet(set, setsToIgnore);
+            if (dependencyMap.containsKey(imageSet)) {
+                for (String dependency : dependencyMap.get(imageSet)) {
+                    removeLoadedImageSet(dependency, setsToIgnore);
                 }
             }
 
-            childImageSets.remove(imageSet);
+            dependencyMap.remove(imageSet);
         }
     }
 
