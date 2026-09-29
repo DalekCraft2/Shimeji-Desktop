@@ -135,8 +135,10 @@ public class BehaviorBuilder implements IBehaviorBuilder {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
                     "MissingRequiredAttributeErrorMessage"), schema.getString("Frequency")));
         }
-        // TODO: Ensure that frequencies are not negative when loading behaviors and behavior references
         frequency = Integer.parseInt(frequencyText);
+        if (frequency < 0) {
+            throw new IllegalArgumentException("frequency<0");
+        }
         hidden = behaviorNode.hasAttribute(schema.getString("Hidden")) &&
                 Boolean.parseBoolean(behaviorNode.getAttribute(schema.getString("Hidden")));
 

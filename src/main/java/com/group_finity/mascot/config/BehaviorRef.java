@@ -90,6 +90,9 @@ public class BehaviorRef implements IBehaviorBuilder {
                     "MissingRequiredAttributeErrorMessage"), schema.getString("Frequency")));
         }
         frequency = Integer.parseInt(frequencyText);
+        if (frequency < 0) {
+            throw new IllegalArgumentException("frequency<0");
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Loading behavior reference: {}", this);
