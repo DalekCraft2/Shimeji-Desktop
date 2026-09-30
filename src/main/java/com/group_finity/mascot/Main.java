@@ -52,17 +52,38 @@ import java.util.logging.LogManager;
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
+    /**
+     * The path to the configuration directory.
+     * Also functions as a path representing the name of the configuration directory.
+     */
     public static final Path CONFIG_DIRECTORY = Path.of("conf");
+    /**
+     * The path to the image directory.
+     * Also functions as a path representing the name of the image directory.
+     */
     public static final Path IMAGE_DIRECTORY = Path.of("img");
+    /**
+     * The path to the sound directory.
+     * Also functions as a path representing the name of the sound directory.
+     */
     public static final Path SOUND_DIRECTORY = Path.of("sound");
+    /** The path to the settings file. */
     public static final Path SETTINGS_FILE = CONFIG_DIRECTORY.resolve("settings.properties");
+    /** The path to the logging file. */
     public static final Path LOGGING_FILE = CONFIG_DIRECTORY.resolve("logging.properties");
+    /** The path to the icon file. */
     public static final Path ICON_FILE = IMAGE_DIRECTORY.resolve("icon.png");
 
+    /**
+     * An array of all valid names for the actions file.
+     */
     private static final String[] ACTIONS_FILENAMES = {
             "actions.xml", "動作.xml", "one.xml", "1.xml"
     };
 
+    /**
+     * An array of all valid names for the behaviors file.
+     */
     private static final String[] BEHAVIORS_FILENAMES = {
             "behaviors.xml", "behavior.xml", "行動.xml", "two.xml", "2.xml"
     };
@@ -83,14 +104,40 @@ public class Main {
         }
     }
 
+    /**
+     * The instance of the program.
+     *
+     * @see #getInstance()
+     */
     private static final Main INSTANCE = new Main();
+
+    /**
+     * The manager that is used for all mascots.
+     *
+     * @see #getManager()
+     */
     private final Manager manager = new Manager();
+
+    /**
+     * The currently selected image sets that were loaded successfully.
+     * This only includes the image sets that were selected in the image set chooser, and not their dependencies.
+     *
+     * @see #getImageSets()
+     * @see #setActiveImageSets(Collection)
+     */
     private List<String> imageSets = new ArrayList<>();
+
+    /**
+     * Maps an image set to its corresponding configuration.
+     *
+     * @see #loadConfiguration(String)
+     * @see #getConfiguration(String)
+     */
     private final Map<String, Configuration> configurations = new ConcurrentHashMap<>();
 
     /**
-     * Maps an image set name to a list of image sets that are dependencies of that image set.
-     * For as long as a given image set is selected and loaded, all of its dependencies must also be loaded.
+     * Maps an image set to a list of image sets that are dependencies of that image set.
+     * For as long as a given image set is loaded, all of its dependencies must also be loaded.
      */
     private final Map<String, List<String>> dependencyMap = new ConcurrentHashMap<>();
 
@@ -100,7 +147,19 @@ public class Main {
      */
     private final Collection<String> failedConfigurations = new ArrayList<>();
 
+    /**
+     * The user settings data.
+     *
+     * @see #getSettings()
+     */
     private final Settings settings = new Settings();
+
+    /**
+     * The resource bundle for the language that is currently selected by the user.
+     *
+     * @see #getLanguageBundle()
+     * @see #loadLanguage(Locale)
+     */
     private ResourceBundle languageBundle;
 
     /**
@@ -111,31 +170,77 @@ public class Main {
      */
     private static BufferedImage icon;
 
+    /**
+     * The {@link JFrame} instance used for displaying windows and dialogs.
+     *
+     * @see #getFrame()
+     */
     private static JFrame frame;
 
+    /**
+     * The container for the program's tray icon and its associated popup menu.
+     *
+     * @see #getTrayMenu()
+     */
     private final TrayMenu trayMenu = new TrayMenu();
 
+    /**
+     * Gets the instance of the program.
+     *
+     * @return the instance of the program
+     */
     // TODO: Refactor this away entirely.
     public static Main getInstance() {
         return INSTANCE;
     }
 
+    /**
+     * Gets the {@link JFrame} instance used for displaying windows and dialogs.
+     *
+     * @return the {@code JFrame} instance
+     */
     static JFrame getFrame() {
         return frame;
     }
 
+    /**
+     * Displays an error dialog with the specified message.
+     *
+     * @param message the message to display
+     */
     public static void showError(String message) {
         showError(message, null);
     }
 
+    /**
+     * Displays an error dialog with the specified message.
+     * The specified throwable will be stringified and appended to the message.
+     *
+     * @param message the message to display
+     * @param exception the throwable to append to the message
+     */
     public static void showError(String message, Throwable exception) {
         showError(frame, message, exception);
     }
 
+    /**
+     * Displays an error dialog in the specified component with the specified message.
+     *
+     * @param parentComponent the component in which the dialog will be displayed
+     * @param message the message to display
+     */
     public static void showError(Component parentComponent, String message) {
         showError(parentComponent, message, null);
     }
 
+    /**
+     * Displays an error dialog with the specified message in the specified component.
+     * The specified throwable will be stringified and appended to the message.
+     *
+     * @param parentComponent the component in which the dialog will be displayed
+     * @param message the message to display
+     * @param exception the throwable to append to the message
+     */
     public static void showError(Component parentComponent, String message, Throwable exception) {
         ResourceBundle languageBundle = INSTANCE.languageBundle;
         if (exception != null) {
@@ -163,13 +268,22 @@ public class Main {
         JOptionPane.showMessageDialog(parentComponent, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
-    static void main() throws InterruptedException, InvocationTargetException {
-        SwingUtilities.invokeAndWait(() -> {
-            // Load theme before any Swing components are created
-            updateLookAndFeel();
-            // Create frame before anything else happens, in case showError() gets called
-            frame = new JFrame();
-        });
+    /**
+     * The entry point for the program.
+     */
+    static void main() {
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                // Load theme before any Swing components are created
+                updateLookAndFeel();
+                // Create frame before anything else happens, in case showError() gets called
+                frame = new JFrame();
+            });
+        } catch (InterruptedException | InvocationTargetException e) {
+            // Wrap these in a RuntimeException instead of adding a throws clause to the method signature
+            // because I can't be bothered to describe the situations in which these are thrown in the doc comment
+            throw new RuntimeException(e);
+        }
         OsThemeDetector.getDetector().registerListener(Main::updateLookAndFeel);
 
         try {
@@ -188,6 +302,9 @@ public class Main {
         }
     }
 
+    /**
+     * Initializes the program.
+     */
     public void run() {
         // Load settings
         settings.load(SETTINGS_FILE);
@@ -278,9 +395,10 @@ public class Main {
     }
 
     /**
-     * Loads the configuration files for the given image set.
+     * Loads the configuration files for the specified image set.
      *
      * @param imageSet the image set to load
+     * @return {@code true} if the configuration was loaded successfully; {@code false} otherwise
      */
     private boolean loadConfiguration(final String imageSet) {
         if (configurations.containsKey(imageSet)) {
@@ -393,6 +511,15 @@ public class Main {
         return false;
     }
 
+    /**
+     * Gets the path to the file that contains the action data for the specified image set.
+     * The {@code img/[imageSet]/conf/} directory is searched first, followed by the {@code conf/[imageSet]/} directory,
+     * and lastly the {@code conf/} directory.
+     *
+     * @param imageSet the image set whose actions file path is to be returned
+     * @return the path to the specified image set's actions file
+     * @throws FileNotFoundException if the specified image set's actions file cannot be found
+     */
     public static Path getActionsFilePath(String imageSet) throws FileNotFoundException {
         Path[] configDirs = {
                 IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
@@ -412,6 +539,15 @@ public class Main {
         throw new FileNotFoundException("Could not find action file for image set: " + imageSet);
     }
 
+    /**
+     * Gets the path to the file that contains the behavior data for the specified image set.
+     * The {@code img/[imageSet]/conf/} directory is searched first, followed by the {@code conf/[imageSet]/} directory,
+     * and lastly the {@code conf/} directory.
+     *
+     * @param imageSet the image set whose behaviors file path is to be returned
+     * @return the path to the specified image set's behaviors file
+     * @throws FileNotFoundException if the specified image set's behaviors file cannot be found
+     */
     public static Path getBehaviorsFilePath(String imageSet) throws FileNotFoundException {
         Path[] configDirs = {
                 IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
@@ -431,6 +567,15 @@ public class Main {
         throw new FileNotFoundException("Could not find behavior file for image set: " + imageSet);
     }
 
+    /**
+     * Gets the path to the file that contains the information data for the specified image set.
+     * The {@code img/[imageSet]/conf/} directory is searched first, followed by the {@code conf/[imageSet]/} directory,
+     * and lastly the {@code conf/} directory.
+     *
+     * @param imageSet the image set whose information file path is to be returned
+     * @return the path to the specified image set's information file
+     * @throws FileNotFoundException if the specified image set's information file cannot be found
+     */
     public static Path getInfoFilePath(String imageSet) throws FileNotFoundException {
         Path[] configDirs = {
                 IMAGE_DIRECTORY.resolve(imageSet).resolve(CONFIG_DIRECTORY),
@@ -448,6 +593,16 @@ public class Main {
         throw new FileNotFoundException("Could not find information file for image set: " + imageSet);
     }
 
+    /**
+     * Gets the path to the specified sound file for the specified image set.
+     * The {@code img/[imageSet]/sound/} directory is searched first, followed by the {@code sound/[imageSet]/} directory,
+     * and lastly the {@code sound/} directory.
+     *
+     * @param imageSet the image set that uses the sound file
+     * @param soundFile the name of the sound file
+     * @return the path to the specified sound file for the specified image set
+     * @throws FileNotFoundException if the specified sound file for the specified image set cannot be found
+     */
     public static Path getSoundFilePath(String imageSet, String soundFile) throws FileNotFoundException {
         Path[] soundDirs = {
                 IMAGE_DIRECTORY.resolve(imageSet).resolve(SOUND_DIRECTORY),
@@ -509,6 +664,12 @@ public class Main {
         }
     }
 
+    /**
+     * Loads the resource bundle for the specified locale.
+     *
+     * @param locale the locale whose resource bundle is to be loaded
+     * @see #getLanguageBundle()
+     */
     void loadLanguage(Locale locale) {
         try {
             URL[] urls = {CONFIG_DIRECTORY.toUri().toURL()};
@@ -522,12 +683,25 @@ public class Main {
         }
     }
 
+    /**
+     * Marks the information window as dismissed for the specified image set,
+     * preventing the specified image set's information window from reappearing in the future.
+     *
+     * @param imageSet the image set whose information window is to be marked as dismissed
+     */
     private void setMascotInformationDismissed(final String imageSet) {
         if (!settings.informationDismissed.contains(imageSet)) {
             settings.informationDismissed.add(imageSet);
         }
     }
 
+    /**
+     * Sets whether the behavior with the specified name is enabled for the image set used by the specified mascot.
+     *
+     * @param name the name of the behavior whose enabled state is to be set
+     * @param mascot the mascot whose image set will be affected by this operation
+     * @param enabled {@code true} to enable the specified behavior; {@code false} to disable the specified behavior
+     */
     public void setMascotBehaviorEnabled(final String name, final Mascot mascot, boolean enabled) {
         List<String> list;
         if (settings.disabledBehaviors.containsKey(mascot.getImageSet())) {
@@ -549,6 +723,9 @@ public class Main {
         }
     }
 
+    /**
+     * Clears all loaded configuration, image, and sound data and reloads all active image sets.
+     */
     void reloadAllImageSets() {
         boolean isExit = manager.isExitOnLastRemoved();
         manager.setExitOnLastRemoved(false);
@@ -577,6 +754,7 @@ public class Main {
      * @param newImageSets all the image sets that should now be active
      * @author LavenderSnek
      * @author Kilkakon (did some tweaks)
+     * @see #getImageSets()
      */
     void setActiveImageSets(Collection<String> newImageSets) {
         if (newImageSets == null) {
@@ -627,7 +805,7 @@ public class Main {
     }
 
     /**
-     * Recursively populates the given collection with all dependencies of the given image set.
+     * Recursively populates the specified collection with all dependencies of the specified image set.
      *
      * @param imageSet the image set whose dependencies should be added to the collection
      * @param dependencies the collection to populate
@@ -644,9 +822,9 @@ public class Main {
     }
 
     /**
-     * Unloads the given image set and disposes of any mascots of that image set, unless it is a dependency of
+     * Unloads the specified image set and disposes of any mascots of that image set, unless it is a dependency of
      * an image set that has been selected in the image set chooser.
-     * If the given image set depends on any image sets that have not been selected in the image set chooser,
+     * If the specified image set depends on any image sets that have not been selected in the image set chooser,
      * those image sets will also be unloaded and their mascots will be disposed.
      *
      * @param imageSet the image set to remove
@@ -672,9 +850,9 @@ public class Main {
     }
 
     /**
-     * Loads the given image set's configuration if it is not yet loaded, adds it to the list of loaded image sets,
+     * Loads the specified image set's configuration if it is not yet loaded, adds it to the list of loaded image sets,
      * and creates a mascot of the image set.
-     * If the given image set's configuration is not yet loaded and its information has not been seen,
+     * If the specified image set's configuration is not yet loaded and its information has not been seen,
      * its information window will be shown after the configuration has loaded.
      *
      * @param imageSet the image set to add
@@ -698,30 +876,68 @@ public class Main {
         }
     }
 
+    /**
+     * Gets the manager that is used for all mascots.
+     *
+     * @return the mascot manager
+     */
     Manager getManager() {
         return manager;
     }
 
+    /**
+     * Gets the currently selected image sets that were loaded successfully.
+     * The returned list only includes the image sets that were selected in the image set chooser,
+     * and not their dependencies.
+     *
+     * @return the currently selected image sets that were loaded successfully
+     * @see #setActiveImageSets(Collection)
+     */
     public List<String> getImageSets() {
         return imageSets;
     }
 
+    /**
+     * Gets the configuration associated with the specified image set.
+     *
+     * @param imageSet the image set whose associated configuration is to be returned
+     * @return the image set's associated configuration
+     */
     public Configuration getConfiguration(String imageSet) {
         return configurations.get(imageSet);
     }
 
+    /**
+     * Gets the user settings data.
+     *
+     * @return the user settings data
+     */
     public Settings getSettings() {
         return settings;
     }
 
+    /**
+     * Gets the resource bundle for the language that is currently selected by the user.
+     *
+     * @return the currently selected language's resource bundle
+     * @see #loadLanguage(Locale)
+     */
     public ResourceBundle getLanguageBundle() {
         return languageBundle;
     }
 
+    /**
+     * Gets the container for the program's tray icon and its associated popup menu.
+     *
+     * @return the tray menu container
+     */
     TrayMenu getTrayMenu() {
         return trayMenu;
     }
 
+    /**
+     * Disposes all mascots, stops the manager, and exits the program.
+     */
     public void exit() {
         manager.disposeAll();
         manager.stop();
@@ -766,9 +982,10 @@ public class Main {
     }
 
     /**
-     * Loads the icon file and returns it as a {@link BufferedImage}.
-     * If a custom icon has been placed at the path {@code img/icon.png}, then it will be loaded. Otherwise, the default
-     * icon will be loaded.
+     * Gets the icon for the program as a {@link BufferedImage}.
+     * If the icon has not yet been loaded, it is read from the icon file.
+     * If a custom icon has been placed at the path {@code img/icon.png}, then it will be loaded.
+     * Otherwise, the default icon will be loaded.
      *
      * @return The loaded {@link BufferedImage} icon, or a blank image if loading fails.
      */
