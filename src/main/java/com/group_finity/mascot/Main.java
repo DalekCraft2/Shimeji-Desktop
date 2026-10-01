@@ -122,10 +122,10 @@ public class Main {
      * The currently selected image sets that were loaded successfully.
      * This only includes the image sets that were selected in the image set chooser, and not their dependencies.
      *
-     * @see #getImageSets()
+     * @see #getActiveImageSets()
      * @see #setActiveImageSets(Collection)
      */
-    private List<String> imageSets = new ArrayList<>();
+    private List<String> activeImageSets = new ArrayList<>();
 
     /**
      * Maps an image set to its corresponding configuration.
@@ -319,7 +319,7 @@ public class Main {
         if (!settings.alwaysShowShimejiChooser) {
             for (String imageSet : settings.activeImageSets)
                 if (!imageSet.trim().isEmpty()) {
-                    imageSets.add(imageSet.trim());
+                    activeImageSets.add(imageSet.trim());
                 }
         }
 
@@ -344,7 +344,7 @@ public class Main {
             NativeFactory.getInstance().getEnvironment().init();
 
         // Create mascots
-        for (String imageSet : imageSets) {
+        for (String imageSet : activeImageSets) {
             if (configurations.get(imageSet).getSplashImagePath() != null &&
                     (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
                 SwingUtilities.invokeLater(() -> {
@@ -366,11 +366,11 @@ public class Main {
      */
     private void configurationLoadLoop() {
         do {
-            if (imageSets.isEmpty()) {
+            if (activeImageSets.isEmpty()) {
                 try {
                     SwingUtilities.invokeAndWait(() -> {
-                        imageSets = new ImageSetChooser(frame, true).display();
-                        if (imageSets == null) {
+                        activeImageSets = new ImageSetChooser(frame, true).display();
+                        if (activeImageSets == null) {
                             exit();
                         }
                     });
@@ -380,18 +380,18 @@ public class Main {
             }
 
             // Load mascot configurations
-            for (int index = 0; index < imageSets.size(); index++) {
-                String imageSet = imageSets.get(index);
+            for (int index = 0; index < activeImageSets.size(); index++) {
+                String imageSet = activeImageSets.get(index);
                 if (!loadConfiguration(imageSet)) {
                     // failed to load
-                    imageSets.remove(imageSet);
+                    activeImageSets.remove(imageSet);
                     index--;
                 }
             }
             // Clear any items that were added to this collection during the loading sequence
             failedConfigurations.clear();
         }
-        while (imageSets.isEmpty());
+        while (activeImageSets.isEmpty());
     }
 
     /**
@@ -624,12 +624,12 @@ public class Main {
      * Creates a {@link Mascot} with a randomly selected image set.
      */
     public void createMascot() {
-        int length = imageSets.size();
+        int length = activeImageSets.size();
         if (length == 0) {
             return;
         }
         int random = (int) (length * Math.random());
-        createMascot(imageSets.get(random));
+        createMascot(activeImageSets.get(random));
     }
 
     /**
@@ -740,7 +740,7 @@ public class Main {
         configurationLoadLoop();
 
         // Create mascots
-        for (String imageSet : imageSets) {
+        for (String imageSet : activeImageSets) {
             createMascot(imageSet);
         }
 
@@ -754,7 +754,7 @@ public class Main {
      * @param newImageSets all the image sets that should now be active
      * @author LavenderSnek
      * @author Kilkakon (did some tweaks)
-     * @see #getImageSets()
+     * @see #getActiveImageSets()
      */
     void setActiveImageSets(Collection<String> newImageSets) {
         if (newImageSets == null) {
@@ -763,13 +763,13 @@ public class Main {
 
         // I don't think there would be enough image sets chosen at any given
         // time for it to be worth using HashSet, but I might be wrong
-        Collection<String> toRemove = new ArrayList<>(imageSets);
+        Collection<String> toRemove = new ArrayList<>(activeImageSets);
         toRemove.removeAll(newImageSets);
 
         Collection<String> toAdd = new ArrayList<>();
         Collection<String> toRetain = new ArrayList<>();
         for (String imageSet : newImageSets) {
-            if (!imageSets.contains(imageSet)) {
+            if (!activeImageSets.contains(imageSet)) {
                 toAdd.add(imageSet);
             }
             if (!toRetain.contains(imageSet)) {
@@ -796,7 +796,7 @@ public class Main {
         // Clear any items that were added to this collection during the loading sequence
         failedConfigurations.clear();
 
-        if (imageSets.isEmpty()) {
+        if (activeImageSets.isEmpty()) {
             // All configurations failed to load, so prompt the user to select image sets again
             configurationLoadLoop();
         }
@@ -833,7 +833,7 @@ public class Main {
     private void removeLoadedImageSet(String imageSet, Collection<String> setsToIgnore) {
         if (!setsToIgnore.contains(imageSet)) {
             setsToIgnore.add(imageSet);
-            imageSets.remove(imageSet);
+            activeImageSets.remove(imageSet);
             manager.remainNone(imageSet);
             configurations.remove(imageSet);
             ImagePairs.removeAll(imageSet);
@@ -859,11 +859,11 @@ public class Main {
      */
     private void addImageSet(String imageSet) {
         if (configurations.containsKey(imageSet)) {
-            imageSets.add(imageSet);
+            activeImageSets.add(imageSet);
             createMascot(imageSet);
         } else if (!failedConfigurations.contains(imageSet)) {
             if (loadConfiguration(imageSet)) {
-                imageSets.add(imageSet);
+                activeImageSets.add(imageSet);
                 if (configurations.get(imageSet).getSplashImagePath() != null &&
                         (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
                     InformationWindow info = new InformationWindow();
@@ -893,8 +893,8 @@ public class Main {
      * @return the currently selected image sets that were loaded successfully
      * @see #setActiveImageSets(Collection)
      */
-    public List<String> getImageSets() {
-        return imageSets;
+    public List<String> getActiveImageSets() {
+        return activeImageSets;
     }
 
     /**

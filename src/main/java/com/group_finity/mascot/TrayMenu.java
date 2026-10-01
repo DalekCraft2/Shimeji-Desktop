@@ -103,7 +103,7 @@ public class TrayMenu {
                         manager.disposeAll();
                     } else {
                         // If the mascots are already gone, recreate one mascot for each active image set
-                        for (String imageSet : Main.getInstance().getImageSets()) {
+                        for (String imageSet : Main.getInstance().getActiveImageSets()) {
                             Main.getInstance().createMascot(imageSet);
                             manager.setExitOnLastRemoved(true);
                         }
