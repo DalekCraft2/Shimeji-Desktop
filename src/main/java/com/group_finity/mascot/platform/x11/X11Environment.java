@@ -97,8 +97,8 @@ class X11Environment extends AbstractEnvironment {
     /**
      * Storage for values of certain state/type atoms on the current display.
      */
-    private final Collection<Number> badStateList;
-    private final Collection<Number> badTypeList;
+    private final Collection<Number> badStates;
+    private final Collection<Number> badTypes;
     private final int maximizedVertValue;
     private final int maximizedHorzValue;
     private final int minimizedValue;
@@ -135,13 +135,13 @@ class X11Environment extends AbstractEnvironment {
         maximizedHorzValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_HORZ").intValue();
         minimizedValue = display.getAtom("_NET_WM_STATE_HIDDEN").intValue();
         fullscreenValue = display.getAtom("_NET_WM_STATE_FULLSCREEN").intValue();
-        badStateList = List.of(
+        badStates = Set.of(
                 minimizedValue,
                 display.getAtom("_NET_WM_STATE_MODAL").intValue(),
                 display.getAtom("_NET_WM_STATE_ABOVE").intValue());
 
         dockValue = display.getAtom("_NET_WM_WINDOW_TYPE_DOCK").intValue();
-        badTypeList = List.of(
+        badTypes = Set.of(
                 dockValue,
                 display.getAtom("_NET_WM_WINDOW_TYPE_DESKTOP").intValue(),
                 display.getAtom("_NET_WM_WINDOW_TYPE_MENU").intValue(),
@@ -277,9 +277,8 @@ class X11Environment extends AbstractEnvironment {
         } catch (X11Exception e) {
             return WindowStatus.IGNORED;
         }
-        // System.out.println("ID: " + window.getID() + "; Title: " + getWindowTitle(window) + "; State: " + state + "; Type: " + type);
-        boolean badDesktop = desktop != null && !desktop.equals(curDesktop);
-        if (!badDesktop && !checkState(state) && !checkType(type)) {
+        boolean goodDesktop = desktop != null && desktop.equals(curDesktop);
+        if (goodDesktop && isStateGood(state) && isTypeGood(type)) {
             if (state.contains(maximizedVertValue) && state.contains(maximizedHorzValue)) {
                 // Window is maximized and prevents the windows beneath it from being interactive
                 return WindowStatus.OBSTRUCTIVE;
@@ -372,18 +371,18 @@ class X11Environment extends AbstractEnvironment {
         return title;
     }
 
-    private boolean checkState(Collection<Integer> state) {
+    private boolean isStateGood(Collection<Integer> state) {
         if (state == null || state.isEmpty()) {
-            return true;
+            return false;
         }
-        return state.stream().anyMatch(badStateList::contains);
+        return state.stream().noneMatch(badStates::contains);
     }
 
-    private boolean checkType(Collection<Integer> type) {
+    private boolean isTypeGood(Collection<Integer> type) {
         if (type == null || type.isEmpty()) {
-            return true;
+            return false;
         }
-        return type.stream().anyMatch(badTypeList::contains);
+        return type.stream().noneMatch(badTypes::contains);
     }
 
     /**
