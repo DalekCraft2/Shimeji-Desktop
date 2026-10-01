@@ -16,41 +16,200 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * A container for the user settings data read from the program's settings file.
+ *
  * @author DalekCraft
+ * @see SettingsWindow
  */
 public class Settings {
     private static final Logger log = LoggerFactory.getLogger(Settings.class);
 
+    /**
+     * The property list containing the raw data read from the settings file.
+     * This is read from when loading data, and written to when writing data to the settings file.
+     */
     private final Properties properties = new Properties();
 
+    // Miscellaneous settings
+
+    /**
+     * An override for the program's name, used in places like window titles and the tray icon if set.
+     * If left empty, the default program name ("Shimeji-ee") is used.
+     */
     public String shimejiEeNameOverride = "";
+
+    /**
+     * The currently selected image sets.
+     */
     public List<String> activeImageSets = new ArrayList<>();
+
+    /**
+     * A list of image sets whose information windows have been dismissed.
+     * Information windows that have been dismissed will not appear when starting the program.
+     * This is ignored if {@link #alwaysShowInformationScreen} is {@code true}.
+     */
     public List<String> informationDismissed = new ArrayList<>();
 
+    // Settings in tray menu and mascot context menu
+
+    /**
+     * The language to use for localizing the UI.
+     */
     public Locale language = Locale.getDefault();
+
+    /**
+     * Maps an image set to a list of behaviors that are disabled for that image set.
+     */
     public Map<String, List<String>> disabledBehaviors = new HashMap<>();
+
+    /**
+     * Whether mascots are allowed to perform breeding actions, which create new mascots.
+     * This is only used if a breeding action's {@code BornTransient} parameter is set to {@code false}.
+     *
+     * @see com.group_finity.mascot.action.Breed
+     * @see com.group_finity.mascot.action.BreedJump
+     * @see com.group_finity.mascot.action.BreedMove
+     */
     public boolean breeding = true;
+
+    /**
+     * Whether mascots are allowed to create transient mascots, which disappear shortly after creation.
+     * This is only used if a breeding action's {@code BornTransient} parameter is set to {@code true}.
+     *
+     * @see com.group_finity.mascot.action.Breed
+     * @see com.group_finity.mascot.action.BreedJump
+     * @see com.group_finity.mascot.action.BreedMove
+     */
     public boolean transients = true;
+
+    /**
+     * Whether mascots are allowed to change which image set they are using.
+     *
+     * @see com.group_finity.mascot.action.Transform
+     */
     public boolean transformation = true;
+
+    /**
+     * Whether mascots are allowed to carry and throw windows.
+     *
+     * @see com.group_finity.mascot.action.FallWithIE
+     * @see com.group_finity.mascot.action.WalkWithIE
+     * @see com.group_finity.mascot.action.ThrowIE
+     */
     public boolean throwing = true;
+
+    /**
+     * Whether sound effects are enabled.
+     */
     public boolean sounds = true;
+
+    /**
+     * Whether mascots are allowed to walk between multiple displays on their own,
+     * without needing the user to drag them to another display.
+     */
     public boolean multiscreen = true;
 
+    // General settings
+
+    /**
+     * Whether to use the system tray for the tray menu.
+     * If set to {@code true}, the tray menu will act as a popup menu for the tray icon.
+     * If set to {@code false}, the tray menu will always be visible, and will exit the program if closed.
+     *
+     * @see TrayMenu
+     */
     public boolean showTrayIcon = true;
+
+    /**
+     * Whether to always show the {@linkplain com.group_finity.mascot.imagesetchooser.ImageSetChooser image set chooser}
+     * upon starting the program.
+     *
+     * @see com.group_finity.mascot.imagesetchooser.ImageSetChooser
+     */
     public boolean alwaysShowShimejiChooser = false;
+
+    /**
+     * Whether to always show the {@linkplain InformationWindow information windows} for all
+     * image sets upon starting the program.
+     *
+     * @see InformationWindow
+     */
     public boolean alwaysShowInformationScreen = false;
+
+    /**
+     * Whether to draw geometry information for mascots, for debugging purposes.
+     * The geometry information of a mascot includes its bounds, anchor point, and hotspots.
+     */
     public boolean drawShimejiBounds = false;
+
+    /**
+     * The type of filter to use when scaling mascot images.
+     */
     public Filter filter = Filter.NEAREST_NEIGHBOUR;
+
+    /**
+     * The opacity factor by which to premultiply mascot images.
+     * 0 makes the images completely transparent, and 1 leaves the images' opacity unchanged.
+     */
     public double opacity = 1.0;
+
+    /**
+     * The factor by which to scale mascot images.
+     */
     public double scaling = 1.0;
 
+    // Interactive window settings
+
+    /**
+     * A list of all whitelisted window titles, for determining whether mascots can interact with a window
+     * with a given title. A window can only be interactive if its title is valid.
+     * <p>
+     * If a window title contains any of the strings in this list, the window title may be valid.
+     * However, because the {@linkplain #interactiveWindowsBlacklist window title blacklist} takes priority over
+     * the whitelist, it is not guaranteed that the window title will be valid if it contains a string in this list.
+     * <p>
+     * If this list is empty, a window title can still be valid if the blacklist is not empty and does not contain
+     * any substrings of the window title.
+     *
+     * @see #interactiveWindowsBlacklist
+     */
     public List<String> interactiveWindows = new ArrayList<>();
+
+    /**
+     * A list of all blacklisted window titles, for determining whether mascots can interact with a window
+     * with a given title. A window can only be interactive if its title is valid.
+     * <p>
+     * If a window title contains any of the strings in this list, the window title is invalid.
+     *
+     * @see #interactiveWindows
+     */
     public List<String> interactiveWindowsBlacklist = new ArrayList<>();
 
+    // Window mode settings
+
+    /**
+     * Whether to create mascots in a virtual environment in a window, instead of on the desktop itself.
+     */
     public boolean windowedMode = false;
+
+    /**
+     * The initial dimensions of the virtual environment window.
+     */
     public Dimension windowSize = new Dimension(600, 500);
+
+    /**
+     * The background color of the virtual environment window.
+     */
     public Color backgroundColor = Color.GREEN;
+
+    /**
+     * An optional image to display in the background of the virtual environment window.
+     */
     public Path backgroundImage = null;
+
+    /**
+     * The type of behavior to use when scaling the virtual environment window's background image.
+     */
     public VirtualContentPanel.ResizeMode backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
 
     /**
@@ -72,7 +231,7 @@ public class Settings {
         activeImageSets = getStringListProperty(properties, "ActiveShimeji", "/", new ArrayList<>());
         informationDismissed = getStringListProperty(properties, "InformationDismissed", "/", new ArrayList<>());
 
-        // Settings in tray menu and mascot popup menu
+        // Settings in tray menu and mascot context menu
         language = Locale.forLanguageTag(properties.getProperty("Language", Locale.getDefault().toLanguageTag()));
         disabledBehaviors.clear();
         if (!properties.isEmpty()) {
@@ -136,6 +295,15 @@ public class Settings {
         }
     }
 
+    /**
+     * Parses a boolean from the value with the specified key in the specified property list.
+     *
+     * @param properties the property list from which to read the value
+     * @param key the key of the property
+     * @param defaultValue a default value if the specified key does not exist in the property list
+     * @return a boolean parsed from the property with the specified key, or the default value if the specified
+     * key does not exist in the property list
+     */
     private boolean getBooleanProperty(Properties properties, String key, boolean defaultValue) {
         if (properties.containsKey(key)) {
             return Boolean.parseBoolean(properties.getProperty(key));
@@ -144,6 +312,16 @@ public class Settings {
         }
     }
 
+    /**
+     * Parses an integer from the value with the specified key in the specified property list.
+     *
+     * @param properties the property list from which to read the value
+     * @param key the key of the property
+     * @param defaultValue a default value if the specified key does not exist in the property list, or if the
+     * value with the specified key cannot be parsed as an integer
+     * @return an integer parsed from the value with the specified key, or the default value if either the specified
+     * key does not exist in the property list or the value with the specified key cannot be parsed as an integer
+     */
     private int getIntProperty(Properties properties, String key, int defaultValue) {
         if (properties.containsKey(key)) {
             try {
@@ -154,6 +332,16 @@ public class Settings {
         return defaultValue;
     }
 
+    /**
+     * Parses a double from the value with the specified key in the specified property list.
+     *
+     * @param properties the property list from which to read the value
+     * @param key the key of the property
+     * @param defaultValue a default value if the specified key does not exist in the property list, or if the
+     * value with the specified key cannot be parsed as a double
+     * @return a double parsed from the value with the specified key, or the default value if either the specified
+     * key does not exist in the property list or the value with the specified key cannot be parsed as a double
+     */
     private double getDoubleProperty(Properties properties, String key, double defaultValue) {
         if (properties.containsKey(key)) {
             try {
@@ -164,6 +352,17 @@ public class Settings {
         return defaultValue;
     }
 
+    /**
+     * Parses an array of integers from the value with the specified key in the specified property list.
+     *
+     * @param properties the property list from which to read the value
+     * @param key the key of the property
+     * @param separator the delimiter to use when splitting the single string property into an array of integers
+     * @param defaultValue a default value if the specified key does not exist in the property list, or if one of the
+     * values in the array cannot be parsed as an integer
+     * @return an array of integers parsed from the value with the specified key, or the default value if either the
+     * specified key does not exist in the property list or one of the values in the array cannot be parsed as an integer
+     */
     private int[] getIntArrayProperty(Properties properties, String key, String separator, int[] defaultValue) {
         if (properties.containsKey(key)) {
             String[] splitArray = properties.getProperty(key).split(separator);
@@ -175,10 +374,28 @@ public class Settings {
         return defaultValue;
     }
 
+    /**
+     * Parses a list of strings from the value with the specified key in the specified property list.
+     *
+     * @param properties the property list from which to read the value
+     * @param key the key of the property
+     * @param separator the delimiter to use when splitting the single string property into a list of strings
+     * @return a list of strings parsed from the value with the specified key
+     */
     private List<String> getStringListProperty(Properties properties, String key, String separator) {
         return Arrays.stream(properties.getProperty(key).split(separator)).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
     }
 
+    /**
+     * Parses a list of strings from the value with the specified key in the specified property list.
+     *
+     * @param properties the property list from which to read the value
+     * @param key the key of the property
+     * @param separator the delimiter to use when splitting the single string property into a list of strings
+     * @param defaultValue a default value if the specified key does not exist in the property list
+     * @return a list of strings parsed from the value with the specified key, or the default value if the specified
+     * key does not exist in the property list
+     */
     private List<String> getStringListProperty(Properties properties, String key, String separator, List<String> defaultValue) {
         if (properties.containsKey(key)) {
             return Arrays.stream(properties.getProperty(key).split(separator)).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
@@ -197,7 +414,7 @@ public class Settings {
         properties.setProperty("ActiveShimeji", String.join("/", activeImageSets));
         properties.setProperty("InformationDismissed", String.join("/", informationDismissed));
 
-        // Settings in tray menu and mascot popup menu
+        // Settings in tray menu and mascot context menu
         properties.setProperty("Language", language.toLanguageTag());
         if (!disabledBehaviors.isEmpty()) {
             for (Map.Entry<String, List<String>> entry : disabledBehaviors.entrySet()) {
