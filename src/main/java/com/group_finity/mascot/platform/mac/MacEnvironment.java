@@ -62,13 +62,13 @@ class MacEnvironment extends AbstractEnvironment {
     private final Set<Integer> touchedProcesses = new HashSet<>();
 
     static final CFStringRef
-            kAXPosition = CFStringRef.createCFString("AXPosition"),
-            kAXSize = CFStringRef.createCFString("AXSize"),
-            kAXFocusedWindow = CFStringRef.createCFString("AXFocusedWindow"),
+            kAXPositionAttribute = CFStringRef.createCFString("AXPosition"),
+            kAXSizeAttribute = CFStringRef.createCFString("AXSize"),
+            kAXFocusedWindowAttribute = CFStringRef.createCFString("AXFocusedWindow"),
+            kAXChildrenAttribute = CFStringRef.createCFString("AXChildren"),
             kDock = CFStringRef.createCFString("com.apple.Dock"),
             kTileSize = CFStringRef.createCFString("tilesize"),
-            kOrientation = CFStringRef.createCFString("orientation"),
-            kAXChildren = CFStringRef.createCFString("AXChildren");
+            kOrientation = CFStringRef.createCFString("orientation");
 
     private Rectangle getFrontmostAppRect() {
         Rectangle ret;
@@ -81,7 +81,7 @@ class MacEnvironment extends AbstractEnvironment {
 
         // XXX: Is error checking necessary other than here?
         if (carbonEx.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindow, windowp) == CarbonExtra.kAXErrorSuccess) {
+                application, kAXFocusedWindowAttribute, windowp) == CarbonExtra.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef(windowp.getValue());
             ret = getRectOfWindow(window);
         } else {
@@ -92,7 +92,7 @@ class MacEnvironment extends AbstractEnvironment {
         return ret;
     }
 
-    private static int getFrontmostAppsPID() {
+    private static int getFrontmostAppPID() {
         ProcessSerialNumber frontProcessPsn = new ProcessSerialNumber();
         IntByReference frontProcessPidp = new IntByReference();
 
@@ -104,7 +104,7 @@ class MacEnvironment extends AbstractEnvironment {
 
     private static CGPoint getPositionOfWindow(AXUIElementRef window) {
         PointerByReference valuep = new PointerByReference();
-        carbonEx.AXUIElementCopyAttributeValue(window, kAXPosition, valuep);
+        carbonEx.AXUIElementCopyAttributeValue(window, kAXPositionAttribute, valuep);
 
         AXValueRef axvalue = new AXValueRef(valuep.getValue());
         CGPoint position = new CGPoint();
@@ -116,7 +116,7 @@ class MacEnvironment extends AbstractEnvironment {
 
     private static CGSize getSizeOfWindow(AXUIElementRef window) {
         PointerByReference valuep = new PointerByReference();
-        carbonEx.AXUIElementCopyAttributeValue(window, kAXSize, valuep);
+        carbonEx.AXUIElementCopyAttributeValue(window, kAXSizeAttribute, valuep);
 
         AXValueRef axvalue = new AXValueRef(valuep.getValue());
         CGSize size = new CGSize();
@@ -133,7 +133,7 @@ class MacEnvironment extends AbstractEnvironment {
         PointerByReference windowp = new PointerByReference();
 
         if (carbonEx.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindow, windowp) == CarbonExtra.kAXErrorSuccess) {
+                application, kAXFocusedWindowAttribute, windowp) == CarbonExtra.kAXErrorSuccess) {
             AXUIElementRef window = new AXUIElementRef(windowp.getValue());
             moveWindow(window, x, y);
         }
@@ -168,7 +168,7 @@ class MacEnvironment extends AbstractEnvironment {
     private static List<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
         PointerByReference axWindowsp = new PointerByReference();
 
-        carbonEx.AXUIElementCopyAttributeValue(application, kAXChildren, axWindowsp);
+        carbonEx.AXUIElementCopyAttributeValue(application, kAXChildrenAttribute, axWindowsp);
 
         if (axWindowsp.getValue() == Pointer.NULL) {
             return List.of();
@@ -195,7 +195,7 @@ class MacEnvironment extends AbstractEnvironment {
         position.write();
         AXValueRef axvalue = carbonEx.AXValueCreate(
                 CarbonExtra.kAXValueCGPointType, position.getPointer());
-        carbonEx.AXUIElementSetAttributeValue(window, kAXPosition, axvalue);
+        carbonEx.AXUIElementSetAttributeValue(window, kAXPositionAttribute, axvalue);
     }
 
     /**
@@ -303,7 +303,7 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     private void updateFrontmostApp() {
-        int newPID = getFrontmostAppsPID();
+        int newPID = getFrontmostAppPID();
         setCurrentPID(newPID);
     }
 
@@ -358,7 +358,7 @@ class MacEnvironment extends AbstractEnvironment {
         // Wrapping in the X direction
         x = (int) Math.clamp(x, minX, maxX);
 
-        // Wrapping in Y direction
+        // Wrapping in the Y direction
         y = (int) Math.clamp(y, minY, maxY);
 
         moveFrontmostWindow(x, y);
