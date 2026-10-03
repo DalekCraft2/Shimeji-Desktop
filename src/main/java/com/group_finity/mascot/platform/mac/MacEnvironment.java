@@ -14,6 +14,8 @@ import com.sun.jna.platform.mac.CoreFoundation.CFArrayRef;
 import com.sun.jna.platform.mac.CoreFoundation.CFIndex;
 import com.sun.jna.platform.mac.CoreFoundation.CFStringRef;
 import com.sun.jna.platform.mac.CoreFoundation.CFTypeRef;
+import com.sun.jna.platform.mac.CoreGraphics.CGPoint;
+import com.sun.jna.platform.mac.CoreGraphics.CGSize;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
@@ -180,11 +182,16 @@ class MacEnvironment extends AbstractEnvironment {
     private static Rectangle getRectOfWindow(AXUIElementRef window) {
         CGPoint pos = getPositionOfWindow(window);
         CGSize size = getSizeOfWindow(window);
-        return new Rectangle(pos.getX(), pos.getY(), size.getWidth(), size.getHeight());
+        return new Rectangle(
+                (int) Math.round(pos.x), (int) Math.round(pos.y),
+                (int) Math.round(size.width), (int) Math.round(size.height)
+        );
     }
 
     private static void moveWindow(AXUIElementRef window, int x, int y) {
-        CGPoint position = new CGPoint(x, y);
+        CGPoint position = new CGPoint();
+        position.x = x;
+        position.y = y;
         position.write();
         AXValueRef axvalue = carbonEx.AXValueCreate(
                 CarbonExtra.kAXValueCGPointType, position.getPointer());
