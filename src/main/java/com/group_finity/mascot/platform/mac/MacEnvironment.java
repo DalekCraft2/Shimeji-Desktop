@@ -76,19 +76,21 @@ class MacEnvironment extends AbstractEnvironment {
 
         AXUIElementRef application =
                 carbonEx.AXUIElementCreateApplication(pid);
+        try {
+            PointerByReference windowp = new PointerByReference();
 
-        PointerByReference windowp = new PointerByReference();
-
-        // XXX: Is error checking necessary other than here?
-        if (carbonEx.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindowAttribute, windowp) == CarbonExtra.kAXErrorSuccess) {
-            AXUIElementRef window = new AXUIElementRef(windowp.getValue());
-            ret = getRectOfWindow(window);
-        } else {
-            ret = null;
+            // XXX: Is error checking necessary other than here?
+            if (carbonEx.AXUIElementCopyAttributeValue(
+                    application, kAXFocusedWindowAttribute, windowp) == CarbonExtra.kAXErrorSuccess) {
+                AXUIElementRef window = new AXUIElementRef(windowp.getValue());
+                ret = getRectOfWindow(window);
+            } else {
+                ret = null;
+            }
+        } finally {
+            application.release();
         }
 
-        application.release();
         return ret;
     }
 
@@ -129,16 +131,17 @@ class MacEnvironment extends AbstractEnvironment {
     private void moveFrontmostWindow(final int x, final int y) {
         AXUIElementRef application =
                 carbonEx.AXUIElementCreateApplication(currentPID);
+        try {
+            PointerByReference windowp = new PointerByReference();
 
-        PointerByReference windowp = new PointerByReference();
-
-        if (carbonEx.AXUIElementCopyAttributeValue(
-                application, kAXFocusedWindowAttribute, windowp) == CarbonExtra.kAXErrorSuccess) {
-            AXUIElementRef window = new AXUIElementRef(windowp.getValue());
-            moveWindow(window, x, y);
+            if (carbonEx.AXUIElementCopyAttributeValue(
+                    application, kAXFocusedWindowAttribute, windowp) == CarbonExtra.kAXErrorSuccess) {
+                AXUIElementRef window = new AXUIElementRef(windowp.getValue());
+                moveWindow(window, x, y);
+            }
+        } finally {
+            application.release();
         }
-
-        application.release();
     }
 
     private void restoreWindowsNotIn(final Rectangle rect) {
@@ -148,20 +151,24 @@ class MacEnvironment extends AbstractEnvironment {
         for (int pid : touchedProcesses) {
             AXUIElementRef application =
                     carbonEx.AXUIElementCreateApplication(pid);
-
-            List<AXUIElementRef> windowsOfApp = getWindowsOf(application);
-            if (!windowsOfApp.isEmpty()) {
-                for (AXUIElementRef window : windowsOfApp) {
-                    window.retain();
-                    Rectangle windowRect = getRectOfWindow(window);
-                    if (!rect.intersects(windowRect)) {
-                        moveWindow(window, 0, 0);
+            try {
+                List<AXUIElementRef> windowsOfApp = getWindowsOf(application);
+                if (!windowsOfApp.isEmpty()) {
+                    for (AXUIElementRef window : windowsOfApp) {
+                        window.retain();
+                        try {
+                            Rectangle windowRect = getRectOfWindow(window);
+                            if (!rect.intersects(windowRect)) {
+                                moveWindow(window, 0, 0);
+                            }
+                        } finally {
+                            window.release();
+                        }
                     }
-                    window.release();
                 }
+            } finally {
+                application.release();
             }
-
-            application.release();
         }
     }
 
@@ -243,12 +250,12 @@ class MacEnvironment extends AbstractEnvironment {
         // Cast the property to a string ref
         CFStringRef orientationStringRef = new CFStringRef(orientationRef.getPointer());
 
-        final int bufSize = 64;
-        try (Memory buf = new Memory(bufSize)) {
+        try (Memory buf = new Memory(64)) {
             CoreFoundation.INSTANCE.CFStringGetCString(
-                    orientationStringRef, buf, new CFIndex(bufSize), carbonEx.CFStringGetSystemEncoding());
-            orientationStringRef.release();
+                    orientationStringRef, buf, new CFIndex(buf.size()), carbonEx.CFStringGetSystemEncoding());
             return buf.getString(0);
+        } finally {
+            orientationStringRef.release();
         }
     }
 
