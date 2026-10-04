@@ -6,7 +6,10 @@ package com.group_finity.mascot.platform.mac;
 
 import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.environment.Area;
-import com.group_finity.mascot.platform.mac.jna.*;
+import com.group_finity.mascot.platform.mac.jna.AXUIElementRef;
+import com.group_finity.mascot.platform.mac.jna.AXValueRef;
+import com.group_finity.mascot.platform.mac.jna.CarbonExtra;
+import com.group_finity.mascot.platform.mac.jna.ProcessSerialNumber;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.mac.CoreFoundation;

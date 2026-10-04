@@ -167,7 +167,7 @@ public interface Dwmapi extends StdCallLibrary {
      * animating a representation of the window's content via a DirectComposition visual that has been associated with
      * the layered child window. For more details on this usage case, see
      * <a href="https://learn.microsoft.com/en-us/windows/win32/directcomp/how-to--animate-the-bitmap-of-a-layered-child-window">
-     *     How to animate the bitmap of a layered child window.</a>
+     * How to animate the bitmap of a layered child window.</a>
      * <p>
      * <b>Windows 7 and earlier:</b> This value is not supported.
      */
