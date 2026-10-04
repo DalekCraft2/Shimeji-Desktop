@@ -481,8 +481,13 @@ class X11Environment extends AbstractEnvironment {
     @Override
     public void moveActiveWindow(int x, int y) {
         if (activeWindowObject != null) {
-            // FIXME: Mascots will often let go of a window very shortly after they pick it up, without throwing it
             X11.INSTANCE.XMoveWindow(display.getX11Display(), activeWindowObject.getX11Window(), x, y);
+
+            /* The XMoveWindow request does not take effect immediately, so we need to process all pending events so the
+            window's position is where we want it to be.
+            This fixes the issue where mascots sometimes think they are no longer holding onto the window when
+            carrying it due to the XMoveWindow request not having been processed yet. */
+            X11.INSTANCE.XSync(display.getX11Display(), false);
         }
     }
 
