@@ -20,6 +20,9 @@ class GenericTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private BufferedImage image;
 
+    /**
+     * Initializes a new {@code GenericTranslucentWindow}.
+     */
     GenericTranslucentWindow() {
         super();
 

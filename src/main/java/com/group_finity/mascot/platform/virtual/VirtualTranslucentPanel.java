@@ -22,6 +22,9 @@ class VirtualTranslucentPanel extends JPanel implements TranslucentWindow {
      */
     private BufferedImage image;
 
+    /**
+     * Initializes a new {@code VirtualTranslucentPanel}.
+     */
     VirtualTranslucentPanel() {
         super();
 

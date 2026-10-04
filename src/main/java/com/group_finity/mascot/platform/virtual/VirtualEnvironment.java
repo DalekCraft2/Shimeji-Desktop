@@ -252,11 +252,17 @@ class VirtualEnvironment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Adds the specified translucent panel to this environment's display window.
+     *
+     * @param mascotPanel the translucent panel to add
+     */
     void addMascot(final VirtualTranslucentPanel mascotPanel) {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> addMascot(mascotPanel));
             return;
         }
+        // TODO: Determine whether these width and height checks are necessary
         Container contentPane = display.getContentPane();
         if (contentPane.getWidth() > 0 && contentPane.getHeight() > 0) {
             display.setPreferredSize(display.getSize());

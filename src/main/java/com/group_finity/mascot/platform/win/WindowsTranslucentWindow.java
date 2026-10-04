@@ -21,6 +21,9 @@ class WindowsTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private BufferedImage image;
 
+    /**
+     * Initializes a new {@code WindowsTranslucentWindow}.
+     */
     WindowsTranslucentWindow() {
         super();
 

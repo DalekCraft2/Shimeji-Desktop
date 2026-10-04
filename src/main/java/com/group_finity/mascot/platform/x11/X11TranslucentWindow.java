@@ -38,6 +38,9 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private boolean visible;
 
+    /**
+     * Initializes a new {@code X11TranslucentWindow}.
+     */
     X11TranslucentWindow(X11.Display dpy, int dockValue) {
         super();
 

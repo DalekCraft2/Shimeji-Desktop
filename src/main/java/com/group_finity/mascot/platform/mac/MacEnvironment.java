@@ -34,6 +34,9 @@ import java.util.stream.IntStream;
  */
 class MacEnvironment extends AbstractEnvironment {
 
+    /**
+     * The instance of the {@code Carbon} library interface, for convenience.
+     */
     private static final CarbonExtra carbonEx = CarbonExtra.INSTANCE;
 
     /**
@@ -47,29 +50,79 @@ class MacEnvironment extends AbstractEnvironment {
     private final Area activeWindow = new Area();
 
     /**
-     * On Mac, you can take the active window, so mascots will react to it.
+     * On macOS, it is possible to obtain the active window, so we configure Shimeji to react to it.
      * <p>
-     * Therefore, in this class, give {@link #activeWindow} an alias called {@code frontmostWindow}.
+     * Therefore, within this class, we assign the alias {@code frontmostWindow} to {@link #activeWindow}.
      *
      * @see #activeWindow
      */
     private final Area frontmostWindow = activeWindow;
 
+    /**
+     * The process ID of the current process, that being the Shimeji-ee program.
+     */
     private final int myPID = (int) ProcessHandle.current().pid();
 
+    /**
+     * The process ID of the active window.
+     *
+     * @see #getCurrentPID()
+     * @see #setCurrentPID(int)
+     */
     private int currentPID = myPID;
 
+    /**
+     * A set containing the process IDs of all windows that have at some point been the active window.
+     */
     private final Set<Integer> touchedProcesses = new HashSet<>();
 
-    static final CFStringRef
-            kAXPositionAttribute = CFStringRef.createCFString("AXPosition"),
-            kAXSizeAttribute = CFStringRef.createCFString("AXSize"),
-            kAXFocusedWindowAttribute = CFStringRef.createCFString("AXFocusedWindow"),
-            kAXChildrenAttribute = CFStringRef.createCFString("AXChildren"),
-            kDock = CFStringRef.createCFString("com.apple.Dock"),
-            kTileSize = CFStringRef.createCFString("tilesize"),
-            kOrientation = CFStringRef.createCFString("orientation");
+    /**
+     * <a href="https://developer.apple.com/documentation/applicationservices/kaxpositionattribute">Apple docs: kAXPositionAttribute</a>
+     * <h4>Discussion</h4>
+     * The global screen coordinates of the top-left corner of this accessibility object. Note that the coordinates
+     * {@code 0,0} represent the top-left corner of the screen that displays the menu bar. All accessibility objects
+     * that have a screen position (in other words, are visible on the screen) should include this attribute.
+     */
+    static final CFStringRef kAXPositionAttribute = CFStringRef.createCFString("AXPosition");
 
+    /**
+     * <a href="https://developer.apple.com/documentation/applicationservices/kaxsizeattribute">Apple docs: kAXSizeAttribute</a>
+     * <p>
+     * The vertical and horizontal dimensions of this accessibility object. This attribute is required for all
+     * accessibility objects that are visible on the screen.
+     */
+    static final CFStringRef kAXSizeAttribute = CFStringRef.createCFString("AXSize");
+
+    /**
+     * <a href="https://developer.apple.com/documentation/applicationservices/kaxfocusedwindowattribute">Apple docs: kAXFocusedWindowAttribute</a>
+     * <p>
+     * The accessibility object that represents the currently focused window of this application. This attribute is
+     * recommended for all application-level accessibility objects.
+     */
+    static final CFStringRef kAXFocusedWindowAttribute = CFStringRef.createCFString("AXFocusedWindow");
+
+    /**
+     * <a href="https://developer.apple.com/documentation/applicationservices/kaxchildrenattribute">Apple docs: kAXChildrenAttribute</a>
+     * <h4>Discussion</h4>
+     * An array of the first-order accessibility objects contained by this accessibility object. An accessibility object
+     * may be a member of only one {@code AXChildren} array. This attribute is required for all accessibility objects
+     * that contain accessible child objects.
+     */
+    static final CFStringRef kAXChildrenAttribute = CFStringRef.createCFString("AXChildren");
+
+    /** The application ID of the dock. */
+    static final CFStringRef kDock = CFStringRef.createCFString("com.apple.Dock");
+    /** The preference key of the tile size for the dock. */
+    static final CFStringRef kTileSize = CFStringRef.createCFString("tilesize");
+    /** The preference key of the orientation for the dock. */
+    static final CFStringRef kOrientation = CFStringRef.createCFString("orientation");
+
+    /**
+     * Gets the bounds of the window that is attributed to the current frontmost app.
+     *
+     * @return the bounds of the window that is attributed to the current frontmost app,
+     * or {@code null} if the frontmost app's window can't be accessed
+     */
     private Rectangle getFrontmostAppRect() {
         Rectangle ret;
         int pid = getCurrentPID();
@@ -94,6 +147,11 @@ class MacEnvironment extends AbstractEnvironment {
         return ret;
     }
 
+    /**
+     * Gets the process ID of the frontmost app through the macOS API.
+     *
+     * @return the process ID of the frontmost app
+     */
     private static int getFrontmostAppPID() {
         ProcessSerialNumber frontProcessPsn = new ProcessSerialNumber();
         IntByReference frontProcessPidp = new IntByReference();
@@ -104,6 +162,12 @@ class MacEnvironment extends AbstractEnvironment {
         return frontProcessPidp.getValue();
     }
 
+    /**
+     * Gets the position of the specified window.
+     *
+     * @param window the window whose position is to be returned
+     * @return the position of the specified window
+     */
     private static CGPoint getPositionOfWindow(AXUIElementRef window) {
         PointerByReference valuep = new PointerByReference();
         carbonEx.AXUIElementCopyAttributeValue(window, kAXPositionAttribute, valuep);
@@ -116,6 +180,12 @@ class MacEnvironment extends AbstractEnvironment {
         return position;
     }
 
+    /**
+     * Gets the size of the specified window.
+     *
+     * @param window the window whose size is to be returned
+     * @return the size of the specified window
+     */
     private static CGSize getSizeOfWindow(AXUIElementRef window) {
         PointerByReference valuep = new PointerByReference();
         carbonEx.AXUIElementCopyAttributeValue(window, kAXSizeAttribute, valuep);
@@ -128,6 +198,12 @@ class MacEnvironment extends AbstractEnvironment {
         return size;
     }
 
+    /**
+     * Repositions the frontmost window so its top-left corner is at the specified location {@code (x, y)}.
+     *
+     * @param x the x-coordinate at which the frontmost window's left side should be after it is moved
+     * @param y the y-coordinate at which the frontmost window's top side should be after it is moved
+     */
     private void moveFrontmostWindow(final int x, final int y) {
         AXUIElementRef application =
                 carbonEx.AXUIElementCreateApplication(currentPID);
@@ -144,6 +220,12 @@ class MacEnvironment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Searches for any {@linkplain #touchedProcesses touched processes} whose windows do not overlap with the specified
+     * rectangle region, and moves their windows to be at position {@code (0, 0)}.
+     *
+     * @param rect the region to check against the touched processes
+     */
     private void restoreWindowsNotIn(final Rectangle rect) {
         if (touchedProcesses.isEmpty()) {
             return;
@@ -172,6 +254,12 @@ class MacEnvironment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Gets a list of the windows that are attributed to the specified application.
+     *
+     * @param application the application whose attributed windows are to be returned
+     * @return a list of the windows that are attributed to the specified application
+     */
     private static List<AXUIElementRef> getWindowsOf(AXUIElementRef application) {
         PointerByReference axWindowsp = new PointerByReference();
 
@@ -186,6 +274,12 @@ class MacEnvironment extends AbstractEnvironment {
         return IntStream.range(0, cfWindows.getCount()).mapToObj(cfWindows::getValueAtIndex).map(AXUIElementRef::new).collect(Collectors.toList());
     }
 
+    /**
+     * Gets the bounds of the specified window.
+     *
+     * @param window the window whose bounds are to be returned
+     * @return the bounds of the specified window
+     */
     private static Rectangle getRectOfWindow(AXUIElementRef window) {
         CGPoint pos = getPositionOfWindow(window);
         CGSize size = getSizeOfWindow(window);
@@ -195,6 +289,13 @@ class MacEnvironment extends AbstractEnvironment {
         );
     }
 
+    /**
+     * Repositions the specified window so its top-left corner is at the specified location {@code (x, y)}.
+     *
+     * @param window the window to reposition
+     * @param x the x-coordinate at which the window's left side should be after it is moved
+     * @param y the y-coordinate at which the window's top side should be after it is moved
+     */
     private static void moveWindow(AXUIElementRef window, int x, int y) {
         CGPoint position = new CGPoint();
         position.x = x;
@@ -206,9 +307,11 @@ class MacEnvironment extends AbstractEnvironment {
     }
 
     /**
-     * Returns the range that will not be pushed back even if the window is moved within the screen as a Rectangle.
-     * On Mac, if you try to move the window completely off the screen,
-     * the window gets pushed back into the screen.
+     * Gets a {@link Rectangle} representing the area within the screen where a window can be moved without being
+     * pushed back onto the screen.
+     * On macOS, if one attempts to move a window completely off-screen, it is pushed back onto the screen.
+     *
+     * @return the area within the screen where a window can be moved without being pushed back onto the screen
      */
     private Rectangle getWindowVisibleArea() {
         final int menuBarHeight = 22;
@@ -237,6 +340,12 @@ class MacEnvironment extends AbstractEnvironment {
         return new Rectangle(x, y, width, height);
     }
 
+    /**
+     * Gets a string representation of the orientation of the dock for the current user.
+     * The possible orientation values are "bottom", "left", and "right".
+     *
+     * @return one of "bottom", "left", or "right"; or "null" if the orientation value could not be read
+     */
     private static String getDockOrientation() {
         CFTypeRef orientationRef =
                 carbonEx.CFPreferencesCopyValue(
@@ -259,32 +368,51 @@ class MacEnvironment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Gets the tile size of the dock.
+     *
+     * @return the tile size of the dock
+     */
     private static int getDockTileSize() {
         /*
-         * Since there is no efficient way to monitor the height of the Dock,
-         * we will return a constant larger than the maximum size of the Dock for now.
+         * Since I cannot find an efficient way to monitor the Dock's height,
+         * I am returning a constant value larger than the Dock's maximum size for the time being.
          *
-         * The value obtained by CFPreferencesCopyValue is different from the value obtained by AppleScript,
-         * and AppleScript is the correct value.
+         * The value obtained via CFPreferencesCopyValue differs from the value obtained via AppleScript,
+         * and the AppleScript value is the correct one.
          *
-         * If you get the PID and use the Accessibility API, you can get the correct value,
-         * but if you do a killall Dock, it will SEGV.
-         * In order to avoid SEGV, it is necessary to reset the pid every time,
-         * but I can't find any other way other than going through the list of processes.
-         * Considering how often it is called, I don't want to use AppleScript.
-         * We will consider this trade-off later.
+         * While the correct value can be retrieved by obtaining the PID and using the Accessibility API,
+         * a segmentation fault occurs if `killall Dock` is executed.
+         * To avoid the SEGV, the PID must be re-fetched each time,
+         * but I cannot find a method to do this other than traversing the process list.
+         * I want to avoid using AppleScript given the frequency of calls.
+         * I will consider this trade-off later.
          */
         return 100;
     }
 
+    /**
+     * Writes to permanent storage all pending changes to the preference data for the dock application.
+     */
     private static void refreshDockState() {
         carbonEx.CFPreferencesAppSynchronize(kDock);
     }
 
+    /**
+     * Gets the process ID of the active window.
+     *
+     * @return the process ID of the active window
+     * @see #setCurrentPID(int)
+     */
     private int getCurrentPID() {
         return currentPID;
     }
 
+    /**
+     * Sets the process ID of the active window.
+     *
+     * @param newPID the new process ID of the active window
+     */
     private void setCurrentPID(int newPID) {
         if (newPID != myPID) {
             currentPID = newPID;
@@ -292,6 +420,9 @@ class MacEnvironment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Updates the area of the active window.
+     */
     private void updateFrontmostWindow() {
         final Rectangle
                 frontmostWindowRect = getFrontmostAppRect(),
@@ -309,6 +440,12 @@ class MacEnvironment extends AbstractEnvironment {
         }
     }
 
+    /**
+     * Updates the process ID of the active window.
+     *
+     * @see #getFrontmostAppPID()
+     * @see #setCurrentPID(int)
+     */
     private void updateFrontmostApp() {
         int newPID = getFrontmostAppPID();
         setCurrentPID(newPID);
@@ -342,11 +479,22 @@ class MacEnvironment extends AbstractEnvironment {
         return currentPID;
     }
 
+    /**
+     * Repositions the active window so its top-left corner is at the specified location {@code (x, y)}.
+     * If necessary, the specified position will be adjusted such that the window does not completely leave the screen.
+     * <p>
+     * On macOS, if one attempts to move a window completely off-screen, it is pushed back onto the screen.
+     * Therefore, if the specified position puts the window completely off-screen, it will be adjusted to move the
+     * window as far off-screen as possible without being pushed back onto the screen.
+     *
+     * @param x the x-coordinate at which the active window's left side should be after it is moved
+     * @param y the y-coordinate at which the active window's top side should be after it is moved
+     */
     @Override
     public void moveActiveWindow(int x, int y) {
         /*
-         * As mentioned above, if you try to move completely off-screen, you will be pushed back,
-         * so if you specify such a position, switch to moving as far as possible.
+         * As mentioned in getWindowVisibleArea(), attempting to move completely off-screen results in being pushed back
+         * onto the screen; therefore, for such positioning requests, the movement is adjusted to go as far as possible.
          */
         final Rectangle
                 visibleRect = getWindowVisibleArea(),

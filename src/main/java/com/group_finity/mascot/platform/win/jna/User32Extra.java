@@ -6,7 +6,7 @@ import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 
 /**
- * Provides access to functions in the Windows {@code user32} library that aren't implemented in
+ * Provides access to functions in the Windows {@code user32} library that are not implemented in
  * JNA's {@link com.sun.jna.platform.win32.User32 User32} interface.
  *
  * @author Yuki Yamada

@@ -8,6 +8,9 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.mac.CoreFoundation.CFTypeRef;
 
 /**
+ * Represents the macOS Application Services
+ * <a href="https://developer.apple.com/documentation/applicationservices/axvalueref">AXValueRef</a> struct.
+ *
  * @author nonowarn
  */
 public class AXValueRef extends CFTypeRef {

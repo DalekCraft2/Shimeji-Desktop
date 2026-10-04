@@ -24,6 +24,9 @@ class MacTranslucentWindow extends JWindow implements TranslucentWindow {
      */
     private BufferedImage image;
 
+    /**
+     * Initializes a new {@code MacTranslucentWindow}.
+     */
     MacTranslucentWindow() {
         super(WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 

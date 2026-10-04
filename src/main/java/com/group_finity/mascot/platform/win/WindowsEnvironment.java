@@ -63,12 +63,13 @@ class WindowsEnvironment extends AbstractEnvironment {
     private String activeWindowTitle = "";
 
     /**
-     * The native window handle for the active window.
+     * The native handle of the active window.
      * If there is currently no active window, this value will be {@code null}.
      *
      * @see #activeWindow
      * @see #activeWindowTitle
      * @see #getActiveWindowId()
+     * @see #findActiveWindow()
      */
     private HWND activeWindowHandle = null;
 
@@ -228,7 +229,7 @@ class WindowsEnvironment extends AbstractEnvironment {
     }
 
     /**
-     * Gets a {@link WindowStatus} representing whether the specified window is interactive, whether it
+     * Gets a {@link WindowStatus WindowStatus} representing whether the specified window is interactive, whether it
      * prevents other windows from being interactive, and whether it intersects with the bounds of the screen.
      *
      * @param hWnd the window whose status will be returned
@@ -269,6 +270,15 @@ class WindowsEnvironment extends AbstractEnvironment {
         return WindowStatus.IGNORED;
     }
 
+    /**
+     * Searches all top-level windows for one that meets the criteria to be the active window.
+     * For a window to be the active window, its {@link WindowStatus WindowStatus} must
+     * be {@link WindowStatus#INTERACTIVE INTERACTIVE}.
+     *
+     * @return the native handle of the new active window, or {@code null} if no windows met the criteria
+     * to be the active window
+     * @see #getWindowStatus(HWND)
+     */
     private HWND findActiveWindow() {
         activeWindowHandle = null;
 
@@ -288,9 +298,12 @@ class WindowsEnvironment extends AbstractEnvironment {
     }
 
     /**
-     * Gets the given window's area.
+     * Gets the bounds of the specified window.
      *
-     * @return the window's area
+     * @param hWnd the window whose bounds are to be returned
+     * @param dpiAware {@code true} if the bounds should be scaled to match the DPI of the graphics environment;
+     * {@code false} if the bounds should not be scaled
+     * @return the bounds of the window
      */
     private static Rectangle getWindowRect(HWND hWnd, boolean dpiAware) {
         if (hWnd == null) {

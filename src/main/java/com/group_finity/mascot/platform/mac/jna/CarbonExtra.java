@@ -10,15 +10,25 @@ import com.sun.jna.NativeLibrary;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.mac.CoreFoundation.CFStringRef;
 import com.sun.jna.platform.mac.CoreFoundation.CFTypeRef;
+import com.sun.jna.platform.mac.CoreGraphics;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
+ * Provides access to functions in the macOS {@code Carbon} library that are not implemented in
+ * JNA's {@link com.sun.jna.platform.mac.Carbon Carbon} interface.
+ *
  * @author nonowarn
  */
 public interface CarbonExtra extends Library {
+    /**
+     * The instance of the {@code Carbon} library interface.
+     */
     CarbonExtra INSTANCE = Native.load("Carbon", CarbonExtra.class);
 
+    /**
+     * A {@link NativeLibrary} instance that refers to the current process.
+     */
     NativeLibrary nl = NativeLibrary.getProcess();
 
     /**
@@ -31,7 +41,7 @@ public interface CarbonExtra extends Library {
     /**
      * <a href="https://developer.apple.com/documentation/corefoundation/kcfpreferencesanyhost">Apple docs: kCFPreferencesAnyHost</a>
      * <p>
-     * Indicates a preference that applies only to the current user.
+     * Indicates a preference that applies to any host.
      * <h4>Discussion</h4>
      * This option is not supported.
      */
@@ -47,14 +57,14 @@ public interface CarbonExtra extends Library {
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgpointtype">Apple docs: kAXValueCGPointType</a>
      * <p>
-     * a wrapper for CGPoint; see CoreGraphics.h
+     * a wrapper for {@link CoreGraphics.CGPoint CGPoint}; see CoreGraphics.h
      */
     int kAXValueCGPointType = 1;
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/axvaluetype/kaxvaluecgsizetype">Apple docs: kAXValueCGSizeType</a>
      * <p>
-     * a wrapper for CGSize; see CoreGraphics.h
+     * a wrapper for {@link CoreGraphics.CGSize CGSize}; see CoreGraphics.h
      */
     int kAXValueCGSizeType = 2;
 

@@ -24,7 +24,9 @@ import java.util.List;
 class X11Environment extends AbstractEnvironment {
 
     /**
-     * The {@link X} display.
+     * The {@linkplain X.Display X display} used to access the X11 environment.
+     *
+     * @see #getDisplay()
      */
     private final Display display = new Display();
 
@@ -59,6 +61,15 @@ class X11Environment extends AbstractEnvironment {
      */
     private String activeWindowTitle = "";
 
+    /**
+     * An {@linkplain X.Window X window} representing the native handle of the active window.
+     * If there is currently no active window, this value will be {@code null}.
+     *
+     * @see #activeWindow
+     * @see #activeWindowTitle
+     * @see #getActiveWindowId()
+     * @see #findActiveWindow()
+     */
     private Window activeWindowObject = null;
 
     /**
@@ -95,14 +106,35 @@ class X11Environment extends AbstractEnvironment {
     private String[] windowTitlesBlacklist = null;
 
     /**
-     * Storage for values of certain state/type atoms on the current display.
+     * A collection of "bad" window state atoms. If any of these are present on a window,
+     * that window is prevented from becoming the active window.
+     *
+     * @see #isStateGood(Collection)
      */
     private final Collection<Number> badStates;
+
+    /**
+     * A collection of "bad" window type atoms. If any of these are present on a window,
+     * that window is prevented from becoming the active window.
+     *
+     * @see #isStateGood(Collection)
+     */
     private final Collection<Number> badTypes;
+
+    /** The atom representing the window state of being maximized vertically. */
     private final int maximizedVertValue;
+    /** The atom representing the window state of being maximized horizontally. */
     private final int maximizedHorzValue;
+    /** The atom representing the window state of being hidden. This applies to both minimized and invisible windows. */
     private final int minimizedValue;
+    /** The atom representing the window state of being in fullscreen mode. */
     private final int fullscreenValue;
+
+    /**
+     * The atom representing the window type used for dock/panel features.
+     *
+     * @see #getDockValue()
+     */
     private final int dockValue;
 
     /**
@@ -249,7 +281,7 @@ class X11Environment extends AbstractEnvironment {
     }
 
     /**
-     * Gets a {@link WindowStatus} representing whether the specified window is interactive, whether it
+     * Gets a {@link WindowStatus WindowStatus} representing whether the specified window is interactive, whether it
      * prevents other windows from being interactive, and whether it intersects with the bounds of the screen.
      *
      * @param window the window whose status will be returned
@@ -310,6 +342,15 @@ class X11Environment extends AbstractEnvironment {
         return WindowStatus.IGNORED;
     }
 
+    /**
+     * Searches all top-level windows for one that meets the criteria to be the active window.
+     * For a window to be the active window, its {@link WindowStatus WindowStatus} must
+     * be {@link WindowStatus#INTERACTIVE INTERACTIVE}.
+     *
+     * @return an {@linkplain X.Window X window} representing the native handle of the new active window,
+     * or {@code null} if no windows met the criteria to be the active window
+     * @see #getWindowStatus(Window)
+     */
     private Window findActiveWindow() {
         activeWindowObject = null;
 
@@ -342,9 +383,10 @@ class X11Environment extends AbstractEnvironment {
     }
 
     /**
-     * Gets the given window's bounds.
+     * Gets the bounds of the specified window.
      *
-     * @return the window's bounds
+     * @param window the window whose bounds are to be returned
+     * @return the bounds of the window
      */
     private static Rectangle getWindowBounds(Window window) {
         if (window == null) {
@@ -354,9 +396,10 @@ class X11Environment extends AbstractEnvironment {
     }
 
     /**
-     * Gets the given window's title.
+     * Gets the title of the specified window.
      *
-     * @return the window's title
+     * @param window the window whose title is to be returned
+     * @return the title of the window
      */
     private static String getWindowTitle(Window window) {
         if (window == null) {
@@ -371,6 +414,15 @@ class X11Environment extends AbstractEnvironment {
         return title;
     }
 
+    /**
+     * Checks whether the specified collection of window states is good.
+     * A collection of window states is good if it is not {@code null}, is not empty, and does not contain any
+     * {@linkplain #badStates bad states}.
+     * If a window's state is bad, it cannot be set as the active window.
+     *
+     * @param state the window state collection to check
+     * @return {@code true} if the window state collection is good; {@code false} otherwise
+     */
     private boolean isStateGood(Collection<Integer> state) {
         if (state == null || state.isEmpty()) {
             return false;
@@ -378,6 +430,15 @@ class X11Environment extends AbstractEnvironment {
         return state.stream().noneMatch(badStates::contains);
     }
 
+    /**
+     * Checks whether the specified collection of window types is good.
+     * A collection of window types is good if it is not {@code null}, is not empty, and does not contain any
+     * {@linkplain #badTypes bad types}.
+     * If a window's type is bad, it cannot be set as the active window.
+     *
+     * @param type the window type collection to check
+     * @return {@code true} if the window type collection is good; {@code false} otherwise
+     */
     private boolean isTypeGood(Collection<Integer> type) {
         if (type == null || type.isEmpty()) {
             return false;
@@ -470,10 +531,20 @@ class X11Environment extends AbstractEnvironment {
         display.close();
     }
 
+    /**
+     * Gets the {@linkplain X.Display X display} used to access the X11 environment.
+     *
+     * @return the X display
+     */
     Display getDisplay() {
         return display;
     }
 
+    /**
+     * Gets the atom representing the window type used for dock/panel features.
+     *
+     * @return the atom representing the dock window type
+     */
     int getDockValue() {
         return dockValue;
     }

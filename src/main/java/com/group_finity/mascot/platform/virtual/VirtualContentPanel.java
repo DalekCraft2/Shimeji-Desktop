@@ -7,13 +7,27 @@ import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 
 /**
- * Virtual desktop content pane.
+ * The content pane for the virtual environment window, which supports displaying a background image
+ * that can be automatically rescaled when the size of the window is changed.
  *
  * @author Kilkakon
+ * @see VirtualEnvironment
  * @since 1.0.21
  */
 public class VirtualContentPanel extends JPanel {
+    /**
+     * An optional image to display in the background of this content pane.
+     *
+     * @see #resizeImage(Image)
+     */
     private Image resizedImage;
+
+    /**
+     * The type of behavior to use when scaling this content pane's background image,
+     * if {@link #resizedImage} is not {@code null}.
+     *
+     * @see #resizeImage(Image)
+     */
     private final ResizeMode mode;
 
     /**
@@ -41,6 +55,15 @@ public class VirtualContentPanel extends JPanel {
         STRETCH
     }
 
+    /**
+     * Initializes a new {@code VirtualContentPanel}.
+     *
+     * @param preferredSize the initial dimensions of this content pane
+     * @param background the background color of this content pane
+     * @param image an optional image to display in the background of this content pane
+     * @param mode the type of behavior to use when scaling this content pane's background image,
+     * if {@code image} is not {@code null}
+     */
     VirtualContentPanel(Dimension preferredSize, Color background, final Image image, final ResizeMode mode) {
         setLayout(null);
         setPreferredSize(preferredSize);
@@ -48,12 +71,16 @@ public class VirtualContentPanel extends JPanel {
         resizedImage = image;
         this.mode = mode;
 
+        /* Add a listener to resize the image as soon as the window is made visible,
+        because resizing it in the constructor without using a listener would
+        have no effect due to getWidth() and getHeight() returning 0 at that point. */
         addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
                 resizeImage(image);
             }
         });
 
+        // Add a listener to resize the background image whenever the content pane is resized
         addComponentListener(new ComponentListener() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -74,6 +101,12 @@ public class VirtualContentPanel extends JPanel {
         });
     }
 
+    /**
+     * Updates {@link #resizedImage} by setting it to a scaled instance of the specified image.
+     * Scaling is done based on the {@linkplain #mode resize mode} and dimensions of this content pane.
+     *
+     * @param image the image from which to create a scaled instance
+     */
     private void resizeImage(Image image) {
         if (image != null) {
             switch (mode) {
