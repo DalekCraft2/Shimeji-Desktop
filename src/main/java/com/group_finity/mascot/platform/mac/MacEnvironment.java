@@ -317,6 +317,7 @@ class MacEnvironment extends AbstractEnvironment {
      * @return the area within the screen where a window can be moved without being pushed back onto the screen
      */
     private Rectangle getWindowVisibleArea() {
+        // TODO: Get the menu bar height programmatically
         final int menuBarHeight = 22;
         int x = 1, y = menuBarHeight,
                 width = getScreen().getWidth() - 2, // Because it's 0-origin
