@@ -357,13 +357,15 @@ class X11Environment extends AbstractEnvironment {
         // Retrieve all windows from the X Display
         Window[] allWindows;
         try {
-            allWindows = display.getWindows();
+            allWindows = display.getWindowsLayerOrdered();
         } catch (X11Exception e) {
             return null;
         }
 
         loop:
-        for (Window window : allWindows) {
+        // Iterate in reverse because the array is ordered from bottommost window to topmost window
+        for (int i = allWindows.length - 1; i >= 0; i--) {
+            Window window = allWindows[i];
             switch (getWindowStatus(window)) {
                 case INTERACTIVE:
                     activeWindowObject = window;
@@ -512,14 +514,16 @@ class X11Environment extends AbstractEnvironment {
         // Retrieve all windows from the X Display
         Window[] allWindows;
         try {
-            allWindows = display.getWindows();
+            allWindows = display.getWindowsLayerOrdered();
         } catch (X11Exception e) {
             return;
         }
 
         int offset = 25;
 
-        for (Window window : allWindows) {
+        // Iterate in reverse because the array is ordered from bottommost window to topmost window
+        for (int i = allWindows.length - 1; i >= 0; i--) {
+            Window window = allWindows[i];
             WindowStatus result = getWindowStatus(window);
             if (result == WindowStatus.OUT_OF_BOUNDS) {
                 // Out-of-bounds interactive window found

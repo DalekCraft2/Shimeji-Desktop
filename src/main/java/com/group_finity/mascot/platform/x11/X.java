@@ -205,10 +205,10 @@ public class X {
         }
 
         /**
-         * Returns all windows managed by the window manager.
+         * Gets all windows managed by the window manager, ordered by age from oldest to newest.
          *
-         * @return all windows managed by the window manager
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return all windows managed by the window manager, ordered by age from oldest to newest
+         * @throws X11Exception if X11 window errors occurred
          */
         public Window[] getWindows() throws X11Exception {
             byte[] bytes;
@@ -223,6 +223,27 @@ public class X {
                     throw new X11Exception("Cannot get client list properties (_NET_CLIENT_LIST or _WIN_CLIENT_LIST)", e1);
                 }
             }
+
+            Window[] windowList = new Window[bytes.length / X11.Window.SIZE];
+
+            for (int i = 0; i < windowList.length; i++) {
+                windowList[i] = new Window(this, new X11.Window(bytesToInt(bytes, X11.XID.SIZE * i)));
+            }
+
+            return windowList;
+        }
+
+        /**
+         * Gets all windows managed by the window manager, ordered by layer from bottom to top.
+         *
+         * @return all windows managed by the window manager, ordered by layer from bottom to top
+         * @throws X11Exception if X11 window errors occurred
+         */
+        public Window[] getWindowsLayerOrdered() throws X11Exception {
+            byte[] bytes;
+            Window rootWindow = getRootWindow();
+
+            bytes = rootWindow.getProperty(X11.XA_WINDOW, "_NET_CLIENT_LIST_STACKING");
 
             Window[] windowList = new Window[bytes.length / X11.Window.SIZE];
 
