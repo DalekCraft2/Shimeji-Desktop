@@ -392,7 +392,23 @@ class X11Environment extends AbstractEnvironment {
         if (window == null) {
             return null;
         }
-        return window.getBounds();
+        Rectangle rawBounds = window.getBounds();
+        Integer[] extents;
+        try {
+            extents = window.getExtents();
+        } catch (X11Exception e) {
+            return rawBounds;
+        }
+        /* The window.getBounds() method returns the area of the window minus the extents. Using those bounds as-is
+        prevents mascots from interacting with the title bar of the window, so we need to create a new rectangle that
+        takes the window frame extents into consideration.
+
+        XMoveWindow(), which is used to move the active window, interprets the X and Y coordinates passed to it as the
+        top-left corner of the window with the extents taken into consideration. Taking the extents into consideration
+        here prevents XMoveWindow() from making the active window jump downward suddenly when a mascot tries to move it,
+        which previously caused the mascot to immediately let go of the window and fall. */
+        return new Rectangle(rawBounds.x - extents[0], rawBounds.y - extents[2],
+                rawBounds.width + extents[0] + extents[1], rawBounds.height + extents[2] + extents[3]);
     }
 
     /**

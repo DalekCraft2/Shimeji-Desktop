@@ -614,6 +614,16 @@ public class X {
         }
 
         /**
+         * Returns the window frame extents, formatted as {@code [left, right, top, bottom]}.
+         *
+         * @return window frame extents
+         * @throws X11Exception thrown if X11 window errors occurred
+         */
+        public Integer[] getExtents() throws X11Exception {
+            return getIntListProperty(X11.XA_CARDINAL, "_NET_FRAME_EXTENTS");
+        }
+
+        /**
          * Returns the window class.
          *
          * @return window class
