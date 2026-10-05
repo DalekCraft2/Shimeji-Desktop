@@ -95,6 +95,8 @@ public class ActionBuilder implements IActionBuilder {
     /**
      * The parameters to add to the context of this action.
      * These will be parsed into {@link Variable} objects when this action is built.
+     *
+     * @see #getParameters()
      */
     private final Map<String, String> params;
 
@@ -109,6 +111,8 @@ public class ActionBuilder implements IActionBuilder {
      * <p>
      * If this action's type is an implementation of {@link ComplexAction}, it must have child actions.
      * Otherwise, it must have no child actions.
+     *
+     * @see #getChildActionBuilders()
      */
     private final List<IActionBuilder> childActionBuilders;
 
@@ -520,5 +524,21 @@ public class ActionBuilder implements IActionBuilder {
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Map<String, String> getParameters() {
+        return params;
+    }
+
+    /**
+     * Gets the child actions of this action. The returned list may contain anonymous actions and/or action references.
+     * <p>
+     * An action will have child actions only if its type is an implementation of {@link ComplexAction}.
+     *
+     * @return the child actions of this action
+     */
+    List<IActionBuilder> getChildActionBuilders() {
+        return childActionBuilders;
     }
 }

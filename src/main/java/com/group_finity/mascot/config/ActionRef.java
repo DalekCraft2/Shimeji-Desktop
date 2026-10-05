@@ -36,6 +36,8 @@ public class ActionRef implements IActionBuilder {
     /**
      * The parameters to add to the context of this action.
      * These will be parsed into {@link Variable} objects when this action is built.
+     *
+     * @see #getParameters()
      */
     private final Map<String, String> params;
 
@@ -123,5 +125,10 @@ public class ActionRef implements IActionBuilder {
             newParams.putAll(this.params);
         }
         return configuration.buildAction(name, newParams);
+    }
+
+    @Override
+    public Map<String, String> getParameters() {
+        return params;
     }
 }

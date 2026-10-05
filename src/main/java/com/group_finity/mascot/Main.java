@@ -136,12 +136,6 @@ public class Main {
     private final Map<String, Configuration> configurations = new ConcurrentHashMap<>();
 
     /**
-     * Maps an image set to a list of image sets that are dependencies of that image set.
-     * For as long as a given image set is loaded, all of its dependencies must also be loaded.
-     */
-    private final Map<String, List<String>> dependencyMap = new ConcurrentHashMap<>();
-
-    /**
      * A collection of configurations that failed to load.
      * This is used to avoid attempting to load these configurations more than once.
      */
@@ -462,39 +456,14 @@ public class Main {
 
             configurations.put(imageSet, configuration);
 
-            List<String> dependencies = new ArrayList<>();
-
             // Determine the dependencies for this image set
-            List<Entry> actionLists = actionsEntry.selectChildren(actionsSchema.getString("ActionList"));
-            if (!actionLists.isEmpty()) {
-                for (final Entry actionList : actionLists) {
-                    List<Entry> actionNodes = actionList.selectChildren(actionsSchema.getString("Action"));
-                    if (!actionNodes.isEmpty()) {
-                        for (final Entry actionNode : actionNodes) {
-                            if (actionNode.hasAttribute(actionsSchema.getString("BornMascot"))) {
-                                String dependency = actionNode.getAttribute(actionsSchema.getString("BornMascot"));
-                                if (!dependencies.contains(dependency)) {
-                                    dependencies.add(dependency);
-                                }
-                                if (!configurations.containsKey(dependency)) {
-                                    loadConfiguration(dependency);
-                                }
-                            }
-                            if (actionNode.hasAttribute(actionsSchema.getString("TransformMascot"))) {
-                                String dependency = actionNode.getAttribute(actionsSchema.getString("TransformMascot"));
-                                if (!dependencies.contains(dependency)) {
-                                    dependencies.add(dependency);
-                                }
-                                if (!configurations.containsKey(dependency)) {
-                                    loadConfiguration(dependency);
-                                }
-                            }
-                        }
-                    }
+            configuration.readDependencies(actionsSchema);
+            Collection<String> dependencies = configuration.getDependencies();
+            for (String dependency : dependencies) {
+                if (!configurations.containsKey(dependency)) {
+                    loadConfiguration(dependency);
                 }
             }
-
-            dependencyMap.put(imageSet, dependencies);
 
             return true;
         } catch (IOException | ParserConfigurationException | SAXException | ConfigurationException |
@@ -502,7 +471,6 @@ public class Main {
             log.error("Failed to load configuration for image set \"{}\"", imageSet, e);
             showError(String.format(languageBundle.getString("FailedLoadConfigErrorMessage"), imageSet), e);
             configurations.remove(imageSet);
-            dependencyMap.remove(imageSet);
             ImagePairs.removeAll(imageSet);
             Sounds.removeAll(imageSet);
             failedConfigurations.add(imageSet);
@@ -811,8 +779,8 @@ public class Main {
      * @param dependencies the collection to populate
      */
     private void populateCollectionWithDependencies(String imageSet, Collection<String> dependencies) {
-        if (dependencyMap.containsKey(imageSet)) {
-            for (String dependency : dependencyMap.get(imageSet)) {
+        if (configurations.containsKey(imageSet)) {
+            for (String dependency : configurations.get(imageSet).getDependencies()) {
                 if (!dependencies.contains(dependency)) {
                     dependencies.add(dependency);
                     populateCollectionWithDependencies(dependency, dependencies);
@@ -835,17 +803,16 @@ public class Main {
             setsToIgnore.add(imageSet);
             activeImageSets.remove(imageSet);
             manager.remainNone(imageSet);
+            Collection<String> dependencies = configurations.get(imageSet).getDependencies();
             configurations.remove(imageSet);
             ImagePairs.removeAll(imageSet);
             Sounds.removeAll(imageSet);
 
-            if (dependencyMap.containsKey(imageSet)) {
-                for (String dependency : dependencyMap.get(imageSet)) {
+            if (!dependencies.isEmpty()) {
+                for (String dependency : dependencies) {
                     removeLoadedImageSet(dependency, setsToIgnore);
                 }
             }
-
-            dependencyMap.remove(imageSet);
         }
     }
 

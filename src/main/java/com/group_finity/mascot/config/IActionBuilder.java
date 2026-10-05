@@ -37,4 +37,13 @@ public interface IActionBuilder {
      * @see ActionRef#buildAction(Map)
      */
     Action buildAction(final Map<String, String> params) throws ActionInstantiationException;
+
+    /**
+     * Gets the parameters to add to the context of this action.
+     * These will be parsed into {@link com.group_finity.mascot.script.Variable Variable} objects
+     * when this action is built.
+     *
+     * @return the parameters to add to the context of this action
+     */
+    Map<String, String> getParameters();
 }

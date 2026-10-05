@@ -103,6 +103,14 @@ public class Configuration {
     private final Map<Contributor.Type, Contributor> contributors = new EnumMap<>(Contributor.Type.class);
 
     /**
+     * The image sets that are dependencies of this image set.
+     * For as long as this image set is loaded, all of its dependencies must also be loaded.
+     *
+     * @see #getDependencies()
+     */
+    private final Collection<String> dependencies = new HashSet<>();
+
+    /**
      * The schema used by this {@code Configuration}.
      * <p>
      * This value is overwritten whenever {@link #load} is called. If a caller intends to use this schema after
@@ -405,6 +413,55 @@ public class Configuration {
     }
 
     /**
+     * Parses the parameters of all actions in this configuration to determine which image sets are dependencies of
+     * this image set, and stores them in the {@link #dependencies} field.
+     *
+     * @param actionsSchema the configuration schema used by this image set's actions file
+     */
+    public void readDependencies(ResourceBundle actionsSchema) {
+        if (!actionBuilders.isEmpty()) {
+            for (final ActionBuilder builder : actionBuilders.values()) {
+                readDependenciesRecurse(builder, dependencies, actionsSchema);
+            }
+        }
+    }
+
+    /**
+     * Parses the parameters of the specified action to determine which image sets are dependencies of
+     * this image set, and stores them in the specified collection. If the specified action has any children, this
+     * method recurses over each of the children.
+     *
+     * @param action the action whose parameters and children will be parsed
+     * @param dependencies the collection in which to store this image set's dependencies
+     * @param schema the configuration schema used by this image set's actions file
+     * @see #readDependencies(ResourceBundle)
+     */
+    private void readDependenciesRecurse(IActionBuilder action, Collection<String> dependencies, ResourceBundle schema) {
+        // Determine the dependencies for this image set
+        Map<String, String> params = action.getParameters();
+        if (params.containsKey(schema.getString("BornMascot"))) {
+            String dependency = params.get(schema.getString("BornMascot"));
+            if (!dependencies.contains(dependency)) {
+                dependencies.add(dependency);
+            }
+        }
+        if (params.containsKey(schema.getString("TransformMascot"))) {
+            String dependency = params.get(schema.getString("TransformMascot"));
+            if (!dependencies.contains(dependency)) {
+                dependencies.add(dependency);
+            }
+        }
+        if (action instanceof ActionBuilder builder) {
+            List<IActionBuilder> childActions = builder.getChildActionBuilders();
+            if (!childActions.isEmpty()) {
+                for (IActionBuilder childAction : childActions) {
+                    readDependenciesRecurse(childAction, dependencies, schema);
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a new instance of the action with the specified name, and adds the specified parameters
      * to its context. If a parameter name is present in both the specified parameters and the specified
      * action's existing parameters, the existing parameter will be overwritten by the specified parameter.
@@ -702,6 +759,20 @@ public class Configuration {
      */
     public Map<Contributor.Type, Contributor> getContributors() {
         return contributors;
+    }
+
+    /**
+     * Gets the image sets that are dependencies of this image set.
+     * For as long as this image set is loaded, all of its dependencies must also be loaded.
+     * <p>
+     * {@link #readDependencies(ResourceBundle)} must have been invoked exactly once on this configuration before its
+     * dependencies can be accessed.
+     *
+     * @return the image sets that are dependencies of this image set
+     * @see #readDependencies(ResourceBundle)
+     */
+    public Collection<String> getDependencies() {
+        return dependencies;
     }
 
     /**
