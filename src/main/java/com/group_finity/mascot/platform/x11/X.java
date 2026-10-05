@@ -402,9 +402,12 @@ public class X {
          */
         public ModifierKeymap getModifierKeymap() {
             X11.XModifierKeymapRef xModifierKeymapRef = x11.XGetModifierMapping(x11Display);
-            ModifierKeymap modifierKeymap = new ModifierKeymap(xModifierKeymapRef);
-            x11.XFreeModifiermap(xModifierKeymapRef);
-            return modifierKeymap;
+            try {
+                ModifierKeymap modifierKeymap = new ModifierKeymap(xModifierKeymapRef);
+                return modifierKeymap;
+            } finally {
+                x11.XFreeModifiermap(xModifierKeymapRef);
+            }
         }
 
         /**
@@ -823,8 +826,9 @@ public class X {
             Integer[] list = new Integer[listLength];
             for (int i = 0; i < list.length; i++) {
                 int byteIdx = i * Native.LONG_SIZE; // Corresponding index in the byte array
-                // TODO: This only reads the first four bytes when there can be eight bytes on 64-bit systems,
-                //  but fixing this would require refactoring most Integers in this class to be Longs
+                /* On 64-bit systems, the longs returned by XGetWindowProperty() are just integers
+                that are padded in the upper four bytes, so we only need to read the lower four bytes.
+                (From https://linux.die.net/man/3/xgetwindowproperty) */
                 int value = bytesToInt(property[byteIdx], property[byteIdx + 1], property[byteIdx + 2], property[byteIdx + 3]);
                 list[i] = value;
             }
@@ -1070,6 +1074,8 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public byte[] getProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+            // https://github.com/mirror/libX11/blob/master/src/GetProp.c#L34
+
             X11.AtomByReference xaRetTypeRef = new X11.AtomByReference();
             IntByReference retFormatRef = new IntByReference();
             NativeLongByReference retNItemsRef = new NativeLongByReference();
@@ -1089,45 +1095,50 @@ public class X {
                     retNItemsRef, retBytesAfterRef, retPropRef) != X11.Success) {
                 String propName = x11.XGetAtomName(display.x11Display, xaPropName);
                 throw new X11Exception("Cannot get " + propName + " property.");
+                // The return property is only allocated if XGetWindowProperty succeeds,
+                // so we don't need to call XFree() on it here.
             }
 
-            X11.Atom xaRetType = xaRetTypeRef.getValue();
-            Pointer retProp = retPropRef.getValue();
+            try {
+                X11.Atom xaRetType = xaRetTypeRef.getValue();
+                Pointer retProp = retPropRef.getValue();
 
-            if (xaRetType == null || xaPropType == null) {
-                // The specified property does not exist for the specified window.
-                // The return property doesn't need to be freed because
-                // it should also be null if the return type is null.
-                if (xaPropType != null) {
-                    // But let's free it anyway just to be safe.
+                if (xaRetType == null || xaPropType == null) {
+                    // The specified property does not exist for the specified window.
+                    return null;
+                }
+
+                if (!xaRetType.toNative().equals(xaPropType.toNative())) {
+                    // Requested return type does not match actual return type
+                    String propName = x11.XGetAtomName(display.x11Display, xaPropName);
+                    throw new X11Exception("Invalid type of " + propName + " property");
+                }
+
+                int retFormat = retFormatRef.getValue();
+                long retNItems = retNItemsRef.getValue().longValue();
+
+                // https://www.ibm.com/docs/en/ibm-mq/9.3.x?topic=platforms-standard-data-types-aix-linux-windows
+                int nBytes = switch (retFormat) {
+                    // Returned data is a long array; native long size is 4 bytes on 32-bit and 8 bytes on 64-bit
+                    case 32 -> Native.LONG_SIZE;
+                    // Returned data is a short array; native short size is always 2 bytes
+                    case 16 -> 2;
+                    // Returned data is a char array; native char size is always 1 byte
+                    case 8 -> 1;
+                    case 0 -> 0;
+                    default -> throw new X11Exception("Invalid return format: " + retFormat);
+                };
+                int length = Math.min((int) retNItems * nBytes, MAX_PROPERTY_VALUE_LEN);
+
+                byte[] ret = retProp.getByteArray(0, length);
+
+                return ret;
+            } finally {
+                Pointer retProp = retPropRef.getValue();
+                if (retProp != null) {
                     x11.XFree(retProp);
                 }
-                return null;
             }
-
-            if (!xaRetType.toNative().equals(xaPropType.toNative())) {
-                x11.XFree(retProp);
-                String propName = x11.XGetAtomName(display.x11Display, xaPropName);
-                throw new X11Exception("Invalid type of " + propName + " property");
-            }
-
-            int retFormat = retFormatRef.getValue();
-            long retNItems = retNItemsRef.getValue().longValue();
-
-            // null terminate the result to make string handling easier
-            int nBytes = switch (retFormat) {
-                case 32 -> Native.LONG_SIZE; // Returned data is a long array
-                case 16 -> Native.LONG_SIZE / 2; // Returned data is a short array
-                case 8 -> 1; // Returned data is a char array
-                case 0 -> 0;
-                default -> throw new X11Exception("Invalid return format");
-            };
-            int length = Math.min((int) retNItems * nBytes, MAX_PROPERTY_VALUE_LEN);
-
-            byte[] ret = retProp.getByteArray(0, length);
-
-            x11.XFree(retProp);
-            return ret;
         }
 
         /**
@@ -1181,39 +1192,50 @@ public class X {
         }
 
         public Window[] getSubwindows() throws X11Exception {
-            WindowByReference root = new WindowByReference();
-            WindowByReference parent = new WindowByReference();
-            PointerByReference children = new PointerByReference();
-            IntByReference childCount = new IntByReference();
+            // https://github.com/mirror/libX11/blob/master/src/QuTree.c
 
-            if (x11.XQueryTree(display.x11Display, x11Window, root, parent, children, childCount) == 0) {
+            WindowByReference rootRef = new WindowByReference();
+            WindowByReference parentRef = new WindowByReference();
+            PointerByReference childrenRef = new PointerByReference();
+            IntByReference childCountRef = new IntByReference();
+
+            if (x11.XQueryTree(display.x11Display, x11Window, rootRef, parentRef, childrenRef, childCountRef) == 0) {
                 throw new X11Exception("Can't query subwindows");
             }
 
-            if (childCount.getValue() == 0) {
-                return null;
-            }
+            try {
+                Pointer children = childrenRef.getValue();
+                int childCount = childCountRef.getValue();
 
-            Window[] retVal = new Window[childCount.getValue()];
-            // Depending on if we're running on 64-bit or 32-bit systems,
-            // the Window ID size may be different; we need to make sure that
-            // we get the data properly no matter what
-            if (X11.XID.SIZE == 4) {
-                int[] windows = children.getValue().getIntArray(0, childCount.getValue());
-                for (int x = 0; x < retVal.length; x++) {
-                    X11.Window win = new X11.Window(windows[x]);
-                    retVal[x] = new Window(display, win);
+                if (childCount == 0) {
+                    return null;
                 }
-            } else {
-                long[] windows = children.getValue().getLongArray(0, childCount.getValue());
-                for (int x = 0; x < retVal.length; x++) {
-                    X11.Window win = new X11.Window(windows[x]);
-                    retVal[x] = new Window(display, win);
+
+                Window[] retVal = new Window[childCount];
+                // Depending on if we're running on 64-bit or 32-bit systems,
+                // the Window ID size may be different; we need to make sure that
+                // we get the data properly no matter what
+                if (X11.XID.SIZE == 4) {
+                    int[] windows = children.getIntArray(0, childCount);
+                    for (int x = 0; x < retVal.length; x++) {
+                        X11.Window win = new X11.Window(windows[x]);
+                        retVal[x] = new Window(display, win);
+                    }
+                } else {
+                    long[] windows = children.getLongArray(0, childCount);
+                    for (int x = 0; x < retVal.length; x++) {
+                        X11.Window win = new X11.Window(windows[x]);
+                        retVal[x] = new Window(display, win);
+                    }
+                }
+
+                return retVal;
+            } finally {
+                Pointer children = childrenRef.getValue();
+                if (children != null) {
+                    x11.XFree(children);
                 }
             }
-            x11.XFree(children.getValue());
-
-            return retVal;
         }
 
         public String toString() {
