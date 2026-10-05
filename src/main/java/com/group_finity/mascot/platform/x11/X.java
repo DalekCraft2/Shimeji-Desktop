@@ -783,11 +783,11 @@ public class X {
         }
 
         /**
-         * Returns the property value as integer list.
+         * Returns the property value as integer.
          *
          * @param xaPropType property type
          * @param xaPropName property name
-         * @return property value as integer list
+         * @return property value as integer, or null if not found
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public Integer getIntProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
@@ -807,10 +807,14 @@ public class X {
             if (property == null) {
                 return null;
             }
-            int listLength = property.length / 4; // 4 bytes per integer
+            // Native.LONG_SIZE is used in getProperty() to represent the number of bytes used for each entry
+            // when the return type is 32 bits
+            int listLength = property.length / Native.LONG_SIZE;
             Integer[] list = new Integer[listLength];
             for (int i = 0; i < list.length; i++) {
-                int byteIdx = i * 4; // Corresponding index in the byte array
+                int byteIdx = i * Native.LONG_SIZE; // Corresponding index in the byte array
+                // TODO: This only reads the first four bytes when there can be eight bytes on 64-bit systems,
+                //  but fixing this would require refactoring most Integers in this class to be Longs
                 int value = bytesToInt(property[byteIdx], property[byteIdx + 1], property[byteIdx + 2], property[byteIdx + 3]);
                 list[i] = value;
             }
@@ -818,7 +822,7 @@ public class X {
         }
 
         /**
-         * Returns the property value as integer.
+         * Returns the property value as integer list.
          *
          * @param xaPropType property type
          * @param xaPropName property name
@@ -1067,7 +1071,7 @@ public class X {
 
             /* MAX_PROPERTY_VALUE_LEN / 4 explanation (XGetWindowProperty manpage):
              *
-             * longLength = Specifies the length in 32-bit multiples of the
+             * long_length = Specifies the length in 32-bit multiples of the
              *              data to be retrieved.
              */
             if (x11.XGetWindowProperty(display.x11Display, x11Window, xaPropName, longOffset, longLength, false,
@@ -1102,9 +1106,9 @@ public class X {
 
             // null terminate the result to make string handling easier
             int nBytes = switch (retFormat) {
-                case 32 -> Native.LONG_SIZE;
-                case 16 -> Native.LONG_SIZE / 2;
-                case 8 -> 1;
+                case 32 -> Native.LONG_SIZE; // Returned data is a long array
+                case 16 -> Native.LONG_SIZE / 2; // Returned data is a short array
+                case 8 -> 1; // Returned data is a char array
                 case 0 -> 0;
                 default -> throw new X11Exception("Invalid return format");
             };
