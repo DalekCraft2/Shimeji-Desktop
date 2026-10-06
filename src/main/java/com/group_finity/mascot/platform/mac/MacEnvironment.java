@@ -360,15 +360,17 @@ class MacEnvironment extends AbstractEnvironment {
             return "null";
         }
 
-        // Cast the property to a string ref
-        CFStringRef orientationStringRef = new CFStringRef(orientationRef.getPointer());
+        try {
+            // Cast the property to a string ref
+            CFStringRef orientationStringRef = new CFStringRef(orientationRef.getPointer());
 
-        try (Memory buf = new Memory(64)) {
-            CoreFoundation.INSTANCE.CFStringGetCString(
-                    orientationStringRef, buf, new CFIndex(buf.size()), carbonEx.CFStringGetSystemEncoding());
-            return buf.getString(0);
+            try (Memory buf = new Memory(64)) {
+                CoreFoundation.INSTANCE.CFStringGetCString(
+                        orientationStringRef, buf, new CFIndex(buf.size()), carbonEx.CFStringGetSystemEncoding());
+                return buf.getString(0);
+            }
         } finally {
-            orientationStringRef.release();
+            orientationRef.release();
         }
     }
 
