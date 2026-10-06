@@ -95,7 +95,7 @@ public class X {
      */
     public static class Display {
         /**
-         * Open display.
+         * The native X11 display.
          */
         private final X11.Display x11Display;
         /**
@@ -104,7 +104,7 @@ public class X {
         private final HashMap<String, Atom> atomsHash = new HashMap<>();
 
         /**
-         * Creates the OOWindowUtils using the default display.
+         * Creates a new Display using the default display.
          */
         public Display() {
             x11Display = x11.XOpenDisplay(null);
@@ -115,9 +115,9 @@ public class X {
         }
 
         /**
-         * Creates the OOWindowUtils using a given display.
+         * Creates a new Display using the specified native display.
          *
-         * @param x11Display open display
+         * @param x11Display the native X11 display
          */
         public Display(X11.Display x11Display) {
             this.x11Display = x11Display;
@@ -128,7 +128,7 @@ public class X {
         }
 
         /**
-         * Closes the display.
+         * Closes this display.
          */
         public void close() {
             x11.XCloseDisplay(x11Display);
@@ -142,19 +142,19 @@ public class X {
         }
 
         /**
-         * Returns the X11 display.
+         * Gets the native X11 display.
          *
-         * @return X11 display
+         * @return the native X11 display
          */
         public X11.Display getX11Display() {
             return x11Display;
         }
 
         /**
-         * Get internal atoms by name.
+         * Gets the internal atom with the specified name.
          *
-         * @param name name of the atom
-         * @return atom
+         * @param name the name of the atom
+         * @return the atom with the specified name
          */
         public X11.Atom getAtom(String name) {
             X11.Atom atom = atomsHash.get(name);
@@ -166,10 +166,10 @@ public class X {
         }
 
         /**
-         * Returns the window manager information as a window.
+         * Gets the window manager information as a window.
          *
-         * @return window manager information as a window
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the window manager information as a window
+         * @throws X11Exception if an X11 window error occurred
          */
         public Window getWindowManagerInfo() throws X11Exception {
             Window rootWindow = getRootWindow();
@@ -186,19 +186,19 @@ public class X {
         }
 
         /**
-         * Returns the root window.
+         * Gets the root window.
          *
-         * @return root window
+         * @return the root window
          */
         public Window getRootWindow() {
             return new Window(this, x11.XDefaultRootWindow(x11Display));
         }
 
         /**
-         * Returns the current active window.
+         * Gets the current active window.
          *
-         * @return current active window
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the current active window
+         * @throws X11Exception if an X11 window error occurred
          */
         public Window getActiveWindow() throws X11Exception {
             return getRootWindow().getWindowProperty(X11.XA_WINDOW, "_NET_ACTIVE_WINDOW");
@@ -208,7 +208,7 @@ public class X {
          * Gets all windows managed by the window manager, ordered by age from oldest to newest.
          *
          * @return all windows managed by the window manager, ordered by age from oldest to newest
-         * @throws X11Exception if X11 window errors occurred
+         * @throws X11Exception if an X11 window error occurred
          */
         public Window[] getWindows() throws X11Exception {
             byte[] bytes;
@@ -237,7 +237,7 @@ public class X {
          * Gets all windows managed by the window manager, ordered by layer from bottom to top.
          *
          * @return all windows managed by the window manager, ordered by layer from bottom to top
-         * @throws X11Exception if X11 window errors occurred
+         * @throws X11Exception if an X11 window error occurred
          */
         public Window[] getWindowsLayerOrdered() throws X11Exception {
             byte[] bytes;
@@ -255,10 +255,10 @@ public class X {
         }
 
         /**
-         * Returns the number of desktops.
+         * Gets the number of desktops.
          *
-         * @return number of desktops
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the number of desktops
+         * @throws X11Exception if an X11 window error occurred
          */
         public Integer getDesktopCount() throws X11Exception {
             Window root = getRootWindow();
@@ -275,10 +275,10 @@ public class X {
         }
 
         /**
-         * Returns the number of the active desktop.
+         * Gets the index of the active desktop.
          *
-         * @return number of the active desktop
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the index of the active desktop
+         * @throws X11Exception if an X11 window error occurred
          */
         public Integer getActiveDesktopNumber() throws X11Exception {
             Window root = getRootWindow();
@@ -295,10 +295,10 @@ public class X {
         }
 
         /**
-         * Returns the available desktops.
+         * Gets the available desktops.
          *
-         * @return available desktops
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the available desktops
+         * @throws X11Exception if an X11 window error occurred
          */
         public Desktop[] getDesktops() throws X11Exception {
             Window root = getRootWindow();
@@ -322,20 +322,20 @@ public class X {
         }
 
         /**
-         * Switches to the given desktop.
+         * Switches to the specified desktop.
          *
-         * @param nr desktop number
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param index the index of the desktop to which to switch
+         * @throws X11Exception if an X11 window error occurred
          */
-        public void switchDesktop(int nr) throws X11Exception {
-            getRootWindow().clientMsg("_NET_CURRENT_DESKTOP", nr, 0, 0, 0, 0);
+        public void switchDesktop(int index) throws X11Exception {
+            getRootWindow().clientMsg("_NET_CURRENT_DESKTOP", index, 0, 0, 0, 0);
         }
 
         /**
          * Sets the "showing the desktop" state.
          *
-         * @param state true if the desktop should be shown
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param state {@code true} if the desktop should be shown; {@code false} otherwise
+         * @throws X11Exception if an X11 window error occurred
          */
         public void showingDesktop(boolean state) throws X11Exception {
             getRootWindow().clientMsg("_NET_SHOWING_DESKTOP", state ? 1 : 0, 0, 0, 0, 0);
@@ -344,7 +344,7 @@ public class X {
         /**
          * Enables / disables the auto-repeat of pressed keys.
          *
-         * @param on true if auto-repeat shall be enabled
+         * @param on {@code true} if auto-repeat should be enabled; {@code false} otherwise
          */
         public void setKeyAutoRepeat(boolean on) {
             if (on) {
@@ -355,69 +355,69 @@ public class X {
         }
 
         /**
-         * Returns the key symbol corresponding to the key name.
+         * Gets the key symbol corresponding to the specified key name.
          *
-         * @param keyName name of the key
-         * @return key symbol
+         * @param keyName the name of the key
+         * @return the key symbol corresponding to the key name
          */
         public X11.KeySym getKeySym(String keyName) {
             return x11.XStringToKeysym(keyName);
         }
 
         /**
-         * Returns the key symbol corresponding to the keycode.
+         * Gets the key symbol corresponding to the specified keycode and the specified index in the keycode vector.
          *
-         * @param keyCode keycode
-         * @param index element of the keycode vector
-         * @return key symbol
+         * @param keyCode the keycode
+         * @param index the index in the keycode vector
+         * @return the key symbol corresponding to the keycode and the index in the keycode vector
          */
         public X11.KeySym getKeySym(byte keyCode, int index) {
             return x11.XKeycodeToKeysym(x11Display, keyCode, index);
         }
 
         /**
-         * Returns the keycode corresponding to the key symbol.
+         * Gets the keycode corresponding to the specified key symbol.
          *
-         * @param keySym key symbol
-         * @return keycode
+         * @param keySym the key symbol
+         * @return the keycode corresponding to the key symbol
          */
         public byte getKeyCode(X11.KeySym keySym) {
             return x11.XKeysymToKeycode(x11Display, keySym);
         }
 
         /**
-         * Returns the keycode corresponding to the key name.
+         * Gets the keycode corresponding to the specified key name.
          *
-         * @param keyName name of the key
-         * @return keycode
+         * @param keyName the name of the key
+         * @return the keycode corresponding to the key name
          */
         public byte getKeyCode(String keyName) {
             return x11.XKeysymToKeycode(x11Display, getKeySym(keyName));
         }
 
         /**
-         * Returns the key name corresponding to the key symbol.
+         * Gets the key name corresponding to the specified key symbol.
          *
-         * @param keySym key symbol
-         * @return name of the key
+         * @param keySym the key symbol
+         * @return the key name corresponding to the key symbol
          */
         public String getKeyName(X11.KeySym keySym) {
             return x11.XKeysymToString(keySym);
         }
 
         /**
-         * Returns the key name corresponding to the keycode and the index in the keycode vector.
+         * Gets the key name corresponding to the specified keycode and the specified index in the keycode vector.
          *
-         * @param keyCode keycode
-         * @param index index in the keycode vector
-         * @return name of the key
+         * @param keyCode the keycode
+         * @param index the index in the keycode vector
+         * @return the key name corresponding to the keycode and the index in the keycode vector
          */
         public String getKeyName(byte keyCode, int index) {
             return getKeyName(getKeySym(keyCode, index));
         }
 
         /**
-         * Returns the modifier keymap.
+         * Gets the modifier keymap.
          *
          * @return modifier keymap
          */
@@ -444,10 +444,11 @@ public class X {
 
 
     /**
-     * Modifier keymap. The lists shift, lock, control, mod1, mod1, mod1, mod1, mod1
+     * Modifier keymap. The lists {@link #shift}, {@link #lock}, {@link #control},
+     * {@link #mod1}, {@link #mod2}, {@link #mod3}, {@link #mod4}, and {@link #mod5}
      * contain the keycodes as Byte objects. You can directly access these lists to
-     * read, replace, remove or insert new keycodes to these modifiers.
-     * To apply a new modifier keymap call
+     * read, replace, remove, or insert new keycodes to these modifiers.
+     * To apply a new modifier keymap, call
      * {@link X.Display#setModifierKeymap(ModifierKeymap)}.
      */
     public static class ModifierKeymap {
@@ -475,18 +476,18 @@ public class X {
         }
 
         /**
-         * Creates a modifier keymap and reads the modifiers from the XModifierKeymap.
+         * Creates a modifier keymap and reads the modifiers from the specified {@code XModifierKeymap}.
          *
-         * @param xModifierKeymapRef XModifierKeymap
+         * @param xModifierKeymapRef the {@code XModifierKeymap} from which to read the modifiers
          */
         public ModifierKeymap(X11.XModifierKeymapRef xModifierKeymapRef) {
             fromXModifierKeymap(xModifierKeymapRef);
         }
 
         /**
-         * Reads all modifiers from the XModifierKeymap.
+         * Reads all modifiers from the specified {@code XModifierKeymap}.
          *
-         * @param xModifierKeymapRef XModifierKeymap
+         * @param xModifierKeymapRef the {@code XModifierKeymap} from which to read the modifiers
          */
         public void fromXModifierKeymap(X11.XModifierKeymapRef xModifierKeymapRef) {
             int count = xModifierKeymapRef.max_keypermod;
@@ -508,7 +509,7 @@ public class X {
         }
 
         /**
-         * Returns an XModifierKeymap corresponding to this object.
+         * Gets an {@code XModifierKeymap} corresponding to this object.
          *
          * @return XModifierKeymap
          */
@@ -539,9 +540,9 @@ public class X {
         }
 
         /**
-         * Returns all modifiers as an array.
+         * Gets an array containing all modifier lists.
          *
-         * @return array of modifier lists
+         * @return an array of modifier lists
          */
         @SuppressWarnings("unchecked")
         public ArrayList<Byte>[] getAllModifiers() {
@@ -575,28 +576,28 @@ public class X {
         private final X11.Window x11Window;
 
         /**
-         * Returns the X11 window object.
+         * Gets the native X11 window.
          *
-         * @return X11 window
+         * @return the native X11 window
          */
         public X11.Window getX11Window() {
             return x11Window;
         }
 
         /**
-         * Returns the ID of the window.
+         * Gets the ID of this window.
          *
-         * @return window ID
+         * @return the window ID
          */
         public int getID() {
             return x11Window.intValue();
         }
 
         /**
-         * Creates the window.
+         * Creates a new window.
          *
-         * @param display display where the window is allocated
-         * @param x11Window X11 window
+         * @param display the display where this window is allocated
+         * @param x11Window the native X11 window
          */
         public Window(X.Display display, X11.Window x11Window) {
             this.display = display;
@@ -604,10 +605,10 @@ public class X {
         }
 
         /**
-         * Returns the title of the window.
+         * Gets the title of this window.
          *
-         * @return title of the window
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the title of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public String getTitle() throws X11Exception {
             try {
@@ -618,60 +619,60 @@ public class X {
         }
 
         /**
-         * Returns the window state.
+         * Gets the state of this window.
          *
-         * @return window state atoms
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the state of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public Integer[] getState() throws X11Exception {
-            return getIntArrayProperty(display.getAtom("ATOM"), "_NET_WM_STATE");
+            return getIntArrayProperty(X11.XA_ATOM, "_NET_WM_STATE");
         }
 
         /**
-         * Returns the window type.
+         * Gets the type of this window.
          *
-         * @return window type atoms
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the type of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public Integer[] getType() throws X11Exception {
-            return getIntArrayProperty(display.getAtom("ATOM"), "_NET_WM_WINDOW_TYPE");
+            return getIntArrayProperty(X11.XA_ATOM, "_NET_WM_WINDOW_TYPE");
         }
 
         /**
-         * Returns the window frame extents, formatted as {@code [left, right, top, bottom]}.
+         * Returns the window frame extents of this window, formatted as {@code [left, right, top, bottom]}.
          *
-         * @return window frame extents
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the window frame extents of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public Integer[] getExtents() throws X11Exception {
             return getIntArrayProperty(X11.XA_CARDINAL, "_NET_FRAME_EXTENTS");
         }
 
         /**
-         * Returns the window class.
+         * Gets the class of this window.
          *
-         * @return window class
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the class of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public String getWindowClass() throws X11Exception {
             return getUtf8StringProperty(X11.XA_STRING, X11.XA_WM_CLASS);
         }
 
         /**
-         * Returns the PID of the window.
+         * Gets the PID of this window.
          *
-         * @return PID of the window
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the PID of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public Integer getPID() throws X11Exception {
             return getIntProperty(X11.XA_CARDINAL, "_NET_WM_PID");
         }
 
         /**
-         * Returns the desktop ID of the window.
+         * Gets the desktop ID of this window.
          *
-         * @return desktop ID of the window
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the desktop ID of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public Integer getDesktop() throws X11Exception {
             try {
@@ -682,19 +683,19 @@ public class X {
         }
 
         /**
-         * Returns the client machine name of the window.
+         * Gets the client machine name of this window.
          *
-         * @return client machine name of the window
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return the client machine name of this window
+         * @throws X11Exception if an X11 window error occurred
          */
         public String getMachine() throws X11Exception {
             return getStringProperty(X11.XA_STRING, "WM_CLIENT_MACHINE");
         }
 
         /**
-         * Returns the XWindowAttributes of the window.
+         * Gets the {@code XWindowAttributes} of this window.
          *
-         * @return XWindowAttributes of the window
+         * @return the {@code XWindowAttributes} of this window
          */
         public X11.XWindowAttributes getXWindowAttributes() {
             X11.XWindowAttributes xwa = new X11.XWindowAttributes();
@@ -704,9 +705,9 @@ public class X {
         }
 
         /**
-         * Returns the geometry of the window.
+         * Gets the geometry of this window.
          *
-         * @return geometry of the window
+         * @return the geometry of this window
          */
         public Geometry getGeometry() {
             WindowByReference junkRoot = new WindowByReference();
@@ -729,9 +730,9 @@ public class X {
         }
 
         /**
-         * Returns the bounding box of the window.
+         * Gets the bounding box of this window.
          *
-         * @return bounding box of the window
+         * @return the bounding box of this window
          */
         public Rectangle getBounds() {
             WindowByReference junkRoot = new WindowByReference();
@@ -753,9 +754,9 @@ public class X {
         }
 
         /**
-         * Activates the window.
+         * Activates this window.
          *
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @throws X11Exception if an X11 window error occurred
          */
         public void activate() throws X11Exception {
             clientMsg("_NET_ACTIVE_WINDOW", 0, 0, 0, 0, 0);
@@ -763,20 +764,20 @@ public class X {
         }
 
         /**
-         * Moves the window to the specified desktop.
+         * Moves this window to the specified desktop.
          *
-         * @param desktopNr desktop
-         * @return X11.SUCCESS if closing was successful
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param desktopNr the ID of the desktop to which to move this window
+         * @return {@link X11#Success} if the operation was successful
+         * @throws X11Exception if an X11 window error occurred
          */
         public int moveToDesktop(int desktopNr) throws X11Exception {
             return clientMsg("_NET_WM_DESKTOP", desktopNr, 0, 0, 0, 0);
         }
 
         /**
-         * Selects the input events to listen for.
+         * Selects the input events for which to listen.
          *
-         * @param eventMask event mask representing the events to listen for
+         * @param eventMask an event mask representing the events for which to listen
          */
         public void selectInput(int eventMask) {
             x11.XSelectInput(display.x11Display, x11Window, new NativeLong(eventMask));
@@ -791,22 +792,24 @@ public class X {
         }
 
         /**
-         * Closes the window gracefully.
+         * Closes this window gracefully.
          *
-         * @return X11.SUCCESS if closing was successful
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @return {@link X11#Success} if closing was successful
+         * @throws X11Exception if an X11 window error occurred
          */
         public int close() throws X11Exception {
             return clientMsg("_NET_CLOSE_WINDOW", 0, 0, 0, 0, 0);
         }
 
         /**
-         * Returns the property value as integer.
+         * Gets the value of the specified property as an integer.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as integer, or null if not found
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as an integer,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public Integer getIntProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
@@ -817,24 +820,28 @@ public class X {
         }
 
         /**
-         * Returns the property value as integer.
+         * Gets the value of the specified property as an integer.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as integer, or null if not found
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as an integer,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public Integer getIntProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getIntProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
-         * Returns the property value as integer list.
+         * Gets the value of the specified property as an integer array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as integer list, or null if not found
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as an integer array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public Integer[] getIntArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
@@ -857,24 +864,28 @@ public class X {
         }
 
         /**
-         * Returns the property value as integer list.
+         * Gets the value of the specified property as an integer array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as integer
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as an integer array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public Integer[] getIntArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getIntArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
-         * Returns the property value as window.
+         * Gets the value of the specified property as a window.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as window, or null if not found
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a window,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public Window getWindowProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             Integer windowId = getIntProperty(xaPropType, xaPropName);
@@ -886,24 +897,28 @@ public class X {
         }
 
         /**
-         * Returns the property value as window.
+         * Gets the value of the specified property as a window.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as window
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a window,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public Window getWindowProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getWindowProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
-         * Returns the property value as a null terminated byte array.
+         * Gets the value of the specified property as a null-terminated byte array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as a null terminated byte array, or null if not found
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a null-terminated byte array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public byte[] getNullTerminatedProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] bytesOrig = getProperty(xaPropType, xaPropName);
@@ -933,24 +948,28 @@ public class X {
         }
 
         /**
-         * Returns the property value as a null terminated byte array.
+         * Gets the value of the specified property as a null-terminated byte array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as a null terminated byte array
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a null-terminated byte array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public byte[] getNullTerminatedProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getNullTerminatedProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
-         * Returns the property value as byte array where every '\0' character is replaced by '.'.
+         * Gets the value of the specified property as a byte array where every '\0' character is replaced by '.'.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as byte array where every '\0' character is replaced by '.', or null if the property was not found
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a byte array where every '\0' character is replaced by '.',
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public byte[] getNullReplacedStringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] bytes = getProperty(xaPropType, xaPropName);
@@ -971,24 +990,28 @@ public class X {
         }
 
         /**
-         * Returns the property value as byte array where every '\0' character is replaced by '.'.
+         * Gets the value of the specified property as a byte array where every '\0' character is replaced by '.'.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as byte array where every '\0' character is replaced by '.'
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a byte array where every '\0' character is replaced by '.',
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public byte[] getNullReplacedStringProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getNullReplacedStringProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
-         * Returns the property value as string where every '\0' character is replaced by '.'.
+         * Gets the value of the specified property as a string where every '\0' character is replaced by '.'.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as string where every '\0' character is replaced by '.'
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a string where every '\0' character is replaced by '.',
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String getStringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
@@ -999,12 +1022,14 @@ public class X {
         }
 
         /**
-         * Returns the property value as string where every '\0' character is replaced by '.'.
+         * Gets the value of the specified property as a string where every '\0' character is replaced by '.'.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as string where every '\0' character is replaced by '.'
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a string where every '\0' character is replaced by '.',
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String getStringProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
@@ -1015,12 +1040,14 @@ public class X {
         }
 
         /**
-         * Returns the property value as string list.
+         * Gets the value of the specified property as a string array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as string list
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a string array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String[] getStringArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
@@ -1031,12 +1058,14 @@ public class X {
         }
 
         /**
-         * Returns the property value as string list.
+         * Gets the value of the specified property as a string array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as string list, or null if the property value does not exist
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a string array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String[] getStringArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
@@ -1047,12 +1076,14 @@ public class X {
         }
 
         /**
-         * Returns the property value as UTF8 string where every '\0' character is replaced by '.'.
+         * Gets the value of the specified property as a UTF-8 string where every '\0' character is replaced by '.'.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as UTF8 string where every '\0' character is replaced by '.'
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a UTF-8 string where every '\0' character is replaced by '.',
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String getUtf8StringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
@@ -1063,24 +1094,28 @@ public class X {
         }
 
         /**
-         * Returns the property value as UTF8 string where every '\0' character is replaced by '.'.
+         * Gets the value of the specified property as a UTF-8 string where every '\0' character is replaced by '.'.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as UTF8 string where every '\0' character is replaced by '.'
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a UTF-8 string where every '\0' character is replaced by '.',
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String getUtf8StringProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getUtf8StringProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
-         * Returns the property value as UTF8 string list
+         * Gets the value of the specified property as a UTF-8 string array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as UTF8 string list
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a UTF-8 string array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String[] getUtf8StringArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
@@ -1091,24 +1126,28 @@ public class X {
         }
 
         /**
-         * Returns the property value as UTF8 string list
+         * Gets the value of the specified property as a UTF-8 string array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as UTF8 string list
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a UTF-8 string array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public String[] getUtf8StringArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getUtf8StringArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
-         * Returns the property value as a byte array.
+         * Gets the value of the specified property as a byte array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as a byte array
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a byte array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public byte[] getProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             // https://github.com/mirror/libX11/blob/master/src/GetProp.c#L34
@@ -1179,12 +1218,14 @@ public class X {
         }
 
         /**
-         * Returns the property value as a byte array.
+         * Gets the value of the specified property as a byte array.
          *
-         * @param xaPropType property type
-         * @param xaPropName property name
-         * @return property value as a byte array
-         * @throws X11Exception thrown if X11 window errors occurred
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a byte array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
          */
         public byte[] getProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getProperty(xaPropType, display.getAtom(xaPropName));
@@ -1294,7 +1335,7 @@ public class X {
     }
 
     /**
-     * General exception which is thrown when an X11 window error occurred.
+     * General exception that is thrown when an X11 window error occurs.
      */
     public static class X11Exception extends Exception {
         public X11Exception() {
