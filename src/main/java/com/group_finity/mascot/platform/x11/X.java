@@ -991,7 +991,11 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public String getStringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            return new String(getNullReplacedStringProperty(xaPropType, xaPropName));
+            byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
+            if (property == null) {
+                return null;
+            }
+            return new String(property);
         }
 
         /**
@@ -1003,7 +1007,11 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public String getStringProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            return new String(getNullReplacedStringProperty(xaPropType, xaPropName));
+            byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
+            if (property == null) {
+                return null;
+            }
+            return new String(property);
         }
 
         /**
@@ -1015,7 +1023,11 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public String[] getStringListProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            return new String(getProperty(xaPropType, xaPropName)).split("\0");
+            byte[] property = getProperty(xaPropType, xaPropName);
+            if (property == null) {
+                return null;
+            }
+            return new String(property).split("\0");
         }
 
         /**
@@ -1071,7 +1083,11 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public String[] getUtf8ListProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            return new String(getProperty(xaPropType, xaPropName), StandardCharsets.UTF_8).split("\0");
+            byte[] property = getProperty(xaPropType, xaPropName);
+            if (property == null) {
+                return null;
+            }
+            return new String(property, StandardCharsets.UTF_8).split("\0");
         }
 
         /**
