@@ -224,13 +224,13 @@ public class X {
                 }
             }
 
-            Window[] windowList = new Window[bytes.length / X11.Window.SIZE];
+            Window[] windows = new Window[bytes.length / X11.Window.SIZE];
 
-            for (int i = 0; i < windowList.length; i++) {
-                windowList[i] = new Window(this, new X11.Window(bytesToInt(bytes, X11.XID.SIZE * i)));
+            for (int i = 0; i < windows.length; i++) {
+                windows[i] = new Window(this, new X11.Window(bytesToInt(bytes, X11.XID.SIZE * i)));
             }
 
-            return windowList;
+            return windows;
         }
 
         /**
@@ -245,13 +245,13 @@ public class X {
 
             bytes = rootWindow.getProperty(X11.XA_WINDOW, "_NET_CLIENT_LIST_STACKING");
 
-            Window[] windowList = new Window[bytes.length / X11.Window.SIZE];
+            Window[] windows = new Window[bytes.length / X11.Window.SIZE];
 
-            for (int i = 0; i < windowList.length; i++) {
-                windowList[i] = new Window(this, new X11.Window(bytesToInt(bytes, X11.XID.SIZE * i)));
+            for (int i = 0; i < windows.length; i++) {
+                windows[i] = new Window(this, new X11.Window(bytesToInt(bytes, X11.XID.SIZE * i)));
             }
 
-            return windowList;
+            return windows;
         }
 
         /**
@@ -304,10 +304,10 @@ public class X {
             Window root = getRootWindow();
             String[] desktopNames;
             try {
-                desktopNames = root.getUtf8ListProperty(getAtom("UTF8_STRING"), "_NET_DESKTOP_NAMES");
+                desktopNames = root.getUtf8StringArrayProperty(getAtom("UTF8_STRING"), "_NET_DESKTOP_NAMES");
             } catch (X11Exception e) {
                 try {
-                    desktopNames = root.getStringListProperty(X11.XA_STRING, "_WIN_WORKSPACE_NAMES");
+                    desktopNames = root.getStringArrayProperty(X11.XA_STRING, "_WIN_WORKSPACE_NAMES");
                 } catch (X11Exception e1) {
                     throw new X11Exception("Cannot get desktop names properties (_NET_DESKTOP_NAMES or _WIN_WORKSPACE_NAMES)", e1);
                 }
@@ -611,9 +611,9 @@ public class X {
          */
         public String getTitle() throws X11Exception {
             try {
-                return getUtf8Property(display.getAtom("UTF8_STRING"), "_NET_WM_NAME");
+                return getUtf8StringProperty(display.getAtom("UTF8_STRING"), "_NET_WM_NAME");
             } catch (X11Exception e) {
-                return getUtf8Property(X11.XA_STRING, X11.XA_WM_NAME);
+                return getUtf8StringProperty(X11.XA_STRING, X11.XA_WM_NAME);
             }
         }
 
@@ -624,7 +624,7 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public Integer[] getState() throws X11Exception {
-            return getIntListProperty(display.getAtom("ATOM"), "_NET_WM_STATE");
+            return getIntArrayProperty(display.getAtom("ATOM"), "_NET_WM_STATE");
         }
 
         /**
@@ -634,7 +634,7 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public Integer[] getType() throws X11Exception {
-            return getIntListProperty(display.getAtom("ATOM"), "_NET_WM_WINDOW_TYPE");
+            return getIntArrayProperty(display.getAtom("ATOM"), "_NET_WM_WINDOW_TYPE");
         }
 
         /**
@@ -644,7 +644,7 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public Integer[] getExtents() throws X11Exception {
-            return getIntListProperty(X11.XA_CARDINAL, "_NET_FRAME_EXTENTS");
+            return getIntArrayProperty(X11.XA_CARDINAL, "_NET_FRAME_EXTENTS");
         }
 
         /**
@@ -654,7 +654,7 @@ public class X {
          * @throws X11Exception thrown if X11 window errors occurred
          */
         public String getWindowClass() throws X11Exception {
-            return getUtf8Property(X11.XA_STRING, X11.XA_WM_CLASS);
+            return getUtf8StringProperty(X11.XA_STRING, X11.XA_WM_CLASS);
         }
 
         /**
@@ -836,24 +836,24 @@ public class X {
          * @return property value as integer list, or null if not found
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public Integer[] getIntListProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+        public Integer[] getIntArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
             }
             // Native.LONG_SIZE is used in getProperty() to represent the number of bytes used for each entry
             // when the return type is 32 bits
-            int listLength = property.length / Native.LONG_SIZE;
-            Integer[] list = new Integer[listLength];
-            for (int i = 0; i < list.length; i++) {
+            int arrayLength = property.length / Native.LONG_SIZE;
+            Integer[] array = new Integer[arrayLength];
+            for (int i = 0; i < array.length; i++) {
                 int byteIdx = i * Native.LONG_SIZE; // Corresponding index in the byte array
                 /* On 64-bit systems, the longs returned by XGetWindowProperty() are just integers
                 that are padded in the upper four bytes, so we only need to read the lower four bytes.
                 (From https://linux.die.net/man/3/xgetwindowproperty) */
                 int value = bytesToInt(property[byteIdx], property[byteIdx + 1], property[byteIdx + 2], property[byteIdx + 3]);
-                list[i] = value;
+                array[i] = value;
             }
-            return list;
+            return array;
         }
 
         /**
@@ -864,8 +864,8 @@ public class X {
          * @return property value as integer
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public Integer[] getIntListProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            return getIntListProperty(xaPropType, display.getAtom(xaPropName));
+        public Integer[] getIntArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getIntArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
@@ -1022,7 +1022,7 @@ public class X {
          * @return property value as string list
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public String[] getStringListProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+        public String[] getStringArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
@@ -1038,7 +1038,7 @@ public class X {
          * @return property value as string list, or null if the property value does not exist
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public String[] getStringListProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+        public String[] getStringArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
@@ -1054,7 +1054,7 @@ public class X {
          * @return property value as UTF8 string where every '\0' character is replaced by '.'
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public String getUtf8Property(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+        public String getUtf8StringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
@@ -1070,8 +1070,8 @@ public class X {
          * @return property value as UTF8 string where every '\0' character is replaced by '.'
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public String getUtf8Property(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            return getUtf8Property(xaPropType, display.getAtom(xaPropName));
+        public String getUtf8StringProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getUtf8StringProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
@@ -1082,7 +1082,7 @@ public class X {
          * @return property value as UTF8 string list
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public String[] getUtf8ListProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+        public String[] getUtf8StringArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
@@ -1098,8 +1098,8 @@ public class X {
          * @return property value as UTF8 string list
          * @throws X11Exception thrown if X11 window errors occurred
          */
-        public String[] getUtf8ListProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            return getUtf8ListProperty(xaPropType, display.getAtom(xaPropName));
+        public String[] getUtf8StringArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getUtf8StringArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
