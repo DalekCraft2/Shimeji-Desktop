@@ -22,8 +22,8 @@ import com.sun.jna.Structure.FieldOrder;
 @FieldOrder({"highLongOfPSN", "lowLongOfPSN"})
 public class ProcessSerialNumber extends Structure {
     /** The high-order long integer of the process serial number. */
-    public long highLongOfPSN;
+    public int highLongOfPSN;
 
     /** The low-order long integer of the process serial number. */
-    public long lowLongOfPSN;
+    public int lowLongOfPSN;
 }

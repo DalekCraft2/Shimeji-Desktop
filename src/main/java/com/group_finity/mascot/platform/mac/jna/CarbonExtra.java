@@ -85,7 +85,7 @@ public interface CarbonExtra extends Library {
      * @return
      */
     @Deprecated
-    short GetProcessPID(final ProcessSerialNumber psn, IntByReference pid);
+    int GetProcessPID(final ProcessSerialNumber psn, IntByReference pid);
 
     /**
      * <a href="https://developer.apple.com/documentation/applicationservices/1462085-axuielementcopyattributevalue">Apple docs: AXUIElementCopyAttributeValue</a>
