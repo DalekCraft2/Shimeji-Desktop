@@ -39,6 +39,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Object-oriented X window system.
@@ -82,13 +83,6 @@ public class X {
                 | b1 & 0xff;
     }
 
-    private static int bytesToInt(byte b1, byte b2, byte b3, byte b4, int offset) {
-        return ((b4 + offset) & 0xff) << 24
-                | ((b3 + offset) & 0xff) << 16
-                | ((b2 + offset) & 0xff) << 8
-                | (b1 + offset) & 0xff;
-    }
-
 
     /**
      * X Display.
@@ -101,7 +95,7 @@ public class X {
         /**
          * Map used for caching atoms.
          */
-        private final HashMap<String, Atom> atomsHash = new HashMap<>();
+        private final Map<String, Atom> atomCache = new HashMap<>();
 
         /**
          * Creates a new Display using the default native X11 display.
@@ -160,10 +154,10 @@ public class X {
          * @return the atom with the specified name
          */
         public X11.Atom getAtom(String name) {
-            X11.Atom atom = atomsHash.get(name);
+            X11.Atom atom = atomCache.get(name);
             if (atom == null) {
                 atom = x11.XInternAtom(x11Display, name, false);
-                atomsHash.put(name, atom);
+                atomCache.put(name, atom);
             }
             return atom;
         }
@@ -427,8 +421,7 @@ public class X {
         public ModifierKeymap getModifierKeymap() {
             X11.XModifierKeymapRef xModifierKeymapRef = x11.XGetModifierMapping(x11Display);
             try {
-                ModifierKeymap modifierKeymap = new ModifierKeymap(xModifierKeymapRef);
-                return modifierKeymap;
+                return new ModifierKeymap(xModifierKeymapRef);
             } finally {
                 x11.XFreeModifiermap(xModifierKeymapRef);
             }
@@ -579,6 +572,17 @@ public class X {
         private final X11.Window x11Window;
 
         /**
+         * Creates a new window.
+         *
+         * @param display the display where this window is allocated
+         * @param x11Window the native X11 window
+         */
+        public Window(X.Display display, X11.Window x11Window) {
+            this.display = display;
+            this.x11Window = x11Window;
+        }
+
+        /**
          * Gets the native X11 window.
          *
          * @return the native X11 window
@@ -594,17 +598,6 @@ public class X {
          */
         public int getID() {
             return x11Window.intValue();
-        }
-
-        /**
-         * Creates a new window.
-         *
-         * @param display the display where this window is allocated
-         * @param x11Window the native X11 window
-         */
-        public Window(X.Display display, X11.Window x11Window) {
-            this.display = display;
-            this.x11Window = x11Window;
         }
 
         /**
@@ -692,7 +685,7 @@ public class X {
          * @throws X11Exception if an X11 window error occurred
          */
         public String getMachine() throws X11Exception {
-            return getStringProperty(X11.XA_STRING, "WM_CLIENT_MACHINE");
+            return getStringProperty(X11.XA_STRING, X11.XA_WM_CLIENT_MACHINE);
         }
 
         /**
