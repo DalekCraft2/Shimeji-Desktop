@@ -104,27 +104,30 @@ public class X {
         private final HashMap<String, Atom> atomsHash = new HashMap<>();
 
         /**
-         * Creates a new Display using the default display.
+         * Creates a new Display using the default native X11 display.
+         *
+         * @throws RuntimeException if the default X11 display fails to be opened
          */
         public Display() {
             x11Display = x11.XOpenDisplay(null);
 
             if (x11Display == null) {
-                throw new Error("Can't open X Display");
+                throw new RuntimeException("Cannot open default X11 display");
             }
         }
 
         /**
-         * Creates a new Display using the specified native display.
+         * Creates a new Display using the specified native X11 display.
          *
          * @param x11Display the native X11 display
+         * @throws IllegalArgumentException if {@code x11Display} is {@code null}
          */
         public Display(X11.Display x11Display) {
-            this.x11Display = x11Display;
-
             if (x11Display == null) {
-                throw new Error("X Display is null");
+                throw new IllegalArgumentException("x11Display cannot be null");
             }
+
+            this.x11Display = x11Display;
         }
 
         /**
