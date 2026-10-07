@@ -627,7 +627,7 @@ public class X {
          * @return the state of this window
          * @throws X11Exception if an X11 window error occurred
          */
-        public Integer[] getState() throws X11Exception {
+        public int[] getState() throws X11Exception {
             return getIntArrayProperty(X11.XA_ATOM, "_NET_WM_STATE");
         }
 
@@ -637,7 +637,7 @@ public class X {
          * @return the type of this window
          * @throws X11Exception if an X11 window error occurred
          */
-        public Integer[] getType() throws X11Exception {
+        public int[] getType() throws X11Exception {
             return getIntArrayProperty(X11.XA_ATOM, "_NET_WM_WINDOW_TYPE");
         }
 
@@ -647,7 +647,7 @@ public class X {
          * @return the window frame extents of this window
          * @throws X11Exception if an X11 window error occurred
          */
-        public Integer[] getExtents() throws X11Exception {
+        public int[] getFrameExtents() throws X11Exception {
             return getIntArrayProperty(X11.XA_CARDINAL, "_NET_FRAME_EXTENTS");
         }
 
@@ -846,7 +846,7 @@ public class X {
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
-        public Integer[] getIntArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+        public int[] getIntArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] property = getProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
@@ -854,7 +854,7 @@ public class X {
             // Native.LONG_SIZE is used in getProperty() to represent the number of bytes used for each entry
             // when the return type is 32 bits
             int arrayLength = property.length / Native.LONG_SIZE;
-            Integer[] array = new Integer[arrayLength];
+            int[] array = new int[arrayLength];
             for (int i = 0; i < array.length; i++) {
                 int byteIdx = i * Native.LONG_SIZE; // Corresponding index in the byte array
                 /* On 64-bit systems, the longs returned by XGetWindowProperty() are just integers
@@ -876,7 +876,7 @@ public class X {
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
-        public Integer[] getIntArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+        public int[] getIntArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getIntArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 

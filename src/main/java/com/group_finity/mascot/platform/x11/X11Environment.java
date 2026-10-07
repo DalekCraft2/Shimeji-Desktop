@@ -15,6 +15,7 @@ import com.sun.jna.platform.unix.X11;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * An implementation of {@link AbstractEnvironment} that provides access to the X11 native environment via JNA.
@@ -304,8 +305,8 @@ class X11Environment extends AbstractEnvironment {
              */
             curDesktop = display.getActiveDesktopNumber();
             desktop = window.getDesktop();
-            state = Arrays.asList(window.getState());
-            type = Arrays.asList(window.getType());
+            state = IntStream.of(window.getState()).boxed().toList();
+            type = IntStream.of(window.getType()).boxed().toList();
         } catch (X11Exception e) {
             return WindowStatus.IGNORED;
         }
@@ -395,9 +396,9 @@ class X11Environment extends AbstractEnvironment {
             return null;
         }
         Rectangle rawBounds = window.getBounds();
-        Integer[] extents;
+        int[] extents;
         try {
-            extents = window.getExtents();
+            extents = window.getFrameExtents();
         } catch (X11Exception e) {
             return rawBounds;
         }
