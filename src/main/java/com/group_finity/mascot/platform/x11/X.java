@@ -975,8 +975,7 @@ public class X {
             }
 
             // search for '\0'
-            int i;
-            for (i = 0; i < bytes.length; i++) {
+            for (int i = 0; i < bytes.length; i++) {
                 if (bytes[i] == '\0') {
                     bytes[i] = '.';
                 }
@@ -1028,11 +1027,7 @@ public class X {
          * does not match the actual type of the property
          */
         public String getStringProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
-            if (property == null) {
-                return null;
-            }
-            return new String(property);
+            return getStringProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
@@ -1064,11 +1059,7 @@ public class X {
          * does not match the actual type of the property
          */
         public String[] getStringArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            byte[] property = getProperty(xaPropType, xaPropName);
-            if (property == null) {
-                return null;
-            }
-            return new String(property).split("\0");
+            return getStringArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
