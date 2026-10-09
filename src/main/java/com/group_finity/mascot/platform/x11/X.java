@@ -76,14 +76,6 @@ public class X {
                 | prop[offset] & 0xff;
     }
 
-    private static int bytesToInt(byte b1, byte b2, byte b3, byte b4) {
-        return (b4 & 0xff) << 24
-                | (b3 & 0xff) << 16
-                | (b2 & 0xff) << 8
-                | b1 & 0xff;
-    }
-
-
     /**
      * X Display.
      */
@@ -853,7 +845,7 @@ public class X {
                 /* On 64-bit systems, the longs returned by XGetWindowProperty() are just integers
                 that are padded in the upper four bytes, so we only need to read the lower four bytes.
                 (From https://linux.die.net/man/3/xgetwindowproperty) */
-                int value = bytesToInt(property[byteIdx], property[byteIdx + 1], property[byteIdx + 2], property[byteIdx + 3]);
+                int value = bytesToInt(property, byteIdx);
                 array[i] = value;
             }
             return array;
