@@ -1165,8 +1165,10 @@ public class X {
 
                 if (!xaRetType.toNative().equals(xaPropType.toNative())) {
                     // Requested return type does not match actual return type
-                    String propName = x11.XGetAtomName(display.x11Display, xaPropName);
-                    throw new X11Exception("Invalid type of " + propName + " property");
+                    String requestedTypeName = x11.XGetAtomName(display.x11Display, xaPropType);
+                    String actualTypeName = x11.XGetAtomName(display.x11Display, xaRetType);
+                    throw new X11Exception("Requested property type " + requestedTypeName +
+                            " does not match actual property type " + actualTypeName);
                 }
 
                 int retFormat = retFormatRef.getValue();
@@ -1185,9 +1187,7 @@ public class X {
                 };
                 int length = Math.min((int) retNItems * nBytes, MAX_PROPERTY_VALUE_LEN);
 
-                byte[] ret = retProp.getByteArray(0, length);
-
-                return ret;
+                return retProp.getByteArray(0, length);
             } finally {
                 Pointer retProp = retPropRef.getValue();
                 if (retProp != null) {
