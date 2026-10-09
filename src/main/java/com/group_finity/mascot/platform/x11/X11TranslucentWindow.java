@@ -64,7 +64,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
         addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
                 // Get the handle of the native window for this JWindow
-                X11.Window win = new X11.Window((int) Native.getWindowID(this));
+                X11.Window win = new X11.Window(Native.getWindowID(this));
                 X11 x11 = X11.INSTANCE;
 
                 // Set the window type of the window to "dock" so it can move past the bounds of the screen
