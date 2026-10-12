@@ -56,11 +56,21 @@ public class X {
     public static final int _NET_WM_STATE_ADD = 1;
     /** Toggle property. */
     public static final int _NET_WM_STATE_TOGGLE = 2;
-    /** Maximal property value length. */
+    /** Maximum length for property values, in bytes. */
     public static final int MAX_PROPERTY_VALUE_LEN = 4096;
 
+    /**
+     * The instance of the {@code X11} library interface, for convenience.
+     */
     private static final X11 x11 = X11.INSTANCE;
 
+    /**
+     * Converts the first four entries of the specified byte array into an integer.
+     * The bytes in the array should be in little-endian order.
+     *
+     * @param prop a byte array containing the four bytes of the integer, in little-endian order
+     * @return the integer value corresponding to the four bytes
+     */
     private static int bytesToInt(byte[] prop) {
         return (prop[3] & 0xff) << 24
                 | (prop[2] & 0xff) << 16
@@ -68,6 +78,14 @@ public class X {
                 | prop[0] & 0xff;
     }
 
+    /**
+     * Converts four entries of the specified byte array into an integer, starting from the specified offset.
+     * The bytes in the array should be in little-endian order.
+     *
+     * @param prop a byte array containing the four bytes of the integer, in little-endian order
+     * @param offset the offset at which to start reading values from the array
+     * @return the integer value corresponding to the four bytes
+     */
     private static int bytesToInt(byte[] prop, int offset) {
         return (prop[3 + offset] & 0xff) << 24
                 | (prop[2 + offset] & 0xff) << 16
@@ -76,7 +94,7 @@ public class X {
     }
 
     /**
-     * X Display.
+     * Represents a connection to the X server that controls a display.
      */
     public static class Display {
         /**
@@ -116,7 +134,8 @@ public class X {
         }
 
         /**
-         * Closes this display.
+         * Closes the connection to the X server for this display and destroys all windows, resource IDs,
+         * or other resources that the client has created on this display.
          */
         public void close() {
             x11.XCloseDisplay(x11Display);
@@ -139,10 +158,10 @@ public class X {
         }
 
         /**
-         * Gets the internal atom with the specified name.
+         * Gets the atom identifier associated with the specified name.
          *
          * @param name the name of the atom
-         * @return the atom with the specified name
+         * @return the atom identifier with the specified name
          */
         public X11.Atom getAtom(String name) {
             X11.Atom atom = atomCache.get(name);
@@ -174,9 +193,9 @@ public class X {
         }
 
         /**
-         * Gets the root window.
+         * Gets the root window for the default screen.
          *
-         * @return the root window
+         * @return the root window for the default screen
          */
         public Window getRootWindow() {
             return new Window(this, x11.XDefaultRootWindow(x11Display));
@@ -193,10 +212,11 @@ public class X {
         }
 
         /**
-         * Gets all windows managed by the window manager, ordered by age from oldest to newest.
+         * Gets all windows managed by the window manager, in initial mapping order from oldest to newest.
          *
-         * @return all windows managed by the window manager, ordered by age from oldest to newest
+         * @return all windows managed by the window manager, in initial mapping order from oldest to newest
          * @throws X11Exception if an X11 window error occurred
+         * @see #getWindowsLayerOrdered()
          */
         public Window[] getWindows() throws X11Exception {
             byte[] bytes;
@@ -222,10 +242,11 @@ public class X {
         }
 
         /**
-         * Gets all windows managed by the window manager, ordered by layer from bottom to top.
+         * Gets all windows managed by the window manager, in stacking order from bottommost to topmost.
          *
-         * @return all windows managed by the window manager, ordered by layer from bottom to top
+         * @return all windows managed by the window manager, in stacking order from bottommost to topmost
          * @throws X11Exception if an X11 window error occurred
+         * @see #getWindows()
          */
         public Window[] getWindowsLayerOrdered() throws X11Exception {
             byte[] bytes;
@@ -243,9 +264,9 @@ public class X {
         }
 
         /**
-         * Gets the number of desktops.
+         * Gets the number of virtual desktops.
          *
-         * @return the number of desktops
+         * @return the number of virtual desktops
          * @throws X11Exception if an X11 window error occurred
          */
         public Integer getDesktopCount() throws X11Exception {
@@ -255,6 +276,7 @@ public class X {
                 return root.getIntProperty(X11.XA_CARDINAL, "_NET_NUMBER_OF_DESKTOPS");
             } catch (X11Exception e) {
                 try {
+                    // GNOME winhint with an equivalent function to the EWMH hint above
                     return root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE_COUNT");
                 } catch (X11Exception e1) {
                     throw new X11Exception("Cannot get number of desktops properties (_NET_NUMBER_OF_DESKTOPS or _WIN_WORKSPACE_COUNT)", e1);
@@ -263,10 +285,11 @@ public class X {
         }
 
         /**
-         * Gets the index of the active desktop.
+         * Gets the index of the current desktop.
          *
-         * @return the index of the active desktop
+         * @return the index of the current desktop
          * @throws X11Exception if an X11 window error occurred
+         * @see #switchDesktop(int)
          */
         public Integer getActiveDesktopNumber() throws X11Exception {
             Window root = getRootWindow();
@@ -275,6 +298,7 @@ public class X {
                 return root.getIntProperty(X11.XA_CARDINAL, "_NET_CURRENT_DESKTOP");
             } catch (X11Exception e) {
                 try {
+                    // GNOME winhint with an equivalent function to the EWMH hint above
                     return root.getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
                 } catch (X11Exception e1) {
                     throw new X11Exception("Cannot get current desktop properties (_NET_CURRENT_DESKTOP or _WIN_WORKSPACE property)", e1);
@@ -283,9 +307,9 @@ public class X {
         }
 
         /**
-         * Gets the available desktops.
+         * Gets all virtual desktops.
          *
-         * @return the available desktops
+         * @return an array of all virtual desktops
          * @throws X11Exception if an X11 window error occurred
          */
         public Desktop[] getDesktops() throws X11Exception {
@@ -295,6 +319,7 @@ public class X {
                 desktopNames = root.getUtf8StringArrayProperty(getAtom("UTF8_STRING"), "_NET_DESKTOP_NAMES");
             } catch (X11Exception e) {
                 try {
+                    // GNOME winhint with an equivalent function to the EWMH hint above
                     desktopNames = root.getStringArrayProperty(X11.XA_STRING, "_WIN_WORKSPACE_NAMES");
                 } catch (X11Exception e1) {
                     throw new X11Exception("Cannot get desktop names properties (_NET_DESKTOP_NAMES or _WIN_WORKSPACE_NAMES)", e1);
@@ -314,15 +339,16 @@ public class X {
          *
          * @param index the index of the desktop to which to switch
          * @throws X11Exception if an X11 window error occurred
+         * @see #getActiveDesktopNumber()
          */
         public void switchDesktop(int index) throws X11Exception {
             getRootWindow().clientMsg("_NET_CURRENT_DESKTOP", index, 0, 0, 0, 0);
         }
 
         /**
-         * Sets the "showing the desktop" state.
+         * Sets whether the window manager is in "showing the desktop" mode.
          *
-         * @param state {@code true} if the desktop should be shown; {@code false} otherwise
+         * @param state {@code true} if the window manager should be in "showing the desktop" mode; {@code false} otherwise
          * @throws X11Exception if an X11 window error occurred
          */
         public void showingDesktop(boolean state) throws X11Exception {
@@ -345,19 +371,21 @@ public class X {
         /**
          * Gets the key symbol corresponding to the specified key name.
          *
-         * @param keyName the name of the key
-         * @return the key symbol corresponding to the key name
+         * @param keyName the name of the key symbol
+         * @return the key symbol corresponding to the key name, or {@link X11#NoSymbol} if the specified name
+         * does not match a valid key symbol
          */
         public X11.KeySym getKeySym(String keyName) {
             return x11.XStringToKeysym(keyName);
         }
 
         /**
-         * Gets the key symbol corresponding to the specified keycode and the specified index in the keycode vector.
+         * Gets the key symbol corresponding to the specified keycode and the specified element of the keycode vector.
          *
          * @param keyCode the keycode
-         * @param index the index in the keycode vector
-         * @return the key symbol corresponding to the keycode and the index in the keycode vector
+         * @param index the element of the keycode vector
+         * @return the key symbol corresponding to the keycode and the element of the keycode vector,
+         * or {@link X11#NoSymbol} if no symbol is defined
          */
         public X11.KeySym getKeySym(byte keyCode, int index) {
             return x11.XKeycodeToKeysym(x11Display, keyCode, index);
@@ -366,8 +394,9 @@ public class X {
         /**
          * Gets the keycode corresponding to the specified key symbol.
          *
-         * @param keySym the key symbol
-         * @return the keycode corresponding to the key symbol
+         * @param keySym the key symbol that is to be searched for
+         * @return the keycode corresponding to the key symbol, or 0 if the specified key symbol is not defined
+         * for any keycode
          */
         public byte getKeyCode(X11.KeySym keySym) {
             return x11.XKeysymToKeycode(x11Display, keySym);
@@ -376,8 +405,9 @@ public class X {
         /**
          * Gets the keycode corresponding to the specified key name.
          *
-         * @param keyName the name of the key
-         * @return the keycode corresponding to the key name
+         * @param keyName the name of the key symbol that is to be searched for
+         * @return the keycode corresponding to the key name, or 0 if the specified key symbol is not defined
+         * for any keycode
          */
         public byte getKeyCode(String keyName) {
             X11.KeySym keySym = getKeySym(keyName);
@@ -388,21 +418,24 @@ public class X {
         }
 
         /**
-         * Gets the key name corresponding to the specified key symbol.
+         * Gets the name of the specified key symbol.
          *
-         * @param keySym the key symbol
-         * @return the key name corresponding to the key symbol
+         * @param keySym the key symbol whose name is to be returned
+         * @return the name of the key symbol, or {@code null} if the specified key symbol is
+         * not defined
          */
         public String getKeyName(X11.KeySym keySym) {
             return x11.XKeysymToString(keySym);
         }
 
         /**
-         * Gets the key name corresponding to the specified keycode and the specified index in the keycode vector.
+         * Gets the name of the key symbol corresponding to the specified keycode and
+         * the specified element of the keycode vector.
          *
          * @param keyCode the keycode
-         * @param index the index in the keycode vector
-         * @return the key name corresponding to the keycode and the index in the keycode vector
+         * @param index the element of the keycode vector
+         * @return the name of the key symbol corresponding to the keycode and the element of the keycode vector,
+         * or {@code null} if no symbol is defined
          */
         public String getKeyName(byte keyCode, int index) {
             X11.KeySym keySym = getKeySym(keyCode, index);
@@ -413,9 +446,9 @@ public class X {
         }
 
         /**
-         * Gets the modifier keymap.
+         * Gets a newly created modifier keymap that contains the keys being used as modifiers by this display.
          *
-         * @return modifier keymap
+         * @return a newly created modifier keymap containing the keys being used as modifiers by this display
          */
         public ModifierKeymap getModifierKeymap() {
             X11.XModifierKeymapRef xModifierKeymapRef = x11.XGetModifierMapping(x11Display);
@@ -427,9 +460,10 @@ public class X {
         }
 
         /**
-         * Sets the modifier keymap.
+         * Sets the keycodes of the keys that are to be used as modifiers by this display.
          *
-         * @param modifierKeymap modifier keymap
+         * @param modifierKeymap the modifier keymap containing the keycodes of the keys
+         * that are to be used as modifiers
          */
         public void setModifierKeymap(ModifierKeymap modifierKeymap) {
             X11.XModifierKeymapRef xModifierKeymapRef = null;
@@ -450,7 +484,7 @@ public class X {
      * {@link #mod1}, {@link #mod2}, {@link #mod3}, {@link #mod4}, and {@link #mod5}
      * contain the keycodes as Byte objects. You can directly access these lists to
      * read, replace, remove, or insert new keycodes to these modifiers.
-     * To apply a new modifier keymap, call
+     * To apply a new modifier keymap to a display, use
      * {@link X.Display#setModifierKeymap(ModifierKeymap)}.
      */
     public static class ModifierKeymap {
@@ -478,18 +512,18 @@ public class X {
         }
 
         /**
-         * Creates a modifier keymap and reads the modifiers from the specified {@code XModifierKeymap}.
+         * Creates a modifier keymap and reads the modifiers from the specified {@code XModifierKeymapRef}.
          *
-         * @param xModifierKeymapRef the {@code XModifierKeymap} from which to read the modifiers
+         * @param xModifierKeymapRef the {@code XModifierKeymapRef} from which to read the modifiers
          */
         public ModifierKeymap(X11.XModifierKeymapRef xModifierKeymapRef) {
             fromXModifierKeymap(xModifierKeymapRef);
         }
 
         /**
-         * Reads all modifiers from the specified {@code XModifierKeymap}.
+         * Reads all modifiers from the specified {@code XModifierKeymapRef}.
          *
-         * @param xModifierKeymapRef the {@code XModifierKeymap} from which to read the modifiers
+         * @param xModifierKeymapRef the {@code XModifierKeymapRef} from which to read the modifiers
          */
         public void fromXModifierKeymap(X11.XModifierKeymapRef xModifierKeymapRef) {
             int count = xModifierKeymapRef.max_keypermod;
@@ -511,9 +545,9 @@ public class X {
         }
 
         /**
-         * Gets an {@code XModifierKeymap} corresponding to this object.
+         * Gets an {@code XModifierKeymapRef} corresponding to this object.
          *
-         * @return XModifierKeymap
+         * @return an {@code XModifierKeymapRef} corresponding to this object
          */
         public X11.XModifierKeymapRef toXModifierKeymap() {
             ArrayList<Byte>[] allModifiers = getAllModifiers();
@@ -547,7 +581,8 @@ public class X {
         }
 
         /**
-         * Gets an array containing all modifier lists.
+         * Gets an array containing all modifier lists, in the order
+         * {@code [shift, lock, control, mod1, mod2, mod3, mod4, mod5]}.
          *
          * @return an array of modifier lists
          */
@@ -560,16 +595,32 @@ public class X {
     }
 
     /**
-     * X Desktop.
+     * Represents a virtual desktop.
      */
     public static class Desktop {
+        /**
+         * The display used to retrieve this virtual desktop's information.
+         */
         public X.Display display;
-        public int number;
+        /**
+         * The ID of this virtual desktop.
+         */
+        public int id;
+        /**
+         * The name of this virtual desktop.
+         */
         public String name;
 
-        public Desktop(Display display, int number, String name) {
+        /**
+         * Creates a new virtual desktop.
+         *
+         * @param display the display used to retrieve this virtual desktop's information
+         * @param id the ID of this virtual desktop
+         * @param name the name of this virtual desktop
+         */
+        public Desktop(Display display, int id, String name) {
             this.display = display;
-            this.number = number;
+            this.id = id;
             this.name = name;
         }
     }
@@ -579,7 +630,16 @@ public class X {
      * X Window.
      */
     public static class Window {
+        /**
+         * The display where this window is allocated.
+         */
         private final X.Display display;
+
+        /**
+         * The native X11 window.
+         *
+         * @see #getX11Window()
+         */
         private final X11.Window x11Window;
 
         /**
@@ -605,16 +665,16 @@ public class X {
         /**
          * Gets the ID of this window.
          *
-         * @return the window ID
+         * @return the ID of this window
          */
         public int getID() {
             return x11Window.intValue();
         }
 
         /**
-         * Gets the title of this window.
+         * Gets the name of this window.
          *
-         * @return the title of this window
+         * @return the name of this window
          * @throws X11Exception if an X11 window error occurred
          */
         public String getTitle() throws X11Exception {
@@ -626,9 +686,9 @@ public class X {
         }
 
         /**
-         * Gets the state of this window.
+         * Gets an array of hints describing the state of this window.
          *
-         * @return the state of this window
+         * @return an array of hints describing the state of this window
          * @throws X11Exception if an X11 window error occurred
          */
         public int[] getState() throws X11Exception {
@@ -636,9 +696,9 @@ public class X {
         }
 
         /**
-         * Gets the type of this window.
+         * Gets an array of atoms indicating the functional type of this window.
          *
-         * @return the type of this window
+         * @return an array of atoms indicating the functional type of this window
          * @throws X11Exception if an X11 window error occurred
          */
         public int[] getType() throws X11Exception {
@@ -646,9 +706,9 @@ public class X {
         }
 
         /**
-         * Returns the window frame extents of this window, formatted as {@code [left, right, top, bottom]}.
+         * Gets the extents of this window's frame, in the order {@code [left, right, top, bottom]}.
          *
-         * @return the window frame extents of this window
+         * @return the extents of this window's frame
          * @throws X11Exception if an X11 window error occurred
          */
         public int[] getFrameExtents() throws X11Exception {
@@ -666,9 +726,9 @@ public class X {
         }
 
         /**
-         * Gets the PID of this window.
+         * Gets the process ID of the client that owns this window.
          *
-         * @return the PID of this window
+         * @return the process ID of the client that owns this window
          * @throws X11Exception if an X11 window error occurred
          */
         public Integer getPID() throws X11Exception {
@@ -680,19 +740,21 @@ public class X {
          *
          * @return the desktop ID of this window
          * @throws X11Exception if an X11 window error occurred
+         * @see #moveToDesktop(int)
          */
         public Integer getDesktop() throws X11Exception {
             try {
                 return getIntProperty(X11.XA_CARDINAL, "_NET_WM_DESKTOP");
             } catch (X11Exception e) {
+                // GNOME winhint with an equivalent function to the EWMH hint above
                 return getIntProperty(X11.XA_CARDINAL, "_WIN_WORKSPACE");
             }
         }
 
         /**
-         * Gets the client machine name of this window.
+         * Gets the name of the client machine of this window.
          *
-         * @return the client machine name of this window
+         * @return the name of the client machine of this window
          * @throws X11Exception if an X11 window error occurred
          */
         public String getMachine() throws X11Exception {
@@ -700,9 +762,9 @@ public class X {
         }
 
         /**
-         * Gets the {@code XWindowAttributes} of this window.
+         * Gets the current attributes of this window.
          *
-         * @return the {@code XWindowAttributes} of this window
+         * @return the current attributes of this window
          */
         public X11.XWindowAttributes getXWindowAttributes() {
             X11.XWindowAttributes xwa = new X11.XWindowAttributes();
@@ -712,9 +774,9 @@ public class X {
         }
 
         /**
-         * Gets the geometry of this window.
+         * Gets the current geometry of this window.
          *
-         * @return the geometry of this window
+         * @return the current geometry of this window
          */
         public Geometry getGeometry() {
             WindowByReference junkRoot = new WindowByReference();
@@ -737,9 +799,9 @@ public class X {
         }
 
         /**
-         * Gets the bounding box of this window.
+         * Gets the current bounding box of this window.
          *
-         * @return the bounding box of this window
+         * @return the current bounding box of this window
          */
         public Rectangle getBounds() {
             WindowByReference junkRoot = new WindowByReference();
@@ -761,7 +823,7 @@ public class X {
         }
 
         /**
-         * Activates this window.
+         * Activates this window and brings it to the front.
          *
          * @throws X11Exception if an X11 window error occurred
          */
@@ -774,11 +836,11 @@ public class X {
          * Moves this window to the specified desktop.
          *
          * @param desktopNr the ID of the desktop to which to move this window
-         * @return {@link X11#Success} if the operation was successful
          * @throws X11Exception if an X11 window error occurred
+         * @see #getDesktop()
          */
-        public int moveToDesktop(int desktopNr) throws X11Exception {
-            return clientMsg("_NET_WM_DESKTOP", desktopNr, 0, 0, 0, 0);
+        public void moveToDesktop(int desktopNr) throws X11Exception {
+            clientMsg("_NET_WM_DESKTOP", desktopNr, 0, 0, 0, 0);
         }
 
         /**
@@ -787,25 +849,42 @@ public class X {
          * @param eventMask an event mask representing the events for which to listen
          */
         public void selectInput(int eventMask) {
+            // XSelectInput always returns 1; no point returning that here
             x11.XSelectInput(display.x11Display, x11Window, new NativeLong(eventMask));
         }
 
-        public int nextEvent(X11.XEvent event) {
-            return x11.XNextEvent(display.x11Display, event);
+        /**
+         * Copies the next event in the queue into the specified {@code XEvent} structure.
+         *
+         * @param event the {@code XEvent} into which to copy the next event
+         */
+        public void nextEvent(X11.XEvent event) {
+            // XNextEvent always returns 0; no point returning that here
+            x11.XNextEvent(display.x11Display, event);
         }
 
-        public void sendEvent(int eventMask, X11.XEvent event) {
-            x11.XSendEvent(display.x11Display, x11Window, 1, new NativeLong(eventMask), event);
+        /**
+         * Sends the specified event to this window.
+         *
+         * @param eventMask the event mask to pass to the event. If this is empty, the event is sent
+         * to the client that created this window. Otherwise, the event is propagated to the closest ancestor
+         * of the window for which some client has selected a type specified in this mask and for which no
+         * intervening window has that type in its
+         * {@link X11.XWindowAttributes#do_not_propagate_mask do_not_propagate_mask}.
+         * @param event the type of event to send
+         * @return zero if the conversion to wire protocol format failed; nonzero otherwise
+         */
+        public int sendEvent(int eventMask, X11.XEvent event) {
+            return x11.XSendEvent(display.x11Display, x11Window, 1, new NativeLong(eventMask), event);
         }
 
         /**
          * Closes this window gracefully.
          *
-         * @return {@link X11#Success} if closing was successful
          * @throws X11Exception if an X11 window error occurred
          */
-        public int close() throws X11Exception {
-            return clientMsg("_NET_CLOSE_WINDOW", 0, 0, 0, 0, 0);
+        public void close() throws X11Exception {
+            clientMsg("_NET_CLOSE_WINDOW", 0, 0, 0, 0, 0);
         }
 
         /**
@@ -934,7 +1013,7 @@ public class X {
                 return null;
             }
 
-            // search for '\0'
+            // Get index of first null terminator
             int i;
             for (i = 0; i < bytesOrig.length; i++) {
                 if (bytesOrig[i] == '\0') {
@@ -944,6 +1023,7 @@ public class X {
 
             byte[] bytesDest;
 
+            // Create new array containing everything from the original array up to and including the null terminator
             if (i < bytesOrig.length - 1) {
                 bytesDest = new byte[i + 1];
                 System.arraycopy(bytesOrig, 0, bytesDest, 0, i + 1);
@@ -985,7 +1065,7 @@ public class X {
                 return null;
             }
 
-            // search for '\0'
+            // Replace all null terminators with '.'
             for (int i = 0; i < bytes.length; i++) {
                 if (bytes[i] == '\0') {
                     bytes[i] = '.';
@@ -1229,8 +1309,19 @@ public class X {
             return getProperty(xaPropType, display.getAtom(xaPropName));
         }
 
-        public int clientMsg(String msg, int data0, int data1, int data2, int data3, int data4) throws X11Exception {
-            return clientMsg(
+        /**
+         * Sends a client message event with the specified message type and data to this window.
+         *
+         * @param msg the name of the atom that describes the message type of the event
+         * @param data0 the first parameter to pass to the event
+         * @param data1 the second parameter to pass to the event
+         * @param data2 the third parameter to pass to the event
+         * @param data3 the fourth parameter to pass to the event
+         * @param data4 the fifth parameter to pass to the event
+         * @throws X11Exception if the event failed to be sent
+         */
+        public void clientMsg(String msg, int data0, int data1, int data2, int data3, int data4) throws X11Exception {
+            clientMsg(
                     msg,
                     new NativeLong(data0),
                     new NativeLong(data1),
@@ -1240,7 +1331,18 @@ public class X {
             );
         }
 
-        public int clientMsg(String msg, NativeLong data0, NativeLong data1, NativeLong data2, NativeLong data3, NativeLong data4) throws X11Exception {
+        /**
+         * Sends a client message event with the specified message type and data to this window.
+         *
+         * @param msg the name of the atom that describes the message type of the event
+         * @param data0 the first parameter to pass to the event
+         * @param data1 the second parameter to pass to the event
+         * @param data2 the third parameter to pass to the event
+         * @param data3 the fourth parameter to pass to the event
+         * @param data4 the fifth parameter to pass to the event
+         * @throws X11Exception if the event failed to be sent
+         */
+        public void clientMsg(String msg, NativeLong data0, NativeLong data1, NativeLong data2, NativeLong data3, NativeLong data4) throws X11Exception {
             NativeLong mask = new NativeLong(X11.SubstructureRedirectMask | X11.SubstructureNotifyMask);
 
             X11.XClientMessageEvent event = new X11.XClientMessageEvent();
@@ -1262,11 +1364,15 @@ public class X {
 
             if (x11.XSendEvent(display.x11Display, display.getRootWindow().x11Window, 0, mask, e) == 0) {
                 throw new X11Exception("Cannot send " + msg + " event.");
-            } else {
-                return X11.Success;
             }
         }
 
+        /**
+         * Gets the child windows of this window, in stacking order from bottommost to topmost.
+         *
+         * @return the child windows of this window, or {@code null} if there are no children
+         * @throws X11Exception if the operation failed
+         */
         public Window[] getSubwindows() throws X11Exception {
             // https://github.com/mirror/libX11/blob/master/src/QuTree.c
 
@@ -1276,7 +1382,7 @@ public class X {
             IntByReference childCountRef = new IntByReference();
 
             if (x11.XQueryTree(display.x11Display, x11Window, rootRef, parentRef, childrenRef, childCountRef) == 0) {
-                throw new X11Exception("Can't query subwindows");
+                throw new X11Exception("Cannot query subwindows");
             }
 
             try {
@@ -1314,13 +1420,52 @@ public class X {
             }
         }
 
+        @Override
         public String toString() {
             return x11Window.toString();
         }
 
+        /**
+         * Represents a window's bounding box, border width, and bit depth.
+         *
+         * @see #getGeometry()
+         */
         public static class Geometry {
-            public int x, y, width, height, borderWidth, depth;
+            /**
+             * The X-coordinate of the upper-left outer corner of the window, relative to its parent's origin.
+             */
+            public int x;
+            /**
+             * The Y-coordinate of the upper-left outer corner of the window, relative to its parent's origin.
+             */
+            public int y;
+            /**
+             * The width of the inside of the window, not including the border.
+             */
+            public int width;
+            /**
+             * The height of the inside of the window, not including the border.
+             */
+            public int height;
+            /**
+             * The border width of the window.
+             */
+            public int borderWidth;
+            /**
+             * The bit depth (bits per pixel) of the window.
+             */
+            public int depth;
 
+            /**
+             * Creates a new Geometry object.
+             *
+             * @param x the X-coordinate of the upper-left outer corner of the window, relative to its parent's origin
+             * @param y the Y-coordinate of the upper-left outer corner of the window, relative to its parent's origin
+             * @param width the width of the inside of the window, not including the border
+             * @param height the height of the inside of the window, not including the border
+             * @param borderWidth the border width of the window
+             * @param depth the bit depth (bits per pixel) of the window
+             */
             public Geometry(int x, int y, int width, int height, int borderWidth, int depth) {
                 this.x = x;
                 this.y = y;
