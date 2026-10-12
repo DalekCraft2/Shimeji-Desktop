@@ -380,7 +380,11 @@ public class X {
          * @return the keycode corresponding to the key name
          */
         public byte getKeyCode(String keyName) {
-            return x11.XKeysymToKeycode(x11Display, getKeySym(keyName));
+            X11.KeySym keySym = getKeySym(keyName);
+            if (keySym.toNative().equals(X11.NoSymbol)) {
+                return 0;
+            }
+            return x11.XKeysymToKeycode(x11Display, keySym);
         }
 
         /**
@@ -401,7 +405,11 @@ public class X {
          * @return the key name corresponding to the keycode and the index in the keycode vector
          */
         public String getKeyName(byte keyCode, int index) {
-            return getKeyName(getKeySym(keyCode, index));
+            X11.KeySym keySym = getKeySym(keyCode, index);
+            if (keySym == null) {
+                return null;
+            }
+            return getKeyName(keySym);
         }
 
         /**
