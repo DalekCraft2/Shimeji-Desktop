@@ -23,7 +23,6 @@
  */
 package com.group_finity.mascot.platform.x11;
 
-import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
@@ -425,8 +424,15 @@ public class X {
          * @param modifierKeymap modifier keymap
          */
         public void setModifierKeymap(ModifierKeymap modifierKeymap) {
-            X11.XModifierKeymapRef xModifierKeymapRef = modifierKeymap.toXModifierKeymap();
-            x11.XSetModifierMapping(x11Display, xModifierKeymapRef);
+            X11.XModifierKeymapRef xModifierKeymapRef = null;
+            try {
+                xModifierKeymapRef = modifierKeymap.toXModifierKeymap();
+                x11.XSetModifierMapping(x11Display, xModifierKeymapRef);
+            } finally {
+                if (xModifierKeymapRef != null) {
+                    x11.XFreeModifiermap(xModifierKeymapRef);
+                }
+            }
         }
     }
 
@@ -519,12 +525,17 @@ public class X {
                 }
             }
 
-            X11.XModifierKeymapRef xModifierKeymapRef = new X11.XModifierKeymapRef();
-            xModifierKeymapRef.max_keypermod = count;
-            xModifierKeymapRef.modifiermap = new Memory(keys.length);
-            xModifierKeymapRef.modifiermap.write(0, keys, 0, keys.length);
-
-            return xModifierKeymapRef;
+            X11.XModifierKeymapRef xModifierKeymapRef = null;
+            try {
+                xModifierKeymapRef = x11.XNewModifiermap(count);
+                xModifierKeymapRef.modifiermap.write(0, keys, 0, keys.length);
+                return xModifierKeymapRef;
+            } catch (Throwable e) {
+                if (xModifierKeymapRef != null) {
+                    x11.XFreeModifiermap(xModifierKeymapRef);
+                }
+                throw e;
+            }
         }
 
         /**
