@@ -219,26 +219,18 @@ public class X {
          * @see #getWindowsLayerOrdered()
          */
         public Window[] getWindows() throws X11Exception {
-            byte[] bytes;
             Window rootWindow = getRootWindow();
 
             try {
-                bytes = rootWindow.getProperty(X11.XA_WINDOW, "_NET_CLIENT_LIST");
+                return rootWindow.getWindowArrayProperty(X11.XA_WINDOW, "_NET_CLIENT_LIST");
             } catch (X11Exception e) {
                 try {
-                    bytes = rootWindow.getProperty(X11.XA_CARDINAL, "_WIN_CLIENT_LIST");
+                    // GNOME winhint with an equivalent function to the EWMH hint above
+                    return rootWindow.getWindowArrayProperty(X11.XA_CARDINAL, "_WIN_CLIENT_LIST");
                 } catch (X11Exception e1) {
                     throw new X11Exception("Cannot get client list properties (_NET_CLIENT_LIST or _WIN_CLIENT_LIST)", e1);
                 }
             }
-
-            Window[] windows = new Window[bytes.length / X11.Window.SIZE];
-
-            for (int i = 0; i < windows.length; i++) {
-                windows[i] = new Window(this, new X11.Window(bytesToInt(bytes, X11.XID.SIZE * i)));
-            }
-
-            return windows;
         }
 
         /**
@@ -249,18 +241,7 @@ public class X {
          * @see #getWindows()
          */
         public Window[] getWindowsLayerOrdered() throws X11Exception {
-            byte[] bytes;
-            Window rootWindow = getRootWindow();
-
-            bytes = rootWindow.getProperty(X11.XA_WINDOW, "_NET_CLIENT_LIST_STACKING");
-
-            Window[] windows = new Window[bytes.length / X11.Window.SIZE];
-
-            for (int i = 0; i < windows.length; i++) {
-                windows[i] = new Window(this, new X11.Window(bytesToInt(bytes, X11.XID.SIZE * i)));
-            }
-
-            return windows;
+            return getRootWindow().getWindowArrayProperty(X11.XA_WINDOW, "_NET_CLIENT_LIST_STACKING");
         }
 
         /**
@@ -936,15 +917,12 @@ public class X {
             }
             // Native.LONG_SIZE is used in getProperty() to represent the number of bytes used for each entry
             // when the return type is 32 bits
-            int arrayLength = property.length / Native.LONG_SIZE;
-            int[] array = new int[arrayLength];
+            int[] array = new int[property.length / Native.LONG_SIZE];
             for (int i = 0; i < array.length; i++) {
-                int byteIdx = i * Native.LONG_SIZE; // Corresponding index in the byte array
                 /* On 64-bit systems, the longs returned by XGetWindowProperty() are just integers
                 that are padded in the upper four bytes, so we only need to read the lower four bytes.
                 (From https://linux.die.net/man/3/xgetwindowproperty) */
-                int value = bytesToInt(property, byteIdx);
-                array[i] = value;
+                array[i] = bytesToInt(property, i * Native.LONG_SIZE);
             }
             return array;
         }
@@ -994,6 +972,42 @@ public class X {
          */
         public Window getWindowProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getWindowProperty(xaPropType, display.getAtom(xaPropName));
+        }
+
+        /**
+         * Gets the value of the specified property as a window array.
+         *
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a window array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
+         */
+        public Window[] getWindowArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+            byte[] property = getProperty(xaPropType, xaPropName);
+            if (property == null) {
+                return null;
+            }
+            Window[] array = new Window[property.length / X11.Window.SIZE];
+            for (int i = 0; i < array.length; i++) {
+                array[i] = new Window(display, new X11.Window(bytesToInt(property, i * X11.XID.SIZE)));
+            }
+            return array;
+        }
+
+        /**
+         * Gets the value of the specified property as a window array.
+         *
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as a window array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
+         */
+        public Window[] getWindowArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getWindowArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
@@ -1228,8 +1242,6 @@ public class X {
          * does not match the actual type of the property
          */
         public byte[] getProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            // https://github.com/mirror/libX11/blob/master/src/GetProp.c#L34
-
             X11.AtomByReference xaRetTypeRef = new X11.AtomByReference();
             IntByReference retFormatRef = new IntByReference();
             NativeLongByReference retNItemsRef = new NativeLongByReference();
@@ -1273,7 +1285,6 @@ public class X {
                 int retFormat = retFormatRef.getValue();
                 long retNItems = retNItemsRef.getValue().longValue();
 
-                // https://www.ibm.com/docs/en/ibm-mq/9.3.x?topic=platforms-standard-data-types-aix-linux-windows
                 int nBytes = switch (retFormat) {
                     // Returned data is a long array; native long size is 4 bytes on 32-bit and 8 bytes on 64-bit
                     case 32 -> Native.LONG_SIZE;
@@ -1374,8 +1385,6 @@ public class X {
          * @throws X11Exception if the operation failed
          */
         public Window[] getSubwindows() throws X11Exception {
-            // https://github.com/mirror/libX11/blob/master/src/QuTree.c
-
             WindowByReference rootRef = new WindowByReference();
             WindowByReference parentRef = new WindowByReference();
             PointerByReference childrenRef = new PointerByReference();
