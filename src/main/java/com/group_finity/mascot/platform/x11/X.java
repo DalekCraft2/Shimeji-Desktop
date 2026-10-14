@@ -1278,18 +1278,28 @@ public class X {
         /**
          * Gets the value of the specified property as a byte array.
          *
-         * @param xaPropType the property type
+         * @param xaPropType the property type. If this is {@link X11#AnyPropertyType},
+         * the property type will not be checked against the actual property type.
          * @param xaPropName the property name
-         * @param format the format of the property. Can be 8 for native char arrays, 16 for native short arrays,
-         * and 32 for native long arrays.
+         * @param format the format of the property. Can be 0 for any format, 8 for native char arrays,
+         * 16 for native short arrays, and 32 for native long arrays.
          * @return the value of the property as a byte array,
          * or {@code null} if the specified property does not exist for this window
-         * @throws IllegalArgumentException if {@code format} is not 8, 16, or 32
+         * @throws IllegalArgumentException if {@code xaPropType} or {@code xaPropName} are {@code null};
+         * or if {@code format} is not 0, 8, 16, or 32
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
         public byte[] getProperty(X11.Atom xaPropType, X11.Atom xaPropName, int format) throws X11Exception {
-            if (format != 8 && format != 16 && format != 32) {
+            if (xaPropType == null) {
+                throw new IllegalArgumentException("Property type cannot be null");
+            }
+
+            if (xaPropName == null) {
+                throw new IllegalArgumentException("Property name cannot be null");
+            }
+
+            if (format != 0 && format != 8 && format != 16 && format != 32) {
                 throw new IllegalArgumentException("Invalid format parameter: " + format);
             }
 
@@ -1318,15 +1328,14 @@ public class X {
 
             try {
                 X11.Atom xaRetType = xaRetTypeRef.getValue();
-                Pointer retProp = retPropRef.getValue();
                 int retFormat = retFormatRef.getValue();
 
-                if (xaRetType == null || xaPropType == null || retFormat == 0) {
+                if (xaRetType == null || retFormat == 0) {
                     // The specified property does not exist for the specified window.
                     return null;
                 }
 
-                if (!xaRetType.equals(xaPropType)) {
+                if (!xaPropType.toNative().equals(X11.AnyPropertyType) && !xaRetType.equals(xaPropType)) {
                     // Requested return type does not match actual return type
                     String requestedTypeName = x11.XGetAtomName(display.x11Display, xaPropType);
                     String actualTypeName = x11.XGetAtomName(display.x11Display, xaRetType);
@@ -1334,9 +1343,7 @@ public class X {
                             " does not match actual property type " + actualTypeName);
                 }
 
-                long retNItems = retNItemsRef.getValue().longValue();
-
-                if (format != retFormat) {
+                if (format != 0 && format != retFormat) {
                     throw new X11Exception("Requested format " + format +
                             " does not match actual format " + retFormat);
                 }
@@ -1350,8 +1357,10 @@ public class X {
                     case 8 -> 1;
                     default -> throw new X11Exception("Invalid return format: " + retFormat);
                 };
+                long retNItems = retNItemsRef.getValue().longValue();
                 int length = Math.min((int) retNItems * nBytes, MAX_PROPERTY_VALUE_LEN);
 
+                Pointer retProp = retPropRef.getValue();
                 return retProp.getByteArray(0, length);
             } finally {
                 Pointer retProp = retPropRef.getValue();
@@ -1364,13 +1373,15 @@ public class X {
         /**
          * Gets the value of the specified property as a byte array.
          *
-         * @param xaPropType the property type
+         * @param xaPropType the property type. If this is {@link X11#AnyPropertyType},
+         * the property type will not be checked against the actual property type.
          * @param xaPropName the property name
-         * @param format the format of the property. Can be 8 for native char arrays, 16 for native short arrays,
-         * and 32 for native long arrays.
+         * @param format the format of the property. Can be 0 for any format, 8 for native char arrays,
+         * 16 for native short arrays, and 32 for native long arrays.
          * @return the value of the property as a byte array,
          * or {@code null} if the specified property does not exist for this window
-         * @throws IllegalArgumentException if {@code format} is not 8, 16, or 32
+         * @throws IllegalArgumentException if {@code xaPropType} or {@code xaPropName} are {@code null};
+         * or if {@code format} is not 0, 8, 16, or 32
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
