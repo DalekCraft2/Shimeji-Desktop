@@ -65,6 +65,43 @@ public class X {
     private static final X11 x11 = X11.INSTANCE;
 
     /**
+     * Converts the first eight entries of the specified byte array into a long.
+     * The bytes in the array should be in little-endian order.
+     *
+     * @param prop a byte array containing the eight bytes of the long, in little-endian order
+     * @return the long value corresponding to the eight bytes
+     */
+    private static long bytesToLong(byte[] prop) {
+        return (prop[7] & 0xffL) << 56
+                | (prop[6] & 0xffL) << 48
+                | (prop[5] & 0xffL) << 40
+                | (prop[4] & 0xffL) << 32
+                | (prop[3] & 0xffL) << 24
+                | (prop[2] & 0xffL) << 16
+                | (prop[1] & 0xffL) << 8
+                | prop[0] & 0xffL;
+    }
+
+    /**
+     * Converts eight entries of the specified byte array into a long, starting from the specified offset.
+     * The bytes in the array should be in little-endian order.
+     *
+     * @param prop a byte array containing the eight bytes of the long, in little-endian order
+     * @param offset the offset at which to start reading values from the array
+     * @return the long value corresponding to the eight bytes
+     */
+    private static long bytesToLong(byte[] prop, int offset) {
+        return (prop[7 + offset] & 0xffL) << 56
+                | (prop[6 + offset] & 0xffL) << 48
+                | (prop[5 + offset] & 0xffL) << 40
+                | (prop[4 + offset] & 0xffL) << 32
+                | (prop[3 + offset] & 0xffL) << 24
+                | (prop[2 + offset] & 0xffL) << 16
+                | (prop[1 + offset] & 0xffL) << 8
+                | prop[offset] & 0xffL;
+    }
+
+    /**
      * Converts the first four entries of the specified byte array into an integer.
      * The bytes in the array should be in little-endian order.
      *
@@ -917,12 +954,12 @@ public class X {
             }
             // Native.LONG_SIZE is used in getProperty() to represent the number of bytes used for each entry
             // when the return type is 32 bits
-            int[] array = new int[property.length / Native.LONG_SIZE];
+            int[] array = new int[property.length / NativeLong.SIZE];
             for (int i = 0; i < array.length; i++) {
                 /* On 64-bit systems, the longs returned by XGetWindowProperty() are just integers
                 that are padded in the upper four bytes, so we only need to read the lower four bytes.
                 (From https://linux.die.net/man/3/xgetwindowproperty) */
-                array[i] = bytesToInt(property, i * Native.LONG_SIZE);
+                array[i] = bytesToInt(property, i * NativeLong.SIZE);
             }
             return array;
         }
@@ -952,12 +989,15 @@ public class X {
          * does not match the actual type of the property
          */
         public Window getWindowProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            Integer windowId = getIntProperty(xaPropType, xaPropName);
-            if (windowId == null) {
+            byte[] property = getProperty(xaPropType, xaPropName, 32);
+            if (property == null) {
                 return null;
             }
-            X11.Window x11Window = new X11.Window(windowId);
-            return new Window(display, x11Window);
+            if (X11.Window.SIZE == 8) {
+                return new Window(display, new X11.Window(bytesToLong(property)));
+            } else {
+                return new Window(display, new X11.Window(bytesToInt(property)));
+            }
         }
 
         /**
@@ -991,7 +1031,11 @@ public class X {
             }
             Window[] array = new Window[property.length / X11.Window.SIZE];
             for (int i = 0; i < array.length; i++) {
-                array[i] = new Window(display, new X11.Window(bytesToInt(property, i * X11.XID.SIZE)));
+                if (X11.Window.SIZE == 8) {
+                    array[i] = new Window(display, new X11.Window(bytesToLong(property, i * X11.Window.SIZE)));
+                } else {
+                    array[i] = new Window(display, new X11.Window(bytesToInt(property, i * X11.Window.SIZE)));
+                }
             }
             return array;
         }
@@ -1418,16 +1462,16 @@ public class X {
 
                 Window[] retVal = new Window[childCount];
                 // Depending on if we're running on 64-bit or 32-bit systems,
-                // the Window ID size may be different; we need to make sure that
+                // the Window size may be different; we need to make sure that
                 // we get the data properly no matter what
-                if (X11.XID.SIZE == 4) {
-                    int[] windows = children.getIntArray(0, childCount);
+                if (X11.Window.SIZE == 8) {
+                    long[] windows = children.getLongArray(0, childCount);
                     for (int x = 0; x < retVal.length; x++) {
                         X11.Window win = new X11.Window(windows[x]);
                         retVal[x] = new Window(display, win);
                     }
                 } else {
-                    long[] windows = children.getLongArray(0, childCount);
+                    int[] windows = children.getIntArray(0, childCount);
                     for (int x = 0; x < retVal.length; x++) {
                         X11.Window win = new X11.Window(windows[x]);
                         retVal[x] = new Window(display, win);
