@@ -879,7 +879,7 @@ public class X {
          * does not match the actual type of the property
          */
         public Integer getIntProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] property = getProperty(xaPropType, xaPropName);
+            byte[] property = getProperty(xaPropType, xaPropName, 32);
             if (property == null) {
                 return null;
             }
@@ -911,7 +911,7 @@ public class X {
          * does not match the actual type of the property
          */
         public int[] getIntArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] property = getProperty(xaPropType, xaPropName);
+            byte[] property = getProperty(xaPropType, xaPropName, 32);
             if (property == null) {
                 return null;
             }
@@ -985,7 +985,7 @@ public class X {
          * does not match the actual type of the property
          */
         public Window[] getWindowArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] property = getProperty(xaPropType, xaPropName);
+            byte[] property = getProperty(xaPropType, xaPropName, 32);
             if (property == null) {
                 return null;
             }
@@ -1021,7 +1021,7 @@ public class X {
          * does not match the actual type of the property
          */
         public byte[] getNullTerminatedProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] bytesOrig = getProperty(xaPropType, xaPropName);
+            byte[] bytesOrig = getProperty(xaPropType, xaPropName, 8);
 
             if (bytesOrig == null) {
                 return null;
@@ -1073,7 +1073,7 @@ public class X {
          * does not match the actual type of the property
          */
         public byte[] getNullReplacedStringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] bytes = getProperty(xaPropType, xaPropName);
+            byte[] bytes = getProperty(xaPropType, xaPropName, 8);
 
             if (bytes == null) {
                 return null;
@@ -1146,7 +1146,7 @@ public class X {
          * does not match the actual type of the property
          */
         public String[] getStringArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] property = getProperty(xaPropType, xaPropName);
+            byte[] property = getProperty(xaPropType, xaPropName, 8);
             if (property == null) {
                 return null;
             }
@@ -1210,7 +1210,7 @@ public class X {
          * does not match the actual type of the property
          */
         public String[] getUtf8StringArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] property = getProperty(xaPropType, xaPropName);
+            byte[] property = getProperty(xaPropType, xaPropName, 8);
             if (property == null) {
                 return null;
             }
@@ -1236,12 +1236,19 @@ public class X {
          *
          * @param xaPropType the property type
          * @param xaPropName the property name
+         * @param format the format of the property. Can be 8 for native char arrays, 16 for native short arrays,
+         * and 32 for native long arrays.
          * @return the value of the property as a byte array,
          * or {@code null} if the specified property does not exist for this window
+         * @throws IllegalArgumentException if {@code format} is not 8, 16, or 32
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
-        public byte[] getProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+        public byte[] getProperty(X11.Atom xaPropType, X11.Atom xaPropName, int format) throws X11Exception {
+            if (format != 8 && format != 16 && format != 32) {
+                throw new IllegalArgumentException("Invalid format parameter: " + format);
+            }
+
             X11.AtomByReference xaRetTypeRef = new X11.AtomByReference();
             IntByReference retFormatRef = new IntByReference();
             NativeLongByReference retNItemsRef = new NativeLongByReference();
@@ -1268,13 +1275,14 @@ public class X {
             try {
                 X11.Atom xaRetType = xaRetTypeRef.getValue();
                 Pointer retProp = retPropRef.getValue();
+                int retFormat = retFormatRef.getValue();
 
-                if (xaRetType == null || xaPropType == null) {
+                if (xaRetType == null || xaPropType == null || retFormat == 0) {
                     // The specified property does not exist for the specified window.
                     return null;
                 }
 
-                if (!xaRetType.toNative().equals(xaPropType.toNative())) {
+                if (!xaRetType.equals(xaPropType)) {
                     // Requested return type does not match actual return type
                     String requestedTypeName = x11.XGetAtomName(display.x11Display, xaPropType);
                     String actualTypeName = x11.XGetAtomName(display.x11Display, xaRetType);
@@ -1282,8 +1290,12 @@ public class X {
                             " does not match actual property type " + actualTypeName);
                 }
 
-                int retFormat = retFormatRef.getValue();
                 long retNItems = retNItemsRef.getValue().longValue();
+
+                if (format != retFormat) {
+                    throw new X11Exception("Requested format " + format +
+                            " does not match actual format " + retFormat);
+                }
 
                 int nBytes = switch (retFormat) {
                     // Returned data is a long array; native long size is 4 bytes on 32-bit and 8 bytes on 64-bit
@@ -1292,7 +1304,6 @@ public class X {
                     case 16 -> 2;
                     // Returned data is a char array; native char size is always 1 byte
                     case 8 -> 1;
-                    case 0 -> 0;
                     default -> throw new X11Exception("Invalid return format: " + retFormat);
                 };
                 int length = Math.min((int) retNItems * nBytes, MAX_PROPERTY_VALUE_LEN);
@@ -1311,13 +1322,16 @@ public class X {
          *
          * @param xaPropType the property type
          * @param xaPropName the property name
+         * @param format the format of the property. Can be 8 for native char arrays, 16 for native short arrays,
+         * and 32 for native long arrays.
          * @return the value of the property as a byte array,
          * or {@code null} if the specified property does not exist for this window
+         * @throws IllegalArgumentException if {@code format} is not 8, 16, or 32
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
-        public byte[] getProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            return getProperty(xaPropType, display.getAtom(xaPropName));
+        public byte[] getProperty(X11.Atom xaPropType, String xaPropName, int format) throws X11Exception {
+            return getProperty(xaPropType, display.getAtom(xaPropName), format);
         }
 
         /**
