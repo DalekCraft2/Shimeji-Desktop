@@ -1072,7 +1072,7 @@ public class X {
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
-        public byte[] getNullReplacedStringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+        public byte[] getNullReplacedProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
             byte[] bytes = getProperty(xaPropType, xaPropName, 8);
 
             if (bytes == null) {
@@ -1099,8 +1099,8 @@ public class X {
          * @throws X11Exception if the operation failed, or if the specified type
          * does not match the actual type of the property
          */
-        public byte[] getNullReplacedStringProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
-            return getNullReplacedStringProperty(xaPropType, display.getAtom(xaPropName));
+        public byte[] getNullReplacedProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getNullReplacedProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**
@@ -1114,7 +1114,7 @@ public class X {
          * does not match the actual type of the property
          */
         public String getStringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
+            byte[] property = getNullReplacedProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
             }
@@ -1178,7 +1178,7 @@ public class X {
          * does not match the actual type of the property
          */
         public String getUtf8StringProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
-            byte[] property = getNullReplacedStringProperty(xaPropType, xaPropName);
+            byte[] property = getNullReplacedProperty(xaPropType, xaPropName);
             if (property == null) {
                 return null;
             }
