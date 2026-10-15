@@ -262,13 +262,6 @@ class VirtualEnvironment extends AbstractEnvironment {
             SwingUtilities.invokeLater(() -> addMascot(mascotPanel));
             return;
         }
-        // TODO: Determine whether these width and height checks are necessary
-        Container contentPane = display.getContentPane();
-        if (contentPane.getWidth() > 0 && contentPane.getHeight() > 0) {
-            display.setPreferredSize(display.getSize());
-            display.getRootPane().setPreferredSize(display.getRootPane().getSize());
-            contentPane.setPreferredSize(contentPane.getSize());
-        }
         display.add(mascotPanel);
     }
 }
