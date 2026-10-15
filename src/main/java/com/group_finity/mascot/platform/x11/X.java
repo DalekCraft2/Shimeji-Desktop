@@ -344,9 +344,23 @@ public class X {
                 }
             }
 
-            Desktop[] desktops = new Desktop[getDesktopCount()];
+            if (desktopNames == null) {
+                return null;
+            }
+
+            Integer desktopCount = getDesktopCount();
+            if (desktopCount == null) {
+                return null;
+            }
+
+            Desktop[] desktops = new Desktop[desktopCount];
             for (int i = 0; i < desktops.length; i++) {
-                desktops[i] = new Desktop(this, i, desktopNames[i]);
+                if (i < desktopNames.length) {
+                    desktops[i] = new Desktop(this, i, desktopNames[i]);
+                } else {
+                    // Desktop is unnamed
+                    desktops[i] = new Desktop(this, i, null);
+                }
             }
 
             return desktops;
@@ -1081,11 +1095,12 @@ public class X {
 
             byte[] bytesDest;
 
-            // Create new array containing everything from the original array up to and including the null terminator
             if (i < bytesOrig.length - 1) {
+                // Create new array containing everything from the original array up to and including the null terminator
                 bytesDest = new byte[i + 1];
                 System.arraycopy(bytesOrig, 0, bytesDest, 0, i + 1);
             } else {
+                // If the original array contained no null terminator, return the original array
                 bytesDest = bytesOrig;
             }
 
@@ -1194,7 +1209,12 @@ public class X {
             if (property == null) {
                 return null;
             }
-            return new String(property).split("\0");
+            if (property.length == 0) {
+                return new String[0];
+            }
+            // String arrays are null-terminated rather than null-separated,
+            // so we need to cut off the trailing null terminator before we split the string into an array
+            return new String(property, 0, property.length - 1).split("\0");
         }
 
         /**
@@ -1258,7 +1278,12 @@ public class X {
             if (property == null) {
                 return null;
             }
-            return new String(property, StandardCharsets.UTF_8).split("\0");
+            if (property.length == 0) {
+                return new String[0];
+            }
+            // String arrays are null-terminated rather than null-separated,
+            // so we need to cut off the trailing null terminator before we split the string into an array
+            return new String(property, 0, property.length - 1, StandardCharsets.UTF_8).split("\0");
         }
 
         /**
