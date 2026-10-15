@@ -713,7 +713,7 @@ public class X {
             try {
                 return getUtf8StringProperty(display.getAtom("UTF8_STRING"), "_NET_WM_NAME");
             } catch (X11Exception e) {
-                return getUtf8StringProperty(X11.XA_STRING, X11.XA_WM_NAME);
+                return getStringProperty(X11.XA_STRING, X11.XA_WM_NAME);
             }
         }
 
