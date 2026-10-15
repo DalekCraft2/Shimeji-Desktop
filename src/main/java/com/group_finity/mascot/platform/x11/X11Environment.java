@@ -402,6 +402,9 @@ class X11Environment extends AbstractEnvironment {
         } catch (X11Exception e) {
             return rawBounds;
         }
+        if (extents == null) {
+            return rawBounds;
+        }
         /* The window.getBounds() method returns the area of the window minus the extents. Using those bounds as-is
         prevents mascots from interacting with the title bar of the window, so we need to create a new rectangle that
         takes the window frame extents into consideration.
