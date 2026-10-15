@@ -748,13 +748,13 @@ public class X {
         }
 
         /**
-         * Gets the class of this window.
+         * Gets the class of this window, in the format {@code [resource_name, resource_class]}.
          *
          * @return the class of this window
          * @throws X11Exception if an X11 window error occurred
          */
-        public String getWindowClass() throws X11Exception {
-            return getUtf8StringProperty(X11.XA_STRING, X11.XA_WM_CLASS);
+        public String[] getWindowClass() throws X11Exception {
+            return getStringArrayProperty(X11.XA_STRING, X11.XA_WM_CLASS);
         }
 
         /**
