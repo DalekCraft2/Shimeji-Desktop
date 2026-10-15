@@ -153,5 +153,6 @@ public final class ImagePairs {
             }
             imagePairs.clear();
         }
+        IMAGESETS_TO_IMAGEPAIRS.clear();
     }
 }
