@@ -145,6 +145,13 @@ public final class ImagePairs {
      * Clears all currently loaded image pairs.
      */
     public static void clear() {
-        imagePairs.clear();
+        if (!imagePairs.isEmpty()) {
+            // Flush all images to clear up memory sooner instead of waiting for the garbage collector to do it
+            for (ImagePair imagePair : imagePairs.values()) {
+                imagePair.leftImage().getImage().flush();
+                imagePair.rightImage().getImage().flush();
+            }
+            imagePairs.clear();
+        }
     }
 }
