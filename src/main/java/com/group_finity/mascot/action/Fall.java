@@ -120,32 +120,54 @@ public class Fall extends ActionBase {
         modX %= 1;
         modY %= 1;
 
+        // This represents the maximum distance covered on either axis. It is used to iterate over every intermediate
+        // position between the mascot's current position and their new position, to check for floor/wall collisions.
+        // It is always at least 1 to prevent division by 0.
+        // Note that this does not use the distance formula; this is the greater value of dX and dY.
         int dev = Math.max(1, Math.max(Math.abs(dx), Math.abs(dy)));
 
-        final int anchorX = mascot.getAnchor().x;
-        final int anchorY = mascot.getAnchor().y;
+        final Point anchor = mascot.getAnchor();
+        final int initialX = anchor.x;
+        final int initialY = anchor.y;
         final MascotEnvironment environment = getEnvironment();
 
+        // Check collisions with floors/walls at every intermediate position between the current position (X, Y) and
+        // the potential new position (X + dX, Y + dY)
         OUTER:
         for (int i = 0; i <= dev; i++) {
-            int x = anchorX + dx * i / dev;
-            int y = anchorY + dy * i / dev;
+            int x = initialX + dx * i / dev;
+            int y = initialY + dy * i / dev;
 
             // Move mascot
             if (dy > 0) {
-                // HACK: Windows may be moved, so check them often.
+                // HACK: The active window may have been moved since the last tick, in which case its floor may have
+                // quickly moved upward past a mascot that is falling and would have otherwise landed on that floor.
+                // To account for this, if the mascot is moving downward, check all positions from their current
+                // Y-coordinate to 80 units above it to see whether any position is on a floor.
                 for (int j = -80; j <= 0; j++) {
-                    mascot.getAnchor().setLocation(x, y + j);
-                    if (environment.getFloor(true).isOn(mascot.getAnchor())) {
+                    // We have to set the anchor instead of passing a temporary Point variable to isOn() because
+                    // getFloor() - and other MascotEnvironment methods that return borders - use the mascot's anchor
+                    // to determine which border to return.
+                    anchor.setLocation(x, y + j);
+                    // If the new X- and Y-coordinates put the anchor on a floor,
+                    // then break out of the loop and use those coordinates as the new anchor coordinates
+                    if (environment.getFloor(true).isOn(anchor)) {
                         break OUTER;
                     }
                 }
             } else {
-                mascot.getAnchor().setLocation(x, y);
+                // If the mascot is moving upward or has reached the peak of their trajectory,
+                // simply set the anchor to the new X- and Y-coordinates without any further checks
+                anchor.setLocation(x, y);
             }
-            if (environment.getWall(true).isOn(mascot.getAnchor())) {
+            // If the anchor's new position - as set above - puts it on a wall,
+            // then break out of the loop and use that as the mascot's new anchor
+            if (environment.getWall(true).isOn(anchor)) {
                 break;
             }
+
+            // If no collisions are detected, then the mascot's anchor will be set to the aforementioned potential new
+            // position (X + dX, Y + dY) by the time the loop ends.
         }
 
         // Animate
