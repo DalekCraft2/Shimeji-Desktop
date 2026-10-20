@@ -170,6 +170,14 @@ public class FloorCeiling implements Border {
         final int newX = (location.x - prevLeft) * getWidth() / prevWidth + getLeft();
         final int newY = location.y + getDY();
 
+        /*
+        If the new position moved at least 80 units left/right, 20 units down, or 80 units up when compared to the
+        initial position, return the initial position to make it seem like the mascot lost its footing/grip on the border.
+
+        The threshold for moving down is 20 units instead of the usual 80 because the images used for mascots typically
+        don't make the mascots appear to be gripping onto the floor like they do with walls and ceilings. It makes more
+        sense that a mascot would lose its footing on a floor more easily than it would lose its grip on a wall.
+        */
         if (Math.abs(newX - location.x) >= 80 || newY - location.y > 20
                 || newY - location.y < -80) {
             return location;

@@ -161,6 +161,8 @@ public class Wall implements Border {
         final int newX = location.x + getDX();
         final int newY = (location.y - prevTop) * getHeight() / prevHeight + getTop();
 
+        // If the new position moved at least 80 units on either axis when compared to the initial position,
+        // return the initial position to make it seem like the mascot lost their grip on the border.
         if (Math.abs(newX - location.x) >= 80 || Math.abs(newY - location.y) >= 80) {
             return location;
         }
