@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 public class Select extends ComplexAction {
     private static final Logger log = LoggerFactory.getLogger(Select.class);
 
-    public Select(ResourceBundle schema, final VariableMap context, final Action... actions) {
-        super(schema, context, actions);
+    public Select(final String name, final ResourceBundle schema, final VariableMap context, final Action... actions) {
+        super(name, schema, context, actions);
     }
 }

@@ -51,8 +51,9 @@ public class Fall extends ActionBase {
 
     protected double scaling;
 
-    public Fall(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Fall(final String name, final ResourceBundle schema, final List<Animation> animations,
+                final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

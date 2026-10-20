@@ -30,8 +30,8 @@ public class Regist extends ActionBase {
 
     private double scaling;
 
-    public Regist(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Regist(final String name, final ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

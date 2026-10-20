@@ -18,8 +18,9 @@ import java.util.ResourceBundle;
 public class MoveWithTurn extends Move {
     private static final Logger log = LoggerFactory.getLogger(MoveWithTurn.class);
 
-    public MoveWithTurn(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public MoveWithTurn(final String name, final ResourceBundle schema, final List<Animation> animations,
+                        final VariableMap context) {
+        super(name, schema, animations, context);
 
         if (animations.size() < 2) {
             throw new IllegalArgumentException("animations.size<2");

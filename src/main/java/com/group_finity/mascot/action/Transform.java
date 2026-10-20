@@ -25,8 +25,9 @@ public class Transform extends Animate {
     private static final String PARAMETER_TRANSFORMMASCOT = "TransformMascot";
     private static final String DEFAULT_TRANSFORMMASCOT = "";
 
-    public Transform(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Transform(final String name, final ResourceBundle schema, final List<Animation> animations,
+                     final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

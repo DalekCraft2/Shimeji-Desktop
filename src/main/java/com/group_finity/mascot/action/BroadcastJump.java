@@ -18,7 +18,8 @@ import java.util.ResourceBundle;
 public class BroadcastJump extends Jump {
     private static final Logger log = LoggerFactory.getLogger(BroadcastJump.class);
 
-    public BroadcastJump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public BroadcastJump(final String name, final ResourceBundle schema, final List<Animation> animations,
+                         final VariableMap context) {
+        super(name, schema, animations, context);
     }
 }

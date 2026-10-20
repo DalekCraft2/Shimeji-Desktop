@@ -36,8 +36,9 @@ public class ScanMove extends BorderedAction {
 
     private boolean turning = false;
 
-    public ScanMove(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public ScanMove(final String name, final ResourceBundle schema, final List<Animation> animations,
+                    final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

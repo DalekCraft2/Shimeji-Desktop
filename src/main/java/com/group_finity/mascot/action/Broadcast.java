@@ -18,7 +18,8 @@ import java.util.ResourceBundle;
 public class Broadcast extends Animate {
     private static final Logger log = LoggerFactory.getLogger(Broadcast.class);
 
-    public Broadcast(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Broadcast(final String name, final ResourceBundle schema, final List<Animation> animations,
+                     final VariableMap context) {
+        super(name, schema, animations, context);
     }
 }

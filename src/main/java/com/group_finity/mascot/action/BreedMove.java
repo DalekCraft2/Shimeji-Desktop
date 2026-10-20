@@ -19,8 +19,9 @@ public class BreedMove extends Move {
 
     private final Breed.Delegate delegate = new Breed.Delegate(this);
 
-    public BreedMove(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public BreedMove(final String name, final ResourceBundle schema, final List<Animation> animations,
+                     final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

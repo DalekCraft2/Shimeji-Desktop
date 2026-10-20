@@ -28,8 +28,9 @@ public class Move extends BorderedAction {
 
     protected boolean turning = false;
 
-    public Move(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Move(final String name, final ResourceBundle schema, final List<Animation> animations,
+                final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

@@ -22,8 +22,9 @@ public abstract class ComplexAction extends ActionBase {
 
     private int currentAction;
 
-    public ComplexAction(ResourceBundle schema, final VariableMap context, final Action... actions) {
-        super(schema, List.of(), context);
+    public ComplexAction(final String name, final ResourceBundle schema, final VariableMap context,
+                         final Action... actions) {
+        super(name, schema, List.of(), context);
         if (actions.length == 0) {
             throw new IllegalArgumentException("actions.length==0");
         }

@@ -20,8 +20,9 @@ public class Turn extends BorderedAction {
 
     private boolean turning = false;
 
-    public Turn(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Turn(final String name, final ResourceBundle schema, final List<Animation> animations,
+                final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

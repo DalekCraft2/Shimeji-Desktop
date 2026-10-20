@@ -18,8 +18,9 @@ import java.util.ResourceBundle;
 public class Stay extends BorderedAction {
     private static final Logger log = LoggerFactory.getLogger(Stay.class);
 
-    public Stay(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Stay(final String name, final ResourceBundle schema, final List<Animation> animations,
+                final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

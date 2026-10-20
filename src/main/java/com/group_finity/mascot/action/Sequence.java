@@ -19,8 +19,8 @@ public class Sequence extends ComplexAction {
     private static final String PARAMETER_LOOP = "Loop";
     private static final boolean DEFAULT_LOOP = false;
 
-    public Sequence(ResourceBundle schema, final VariableMap context, final Action... actions) {
-        super(schema, context, actions);
+    public Sequence(final String name, final ResourceBundle schema, final VariableMap context, final Action... actions) {
+        super(name, schema, context, actions);
     }
 
     @Override

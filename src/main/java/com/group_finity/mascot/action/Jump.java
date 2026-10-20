@@ -36,8 +36,9 @@ public class Jump extends ActionBase {
 
     private double scaling;
 
-    public Jump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Jump(final String name, final ResourceBundle schema, final List<Animation> animations,
+                final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

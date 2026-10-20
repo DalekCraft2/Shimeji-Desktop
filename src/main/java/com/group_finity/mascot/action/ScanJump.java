@@ -42,8 +42,9 @@ public class ScanJump extends ActionBase {
 
     private double scaling;
 
-    public ScanJump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public ScanJump(final String name, final ResourceBundle schema, final List<Animation> animations,
+                    final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

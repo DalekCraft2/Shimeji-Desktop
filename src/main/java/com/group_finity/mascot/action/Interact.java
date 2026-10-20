@@ -22,8 +22,9 @@ public class Interact extends Animate {
     private static final String PARAMETER_BEHAVIOR = "Behaviour";
     private static final String DEFAULT_BEHAVIOR = "";
 
-    public Interact(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Interact(final String name, final ResourceBundle schema, final List<Animation> animations,
+                    final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

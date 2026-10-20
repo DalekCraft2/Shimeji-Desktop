@@ -21,8 +21,8 @@ public class Mute extends InstantAction {
     private static final String PARAMETER_SOUND = "Sound";
     private static final String DEFAULT_SOUND = null;
 
-    public Mute(ResourceBundle schema, final VariableMap context) {
-        super(schema, context);
+    public Mute(final String name, final ResourceBundle schema, final VariableMap context) {
+        super(name, schema, context);
     }
 
     @Override

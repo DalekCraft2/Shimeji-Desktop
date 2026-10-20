@@ -16,8 +16,9 @@ import java.util.ResourceBundle;
 public class SelfDestruct extends Animate {
     private static final Logger log = LoggerFactory.getLogger(SelfDestruct.class);
 
-    public SelfDestruct(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public SelfDestruct(final String name, final ResourceBundle schema, final List<Animation> animations,
+                        final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

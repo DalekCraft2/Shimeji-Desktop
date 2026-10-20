@@ -35,6 +35,8 @@ public abstract class ActionBase implements Action {
     private static final String PARAMETER_AFFORDANCE = "Affordance";
     private static final String DEFAULT_AFFORDANCE = "";
 
+    private final String name;
+
     private final ResourceBundle schema;
 
     private final List<Animation> animations;
@@ -47,7 +49,9 @@ public abstract class ActionBase implements Action {
 
     private int startTime;
 
-    public ActionBase(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
+    public ActionBase(final String name, final ResourceBundle schema, final List<Animation> animations,
+                      final VariableMap context) {
+        this.name = name;
         this.schema = schema;
         this.animations = animations;
         variables = context;
@@ -55,11 +59,9 @@ public abstract class ActionBase implements Action {
 
     @Override
     public String toString() {
-        try {
-            return "Action[className=" + getClass().getSimpleName() + ",name=" + getName() + ']';
-        } catch (final VariableException e) {
-            return "Action[className=" + getClass().getSimpleName() + ",name=" + null + ']';
-        }
+        // If the action's name is null, it must be an anonymous action
+        String nameString = name == null ? "anonymous" : "name=" + name;
+        return "Action[" + nameString + ",className=" + getClass().getSimpleName() + ']';
     }
 
     @Override
@@ -154,6 +156,10 @@ public abstract class ActionBase implements Action {
         }
     }
 
+    private String getName() {
+        return name;
+    }
+
     protected ResourceBundle getSchema() {
         return schema;
     }
@@ -214,10 +220,6 @@ public abstract class ActionBase implements Action {
 
     protected void setTime(final int time) {
         startTime = getMascot().getTime() - time;
-    }
-
-    private String getName() throws VariableException {
-        return eval(schema.getString("Name"), String.class, null);
     }
 
     private int getDuration() throws VariableException {

@@ -19,8 +19,9 @@ public class BreedJump extends Jump {
 
     private final Breed.Delegate delegate = new Breed.Delegate(this);
 
-    public BreedJump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public BreedJump(final String name, final ResourceBundle schema, final List<Animation> animations,
+                     final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

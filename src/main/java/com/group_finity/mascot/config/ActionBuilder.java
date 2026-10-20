@@ -391,14 +391,16 @@ public class ActionBuilder implements IActionBuilder {
             case TYPE_EMBEDDED -> {
                 try {
                     try {
-                        return cls.getConstructor(ResourceBundle.class, List.class, VariableMap.class).newInstance(schema, animations, variables);
+                        return cls.getConstructor(String.class, ResourceBundle.class, List.class, VariableMap.class)
+                                .newInstance(name, schema, animations, variables);
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
                              IllegalArgumentException | InstantiationException | InvocationTargetException e) {
                         // NOTE: There seems to be no constructor, so move on to the next
                     }
 
                     try {
-                        return cls.getConstructor(ResourceBundle.class, VariableMap.class).newInstance(schema, variables);
+                        return cls.getConstructor(String.class, ResourceBundle.class, VariableMap.class)
+                                .newInstance(name, schema, variables);
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
                              IllegalArgumentException | InstantiationException | InvocationTargetException e) {
                         // NOTE: There seems to be no constructor, so move on to the next
@@ -421,19 +423,19 @@ public class ActionBuilder implements IActionBuilder {
                 }
             }
             case TYPE_MOVE -> {
-                return new Move(schema, animations, variables);
+                return new Move(name, schema, animations, variables);
             }
             case TYPE_STAY -> {
-                return new Stay(schema, animations, variables);
+                return new Stay(name, schema, animations, variables);
             }
             case TYPE_ANIMATE -> {
-                return new Animate(schema, animations, variables);
+                return new Animate(name, schema, animations, variables);
             }
             case TYPE_SEQUENCE -> {
-                return new Sequence(schema, variables, actions);
+                return new Sequence(name, schema, variables, actions);
             }
             case TYPE_SELECT -> {
-                return new Select(schema, variables, actions);
+                return new Select(name, schema, variables, actions);
             }
             default -> // This should not be reached, because we verified that the type was valid in the constructor
                     throw new IllegalStateException("Unexpected type: " + type);

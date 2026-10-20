@@ -18,8 +18,8 @@ import java.util.ResourceBundle;
 public abstract class InstantAction extends ActionBase {
     private static final Logger log = LoggerFactory.getLogger(InstantAction.class);
 
-    public InstantAction(ResourceBundle schema, final VariableMap context) {
-        super(schema, List.of(), context);
+    public InstantAction(final String name, final ResourceBundle schema, final VariableMap context) {
+        super(name, schema, List.of(), context);
     }
 
     @Override

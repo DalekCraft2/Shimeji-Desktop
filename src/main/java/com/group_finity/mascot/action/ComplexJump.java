@@ -57,8 +57,9 @@ public class ComplexJump extends ActionBase {
 
     private double scaling;
 
-    public ComplexJump(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public ComplexJump(final String name, final ResourceBundle schema, final List<Animation> animations,
+                       final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

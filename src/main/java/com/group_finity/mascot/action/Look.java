@@ -18,8 +18,8 @@ public class Look extends InstantAction {
 
     private static final String PARAMETER_LOOKRIGHT = "LookRight";
 
-    public Look(ResourceBundle schema, final VariableMap context) {
-        super(schema, context);
+    public Look(final String name, final ResourceBundle schema, final VariableMap context) {
+        super(name, schema, context);
     }
 
     @Override

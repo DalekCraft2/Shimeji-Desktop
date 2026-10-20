@@ -143,8 +143,9 @@ public class Breed extends Animate {
 
     private final Delegate delegate = new Delegate(this);
 
-    public Breed(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Breed(final String name, final ResourceBundle schema, final List<Animation> animations,
+                 final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

@@ -34,8 +34,9 @@ public class ThrowIE extends Animate {
 
     private long activeWindowId = 0;
 
-    public ThrowIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public ThrowIE(final String name, final ResourceBundle schema, final List<Animation> animations,
+                   final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

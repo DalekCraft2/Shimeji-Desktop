@@ -28,8 +28,9 @@ public class WalkWithIE extends Move {
 
     // private double scaling;
 
-    public WalkWithIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public WalkWithIE(final String name, final ResourceBundle schema, final List<Animation> animations,
+                      final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     /* @Override

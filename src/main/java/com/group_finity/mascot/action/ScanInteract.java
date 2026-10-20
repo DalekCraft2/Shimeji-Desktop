@@ -36,8 +36,9 @@ public class ScanInteract extends BorderedAction {
 
     private boolean turning = false;
 
-    public ScanInteract(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public ScanInteract(final String name, final ResourceBundle schema, final List<Animation> animations,
+                        final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

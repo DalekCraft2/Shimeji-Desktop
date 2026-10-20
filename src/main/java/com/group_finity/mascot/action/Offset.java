@@ -24,8 +24,8 @@ public class Offset extends InstantAction {
 
     // private double scaling;
 
-    public Offset(ResourceBundle schema, final VariableMap context) {
-        super(schema, context);
+    public Offset(final String name, final ResourceBundle schema, final VariableMap context) {
+        super(name, schema, context);
     }
 
     /* @Override

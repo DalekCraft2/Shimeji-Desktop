@@ -43,8 +43,9 @@ public class Dragged extends ActionBase {
 
     private double scaling;
 
-    public Dragged(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public Dragged(final String name, final ResourceBundle schema, final List<Animation> animations,
+                   final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

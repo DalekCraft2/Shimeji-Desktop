@@ -51,8 +51,9 @@ public class ComplexMove extends BorderedAction {
 
     private boolean scanEnabled = false;
 
-    public ComplexMove(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public ComplexMove(final String name, final ResourceBundle schema, final List<Animation> animations,
+                       final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

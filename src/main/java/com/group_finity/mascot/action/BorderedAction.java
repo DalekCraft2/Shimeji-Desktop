@@ -29,8 +29,9 @@ public abstract class BorderedAction extends ActionBase {
 
     private Border border;
 
-    public BorderedAction(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public BorderedAction(final String name, final ResourceBundle schema, final List<Animation> animations,
+                          final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

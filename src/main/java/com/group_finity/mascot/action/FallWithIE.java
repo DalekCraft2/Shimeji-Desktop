@@ -27,8 +27,9 @@ public class FallWithIE extends Fall {
     private static final String PARAMETER_IEOFFSETY = "IeOffsetY";
     private static final int DEFAULT_IEOFFSETY = 0;
 
-    public FallWithIE(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public FallWithIE(final String name, final ResourceBundle schema, final List<Animation> animations,
+                      final VariableMap context) {
+        super(name, schema, animations, context);
     }
 
     @Override

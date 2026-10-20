@@ -18,7 +18,8 @@ import java.util.ResourceBundle;
 public class BroadcastStay extends Stay {
     private static final Logger log = LoggerFactory.getLogger(BroadcastStay.class);
 
-    public BroadcastStay(ResourceBundle schema, final List<Animation> animations, final VariableMap context) {
-        super(schema, animations, context);
+    public BroadcastStay(final String name, final ResourceBundle schema, final List<Animation> animations,
+                         final VariableMap context) {
+        super(name, schema, animations, context);
     }
 }
