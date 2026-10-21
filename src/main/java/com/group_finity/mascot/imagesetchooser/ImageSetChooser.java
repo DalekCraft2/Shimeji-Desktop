@@ -16,14 +16,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Chooser used to select the Shimeji image sets in use.
@@ -156,8 +157,8 @@ public class ImageSetChooser extends JDialog implements Localizable {
         useSelectedButton.setText(languageBundle.getString("UseSelected"));
         useAllButton.setText(languageBundle.getString("UseAll"));
         cancelButton.setText(languageBundle.getString("Cancel"));
-        clearAllLabel.setText(languageBundle.getString("ClearAll"));
-        selectAllLabel.setText(languageBundle.getString("SelectAll"));
+        clearAllButton.setText(languageBundle.getString("ClearAll"));
+        selectAllButton.setText(languageBundle.getString("SelectAll"));
     }
 
     public List<String> display() {
@@ -187,9 +188,9 @@ public class ImageSetChooser extends JDialog implements Localizable {
         useAllButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         pnlLabels = new javax.swing.JPanel();
-        clearAllLabel = new javax.swing.JLabel();
+        clearAllButton = new javax.swing.JButton();
         slashLabel = new javax.swing.JLabel();
-        selectAllLabel = new javax.swing.JLabel();
+        selectAllButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Shimeji-ee Image Set Chooser");
@@ -240,30 +241,28 @@ public class ImageSetChooser extends JDialog implements Localizable {
 
         pnlLabels.setLayout(new javax.swing.BoxLayout(pnlLabels, javax.swing.BoxLayout.LINE_AXIS));
 
-        clearAllLabel.setFont(clearAllLabel.getFont().deriveFont(clearAllLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        clearAllLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
-        clearAllLabel.setText("Clear All");
-        clearAllLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        clearAllLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                clearAllLabelMouseClicked(evt);
-            }
-        });
-        pnlLabels.add(clearAllLabel);
+        clearAllButton.setFont(clearAllButton.getFont().deriveFont(clearAllButton.getFont().getStyle() | java.awt.Font.BOLD));
+        clearAllButton.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
+        clearAllButton.setText("Clear All");
+        clearAllButton.setBorder(null);
+        clearAllButton.setBorderPainted(false);
+        clearAllButton.setContentAreaFilled(false);
+        clearAllButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        clearAllButton.addActionListener(this::clearAllButtonActionPerformed);
+        pnlLabels.add(clearAllButton);
 
         slashLabel.setText(" / ");
         pnlLabels.add(slashLabel);
 
-        selectAllLabel.setFont(selectAllLabel.getFont().deriveFont(selectAllLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        selectAllLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
-        selectAllLabel.setText("Select All");
-        selectAllLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        selectAllLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                selectAllLabelMouseClicked(evt);
-            }
-        });
-        pnlLabels.add(selectAllLabel);
+        selectAllButton.setFont(selectAllButton.getFont().deriveFont(selectAllButton.getFont().getStyle() | java.awt.Font.BOLD));
+        selectAllButton.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
+        selectAllButton.setText("Select All");
+        selectAllButton.setBorder(null);
+        selectAllButton.setBorderPainted(false);
+        selectAllButton.setContentAreaFilled(false);
+        selectAllButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        selectAllButton.addActionListener(this::selectAllButtonActionPerformed);
+        pnlLabels.add(selectAllButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -297,13 +296,13 @@ public class ImageSetChooser extends JDialog implements Localizable {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void clearAllLabelMouseClicked(MouseEvent evt) {//GEN-FIRST:event_clearAllLabelMouseClicked
+    private void clearAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearAllButtonActionPerformed
         lstImageSets.clearSelection();
-    }//GEN-LAST:event_clearAllLabelMouseClicked
+    }//GEN-LAST:event_clearAllButtonActionPerformed
 
-    private void selectAllLabelMouseClicked(MouseEvent evt) {//GEN-FIRST:event_selectAllLabelMouseClicked
+    private void selectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllButtonActionPerformed
         lstImageSets.addSelectionInterval(0, lstImageSets.getModel().getSize() - 1);
-    }//GEN-LAST:event_selectAllLabelMouseClicked
+    }//GEN-LAST:event_selectAllButtonActionPerformed
 
     private void useSelectedButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useSelectedButtonActionPerformed
         imageSets.clear();
@@ -383,14 +382,14 @@ public class ImageSetChooser extends JDialog implements Localizable {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel clearAllLabel;
+    private javax.swing.JButton clearAllButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<ImageSetPanel> lstImageSets;
     private javax.swing.JPanel pnlFooter;
     private javax.swing.JPanel pnlLabels;
     private javax.swing.JPanel pnlList;
-    private javax.swing.JLabel selectAllLabel;
+    private javax.swing.JButton selectAllButton;
     private javax.swing.JLabel slashLabel;
     private javax.swing.JButton useAllButton;
     private javax.swing.JButton useSelectedButton;
