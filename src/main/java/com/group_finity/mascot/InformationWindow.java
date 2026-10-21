@@ -156,14 +156,11 @@ public class InformationWindow extends JFrame implements Localizable {
         setTitle(displayName == null ? languageBundle.getString("Information") : displayName);
 
         StringBuilder html = new StringBuilder("<center style=\"font:");
-        if (lblSplashImage.getFont().getStyle() == Font.BOLD) {
+        if (lblSplashImage.getFont().isBold()) {
             html.append("bold ");
         }
-        if (lblSplashImage.getFont().getStyle() == Font.ITALIC) {
+        if (lblSplashImage.getFont().isItalic()) {
             html.append("italic ");
-        }
-        if (lblSplashImage.getFont().getStyle() == Font.BOLD + Font.ITALIC) {
-            html.append("italic bold ");
         }
         html.append(lblSplashImage.getFont().getSize());
         html.append("pt ");
