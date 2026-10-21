@@ -216,17 +216,27 @@ public class ActionBuilder implements IActionBuilder {
             log.debug("Loading action: {}", this);
         }
 
-        // No need to check whether the attributes map is empty like in BehaviorBuilder,
-        // because it's guaranteed to not be empty since we haven't removed any of the required attributes
-        params = new LinkedHashMap<>(actionNode.getAttributes());
+        // Copy the Action node's attributes and remove any attributes that are only used to create this ActionBuilder.
+        // This will leave us with only the action parameters and custom user-defined attributes, if any exist.
+        Map<String, String> tempParams = new LinkedHashMap<>(actionNode.getAttributes());
+        tempParams.remove(schema.getString("Name"));
+        tempParams.remove(schema.getString("Type"));
+        tempParams.remove(schema.getString("Class"));
+        if (tempParams.isEmpty()) {
+            // Use the same one empty map instance to save memory
+            params = Map.of();
+        } else {
+            // Don't use Map.copyOf() so LinkedHashMap behavior is preserved
+            params = tempParams;
 
-        // Verify that all parameters can be parsed
-        for (final Map.Entry<String, String> param : params.entrySet()) {
-            try {
-                Variable.parse(param.getValue());
-            } catch (final VariableException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
-                        "FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+            // Verify that all parameters can be parsed
+            for (final Map.Entry<String, String> param : params.entrySet()) {
+                try {
+                    Variable.parse(param.getValue());
+                } catch (final VariableException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                }
             }
         }
 

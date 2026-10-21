@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * An implementation of {@link IActionBuilder} that stores minimal information about an action,
@@ -51,28 +52,40 @@ public class ActionRef implements IActionBuilder {
      */
     public ActionRef(final Configuration configuration, final Entry refNode) throws ConfigurationException {
         this.configuration = configuration;
+        ResourceBundle schema = configuration.getSchema();
 
         // Ensure that the Name attribute is present
-        name = refNode.getAttribute(configuration.getSchema().getString("Name"));
+        name = refNode.getAttribute(schema.getString("Name"));
         if (name == null) {
             throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
-                    "MissingRequiredAttributeErrorMessage"), configuration.getSchema().getString("Name")));
+                    "MissingRequiredAttributeErrorMessage"), schema.getString("Name")));
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Loading action reference: {}", this);
         }
 
-        // No need to check whether the attributes map is empty like in BehaviorBuilder,
-        // because it's guaranteed to not be empty since we haven't removed any of the required attributes
-        params = new LinkedHashMap<>(refNode.getAttributes());
+        // Copy the ActionReference node's attributes and remove any attributes that are only used to create this ActionRef.
+        // This will leave us with only the action parameters and custom user-defined attributes, if any exist.
+        Map<String, String> tempParams = new LinkedHashMap<>(refNode.getAttributes());
+        tempParams.remove(schema.getString("Name"));
+        tempParams.remove(schema.getString("Type"));
+        tempParams.remove(schema.getString("Class"));
+        if (tempParams.isEmpty()) {
+            // Use the same one empty map instance to save memory
+            params = Map.of();
+        } else {
+            // Don't use Map.copyOf() so LinkedHashMap behavior is preserved
+            params = tempParams;
 
-        // Verify that all parameters can be parsed
-        for (final Map.Entry<String, String> param : params.entrySet()) {
-            try {
-                Variable.parse(param.getValue());
-            } catch (final VariableException e) {
-                throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString("FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+            // Verify that all parameters can be parsed
+            for (final Map.Entry<String, String> param : params.entrySet()) {
+                try {
+                    Variable.parse(param.getValue());
+                } catch (final VariableException e) {
+                    throw new ConfigurationException(String.format(Main.getInstance().getLanguageBundle().getString(
+                            "FailedParameterEvaluationErrorMessage"), param.getKey()), e);
+                }
             }
         }
     }
