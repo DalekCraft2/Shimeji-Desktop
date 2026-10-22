@@ -23,12 +23,9 @@
  */
 package com.group_finity.mascot.platform.x11;
 
-import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.unix.X11;
-import com.sun.jna.platform.unix.X11.Atom;
-import com.sun.jna.platform.unix.X11.WindowByReference;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.NativeLongByReference;
 import com.sun.jna.ptr.PointerByReference;
@@ -141,7 +138,7 @@ public class X {
         /**
          * Map used for caching atoms.
          */
-        private final Map<String, Atom> atomCache = new HashMap<>();
+        private final Map<String, X11.Atom> atomCache = new HashMap<>();
 
         /**
          * Creates a new Display using the default native X11 display.
@@ -811,7 +808,7 @@ public class X {
          * @return the current geometry of this window
          */
         public Geometry getGeometry() {
-            WindowByReference junkRoot = new WindowByReference();
+            X11.WindowByReference junkRoot = new X11.WindowByReference();
             IntByReference junkX = new IntByReference();
             IntByReference junkY = new IntByReference();
             IntByReference x = new IntByReference();
@@ -836,7 +833,7 @@ public class X {
          * @return the current bounding box of this window
          */
         public Rectangle getBounds() {
-            WindowByReference junkRoot = new WindowByReference();
+            X11.WindowByReference junkRoot = new X11.WindowByReference();
             IntByReference junkX = new IntByReference();
             IntByReference junkY = new IntByReference();
             IntByReference x = new IntByReference();
@@ -966,7 +963,7 @@ public class X {
             if (property == null) {
                 return null;
             }
-            // Native.LONG_SIZE is used in getProperty() to represent the number of bytes used for each entry
+            // NativeLong.SIZE is used in getProperty() to represent the number of bytes used for each entry
             // when the return type is 32 bits
             int[] array = new int[property.length / NativeLong.SIZE];
             for (int i = 0; i < array.length; i++) {
@@ -1375,7 +1372,7 @@ public class X {
 
                 int nBytes = switch (retFormat) {
                     // Returned data is a long array; native long size is 4 bytes on 32-bit and 8 bytes on 64-bit
-                    case 32 -> Native.LONG_SIZE;
+                    case 32 -> NativeLong.SIZE;
                     // Returned data is a short array; native short size is always 2 bytes
                     case 16 -> 2;
                     // Returned data is a char array; native char size is always 1 byte
@@ -1479,8 +1476,8 @@ public class X {
          * @throws X11Exception if the operation failed
          */
         public Window[] getSubwindows() throws X11Exception {
-            WindowByReference rootRef = new WindowByReference();
-            WindowByReference parentRef = new WindowByReference();
+            X11.WindowByReference rootRef = new X11.WindowByReference();
+            X11.WindowByReference parentRef = new X11.WindowByReference();
             PointerByReference childrenRef = new PointerByReference();
             IntByReference childCountRef = new IntByReference();
 
