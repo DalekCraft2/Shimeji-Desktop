@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 /**
  * Object-oriented X window system.
@@ -1214,13 +1215,23 @@ public class X {
                 return null;
             }
             if (property.length == 0) {
-                // This is both optimization and a way to ensure that we don't pass `property.length - 1`
-                // to the String constructor as the "length" parameter when it would evaluate to -1
                 return new String[0];
             }
-            // String arrays are null-terminated rather than null-separated,
-            // so we need to cut off the trailing null terminator before we split the string into an array
-            return new String(property, 0, property.length - 1).split("\0");
+            int terminatorCount = (int) IntStream.range(0, property.length).filter(i -> property[i] == '\0').count();
+            String[] array = new String[terminatorCount];
+            // startIndex: the index of the first byte of the next string in the property byte array
+            // curString: the index of the next string to be updated in the returned array
+            for (int i = 0, startIndex = 0, curString = 0; i < property.length && curString < array.length; i++) {
+                if (property[i] == '\0') {
+                    int length = i - startIndex;
+                    array[curString] = new String(property, startIndex, length);
+                    // Update the start index to be one byte after the last null terminator
+                    startIndex = i + 1;
+                    curString++;
+                }
+            }
+
+            return array;
         }
 
         /**
@@ -1285,13 +1296,23 @@ public class X {
                 return null;
             }
             if (property.length == 0) {
-                // This is both optimization and a way to ensure that we don't pass `property.length - 1`
-                // to the String constructor as the "length" parameter when it would evaluate to -1
                 return new String[0];
             }
-            // String arrays are null-terminated rather than null-separated,
-            // so we need to cut off the trailing null terminator before we split the string into an array
-            return new String(property, 0, property.length - 1, StandardCharsets.UTF_8).split("\0");
+            int terminatorCount = (int) IntStream.range(0, property.length).filter(i -> property[i] == '\0').count();
+            String[] array = new String[terminatorCount];
+            // startIndex: the index of the first byte of the next string in the property byte array
+            // curString: the index of the next string to be updated in the returned array
+            for (int i = 0, startIndex = 0, curString = 0; i < property.length && curString < array.length; i++) {
+                if (property[i] == '\0') {
+                    int length = i - startIndex;
+                    array[curString] = new String(property, startIndex, length, StandardCharsets.UTF_8);
+                    // Update the start index to be one byte after the last null terminator
+                    startIndex = i + 1;
+                    curString++;
+                }
+            }
+
+            return array;
         }
 
         /**
