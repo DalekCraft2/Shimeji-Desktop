@@ -302,6 +302,7 @@ public class X {
 
         /**
          * Gets the index of the current desktop.
+         * This will always be an integer between 0 and {@code getDesktopCount() - 1}.
          *
          * @return the index of the current desktop
          * @throws X11Exception if an X11 window error occurred
@@ -323,31 +324,45 @@ public class X {
         }
 
         /**
-         * Gets all virtual desktops.
+         * Gets the names of all virtual desktops.
+         * <p>
+         * Note that the length of the returned array is not guaranteed to equal the value returned by
+         * {@link #getDesktopCount()}; it may have more or fewer entries. If it has more entries than the desktop count,
+         * the extra entries are being reserved for future use. If it has fewer entries than the desktop count, the
+         * desktops not present in the array are unnamed.
+         *
+         * @return an array of the names of all virtual desktops
+         * @throws X11Exception if an X11 window error occurred
+         */
+        public String[] getDesktopNames() throws X11Exception {
+            Window root = getRootWindow();
+
+            try {
+                return root.getUtf8StringArrayProperty(getAtom("UTF8_STRING"), "_NET_DESKTOP_NAMES");
+            } catch (X11Exception e) {
+                try {
+                    // GNOME winhint with an equivalent function to the EWMH hint above
+                    return root.getStringArrayProperty(X11.XA_STRING, "_WIN_WORKSPACE_NAMES");
+                } catch (X11Exception e1) {
+                    throw new X11Exception("Cannot get desktop names properties (_NET_DESKTOP_NAMES or _WIN_WORKSPACE_NAMES)", e1);
+                }
+            }
+        }
+
+        /**
+         * Gets an array containing representations of all virtual desktops.
          *
          * @return an array of all virtual desktops
          * @throws X11Exception if an X11 window error occurred
          */
         public Desktop[] getDesktops() throws X11Exception {
-            Window root = getRootWindow();
-            String[] desktopNames;
-            try {
-                desktopNames = root.getUtf8StringArrayProperty(getAtom("UTF8_STRING"), "_NET_DESKTOP_NAMES");
-            } catch (X11Exception e) {
-                try {
-                    // GNOME winhint with an equivalent function to the EWMH hint above
-                    desktopNames = root.getStringArrayProperty(X11.XA_STRING, "_WIN_WORKSPACE_NAMES");
-                } catch (X11Exception e1) {
-                    throw new X11Exception("Cannot get desktop names properties (_NET_DESKTOP_NAMES or _WIN_WORKSPACE_NAMES)", e1);
-                }
-            }
-
-            if (desktopNames == null) {
+            Integer desktopCount = getDesktopCount();
+            if (desktopCount == null) {
                 return null;
             }
 
-            Integer desktopCount = getDesktopCount();
-            if (desktopCount == null) {
+            String[] desktopNames = getDesktopNames();
+            if (desktopNames == null) {
                 return null;
             }
 
