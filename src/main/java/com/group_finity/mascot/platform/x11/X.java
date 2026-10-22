@@ -352,12 +352,7 @@ public class X {
 
             Desktop[] desktops = new Desktop[desktopCount];
             for (int i = 0; i < desktops.length; i++) {
-                if (i < desktopNames.length) {
-                    desktops[i] = new Desktop(this, i, desktopNames[i]);
-                } else {
-                    // Desktop is unnamed
-                    desktops[i] = new Desktop(this, i, null);
-                }
+                desktops[i] = new Desktop(this, i, i < desktopNames.length ? desktopNames[i] : null);
             }
 
             return desktops;
@@ -963,6 +958,9 @@ public class X {
             if (property == null) {
                 return null;
             }
+            if (property.length == 0) {
+                return new int[0];
+            }
             // NativeLong.SIZE is used in getProperty() to represent the number of bytes used for each entry
             // when the return type is 32 bits
             int[] array = new int[property.length / NativeLong.SIZE];
@@ -1040,6 +1038,9 @@ public class X {
             if (property == null) {
                 return null;
             }
+            if (property.length == 0) {
+                return new Window[0];
+            }
             Window[] array = new Window[property.length / X11.Window.SIZE];
             for (int i = 0; i < array.length; i++) {
                 if (X11.Window.SIZE == 8) {
@@ -1080,6 +1081,10 @@ public class X {
 
             if (bytesOrig == null) {
                 return null;
+            }
+
+            if (bytesOrig.length == 0) {
+                return bytesOrig;
             }
 
             // Get index of first null terminator
@@ -1135,10 +1140,12 @@ public class X {
                 return null;
             }
 
-            // Replace all null terminators with '.'
-            for (int i = 0; i < bytes.length; i++) {
-                if (bytes[i] == '\0') {
-                    bytes[i] = '.';
+            if (bytes.length > 0) {
+                // Replace all null terminators with '.'
+                for (int i = 0; i < bytes.length; i++) {
+                    if (bytes[i] == '\0') {
+                        bytes[i] = '.';
+                    }
                 }
             }
 
@@ -1207,6 +1214,8 @@ public class X {
                 return null;
             }
             if (property.length == 0) {
+                // This is both optimization and a way to ensure that we don't pass `property.length - 1`
+                // to the String constructor as the "length" parameter when it would evaluate to -1
                 return new String[0];
             }
             // String arrays are null-terminated rather than null-separated,
@@ -1276,6 +1285,8 @@ public class X {
                 return null;
             }
             if (property.length == 0) {
+                // This is both optimization and a way to ensure that we don't pass `property.length - 1`
+                // to the String constructor as the "length" parameter when it would evaluate to -1
                 return new String[0];
             }
             // String arrays are null-terminated rather than null-separated,
