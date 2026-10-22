@@ -540,7 +540,6 @@ public class SettingsWindow extends JDialog implements Localizable {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                colorTextChanged(txtBackgroundColor);
             }
         });
         ((AbstractDocument) txtBackgroundColor.getDocument()).setDocumentFilter(new DocumentFilter() {
@@ -993,10 +992,8 @@ public class SettingsWindow extends JDialog implements Localizable {
         }
 
         String text = field.getText();
-        if (text == null) {
-            return;
-        }
-        if (text.length() != 7 || !text.matches("#[0-9a-fA-F]{6}")) {
+        if (text == null || text.length() != 7 || !text.matches("#[0-9a-fA-F]{6}")) {
+            // Text is not a color code
             return;
         }
 
