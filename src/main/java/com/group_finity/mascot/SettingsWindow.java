@@ -34,8 +34,9 @@ import java.util.stream.IntStream;
  */
 public class SettingsWindow extends JDialog implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(SettingsWindow.class);
-    private final ArrayList<String> listData = new ArrayList<>();
-    private final ArrayList<String> blacklistData = new ArrayList<>();
+
+    private final ArrayList<String> interactiveWindows = new ArrayList<>();
+    private final ArrayList<String> interactiveWindowsBlacklist = new ArrayList<>();
     private boolean showTrayIcon = true;
     private boolean alwaysShowShimejiChooser = false;
     private boolean alwaysShowInformationScreen = false;
@@ -118,18 +119,18 @@ public class SettingsWindow extends JDialog implements Localizable {
         if (!settings.interactiveWindows.isEmpty()) {
             for (String item : settings.interactiveWindows) {
                 if (!item.trim().isEmpty()) {
-                    listData.add(item);
+                    interactiveWindows.add(item);
                 }
             }
-            lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
+            lstInteractiveWindows.setListData(interactiveWindows.toArray(Main.EMPTY_STRING_ARRAY));
         }
         if (!settings.interactiveWindowsBlacklist.isEmpty()) {
             for (String item : settings.interactiveWindowsBlacklist) {
                 if (!item.trim().isEmpty()) {
-                    blacklistData.add(item);
+                    interactiveWindowsBlacklist.add(item);
                 }
             }
-            lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
+            lstInteractiveWindowsBlacklist.setListData(interactiveWindowsBlacklist.toArray(Main.EMPTY_STRING_ARRAY));
         }
 
         chkWindowModeEnabled.setSelected(windowedMode);
@@ -861,8 +862,8 @@ public class SettingsWindow extends JDialog implements Localizable {
                         settings.backgroundMode != backgroundMode ||
                         !Objects.equals(settings.backgroundImage, backgroundImage));
         imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
-        interactiveWindowReloadRequired = !settings.interactiveWindows.equals(listData) ||
-                !settings.interactiveWindowsBlacklist.equals(blacklistData);
+        interactiveWindowReloadRequired = !settings.interactiveWindows.equals(interactiveWindows) ||
+                !settings.interactiveWindowsBlacklist.equals(interactiveWindowsBlacklist);
         trayMenuReloadRequired = settings.showTrayIcon != showTrayIcon;
 
         settings.showTrayIcon = showTrayIcon;
@@ -872,8 +873,8 @@ public class SettingsWindow extends JDialog implements Localizable {
         settings.scaling = scaling;
         settings.filter = filter;
         settings.drawShimejiBounds = drawShimejiBounds;
-        settings.interactiveWindows = listData;
-        settings.interactiveWindowsBlacklist = blacklistData;
+        settings.interactiveWindows = interactiveWindows;
+        settings.interactiveWindowsBlacklist = interactiveWindowsBlacklist;
         settings.windowedMode = windowedMode;
         settings.windowSize = new Dimension(windowSize);
         settings.backgroundColor = backgroundColor;
@@ -893,11 +894,11 @@ public class SettingsWindow extends JDialog implements Localizable {
         String inputValue = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString(pnlInteractiveTabs.getSelectedIndex() == 0 ? "AddInteractiveWindow" : "BlacklistInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
         if (inputValue != null && !inputValue.trim().isEmpty() && !inputValue.contains("/")) {
             if (pnlInteractiveTabs.getSelectedIndex() == 0) {
-                listData.add(inputValue.trim());
-                lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
+                interactiveWindows.add(inputValue.trim());
+                lstInteractiveWindows.setListData(interactiveWindows.toArray(Main.EMPTY_STRING_ARRAY));
             } else {
-                blacklistData.add(inputValue.trim());
-                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
+                interactiveWindowsBlacklist.add(inputValue.trim());
+                lstInteractiveWindowsBlacklist.setListData(interactiveWindowsBlacklist.toArray(Main.EMPTY_STRING_ARRAY));
             }
         }
     }//GEN-LAST:event_btnAddInteractiveWindowActionPerformed
@@ -906,13 +907,13 @@ public class SettingsWindow extends JDialog implements Localizable {
         // delete button
         if (pnlInteractiveTabs.getSelectedIndex() == 0) {
             if (lstInteractiveWindows.getSelectedIndex() != -1) {
-                listData.remove(lstInteractiveWindows.getSelectedIndex());
-                lstInteractiveWindows.setListData(listData.toArray(Main.EMPTY_STRING_ARRAY));
+                interactiveWindows.remove(lstInteractiveWindows.getSelectedIndex());
+                lstInteractiveWindows.setListData(interactiveWindows.toArray(Main.EMPTY_STRING_ARRAY));
             }
         } else {
             if (lstInteractiveWindowsBlacklist.getSelectedIndex() != -1) {
-                blacklistData.remove(lstInteractiveWindowsBlacklist.getSelectedIndex());
-                lstInteractiveWindowsBlacklist.setListData(blacklistData.toArray(Main.EMPTY_STRING_ARRAY));
+                interactiveWindowsBlacklist.remove(lstInteractiveWindowsBlacklist.getSelectedIndex());
+                lstInteractiveWindowsBlacklist.setListData(interactiveWindowsBlacklist.toArray(Main.EMPTY_STRING_ARRAY));
             }
         }
     }//GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed
