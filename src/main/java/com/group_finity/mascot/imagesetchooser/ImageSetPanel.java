@@ -21,12 +21,6 @@ public class ImageSetPanel extends JPanel {
 
     private final String imageSet;
 
-    public ImageSetPanel() {
-        initComponents();
-
-        imageSet = "";
-    }
-
     public ImageSetPanel(String imageSet, String actions,
                          String behaviors, Path imageLocation, String title) {
         initComponents();
