@@ -875,12 +875,10 @@ public class SettingsWindow extends JDialog implements Localizable {
         settings.interactiveWindows = listData;
         settings.interactiveWindowsBlacklist = blacklistData;
         settings.windowedMode = windowedMode;
-        if (windowedMode) {
-            settings.windowSize = new Dimension(windowSize);
-            settings.backgroundColor = backgroundColor;
-            settings.backgroundMode = backgroundMode;
-            settings.backgroundImage = backgroundImage;
-        }
+        settings.windowSize = new Dimension(windowSize);
+        settings.backgroundColor = backgroundColor;
+        settings.backgroundMode = backgroundMode;
+        settings.backgroundImage = backgroundImage;
 
         selectionConfirmed = true;
 
