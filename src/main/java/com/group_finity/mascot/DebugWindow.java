@@ -4,9 +4,14 @@ import javax.swing.*;
 import java.util.ResourceBundle;
 
 /**
+ * A window that displays debugging information about a mascot.
+ *
  * @author Kilkakon
  */
 public class DebugWindow extends JFrame implements Localizable {
+    /**
+     * Creates new form DebugWindow
+     */
     public DebugWindow() {
         initComponents();
         localize(Main.getInstance().getLanguageBundle());
@@ -219,50 +224,112 @@ public class DebugWindow extends JFrame implements Localizable {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Sets the content of the label that indicates the behavior that is currently being executed by the mascot.
+     *
+     * @param text the name of the behavior
+     */
     void setBehavior(String text) {
         lblBehaviorValue.setText(text);
     }
 
+    /**
+     * Sets the content of the label that indicates the X-coordinate of the mascot's anchor.
+     *
+     * @param x the X-coordinate of the mascot's anchor
+     */
     void setShimejiX(int x) {
         lblShimejiXValue.setText(String.format("%d", x));
     }
 
+    /**
+     * Sets the content of the label that indicates the Y-coordinate of the mascot's anchor.
+     *
+     * @param y the Y-coordinate of the mascot's anchor
+     */
     void setShimejiY(int y) {
         lblShimejiYValue.setText(String.format("%d", y));
     }
 
+    /**
+     * Sets the content of the label that indicates the title of the current active window.
+     *
+     * @param title the title of the current active window
+     */
     void setWindowTitle(String title) {
         lblActiveIEValue.setText(title);
     }
 
+    /**
+     * Sets the content of the label that indicates the X-coordinate of the top-left corner
+     * of the current active window.
+     *
+     * @param x the X-coordinate of the top-left corner of the current active window
+     */
     void setWindowX(int x) {
         lblWindowXValue.setText(String.format("%d", x));
     }
 
+    /**
+     * Sets the content of the label that indicates the Y-coordinate of the top-left corner
+     * of the current active window.
+     *
+     * @param y the Y-coordinate of the top-left corner of the current active window
+     */
     void setWindowY(int y) {
         lblWindowYValue.setText(String.format("%d", y));
     }
 
+    /**
+     * Sets the content of the label that indicates the width of the current active window.
+     *
+     * @param width the width of the current active window
+     */
     void setWindowWidth(int width) {
         lblWindowWidthValue.setText(String.format("%d", width));
     }
 
+    /**
+     * Sets the content of the label that indicates the height of the current active window.
+     *
+     * @param height the height of the current active window
+     */
     void setWindowHeight(int height) {
         lblWindowHeightValue.setText(String.format("%d", height));
     }
 
+    /**
+     * Sets the content of the label that indicates the X-coordinate of the top-left corner of the environment.
+     *
+     * @param x the X-coordinate of the top-left corner of the environment
+     */
     void setEnvironmentX(int x) {
         lblEnvironmentXValue.setText(String.format("%d", x));
     }
 
+    /**
+     * Sets the content of the label that indicates the Y-coordinate of the top-left corner of the environment.
+     *
+     * @param y the Y-coordinate of the top-left corner of the environment
+     */
     void setEnvironmentY(int y) {
         lblEnvironmentYValue.setText(String.format("%d", y));
     }
 
+    /**
+     * Sets the content of the label that indicates the width of the environment.
+     *
+     * @param width the width of the environment
+     */
     void setEnvironmentWidth(int width) {
         lblEnvironmentWidthValue.setText(String.format("%d", width));
     }
 
+    /**
+     * Sets the content of the label that indicates the height of the environment.
+     *
+     * @param height the height of the environment
+     */
     void setEnvironmentHeight(int height) {
         lblEnvironmentHeightValue.setText(String.format("%d", height));
     }

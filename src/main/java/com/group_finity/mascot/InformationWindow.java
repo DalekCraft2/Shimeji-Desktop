@@ -24,17 +24,47 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 /**
+ * A window that displays information and credits about an image set.
+ *
  * @author Kilkakon
  * @since 1.0.21
  */
 public class InformationWindow extends JFrame implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(InformationWindow.class);
 
-    // Store these in instance variables so we can reuse them if we need to relocalize the window
+    // These are stored in instance variables so we can reuse them if we need to relocalize the window
+    /**
+     * The title of the information window.
+     * If this is {@code null}, the localized string for "Information" is used instead.
+     */
     private String displayName;
+    /**
+     * Information about the artist for the image set.
+     * If a URL for the artist was provided, this will be an HTML {@code <a>} tag that uses the URL as the
+     * {@code href} attribute and displays the artist's name. Otherwise, it will be the artist's name in plaintext.
+     * If no artist was specified for the image set, this will be {@code null}.
+     */
     private String artistHtml;
+    /**
+     * Information about the scripter for the image set.
+     * If a URL for the scripter was provided, this will be an HTML {@code <a>} tag that uses the URL as the
+     * {@code href} attribute and displays the scripter's name. Otherwise, it will be the scripter's name in plaintext.
+     * If no scripter was specified for the image set, this will be {@code null}.
+     */
     private String scripterHtml;
+    /**
+     * Information about the person who commissioned the image set.
+     * If a URL for the commissioner was provided, this will be an HTML {@code <a>} tag that uses the URL as the
+     * {@code href} attribute and displays the commissioner's name. Otherwise, it will be the commissioner's name in
+     * plaintext. If no commissioner was specified for the image set, this will be {@code null}.
+     */
     private String commissionerHtml;
+    /**
+     * Information about the webpage where the creators of the image set can be supported.
+     * If a URL for the webpage was provided, this will be an HTML {@code <a>} tag that uses the URL as the
+     * {@code href} attribute and displays the webpage's name. Otherwise, it will be the webpage's name in plaintext.
+     * If no support page was specified for the image set, this will be {@code null}.
+     */
     private String supportHtml;
 
     /**
@@ -44,6 +74,12 @@ public class InformationWindow extends JFrame implements Localizable {
         initComponents();
     }
 
+    /**
+     * Initializes the fields of this InformationWindow using the data from the specified image set.
+     *
+     * @param imageSet the name of the image set
+     * @param config the configuration of the image set
+     */
     public void init(final String imageSet, final Configuration config) {
         // load image
         if (config.getSplashImagePath() != null) {
@@ -194,6 +230,10 @@ public class InformationWindow extends JFrame implements Localizable {
         btnClose.setText(languageBundle.getString("Close"));
     }
 
+    /**
+     * Displays this InformationWindow to the user.
+     * This method will not return until the window has been hidden.
+     */
     public void display() {
         setLocationRelativeTo(null);
         setVisible(true);
