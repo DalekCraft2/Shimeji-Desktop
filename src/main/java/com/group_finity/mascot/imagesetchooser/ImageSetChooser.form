@@ -60,6 +60,11 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Select Image Sets to Use:"/>
+      </Properties>
+    </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jScrollPane1.getVerticalScrollBar().setUnitIncrement(9);"/>
@@ -100,11 +105,6 @@
         </Container>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="jLabel1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Select Image Sets to Use:"/>
-      </Properties>
-    </Component>
     <Container class="javax.swing.JPanel" name="pnlFooter">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">

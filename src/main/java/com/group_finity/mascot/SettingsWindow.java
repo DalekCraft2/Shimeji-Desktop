@@ -352,18 +352,18 @@ public class SettingsWindow extends JDialog implements Localizable {
         grpFilter = new javax.swing.ButtonGroup();
         pnlTabs = new javax.swing.JTabbedPane();
         pnlGeneral = new javax.swing.JPanel();
+        chkShowTrayIcon = new javax.swing.JCheckBox();
         chkAlwaysShowShimejiChooser = new javax.swing.JCheckBox();
+        chkAlwaysShowInformationScreen = new javax.swing.JCheckBox();
+        chkDrawShimejiBounds = new javax.swing.JCheckBox();
+        lblOpacity = new javax.swing.JLabel();
+        sldOpacity = new javax.swing.JSlider();
         lblScaling = new javax.swing.JLabel();
         sldScaling = new javax.swing.JSlider();
         lblFilter = new javax.swing.JLabel();
         radFilterNearest = new javax.swing.JRadioButton();
         radFilterBicubic = new javax.swing.JRadioButton();
         radFilterHqx = new javax.swing.JRadioButton();
-        sldOpacity = new javax.swing.JSlider();
-        lblOpacity = new javax.swing.JLabel();
-        chkAlwaysShowInformationScreen = new javax.swing.JCheckBox();
-        chkShowTrayIcon = new javax.swing.JCheckBox();
-        chkDrawShimejiBounds = new javax.swing.JCheckBox();
         pnlInteractiveWindows = new javax.swing.JPanel();
         pnlInteractiveTabs = new javax.swing.JTabbedPane();
         pnlWhitelistTab = new javax.swing.JPanel();
@@ -378,23 +378,23 @@ public class SettingsWindow extends JDialog implements Localizable {
         pnlWindowMode = new javax.swing.JPanel();
         chkWindowModeEnabled = new javax.swing.JCheckBox();
         lblDimensions = new javax.swing.JLabel();
-        lblDimensionsX = new javax.swing.JLabel();
-        lblBackground = new javax.swing.JLabel();
-        txtBackgroundColor = new javax.swing.JFormattedTextField();
-        btnBackgroundColorChange = new javax.swing.JButton();
         spnWindowWidth = new javax.swing.JSpinner();
+        lblDimensionsX = new javax.swing.JLabel();
         spnWindowHeight = new javax.swing.JSpinner();
+        lblBackground = new javax.swing.JLabel();
         lblBackgroundColor = new javax.swing.JLabel();
+        txtBackgroundColor = new javax.swing.JFormattedTextField();
         pnlBackgroundPreviewContainer = new javax.swing.JPanel();
         glueBackground = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         pnlBackgroundPreview = new javax.swing.JPanel();
         glueBackground2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
+        btnBackgroundColorChange = new javax.swing.JButton();
         lblBackgroundImageCaption = new javax.swing.JLabel();
         pnlBackgroundImage = new javax.swing.JPanel();
         lblBackgroundImage = new javax.swing.JLabel();
         btnBackgroundImageChange = new javax.swing.JButton();
-        btnBackgroundImageRemove = new javax.swing.JButton();
         cmbBackgroundImageMode = new javax.swing.JComboBox<>();
+        btnBackgroundImageRemove = new javax.swing.JButton();
         pnlAbout = new javax.swing.JPanel();
         glue1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         lblIcon = new javax.swing.JLabel();
@@ -418,8 +418,28 @@ public class SettingsWindow extends JDialog implements Localizable {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Settings");
 
+        chkShowTrayIcon.setText("Show Tray Icon");
+        chkShowTrayIcon.addItemListener(this::chkShowTrayIconItemStateChanged);
+
         chkAlwaysShowShimejiChooser.setText("Always Show Choose Shimeji");
         chkAlwaysShowShimejiChooser.addItemListener(this::chkAlwaysShowShimejiChooserItemStateChanged);
+
+        chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
+        chkAlwaysShowInformationScreen.addItemListener(this::chkAlwaysShowInformationScreenItemStateChanged);
+
+        chkDrawShimejiBounds.setText("Draw Shimeji Bounds");
+        chkDrawShimejiBounds.addItemListener(this::chkDrawShimejiBoundsItemStateChanged);
+
+        lblOpacity.setText("Opacity");
+
+        sldOpacity.setMajorTickSpacing(10);
+        sldOpacity.setMinorTickSpacing(5);
+        sldOpacity.setPaintLabels(true);
+        sldOpacity.setPaintTicks(true);
+        sldOpacity.setSnapToTicks(true);
+        sldOpacity.setValue(10);
+        sldOpacity.setPreferredSize(new java.awt.Dimension(300, 45));
+        sldOpacity.addChangeListener(this::sldOpacityStateChanged);
 
         lblScaling.setText("Scaling");
 
@@ -446,26 +466,6 @@ public class SettingsWindow extends JDialog implements Localizable {
         grpFilter.add(radFilterHqx);
         radFilterHqx.setText("hqx Filter");
         radFilterHqx.addItemListener(this::radFilterItemStateChanged);
-
-        sldOpacity.setMajorTickSpacing(10);
-        sldOpacity.setMinorTickSpacing(5);
-        sldOpacity.setPaintLabels(true);
-        sldOpacity.setPaintTicks(true);
-        sldOpacity.setSnapToTicks(true);
-        sldOpacity.setValue(10);
-        sldOpacity.setPreferredSize(new java.awt.Dimension(300, 45));
-        sldOpacity.addChangeListener(this::sldOpacityStateChanged);
-
-        lblOpacity.setText("Opacity");
-
-        chkAlwaysShowInformationScreen.setText("Always Show Information Screen");
-        chkAlwaysShowInformationScreen.addItemListener(this::chkAlwaysShowInformationScreenItemStateChanged);
-
-        chkShowTrayIcon.setText("Show Tray Icon");
-        chkShowTrayIcon.addItemListener(this::chkShowTrayIconItemStateChanged);
-
-        chkDrawShimejiBounds.setText("Draw Shimeji Bounds");
-        chkDrawShimejiBounds.addItemListener(this::chkDrawShimejiBoundsItemStateChanged);
 
         javax.swing.GroupLayout pnlGeneralLayout = new javax.swing.GroupLayout(pnlGeneral);
         pnlGeneral.setLayout(pnlGeneralLayout);
@@ -612,28 +612,25 @@ public class SettingsWindow extends JDialog implements Localizable {
 
         lblDimensions.setText("Dimensions");
 
-        lblDimensionsX.setText("x");
-
-        lblBackground.setText("Background");
-
-        txtBackgroundColor.setFormatterFactory(ColorFormatter.createFormatterFactory());
-        txtBackgroundColor.setText("#00FF00");
-        txtBackgroundColor.setPreferredSize(new java.awt.Dimension(70, 24));
-        txtBackgroundColor.addPropertyChangeListener(this::txtBackgroundColorPropertyChange);
-
-        btnBackgroundColorChange.setText("Change");
-        btnBackgroundColorChange.addActionListener(this::btnBackgroundColorChangeActionPerformed);
-
         spnWindowWidth.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 1));
         spnWindowWidth.setPreferredSize(new java.awt.Dimension(60, 24));
         spnWindowWidth.addChangeListener(this::spnWindowWidthStateChanged);
+
+        lblDimensionsX.setText("x");
 
         spnWindowHeight.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 1));
         spnWindowHeight.setMinimumSize(new java.awt.Dimension(30, 20));
         spnWindowHeight.setPreferredSize(new java.awt.Dimension(60, 24));
         spnWindowHeight.addChangeListener(this::spnWindowHeightStateChanged);
 
+        lblBackground.setText("Background");
+
         lblBackgroundColor.setText("Colour");
+
+        txtBackgroundColor.setFormatterFactory(ColorFormatter.createFormatterFactory());
+        txtBackgroundColor.setText("#00FF00");
+        txtBackgroundColor.setPreferredSize(new java.awt.Dimension(70, 24));
+        txtBackgroundColor.addPropertyChangeListener(this::txtBackgroundColorPropertyChange);
 
         pnlBackgroundPreviewContainer.setLayout(new javax.swing.BoxLayout(pnlBackgroundPreviewContainer, javax.swing.BoxLayout.PAGE_AXIS));
         pnlBackgroundPreviewContainer.add(glueBackground);
@@ -655,6 +652,9 @@ public class SettingsWindow extends JDialog implements Localizable {
         pnlBackgroundPreviewContainer.add(pnlBackgroundPreview);
         pnlBackgroundPreviewContainer.add(glueBackground2);
 
+        btnBackgroundColorChange.setText("Change");
+        btnBackgroundColorChange.addActionListener(this::btnBackgroundColorChangeActionPerformed);
+
         lblBackgroundImageCaption.setText("Image");
 
         pnlBackgroundImage.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
@@ -668,10 +668,10 @@ public class SettingsWindow extends JDialog implements Localizable {
         btnBackgroundImageChange.setText("Change");
         btnBackgroundImageChange.addActionListener(this::btnBackgroundImageChangeActionPerformed);
 
+        cmbBackgroundImageMode.addActionListener(this::cmbBackgroundImageModeActionPerformed);
+
         btnBackgroundImageRemove.setText("Remove");
         btnBackgroundImageRemove.addActionListener(this::btnBackgroundImageRemoveActionPerformed);
-
-        cmbBackgroundImageMode.addActionListener(this::cmbBackgroundImageModeActionPerformed);
 
         javax.swing.GroupLayout pnlWindowModeLayout = new javax.swing.GroupLayout(pnlWindowMode);
         pnlWindowMode.setLayout(pnlWindowModeLayout);

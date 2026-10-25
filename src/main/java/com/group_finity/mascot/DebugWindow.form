@@ -132,72 +132,6 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="lblShimejiX">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Shimeji X"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblShimejiXValue">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="N/A"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblShimejiYValue">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="N/A"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblShimejiY">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Shimeji Y"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowX">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Window X"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowY">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Window Y"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowWidth">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Window W"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowHeight">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Window H"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowXValue">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="N/A"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowYValue">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="N/A"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowWidthValue">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="N/A"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblWindowHeightValue">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="N/A"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="lblBehavior">
       <Properties>
         <Property name="text" type="java.lang.String" value="Behaviour"/>
@@ -209,9 +143,81 @@
         <Property name="text" type="java.lang.String" value="N/A"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblEnvironmentY">
+    <Component class="javax.swing.JLabel" name="lblShimejiX">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Environment Y"/>
+        <Property name="text" type="java.lang.String" value="Shimeji X"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblShimejiXValue">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="N/A"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblShimejiY">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Shimeji Y"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblShimejiYValue">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="N/A"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblActiveIE">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Active IE"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblActiveIEValue">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="N/A"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowX">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Window X"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowXValue">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="N/A"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowY">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Window Y"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowYValue">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="N/A"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowWidth">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Window W"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowWidthValue">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="N/A"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowHeight">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Window H"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWindowHeightValue">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="N/A"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblEnvironmentX">
@@ -225,6 +231,11 @@
         <Property name="text" type="java.lang.String" value="N/A"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.JLabel" name="lblEnvironmentY">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Environment Y"/>
+      </Properties>
+    </Component>
     <Component class="javax.swing.JLabel" name="lblEnvironmentYValue">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
@@ -236,29 +247,18 @@
         <Property name="text" type="java.lang.String" value="Environment W"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblEnvironmentHeight">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Environment H"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblEnvironmentHeightValue">
-      <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="N/A"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="lblEnvironmentWidthValue">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="N/A"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblActiveIE">
+    <Component class="javax.swing.JLabel" name="lblEnvironmentHeight">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Active IE"/>
+        <Property name="text" type="java.lang.String" value="Environment H"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblActiveIEValue">
+    <Component class="javax.swing.JLabel" name="lblEnvironmentHeightValue">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="N/A"/>

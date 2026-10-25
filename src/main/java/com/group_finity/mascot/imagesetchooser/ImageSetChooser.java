@@ -179,10 +179,10 @@ public class ImageSetChooser extends JDialog implements Localizable {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         pnlList = new javax.swing.JPanel();
         lstImageSets = new javax.swing.JList<>();
-        jLabel1 = new javax.swing.JLabel();
         pnlFooter = new javax.swing.JPanel();
         useSelectedButton = new javax.swing.JButton();
         useAllButton = new javax.swing.JButton();
@@ -195,6 +195,8 @@ public class ImageSetChooser extends JDialog implements Localizable {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Shimeji-ee Image Set Chooser");
         setMinimumSize(getPreferredSize());
+
+        jLabel1.setText("Select Image Sets to Use:");
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(9);
 
@@ -214,8 +216,6 @@ public class ImageSetChooser extends JDialog implements Localizable {
         );
 
         jScrollPane1.setViewportView(pnlList);
-
-        jLabel1.setText("Select Image Sets to Use:");
 
         pnlFooter.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
 

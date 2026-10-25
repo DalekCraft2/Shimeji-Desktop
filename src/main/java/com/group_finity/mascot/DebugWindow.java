@@ -37,92 +37,92 @@ public class DebugWindow extends JFrame implements Localizable {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblShimejiX = new javax.swing.JLabel();
-        lblShimejiXValue = new javax.swing.JLabel();
-        lblShimejiYValue = new javax.swing.JLabel();
-        lblShimejiY = new javax.swing.JLabel();
-        lblWindowX = new javax.swing.JLabel();
-        lblWindowY = new javax.swing.JLabel();
-        lblWindowWidth = new javax.swing.JLabel();
-        lblWindowHeight = new javax.swing.JLabel();
-        lblWindowXValue = new javax.swing.JLabel();
-        lblWindowYValue = new javax.swing.JLabel();
-        lblWindowWidthValue = new javax.swing.JLabel();
-        lblWindowHeightValue = new javax.swing.JLabel();
         lblBehavior = new javax.swing.JLabel();
         lblBehaviorValue = new javax.swing.JLabel();
-        lblEnvironmentY = new javax.swing.JLabel();
-        lblEnvironmentX = new javax.swing.JLabel();
-        lblEnvironmentXValue = new javax.swing.JLabel();
-        lblEnvironmentYValue = new javax.swing.JLabel();
-        lblEnvironmentWidth = new javax.swing.JLabel();
-        lblEnvironmentHeight = new javax.swing.JLabel();
-        lblEnvironmentHeightValue = new javax.swing.JLabel();
-        lblEnvironmentWidthValue = new javax.swing.JLabel();
+        lblShimejiX = new javax.swing.JLabel();
+        lblShimejiXValue = new javax.swing.JLabel();
+        lblShimejiY = new javax.swing.JLabel();
+        lblShimejiYValue = new javax.swing.JLabel();
         lblActiveIE = new javax.swing.JLabel();
         lblActiveIEValue = new javax.swing.JLabel();
+        lblWindowX = new javax.swing.JLabel();
+        lblWindowXValue = new javax.swing.JLabel();
+        lblWindowY = new javax.swing.JLabel();
+        lblWindowYValue = new javax.swing.JLabel();
+        lblWindowWidth = new javax.swing.JLabel();
+        lblWindowWidthValue = new javax.swing.JLabel();
+        lblWindowHeight = new javax.swing.JLabel();
+        lblWindowHeightValue = new javax.swing.JLabel();
+        lblEnvironmentX = new javax.swing.JLabel();
+        lblEnvironmentXValue = new javax.swing.JLabel();
+        lblEnvironmentY = new javax.swing.JLabel();
+        lblEnvironmentYValue = new javax.swing.JLabel();
+        lblEnvironmentWidth = new javax.swing.JLabel();
+        lblEnvironmentWidthValue = new javax.swing.JLabel();
+        lblEnvironmentHeight = new javax.swing.JLabel();
+        lblEnvironmentHeightValue = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        lblShimejiX.setText("Shimeji X");
-
-        lblShimejiXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblShimejiXValue.setText("N/A");
-
-        lblShimejiYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblShimejiYValue.setText("N/A");
-
-        lblShimejiY.setText("Shimeji Y");
-
-        lblWindowX.setText("Window X");
-
-        lblWindowY.setText("Window Y");
-
-        lblWindowWidth.setText("Window W");
-
-        lblWindowHeight.setText("Window H");
-
-        lblWindowXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblWindowXValue.setText("N/A");
-
-        lblWindowYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblWindowYValue.setText("N/A");
-
-        lblWindowWidthValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblWindowWidthValue.setText("N/A");
-
-        lblWindowHeightValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblWindowHeightValue.setText("N/A");
 
         lblBehavior.setText("Behaviour");
 
         lblBehaviorValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblBehaviorValue.setText("N/A");
 
-        lblEnvironmentY.setText("Environment Y");
+        lblShimejiX.setText("Shimeji X");
+
+        lblShimejiXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblShimejiXValue.setText("N/A");
+
+        lblShimejiY.setText("Shimeji Y");
+
+        lblShimejiYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblShimejiYValue.setText("N/A");
+
+        lblActiveIE.setText("Active IE");
+
+        lblActiveIEValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblActiveIEValue.setText("N/A");
+
+        lblWindowX.setText("Window X");
+
+        lblWindowXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblWindowXValue.setText("N/A");
+
+        lblWindowY.setText("Window Y");
+
+        lblWindowYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblWindowYValue.setText("N/A");
+
+        lblWindowWidth.setText("Window W");
+
+        lblWindowWidthValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblWindowWidthValue.setText("N/A");
+
+        lblWindowHeight.setText("Window H");
+
+        lblWindowHeightValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblWindowHeightValue.setText("N/A");
 
         lblEnvironmentX.setText("Environment X");
 
         lblEnvironmentXValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblEnvironmentXValue.setText("N/A");
 
+        lblEnvironmentY.setText("Environment Y");
+
         lblEnvironmentYValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblEnvironmentYValue.setText("N/A");
 
         lblEnvironmentWidth.setText("Environment W");
 
+        lblEnvironmentWidthValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblEnvironmentWidthValue.setText("N/A");
+
         lblEnvironmentHeight.setText("Environment H");
 
         lblEnvironmentHeightValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblEnvironmentHeightValue.setText("N/A");
-
-        lblEnvironmentWidthValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblEnvironmentWidthValue.setText("N/A");
-
-        lblActiveIE.setText("Active IE");
-
-        lblActiveIEValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblActiveIEValue.setText("N/A");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
