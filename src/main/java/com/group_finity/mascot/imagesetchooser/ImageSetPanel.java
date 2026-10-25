@@ -43,8 +43,8 @@ public class ImageSetPanel extends JPanel {
         }
     }
 
-    public void setCheckbox(boolean value) {
-        checkbox.setSelected(value);
+    public void setSelected(boolean selected) {
+        checkbox.setSelected(selected);
     }
 
     public String getImageSetName() {

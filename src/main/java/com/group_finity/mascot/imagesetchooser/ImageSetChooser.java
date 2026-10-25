@@ -366,7 +366,7 @@ public class ImageSetChooser extends JDialog implements Localizable {
         public Component getListCellRendererComponent(JList<?> list, Object value,
                                                       int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof ImageSetPanel component) {
-                component.setCheckbox(isSelected);
+                component.setSelected(isSelected);
                 return component;
             }
             return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
