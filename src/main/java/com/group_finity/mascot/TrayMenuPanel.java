@@ -106,6 +106,22 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         btnPauseAll.setText(manager.isPaused() ? language.getString("ResumeAnimations") : language.getString("PauseAnimations"));
     }
 
+    /**
+     * Sets the enabled state for any buttons in the tray menu that perform operations on mascots (for example,
+     * creating new mascots or pausing mascot animations).
+     *
+     * @param enabled {@code true} to enable buttons that perform mascot operations; {@code false} to disable them
+     * @see TrayMenu#setMascotOperationsEnabled(boolean)
+     */
+    void setMascotOperationsEnabled(boolean enabled) {
+        btnCallShimeji.setEnabled(enabled);
+        btnFollowCursor.setEnabled(enabled);
+        btnReduceToOne.setEnabled(enabled);
+        btnPauseAll.setEnabled(enabled);
+        // We can leave the "Dismiss all" button untouched because it just exits the program rather than
+        // actually dismissing any mascots
+    }
+
     private void initComponentStates() {
         Settings settings = Main.getInstance().getSettings();
         chkBreeding.setSelected(settings.breeding);
@@ -683,18 +699,28 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         SettingsWindow dialog = new SettingsWindow(Main.getFrame(), true);
         dialog.setIconImage(Main.getIcon());
         dialog.init();
-        // Only do the following code if the settings window wasn't cancelled
+        // Only do the following code if the settings window wasn't canceled
         if (dialog.display()) {
-            if (dialog.isTrayMenuReloadRequired()) {
-                Main.getInstance().getTrayMenu().createTrayIcon();
-            }
-
             boolean environmentReloadRequired = dialog.isEnvironmentReloadRequired();
             boolean imageReloadRequired = dialog.isImageReloadRequired();
             boolean interactiveWindowReloadRequired = dialog.isInteractiveWindowReloadRequired();
 
+            TrayMenu trayMenu = Main.getInstance().getTrayMenu();
+
+            if (dialog.isTrayMenuReloadRequired()) {
+                trayMenu.createTrayIcon();
+            }
+
             boolean windowedMode = Main.getInstance().getSettings().windowedMode;
+            boolean isExit = manager.isExitOnLastRemoved();
             if (environmentReloadRequired) {
+                // Prevent the creation of mascots whilst the environment is being reloaded
+                trayMenu.setMascotOperationsEnabled(false);
+
+                // Dispose all mascots before we reload the environment
+                manager.setExitOnLastRemoved(false);
+                manager.disposeAll();
+
                 // Dispose the environment here, regardless of whether it was windowed.
                 // It's okay if dispose() doesn't need to be called on the EDT for the current environment,
                 // because that method shouldn't take long to return.
@@ -736,21 +762,26 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
                         NativeFactory.getInstance().getEnvironment().refreshCache();
                     }
 
+                    // Reset this to what its value was before
+                    manager.setExitOnLastRemoved(isExit);
+
+                    // Only re-enable the manager once the environment has finished reloading to ensure that the
+                    // manager doesn't access the environment before the environment has finished initializing
+                    manager.setEnabled(true);
+
                     return null;
                 }
 
                 @Override
                 protected void done() {
-                    if (useSystemTray) {
-                        return;
+                    trayMenu.setMascotOperationsEnabled(true);
+                    if (!useSystemTray) {
+                        refreshPauseText();
                     }
-                    refreshPauseText();
                 }
             };
             worker.execute();
         }
-
-        manager.setEnabled(true);
     }//GEN-LAST:event_btnSettingsActionPerformed
 
     private void languagePopupPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_languagePopupPopupMenuWillBecomeInvisible

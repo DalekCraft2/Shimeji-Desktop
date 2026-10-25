@@ -25,6 +25,7 @@ public class TrayMenu {
     private WindowListener trayMenuWindowListener;
     private boolean debouncing = false;
     private Timer debounceTimer;
+    private boolean mascotOperationsEnabled = true;
 
     /**
      * Creates a tray icon, or recreates the existing tray icon if one already existed.
@@ -223,6 +224,7 @@ public class TrayMenu {
         trayMenuWindow.setAlwaysOnTop(useSystemTray);
 
         trayMenuPanel = new TrayMenuPanel(useSystemTray);
+        trayMenuPanel.setMascotOperationsEnabled(mascotOperationsEnabled);
         trayMenuWindow.add(trayMenuPanel);
 
         // set the window dimensions
@@ -255,6 +257,20 @@ public class TrayMenu {
     void refreshPauseText() {
         if (trayMenuPanel != null) {
             trayMenuPanel.refreshPauseText();
+        }
+    }
+
+    /**
+     * Sets the enabled state for any buttons in the tray menu that perform operations on mascots (for example,
+     * creating new mascots or pausing mascot animations).
+     *
+     * @param enabled {@code true} to enable buttons that perform mascot operations; {@code false} to disable them
+     * @see TrayMenuPanel#setMascotOperationsEnabled(boolean)
+     */
+    void setMascotOperationsEnabled(boolean enabled) {
+        mascotOperationsEnabled = enabled;
+        if (trayMenuPanel != null) {
+            trayMenuPanel.setMascotOperationsEnabled(mascotOperationsEnabled);
         }
     }
 }
