@@ -856,10 +856,10 @@ public class SettingsWindow extends JDialog implements Localizable {
         Settings settings = Main.getInstance().getSettings();
 
         environmentReloadRequired = settings.windowedMode != windowedMode ||
-                !settings.windowSize.equals(windowSize) ||
-                !settings.backgroundColor.equals(backgroundColor) ||
-                settings.backgroundMode != backgroundMode ||
-                !Objects.equals(settings.backgroundImage, backgroundImage);
+                windowedMode && (!settings.windowSize.equals(windowSize) ||
+                        !settings.backgroundColor.equals(backgroundColor) ||
+                        settings.backgroundMode != backgroundMode ||
+                        !Objects.equals(settings.backgroundImage, backgroundImage));
         imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
         interactiveWindowReloadRequired = !settings.interactiveWindows.equals(listData) ||
                 !settings.interactiveWindowsBlacklist.equals(blacklistData);
