@@ -796,6 +796,8 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
                 }
             };
             worker.execute();
+        } else {
+            manager.setEnabled(true);
         }
     }//GEN-LAST:event_btnSettingsActionPerformed
 
