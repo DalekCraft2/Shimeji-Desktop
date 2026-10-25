@@ -14,12 +14,7 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -29,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -53,8 +49,6 @@ public class SettingsWindow extends JDialog implements Localizable {
     private VirtualContentPanel.ResizeMode backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
     private Path backgroundImage = null;
     private final VirtualContentPanel.ResizeMode[] backgroundModes = VirtualContentPanel.ResizeMode.values();
-
-    private boolean suppressTextChanged = true;
 
     /**
      * Whether the "Done" button was pressed instead of the "Cancel" or "Close" buttons.
@@ -145,7 +139,7 @@ public class SettingsWindow extends JDialog implements Localizable {
         spnWindowHeight.setEnabled(windowedMode);
         spnWindowWidth.setValue(windowSize.width);
         spnWindowHeight.setValue(windowSize.height);
-        txtBackgroundColor.setText(String.format("#%02X%02X%02X", backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
+        txtBackgroundColor.setValue(backgroundColor);
         btnBackgroundColorChange.setEnabled(windowedMode);
         btnBackgroundImageChange.setEnabled(windowedMode);
         pnlBackgroundPreview.setBackground(backgroundColor);
@@ -208,9 +202,7 @@ public class SettingsWindow extends JDialog implements Localizable {
 
     public boolean display() {
         setLocationRelativeTo(null);
-        suppressTextChanged = false;
         setVisible(true);
-        suppressTextChanged = true;
 
         return selectionConfirmed;
     }
@@ -248,6 +240,105 @@ public class SettingsWindow extends JDialog implements Localizable {
 
     public boolean isTrayMenuReloadRequired() {
         return trayMenuReloadRequired;
+    }
+
+    /**
+     * A text field formatter that converts strings to Color objects and Color objects to strings.
+     * It ensures that the text field's text is always a valid color code.
+     */
+    private static class ColorFormatter extends MaskFormatter {
+        /**
+         * DocumentFilter that forwards calls back to DefaultFormatter.
+         *
+         * @see #getDocumentFilter()
+         */
+        private DocumentFilter documentFilter;
+
+        /**
+         * Creates a FormatterFactory that is used to obtain instances of ColorFormatter.
+         *
+         * @return a new FormatterFactory instance for obtaining ColorFormatter instances
+         */
+        static JFormattedTextField.AbstractFormatterFactory createFormatterFactory() {
+            ColorFormatter formatter = new ColorFormatter();
+            try {
+                // Sets the mask to be # followed by six hexadecimal characters
+                formatter.setMask("'#HHHHHH");
+            } catch (ParseException e) {
+                // Shouldn't be thrown
+                throw new RuntimeException(e);
+            }
+            formatter.setPlaceholderCharacter('_');
+            formatter.setValueContainsLiteralCharacters(true);
+            formatter.setValueClass(Color.class);
+            formatter.setCommitsOnValidEdit(true);
+            formatter.setOverwriteMode(false);
+            formatter.setAllowsInvalid(true);
+            return new DefaultFormatterFactory(formatter);
+        }
+
+        @Override
+        public Object stringToValue(String string) throws ParseException {
+            if (string == null || string.isBlank()) {
+                throw new ParseException("Cannot parse empty string", 0);
+            }
+
+            if (!string.matches("#[0-9a-fA-F]{6}")) {
+                throw new ParseException("Color code must be in the format #RRGGBB", 0);
+            }
+
+            try {
+                return Color.decode(string);
+            } catch (NumberFormatException e) {
+                ParseException pe = new ParseException("Could not decode Color from string", 0);
+                pe.initCause(e);
+                throw pe;
+            }
+        }
+
+        @Override
+        public String valueToString(Object value) throws ParseException {
+            if (value == null) {
+                throw new ParseException("Object cannot be null", 0);
+            }
+            if (value instanceof Color color) {
+                return String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
+            } else {
+                throw new ParseException("The object to format should be a Color", 0);
+            }
+        }
+
+        @Override
+        protected DocumentFilter getDocumentFilter() {
+            if (documentFilter == null) {
+                documentFilter = new DocumentFilter() {
+                    @Override
+                    public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+                        // Forward the call to the DocumentFilter used by DefaultFormatter
+                        ColorFormatter.super.getDocumentFilter().remove(fb, offset, length);
+                    }
+
+                    @Override
+                    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                        if (string != null && string.matches("[#0-9a-fA-F]*") && fb.getDocument().getLength() + string.length() <= 7) {
+                            // If the color code contains no invalid characters and has a length of 7,
+                            // forward the call to the DocumentFilter used by DefaultFormatter
+                            ColorFormatter.super.getDocumentFilter().insertString(fb, offset, string, attr);
+                        }
+                    }
+
+                    @Override
+                    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                        if (text != null && text.matches("[#0-9a-fA-F]*") && fb.getDocument().getLength() - length + text.length() <= 7) {
+                            // If the color code contains no invalid characters and has a length of 7,
+                            // forward the call to the DocumentFilter used by DefaultFormatter
+                            ColorFormatter.super.getDocumentFilter().replace(fb, offset, length, text, attrs);
+                        }
+                    }
+                };
+            }
+            return documentFilter;
+        }
     }
 
     /**
@@ -289,7 +380,7 @@ public class SettingsWindow extends JDialog implements Localizable {
         lblDimensions = new javax.swing.JLabel();
         lblDimensionsX = new javax.swing.JLabel();
         lblBackground = new javax.swing.JLabel();
-        txtBackgroundColor = new javax.swing.JTextField();
+        txtBackgroundColor = new javax.swing.JFormattedTextField();
         btnBackgroundColorChange = new javax.swing.JButton();
         spnWindowWidth = new javax.swing.JSpinner();
         spnWindowHeight = new javax.swing.JSpinner();
@@ -525,38 +616,10 @@ public class SettingsWindow extends JDialog implements Localizable {
 
         lblBackground.setText("Background");
 
+        txtBackgroundColor.setFormatterFactory(ColorFormatter.createFormatterFactory());
         txtBackgroundColor.setText("#00FF00");
         txtBackgroundColor.setPreferredSize(new java.awt.Dimension(70, 24));
-        txtBackgroundColor.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                colorTextChanged(txtBackgroundColor);
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                colorTextChanged(txtBackgroundColor);
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-        ((AbstractDocument) txtBackgroundColor.getDocument()).setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass filterBypass, int offset, String text, AttributeSet attributes) throws BadLocationException {
-                if (text != null && text.matches("[#0-9a-fA-F]*") && filterBypass.getDocument().getLength() + text.length() <= 7) {
-                    super.insertString(filterBypass, offset, text, attributes);
-                }
-            }
-
-            @Override
-            public void replace(FilterBypass filterBypass, int offset, int length, String text, AttributeSet attributes) throws BadLocationException {
-                if (text != null && text.matches("[#0-9a-fA-F]*") && filterBypass.getDocument().getLength() - length + text.length() <= 7) {
-                    super.replace(filterBypass, offset, length, text, attributes);
-                }
-            }
-        });
+        txtBackgroundColor.addPropertyChangeListener(this::txtBackgroundColorPropertyChange);
 
         btnBackgroundColorChange.setText("Change");
         btnBackgroundColorChange.addActionListener(this::btnBackgroundColorChangeActionPerformed);
@@ -931,6 +994,16 @@ public class SettingsWindow extends JDialog implements Localizable {
         windowSize.width = ((SpinnerNumberModel) spnWindowWidth.getModel()).getNumber().intValue();
     }//GEN-LAST:event_spnWindowWidthStateChanged
 
+    private void txtBackgroundColorPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtBackgroundColorPropertyChange
+        if (evt.getPropertyName().equals("value")) {
+            Color newColor = (Color) evt.getNewValue();
+            if (newColor != null && !newColor.equals(backgroundColor)) {
+                backgroundColor = newColor;
+                pnlBackgroundPreview.setBackground(backgroundColor);
+            }
+        }
+    }//GEN-LAST:event_txtBackgroundColorPropertyChange
+
     private void btnBackgroundColorChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundColorChangeActionPerformed
         backgroundColor = chooseColor(backgroundColor, txtBackgroundColor, pnlBackgroundPreview, "ChooseBackgroundColour");
     }//GEN-LAST:event_btnBackgroundColorChangeActionPerformed
@@ -986,33 +1059,12 @@ public class SettingsWindow extends JDialog implements Localizable {
         alwaysShowInformationScreen = evt.getStateChange() == ItemEvent.SELECTED;
     }//GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
 
-    private void colorTextChanged(JTextField field) {
-        if (suppressTextChanged || !isVisible()) {
-            return;
-        }
-
-        String text = field.getText();
-        if (text == null || text.length() != 7 || !text.matches("#[0-9a-fA-F]{6}")) {
-            // Text is not a color code
-            return;
-        }
-
-        Color newColor = Color.decode(text);
-
-        if (field.equals(txtBackgroundColor)) {
-            if (!newColor.equals(backgroundColor)) {
-                backgroundColor = newColor;
-                pnlBackgroundPreview.setBackground(backgroundColor);
-            }
-        }
-    }
-
-    private Color chooseColor(Color color, JTextField field, JPanel preview, String title) {
+    private Color chooseColor(Color color, JFormattedTextField field, JPanel preview, String title) {
         Color newColor = JColorChooser.showDialog(this, Main.getInstance().getLanguageBundle().getString(title), color);
 
         if (newColor != null) {
             color = newColor;
-            field.setText(String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue()));
+            field.setValue(color);
             preview.setBackground(color);
         }
 
@@ -1124,6 +1176,6 @@ public class SettingsWindow extends JDialog implements Localizable {
     private javax.swing.JSlider sldScaling;
     private javax.swing.JSpinner spnWindowHeight;
     private javax.swing.JSpinner spnWindowWidth;
-    private javax.swing.JTextField txtBackgroundColor;
+    private javax.swing.JFormattedTextField txtBackgroundColor;
     // End of variables declaration//GEN-END:variables
 }
