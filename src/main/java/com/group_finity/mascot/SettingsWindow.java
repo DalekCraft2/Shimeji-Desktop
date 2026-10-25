@@ -133,16 +133,15 @@ public class SettingsWindow extends JDialog implements Localizable {
         }
 
         chkWindowModeEnabled.setSelected(windowedMode);
-        spnWindowWidth.setBackground(txtBackgroundColor.getBackground());
-        spnWindowHeight.setBackground(txtBackgroundColor.getBackground());
         spnWindowWidth.setEnabled(windowedMode);
-        spnWindowHeight.setEnabled(windowedMode);
         spnWindowWidth.setValue(windowSize.width);
+        spnWindowHeight.setEnabled(windowedMode);
         spnWindowHeight.setValue(windowSize.height);
+        txtBackgroundColor.setEnabled(windowedMode);
         txtBackgroundColor.setValue(backgroundColor);
+        pnlBackgroundPreview.setBackground(backgroundColor);
         btnBackgroundColorChange.setEnabled(windowedMode);
         btnBackgroundImageChange.setEnabled(windowedMode);
-        pnlBackgroundPreview.setBackground(backgroundColor);
         if (backgroundImage != null) {
             try {
                 refreshBackgroundImage();
@@ -1012,6 +1011,7 @@ public class SettingsWindow extends JDialog implements Localizable {
         windowedMode = evt.getStateChange() == ItemEvent.SELECTED;
         spnWindowWidth.setEnabled(windowedMode);
         spnWindowHeight.setEnabled(windowedMode);
+        txtBackgroundColor.setEnabled(windowedMode);
         btnBackgroundColorChange.setEnabled(windowedMode);
         btnBackgroundImageChange.setEnabled(windowedMode);
         cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
