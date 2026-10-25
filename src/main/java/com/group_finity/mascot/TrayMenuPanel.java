@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
+ * A JPanel that contains all buttons and submenus in the tray menu window.
  *
  * @author DalekCraft
  */
@@ -49,14 +50,19 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
 
     private static final Locale VIETNAM = Locale.forLanguageTag("vi-VN");
 
+    /**
+     * Whether the system tray is being used.
+     * If {@code true}, the menu will be disposed after one of its options has been pressed.
+     * If {@code false}, the menu will not be disposed.
+     */
     private final boolean useSystemTray;
 
     /**
      * Creates new form TrayMenuPanel
      *
      * @param useSystemTray whether the system tray is being used.
-     * If true, the menu will be disposed after one of its options has been pressed.
-     * If false, the menu will not be disposed.
+     * If {@code true}, the menu will be disposed after one of its options has been pressed.
+     * If {@code false}, the menu will not be disposed.
      */
     public TrayMenuPanel(boolean useSystemTray) {
         this.useSystemTray = useSystemTray;
@@ -100,6 +106,12 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         btnDismissAll.setText(languageBundle.getString("DismissAll"));
     }
 
+    /**
+     * Updates the text of the "Pause Animations" button to say either "Pause" or "Resume"
+     * depending on whether all mascots are currently paused.
+     *
+     * @see TrayMenu#refreshPauseText()
+     */
     void refreshPauseText() {
         ResourceBundle language = Main.getInstance().getLanguageBundle();
         Manager manager = Main.getInstance().getManager();
@@ -122,6 +134,9 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         // actually dismissing any mascots
     }
 
+    /**
+     * Initializes the selections for all checkboxes in the menu.
+     */
     private void initComponentStates() {
         Settings settings = Main.getInstance().getSettings();
         chkBreeding.setSelected(settings.breeding);
@@ -913,6 +928,11 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_btnDismissAllActionPerformed
 
 
+    /**
+     * Updates the localization of all {@linkplain Localizable localizable} windows using the specified locale.
+     *
+     * @param locale the locale to use to update the localization of all windows
+     */
     private void updateLocale(Locale locale) {
         // If we are using the system tray, dispose the tray menu window
         // because it should only persist when the system tray setting is disabled

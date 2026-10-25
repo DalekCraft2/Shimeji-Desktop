@@ -19,12 +19,41 @@ import java.awt.image.BufferedImage;
 public class TrayMenu {
     private static final Logger log = LoggerFactory.getLogger(TrayMenu.class);
 
+    /**
+     * The system tray icon for the program. If {@link Settings#showTrayIcon} is {@code false} or the
+     * {@linkplain SystemTray#isSupported() system tray is not supported on the current platform},
+     * this will be {@code null}.
+     */
     private TrayIcon trayIcon;
+    /**
+     * The window used for the tray icon's popup menu.
+     */
     private Window trayMenuWindow;
+    /**
+     * The panel containing all buttons and submenus in the tray menu window.
+     */
     private TrayMenuPanel trayMenuPanel;
+    /**
+     * A listener that exits the program when the tray menu window is closed. This is only added to the window
+     * if {@link Settings#showTrayIcon} is {@code false} or the {@linkplain SystemTray#isSupported()
+     * system tray is not supported on the current platform}.
+     */
     private WindowListener trayMenuWindowListener;
+    /**
+     * Whether the tray icon is currently ignoring mouse events.
+     */
     private boolean debouncing = false;
+    /**
+     * A timer that prevents mouse events from being sent to the tray icon too frequently.
+     * When this timer completes, it sets {@link #debouncing} to {@code false}.
+     */
     private Timer debounceTimer;
+    /**
+     * The enabled state for any buttons in the tray menu that perform operations on mascots (for example,
+     * creating new mascots or pausing mascot animations).
+     *
+     * @see #setMascotOperationsEnabled(boolean)
+     */
     private boolean mascotOperationsEnabled = true;
 
     /**
@@ -254,6 +283,12 @@ public class TrayMenu {
         trayMenuWindow.setVisible(true);
     }
 
+    /**
+     * Updates the text of the "Pause Animations" button to say either "Pause" or "Resume"
+     * depending on whether all mascots are currently paused.
+     *
+     * @see TrayMenuPanel#refreshPauseText()
+     */
     void refreshPauseText() {
         if (trayMenuPanel != null) {
             trayMenuPanel.refreshPauseText();
