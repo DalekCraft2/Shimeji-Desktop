@@ -12,15 +12,29 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Displays information about an image set. Used by {@link ImageSetChooser}.
+ * A JPanel that displays basic information about an image set.
+ * Used by {@link ImageSetChooser} to list all available image sets.
  *
  * @author Shimeji-ee Group
  * @since 1.0.2
  */
 public class ImageSetPanel extends JPanel {
-
+    /**
+     * The name of the image set that is represented by this panel.
+     *
+     * @see #getImageSetName()
+     */
     private final String imageSet;
 
+    /**
+     * Creates a new ImageSetPanel.
+     *
+     * @param imageSet the image set that is represented by this panel
+     * @param actions the path to the actions file used by the image set
+     * @param behaviors the path to the behaviors file used by the image set
+     * @param imageLocation the path to the image file to display on this panel
+     * @param title the title to display on this panel
+     */
     public ImageSetPanel(String imageSet, String actions,
                          String behaviors, Path imageLocation, String title) {
         initComponents();
@@ -37,10 +51,20 @@ public class ImageSetPanel extends JPanel {
         }
     }
 
+    /**
+     * Sets whether this panel is selected.
+     *
+     * @param selected {@code true} to select this panel; {@code false} to deselect it
+     */
     public void setSelected(boolean selected) {
         checkbox.setSelected(selected);
     }
 
+    /**
+     * Gets the name of the image set that is represented by this panel.
+     *
+     * @return the name of the image set that is represented by this panel
+     */
     public String getImageSetName() {
         return imageSet;
     }

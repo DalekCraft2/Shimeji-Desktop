@@ -146,6 +146,12 @@ public class ImageSetChooser extends JDialog implements Localizable {
         lstImageSets.setVisibleRowCount(Math.min(numRows, lstImageSets.getVisibleRowCount()));
     }
 
+    /**
+     * Converts the specified collection of Integers into an array of ints.
+     *
+     * @param integers the collection of Integers to convert
+     * @return the resulting int array
+     */
     private int[] convertIntegers(Collection<Integer> integers) {
         return integers.stream().mapToInt(Integer::intValue).toArray();
     }
@@ -161,6 +167,12 @@ public class ImageSetChooser extends JDialog implements Localizable {
         selectAllButton.setText(languageBundle.getString("SelectAll"));
     }
 
+    /**
+     * Displays this ImageSetChooser to the user and returns the image sets that were selected.
+     * This method will not return until the window has been hidden.
+     *
+     * @return the selected image sets, or {@code null} if the selection was canceled
+     */
     public List<String> display() {
         setLocationRelativeTo(null);
         setVisible(true);
@@ -301,7 +313,10 @@ public class ImageSetChooser extends JDialog implements Localizable {
     }//GEN-LAST:event_clearAllButtonActionPerformed
 
     private void selectAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllButtonActionPerformed
+        // We can't call setSelectionInterval because overriding it with CustomListSelectionModel causes it to
+        // not behave as intended when called manually, so we need to call addSelectionInterval instead
         lstImageSets.addSelectionInterval(0, lstImageSets.getModel().getSize() - 1);
+        // lstImageSets.setSelectionInterval(0, lstImageSets.getModel().getSize() - 1);
     }//GEN-LAST:event_selectAllButtonActionPerformed
 
     private void useSelectedButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useSelectedButtonActionPerformed
@@ -331,27 +346,55 @@ public class ImageSetChooser extends JDialog implements Localizable {
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Custom list selection model that allows multiple entries in the list to be selected when the mouse
+     * is dragged over them.
+     * <p>
+     * This class was made by <a href="https://stackoverflow.com/a/5831609">Francisco on StackOverflow</a>.
+     */
     static class CustomListSelectionModel extends DefaultListSelectionModel {
+        /**
+         * The previous index of the first end of the selection interval, inclusive.
+         */
         private int i0 = -1;
+        /**
+         * The previous index of the second end of the selection interval, inclusive.
+         */
         private int i1 = -1;
 
         @Override
         public void setSelectionInterval(int index0, int index1) {
-            // These statements ensure that the buttons do not flicker whenever the cursor is dragged over them
-            // This code was made by Francisco on StackOverflow (https://stackoverflow.com/a/5831609)
             if (i0 == index0 && i1 == index1) {
+                // The selection indices are the same as they last were, meaning the mouse
+                // is being dragged over the same list entry as it was when this method was last called
                 if (getValueIsAdjusting()) {
+                    // Set valueIsAdjusting to false to prevent the selection from being changed if we
+                    // reach the above conditional statement again, as that would cause flickering
+                    // wheneber the mouse is dragged over the current list entry
                     setValueIsAdjusting(false);
                     setSelection(index0, index1);
                 }
             } else {
+                // The selection indices are not the same as they last were,
+                // meaning the mouse is being dragged over a new list entry
                 i0 = index0;
                 i1 = index1;
+                // Set valueIsAdjusting to false to prevent the "getValueIsAdjusting" check above from passing if
+                // the mouse is dragged over the currently pressed list entry, because that would cause the selection
+                // of the list entry to be toggled as soon as the mouse is dragged over it
                 setValueIsAdjusting(false);
                 setSelection(index0, index1);
             }
         }
 
+        /**
+         * An alternative to calling {@code super.setSelectionInterval()} that delegates to
+         * {@link #addSelectionInterval(int, int)} and {@link #removeSelectionInterval(int, int)}
+         * to allow selecting multiple list entries without needing to hold down the CTRL key.
+         *
+         * @param index0 one end of the interval
+         * @param index1 other end of the interval
+         */
         private void setSelection(int index0, int index1) {
             if (isSelectedIndex(index0)) {
                 removeSelectionInterval(index0, index1);
@@ -361,6 +404,10 @@ public class ImageSetChooser extends JDialog implements Localizable {
         }
     }
 
+    /**
+     * Custom list cell renderer that only calls the superclass's {@link DefaultListCellRenderer#getListCellRendererComponent
+     * getListCellRendererComponent} method if the value passed to the method isn't an instance of {@link ImageSetPanel}.
+     */
     static class CustomListCellRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value,
@@ -373,6 +420,9 @@ public class ImageSetChooser extends JDialog implements Localizable {
         }
     }
 
+    /**
+     * Program entry point used for quickly testing the ImageSetChooser.
+     */
     static void main() {
         EventQueue.invokeLater(() -> {
             new ImageSetChooser(new JFrame(), true).display();
