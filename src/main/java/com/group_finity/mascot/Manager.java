@@ -68,6 +68,9 @@ public class Manager {
      * Whether the program should exit when the last {@link Mascot} is removed from this {@code Manager}.
      * If, for example, it is not possible to access the tray icon menu, then the process will continue running
      * indefinitely unless we terminate the program after the last mascot is removed.
+     *
+     * @see #isExitOnLastRemoved()
+     * @see #setExitOnLastRemoved(boolean)
      */
     private boolean exitOnLastRemoved = true;
 
