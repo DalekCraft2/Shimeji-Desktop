@@ -361,15 +361,19 @@ public class Main {
      * If none of the selected image sets' configurations successfully load, the process repeats.
      */
     private void configurationLoadLoop() {
+        Runnable runnable = null;
         do {
             if (activeImageSets.isEmpty()) {
-                try {
-                    SwingUtilities.invokeAndWait(() -> {
+                if (runnable == null) {
+                    runnable = () -> {
                         activeImageSets = new ImageSetChooser(frame, true).display();
                         if (activeImageSets == null) {
                             exit();
                         }
-                    });
+                    };
+                }
+                try {
+                    SwingUtilities.invokeAndWait(runnable);
                 } catch (InterruptedException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
