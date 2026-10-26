@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -79,8 +80,10 @@ public class SettingsWindow extends JDialog implements Localizable {
         Dictionary<Integer, JLabel> labelTable = IntStream.range(0, 9).boxed().collect(Collectors.toMap(index -> index * 10, index -> new JLabel(index + "x"), (a, b) -> b, Hashtable::new));
         sldScaling.setLabelTable(labelTable);
 
-        if (!getIconImages().isEmpty()) {
-            lblIcon.setIcon(new ImageIcon(getIconImages().getFirst().getScaledInstance(lblIcon.getPreferredSize().width, lblIcon.getPreferredSize().height, Image.SCALE_SMOOTH)));
+        List<Image> iconImages = getIconImages();
+        if (!iconImages.isEmpty()) {
+            Dimension preferredSize = lblIcon.getPreferredSize();
+            lblIcon.setIcon(new ImageIcon(iconImages.getFirst().getScaledInstance(preferredSize.width, preferredSize.height, Image.SCALE_SMOOTH)));
         }
 
         // localisation

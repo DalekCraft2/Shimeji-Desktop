@@ -673,9 +673,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         // Needed to stop the guys from potentially throwing away the image set chooser window
         Main.getInstance().getManager().setEnabled(false);
 
-        ImageSetChooser chooser = new ImageSetChooser(Main.getFrame(), true);
-        chooser.setIconImage(Main.getIcon());
-        Collection<String> result = chooser.display();
+        Collection<String> result = new ImageSetChooser(Main.getFrame(), true).display();
 
         if (result != null) {
             /*
@@ -712,6 +710,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         manager.setEnabled(false);
 
         SettingsWindow dialog = new SettingsWindow(Main.getFrame(), true);
+        // Set the icon so the window can display it in the "About" tab
         dialog.setIconImage(Main.getIcon());
         dialog.init();
         // Only do the following code if the settings window wasn't canceled

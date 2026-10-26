@@ -272,6 +272,8 @@ public class Main {
                 updateLookAndFeel();
                 // Create frame before anything else happens, in case showError() gets called
                 frame = new JFrame();
+                // Setting the icon image for the root frame allows child dialog windows to inherit its icon
+                frame.setIconImage(getIcon());
             });
         } catch (InterruptedException | InvocationTargetException e) {
             // Wrap these in a RuntimeException instead of adding a throws clause to the method signature
