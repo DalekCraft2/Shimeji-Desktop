@@ -204,6 +204,7 @@ public class SettingsWindow extends JDialog implements Localizable {
     }
 
     public boolean display() {
+        selectionConfirmed = false;
         setLocationRelativeTo(null);
         setVisible(true);
 

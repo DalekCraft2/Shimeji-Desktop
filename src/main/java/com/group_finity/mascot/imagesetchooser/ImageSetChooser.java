@@ -174,6 +174,7 @@ public class ImageSetChooser extends JDialog implements Localizable {
      * @return the selected image sets, or {@code null} if the selection was canceled
      */
     public List<String> display() {
+        selectionConfirmed = false;
         setLocationRelativeTo(null);
         setVisible(true);
         if (selectionConfirmed) {
@@ -316,7 +317,6 @@ public class ImageSetChooser extends JDialog implements Localizable {
         // We can't call setSelectionInterval because overriding it with CustomListSelectionModel causes it to
         // not behave as intended when called manually, so we need to call addSelectionInterval instead
         lstImageSets.addSelectionInterval(0, lstImageSets.getModel().getSize() - 1);
-        // lstImageSets.setSelectionInterval(0, lstImageSets.getModel().getSize() - 1);
     }//GEN-LAST:event_selectAllButtonActionPerformed
 
     private void useSelectedButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_useSelectedButtonActionPerformed
