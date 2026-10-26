@@ -339,19 +339,8 @@ public class Main {
         } else
             NativeFactory.getInstance().getEnvironment().init();
 
-        // Create mascots
-        for (String imageSet : activeImageSets) {
-            if (configurations.get(imageSet).getSplashImagePath() != null &&
-                    (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
-                SwingUtilities.invokeLater(() -> {
-                    InformationWindow info = new InformationWindow();
-                    info.init(imageSet, configurations.get(imageSet));
-                    info.display();
-                });
-                setMascotInformationDismissed(imageSet);
-            }
-            createMascot(imageSet);
-        }
+        // Create a mascot for each active image set
+        mascotCreateLoop();
 
         manager.start();
     }
@@ -595,6 +584,25 @@ public class Main {
     }
 
     /**
+     * Creates one mascot for each active image set, and displays the respective image set's information window
+     * if it has one and the window has not previously been dismissed by the user.
+     */
+    private void mascotCreateLoop() {
+        for (String imageSet : activeImageSets) {
+            if (configurations.get(imageSet).getSplashImagePath() != null &&
+                    (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
+                SwingUtilities.invokeLater(() -> {
+                    InformationWindow info = new InformationWindow();
+                    info.init(imageSet, configurations.get(imageSet));
+                    info.display();
+                });
+                setMascotInformationDismissed(imageSet);
+            }
+            createMascot(imageSet);
+        }
+    }
+
+    /**
      * Creates a {@link Mascot} with a randomly selected image set.
      */
     public void createMascot() {
@@ -713,10 +721,8 @@ public class Main {
         // Load mascot configurations
         configurationLoadLoop();
 
-        // Create mascots
-        for (String imageSet : activeImageSets) {
-            createMascot(imageSet);
-        }
+        // Create a mascot for each active image set
+        mascotCreateLoop();
 
         manager.setExitOnLastRemoved(isExit);
     }
@@ -773,6 +779,9 @@ public class Main {
         if (activeImageSets.isEmpty()) {
             // All configurations failed to load, so prompt the user to select image sets again
             configurationLoadLoop();
+
+            // Create a mascot for each active image set
+            mascotCreateLoop();
         }
 
         manager.setExitOnLastRemoved(isExit);
