@@ -298,7 +298,7 @@ class X11Environment extends AbstractEnvironment {
              /*
             NOTE: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
             not focused, this method has to return WindowStatus.IGNORED for most windows other than the currently focused one.
-            This is because window.getDesktop() will return null in that case, so badDesktop will equal true later,
+            This is because window.getDesktop() will return null in that case, so goodDesktop will equal false later,
             causing the bulk of this method to be skipped.
 
             I don't think I can do anything about that. Sorry!
