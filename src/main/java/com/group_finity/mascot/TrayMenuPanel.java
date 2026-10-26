@@ -670,8 +670,10 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     private void btnChooseShimejiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseShimejiActionPerformed
         if (useSystemTray)
             ((Window) getTopLevelAncestor()).dispose();
+        Manager manager = Main.getInstance().getManager();
+
         // Needed to stop the guys from potentially throwing away the image set chooser window
-        Main.getInstance().getManager().setEnabled(false);
+        manager.setEnabled(false);
 
         Collection<String> result = new ImageSetChooser(Main.getFrame(), true).display();
 
@@ -698,7 +700,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
             worker.execute();
         }
 
-        Main.getInstance().getManager().setEnabled(true);
+        manager.setEnabled(true);
     }//GEN-LAST:event_btnChooseShimejiActionPerformed
 
     private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed
