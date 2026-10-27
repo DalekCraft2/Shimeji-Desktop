@@ -758,28 +758,33 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
             /* FIXME: It's possible to have multiple of this SwingWorker procedure running at once by opening a
                 settings window and changing a setting very shortly after a settings window was already closed,
                 in which case an exception is all but guaranteed to happen somewhere due to concurrent reads and writes
-                from/to the active image set data in Main. It can also happen with the ImageSetChooser SwingWorker. */
+                from/to the active image set data in Main. It can also happen with the ImageSetChooser SwingWorker.
+                I could solve this by creating a "Loading" dialog that blocks input until the procedure has finished
+                running. */
             SwingWorker<Void, Void> worker = new SwingWorker<>() {
                 @Override
                 protected Void doInBackground() {
-                    if (environmentReloadRequired && !windowedMode) {
-                        /*
-                         * If not in windowed mode, initialize the environment on the worker thread
-                         * because it's not necessary to do it on the EDT
-                         */
-                        NativeFactory.resetInstance();
-                        NativeFactory.getInstance().getEnvironment().init();
-                    }
-                    // TODO: Allow images to be reloaded without needing to reload all mascots as well (unless the scaling has changed)
-                    if (environmentReloadRequired || imageReloadRequired) {
-                        // Reload the image sets if the scaling/opacity settings were changed
-                        // or if the environment was reloaded
-                        Main.getInstance().reloadAllImageSets();
-                    }
-                    // Only refresh interactive window cache if the environment wasn't reloaded,
-                    // because reloading the environment already refreshes the cache
-                    if (interactiveWindowReloadRequired && !environmentReloadRequired) {
+                    if (environmentReloadRequired) {
+                        if (!windowedMode) {
+                            /*
+                             * If not in windowed mode, initialize the environment on the worker thread
+                             * because it's not necessary to do it on the EDT
+                             */
+                            NativeFactory.resetInstance();
+                            NativeFactory.getInstance().getEnvironment().init();
+                        }
+                    } else if (interactiveWindowReloadRequired) {
+                        // Only refresh interactive window cache if the environment wasn't reloaded,
+                        // because reloading the environment already refreshes the cache
                         NativeFactory.getInstance().getEnvironment().refreshCache();
+                    }
+
+                    if (imageReloadRequired) {
+                        // Reload the image sets if the scaling, filter, or opacity settings were changed
+                        Main.getInstance().reloadAllImageSets();
+                    } else if (environmentReloadRequired) {
+                        // Create a mascot for each active image set
+                        Main.getInstance().createActiveImageSetMascots();
                     }
 
                     // Reset this to what its value was before
