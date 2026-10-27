@@ -31,25 +31,50 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
+ * Dialog used for changing the program's settings.
+ *
  * @author Kilkakon
  */
 public class SettingsWindow extends JDialog implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(SettingsWindow.class);
 
-    private final ArrayList<String> interactiveWindows = new ArrayList<>();
-    private final ArrayList<String> interactiveWindowsBlacklist = new ArrayList<>();
+    // General settings
+    /** @see Settings#showTrayIcon */
     private boolean showTrayIcon = true;
+    /** @see Settings#alwaysShowInformationScreen */
     private boolean alwaysShowShimejiChooser = false;
+    /** @see Settings#alwaysShowInformationScreen */
     private boolean alwaysShowInformationScreen = false;
+    /** @see Settings#drawShimejiBounds */
     private boolean drawShimejiBounds = false;
+    /** @see Settings#filter */
     private Filter filter = Filter.NEAREST_NEIGHBOUR;
+    /** @see Settings#scaling */
     private double scaling = 1.0;
+    /** @see Settings#opacity */
     private double opacity = 1.0;
+
+    // Interactive window settings
+    /** @see Settings#interactiveWindows */
+    private final ArrayList<String> interactiveWindows = new ArrayList<>();
+    /** @see Settings#interactiveWindowsBlacklist */
+    private final ArrayList<String> interactiveWindowsBlacklist = new ArrayList<>();
+
+    // Window mode settings
+    /** @see Settings#windowedMode */
     private boolean windowedMode = false;
+    /** @see Settings#windowSize */
     private Dimension windowSize = new Dimension(600, 500);
+    /** @see Settings#backgroundColor */
     private Color backgroundColor = new Color(0, 255, 0);
+    /** @see Settings#backgroundMode */
     private VirtualContentPanel.ResizeMode backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
+    /** @see Settings#backgroundImage */
     private Path backgroundImage = null;
+    /**
+     * Array containing the constants of the {@link VirtualContentPanel.ResizeMode} enum, to avoid calling the
+     * {@link VirtualContentPanel.ResizeMode#values()} method multiple times.
+     */
     private final VirtualContentPanel.ResizeMode[] backgroundModes = VirtualContentPanel.ResizeMode.values();
 
     /**
@@ -57,9 +82,33 @@ public class SettingsWindow extends JDialog implements Localizable {
      */
     private boolean selectionConfirmed = false;
 
+    /**
+     * Whether any settings that were changed require the environment to be reloaded for the changes to take effect.
+     *
+     * @see #isEnvironmentReloadRequired()
+     */
     private boolean environmentReloadRequired = false;
+
+    /**
+     * Whether any settings that were changed require the mascots' images to be reloaded for the changes to take effect.
+     *
+     * @see #isImageReloadRequired()
+     */
     private boolean imageReloadRequired = false;
+
+    /**
+     * Whether any settings that were changed require the environment's cached interactive window data to be cleared
+     * for the changes to take effect.
+     *
+     * @see #isInteractiveWindowReloadRequired()
+     */
     private boolean interactiveWindowReloadRequired = false;
+
+    /**
+     * Whether any settings that were changed require the tray menu to be reloaded for the changes to take effect.
+     *
+     * @see #isTrayMenuReloadRequired()
+     */
     private boolean trayMenuReloadRequired = false;
 
     /**
@@ -75,6 +124,11 @@ public class SettingsWindow extends JDialog implements Localizable {
         initComponents();
     }
 
+    /**
+     * Performs the initial localization and initializes the values of the settings.
+     * This is separated from the constructor so {@link #setIconImage(Image)} can be called before this calls
+     * {@link #getIconImages()} to initialize the icon image of the program on the "About" tab.
+     */
     public void init() {
         // initialise controls
         Dictionary<Integer, JLabel> labelTable = IntStream.range(0, 9).boxed().collect(Collectors.toMap(index -> index * 10, index -> new JLabel(index + "x"), (a, b) -> b, Hashtable::new));
@@ -203,6 +257,12 @@ public class SettingsWindow extends JDialog implements Localizable {
         btnCancel.setText(languageBundle.getString("Cancel"));
     }
 
+    /**
+     * Displays this SettingsWindow to the user.
+     * This method will not return until the window has been hidden.
+     *
+     * @return {@code true} if the selection was confirmed; {@code false} if it was canceled
+     */
     public boolean display() {
         selectionConfirmed = false;
         setLocationRelativeTo(null);
@@ -211,6 +271,12 @@ public class SettingsWindow extends JDialog implements Localizable {
         return selectionConfirmed;
     }
 
+    /**
+     * Attempts to open the specified URL in the default browser.
+     * If the operation fails, an error is logged.
+     *
+     * @param url the URL to open
+     */
     private void browseToUrl(String url) {
         try {
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -230,18 +296,46 @@ public class SettingsWindow extends JDialog implements Localizable {
         }
     }
 
+    /**
+     * Gets whether any settings that were changed require the environment to be reloaded for the changes
+     * to take effect.
+     *
+     * @return {@code true} if the environment needs to be reloaded for changes to take effect;
+     * {@code false} otherwise
+     */
     public boolean isEnvironmentReloadRequired() {
         return environmentReloadRequired;
     }
 
+    /**
+     * Gets whether any settings that were changed require the mascots' images to be reloaded for the changes
+     * to take effect.
+     *
+     * @return {@code true} if the mascots' images needs to be reloaded for changes to take effect;
+     * {@code false} otherwise
+     */
     public boolean isImageReloadRequired() {
         return imageReloadRequired;
     }
 
+    /**
+     * Gets whether any settings that were changed require the environment's cached interactive window data to be
+     * cleared for the changes to take effect.
+     *
+     * @return {@code true} if the environment's cached interactive window data needs to be cleared for changes
+     * to take effect; {@code false} otherwise
+     */
     public boolean isInteractiveWindowReloadRequired() {
         return interactiveWindowReloadRequired;
     }
 
+    /**
+     * Gets whether any settings that were changed require the tray menu to be reloaded for the changes
+     * to take effect.
+     *
+     * @return {@code true} if the tray menu needs to be reloaded for changes to take effect;
+     * {@code false} otherwise
+     */
     public boolean isTrayMenuReloadRequired() {
         return trayMenuReloadRequired;
     }
@@ -1062,6 +1156,16 @@ public class SettingsWindow extends JDialog implements Localizable {
         alwaysShowInformationScreen = evt.getStateChange() == ItemEvent.SELECTED;
     }//GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
 
+    /**
+     * Displays a color chooser dialog and applies information about the selected color to the
+     * specified text field and panel.
+     *
+     * @param color the initial color set when the color chooser is shown
+     * @param field the text field to update with the selected color's hex code
+     * @param preview the panel whose background will be updated to preview the selected color
+     * @param title the resource bundle key of the title of the color chooser window
+     * @return the selected color, or the initial color if the dialog was canceled
+     */
     private Color chooseColor(Color color, JFormattedTextField field, JPanel preview, String title) {
         Color newColor = JColorChooser.showDialog(this, Main.getInstance().getLanguageBundle().getString(title), color);
 
@@ -1074,6 +1178,15 @@ public class SettingsWindow extends JDialog implements Localizable {
         return color;
     }
 
+    /**
+     * Updates the preview for the background image in the "Window Mode" tab, using the
+     * currently selected values for the {@linkplain #backgroundImage path to the background image}
+     * and the {@linkplain #backgroundMode resize mode}.
+     * If the currently selected background image path is {@code null}, the currently displaying image is
+     * removed from the background image preview.
+     *
+     * @throws IOException if the image file at the selected background image path cannot be read
+     */
     private void refreshBackgroundImage() throws IOException {
         if (backgroundImage == null) {
             lblBackgroundImage.setIcon(null);
