@@ -740,7 +740,21 @@ public class Main {
      * @see #getActiveImageSets()
      */
     void setActiveImageSets(Collection<String> newImageSets) {
-        if (newImageSets == null) {
+        if (newImageSets == null || activeImageSets.equals(newImageSets)) {
+            return;
+        }
+
+        if (activeImageSets.isEmpty()) {
+            boolean isExit = manager.isExitOnLastRemoved();
+            manager.setExitOnLastRemoved(false);
+
+            activeImageSets.addAll(newImageSets);
+            // Load mascot configurations
+            loadSelectedConfigurations();
+            // Create a mascot for each active image set
+            createActiveImageSetMascots();
+
+            manager.setExitOnLastRemoved(isExit);
             return;
         }
 
