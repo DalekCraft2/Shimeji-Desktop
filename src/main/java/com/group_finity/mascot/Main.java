@@ -320,7 +320,7 @@ public class Main {
         }
 
         // Load mascot configurations
-        configurationLoadLoop();
+        loadSelectedConfigurations();
 
         // Create the tray icon
         SwingUtilities.invokeLater(trayMenu::createTrayIcon);
@@ -340,7 +340,7 @@ public class Main {
             NativeFactory.getInstance().getEnvironment().init();
 
         // Create a mascot for each active image set
-        mascotCreateLoop();
+        createActiveImageSetMascots();
 
         manager.start();
     }
@@ -349,7 +349,7 @@ public class Main {
      * Shows the image set chooser if there are no image sets selected, and then loads the selected image sets.
      * If none of the selected image sets' configurations successfully load, the process repeats.
      */
-    private void configurationLoadLoop() {
+    private void loadSelectedConfigurations() {
         Runnable runnable = null;
         do {
             if (activeImageSets.isEmpty()) {
@@ -587,7 +587,7 @@ public class Main {
      * Creates one mascot for each active image set, and displays the respective image set's information window
      * if it has one and the window has not previously been dismissed by the user.
      */
-    private void mascotCreateLoop() {
+    private void createActiveImageSetMascots() {
         for (String imageSet : activeImageSets) {
             if (configurations.get(imageSet).getSplashImagePath() != null &&
                     (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
@@ -719,10 +719,10 @@ public class Main {
         configurations.clear();
 
         // Load mascot configurations
-        configurationLoadLoop();
+        loadSelectedConfigurations();
 
         // Create a mascot for each active image set
-        mascotCreateLoop();
+        createActiveImageSetMascots();
 
         manager.setExitOnLastRemoved(isExit);
     }
@@ -747,11 +747,14 @@ public class Main {
         toRemove.removeAll(newImageSets);
 
         Collection<String> toAdd = new ArrayList<>();
+        // Collection of image sets to keep loaded when calling removeActiveImageSet
         Collection<String> toRetain = new ArrayList<>();
         for (String imageSet : newImageSets) {
+            // We only want to call addActiveImageSet on the image set if it isn't already active
             if (!activeImageSets.contains(imageSet)) {
                 toAdd.add(imageSet);
             }
+            // Keep this image set and all of its dependencies loaded if it is active
             if (!toRetain.contains(imageSet)) {
                 toRetain.add(imageSet);
             }
@@ -763,13 +766,13 @@ public class Main {
 
         if (!toRemove.isEmpty()) {
             for (String r : toRemove) {
-                removeLoadedImageSet(r, toRetain);
+                removeActiveImageSet(r, toRetain);
             }
         }
 
         if (!toAdd.isEmpty()) {
             for (String a : toAdd) {
-                addImageSet(a);
+                addActiveImageSet(a);
             }
         }
 
@@ -778,10 +781,10 @@ public class Main {
 
         if (activeImageSets.isEmpty()) {
             // All configurations failed to load, so prompt the user to select image sets again
-            configurationLoadLoop();
+            loadSelectedConfigurations();
 
             // Create a mascot for each active image set
-            mascotCreateLoop();
+            createActiveImageSetMascots();
         }
 
         manager.setExitOnLastRemoved(isExit);
@@ -805,15 +808,18 @@ public class Main {
     }
 
     /**
-     * Unloads the specified image set and disposes of any mascots of that image set, unless it is a dependency of
-     * an image set that has been selected in the image set chooser.
-     * If the specified image set depends on any image sets that have not been selected in the image set chooser,
-     * those image sets will also be unloaded and their mascots will be disposed.
+     * Removes the specified image set from the list of active image sets. If the image set is not present in the
+     * specified collection of image sets to ignore, then it is unloaded and any mascots of that image set are disposed.
      *
      * @param imageSet the image set to remove
-     * @param setsToIgnore a collection of image sets that should not be removed
+     * @param setsToIgnore a collection of image sets that should not be unloaded. This should be populated with image
+     * sets that have been selected in the image set chooser, along with all of their dependencies. If the specified
+     * image set depends on an image set that is not in this collection (i.e., an image set that has not been selected
+     * in the image set chooser and is not a dependency of another active image set), that dependency will also be
+     * unloaded and its mascots will be disposed.
+     * @see #setActiveImageSets(Collection)
      */
-    private void removeLoadedImageSet(String imageSet, Collection<String> setsToIgnore) {
+    private void removeActiveImageSet(String imageSet, Collection<String> setsToIgnore) {
         // Remove the image set from the active image set list regardless of whether it's in setsToIgnore, because
         // an image set can be loaded without being active if that image set is a dependency of another image set
         activeImageSets.remove(imageSet);
@@ -827,21 +833,22 @@ public class Main {
 
             if (!dependencies.isEmpty()) {
                 for (String dependency : dependencies) {
-                    removeLoadedImageSet(dependency, setsToIgnore);
+                    removeActiveImageSet(dependency, setsToIgnore);
                 }
             }
         }
     }
 
     /**
-     * Loads the specified image set's configuration if it is not yet loaded, adds it to the list of loaded image sets,
-     * and creates a mascot of the image set.
+     * Loads the specified image set's configuration if it is not yet loaded. If the configuration is loaded
+     * successfully, the image set is added to the list of active image sets and a mascot of the image set is created.
      * If the specified image set's configuration is not yet loaded and its information has not been seen,
      * its information window will be shown after the configuration has loaded.
      *
      * @param imageSet the image set to add
+     * @see #setActiveImageSets(Collection)
      */
-    private void addImageSet(String imageSet) {
+    private void addActiveImageSet(String imageSet) {
         if (configurations.containsKey(imageSet)) {
             activeImageSets.add(imageSet);
             createMascot(imageSet);
