@@ -814,9 +814,11 @@ public class Main {
      * @param setsToIgnore a collection of image sets that should not be removed
      */
     private void removeLoadedImageSet(String imageSet, Collection<String> setsToIgnore) {
+        // Remove the image set from the active image set list regardless of whether it's in setsToIgnore, because
+        // an image set can be loaded without being active if that image set is a dependency of another image set
+        activeImageSets.remove(imageSet);
         if (!setsToIgnore.contains(imageSet)) {
             setsToIgnore.add(imageSet);
-            activeImageSets.remove(imageSet);
             manager.remainNone(imageSet);
             Collection<String> dependencies = configurations.get(imageSet).getDependencies();
             configurations.remove(imageSet);
