@@ -125,7 +125,7 @@ public class Main {
      * @see #getActiveImageSets()
      * @see #setActiveImageSets(Collection)
      */
-    private List<String> activeImageSets = new ArrayList<>();
+    private final List<String> activeImageSets = new ArrayList<>();
 
     /**
      * Maps an image set to its corresponding configuration.
@@ -312,11 +312,12 @@ public class Main {
         loadLanguage(settings.language);
 
         // Get the image sets to use
-        if (!settings.alwaysShowShimejiChooser) {
-            for (String imageSet : settings.activeImageSets)
+        if (!settings.alwaysShowShimejiChooser && !settings.activeImageSets.isEmpty()) {
+            for (String imageSet : settings.activeImageSets) {
                 if (!imageSet.trim().isEmpty()) {
                     activeImageSets.add(imageSet.trim());
                 }
+            }
         }
 
         // Load mascot configurations
@@ -355,9 +356,11 @@ public class Main {
             if (activeImageSets.isEmpty()) {
                 if (runnable == null) {
                     runnable = () -> {
-                        activeImageSets = new ImageSetChooser(frame, true).display();
-                        if (activeImageSets == null) {
+                        List<String> selectedImageSets = new ImageSetChooser(frame, true).display();
+                        if (selectedImageSets == null) {
                             exit();
+                        } else {
+                            activeImageSets.addAll(selectedImageSets);
                         }
                     };
                 }
