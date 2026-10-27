@@ -590,7 +590,7 @@ public class Main {
      * Creates one mascot for each active image set, and displays the respective image set's information window
      * if it has one and the window has not previously been dismissed by the user.
      */
-    private void createActiveImageSetMascots() {
+    void createActiveImageSetMascots() {
         for (String imageSet : activeImageSets) {
             if (configurations.get(imageSet).getSplashImagePath() != null &&
                     (settings.alwaysShowInformationScreen || !settings.informationDismissed.contains(imageSet))) {
