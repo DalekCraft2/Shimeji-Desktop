@@ -443,7 +443,7 @@ public class Settings {
         properties.setProperty("AlwaysShowInformationScreen", String.valueOf(alwaysShowInformationScreen));
         properties.setProperty("DrawShimejiBounds", String.valueOf(drawShimejiBounds));
         /*
-        BUG: Using switch statements in this method seem to sometimes cause NoClassDefFoundError (likely related to the
+        BUG: Using switch statements in this method seems to sometimes cause NoClassDefFoundError (likely related to the
         fact that this method is only called when the program is shutting down), so we have to use if statements instead.
         https://stackoverflow.com/questions/24473247/java-enum-noclassdeffounderror
          */
