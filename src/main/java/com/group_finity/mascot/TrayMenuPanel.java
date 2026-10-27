@@ -755,6 +755,10 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
              * We're on the Event Dispatch Thread here,
              * so do this on a separate thread to avoid making the UI unresponsive.
              */
+            /* FIXME: It's possible to have multiple of this SwingWorker procedure running at once by opening a
+                settings window and changing a setting very shortly after a settings window was already closed,
+                in which case an exception is all but guaranteed to happen somewhere due to concurrent reads and writes
+                from/to the active image set data in Main. It can also happen with the ImageSetChooser SwingWorker. */
             SwingWorker<Void, Void> worker = new SwingWorker<>() {
                 @Override
                 protected Void doInBackground() {
