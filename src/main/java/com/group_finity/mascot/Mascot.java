@@ -598,7 +598,7 @@ public class Mascot {
 
         final Component windowComponent = window.asComponent();
 
-        // TODO: Get the popup to close when clicking outside of it
+        // TODO: Get the popup to close when clicking outside of it (specifically on Windows; this already works on Linux)
         windowComponent.requestFocus();
 
         // Lightweight popups expect the mascot window to draw them if they fall inside the mascot window's boundary.
