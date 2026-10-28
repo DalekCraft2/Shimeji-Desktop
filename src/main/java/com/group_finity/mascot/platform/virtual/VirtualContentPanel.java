@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
+import java.util.Objects;
 
 /**
  * The content pane for the virtual environment window, which supports displaying a background image
@@ -148,6 +149,8 @@ public class VirtualContentPanel extends JPanel {
                 resizedImage.flush();
             }
 
+            Image prevImage = resizedImage;
+
             switch (resizeMode) {
                 case CENTRE -> resizedImage = backgroundImage;
                 case FILL, FIT -> {
@@ -178,6 +181,10 @@ public class VirtualContentPanel extends JPanel {
 
                     resizedImage = backgroundImage.getScaledInstance(panelWidth, panelHeight, Image.SCALE_SMOOTH);
                 }
+            }
+
+            if (!Objects.equals(prevImage, resizedImage)) {
+                repaint();
             }
         }
     }
