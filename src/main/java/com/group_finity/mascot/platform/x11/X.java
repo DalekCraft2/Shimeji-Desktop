@@ -1547,14 +1547,12 @@ public class X {
                 if (X11.Window.SIZE == 8) {
                     long[] windows = children.getLongArray(0, childCount);
                     for (int x = 0; x < retVal.length; x++) {
-                        X11.Window win = new X11.Window(windows[x]);
-                        retVal[x] = new Window(display, win);
+                        retVal[x] = new Window(display, new X11.Window(windows[x]));
                     }
                 } else {
                     int[] windows = children.getIntArray(0, childCount);
                     for (int x = 0; x < retVal.length; x++) {
-                        X11.Window win = new X11.Window(windows[x]);
-                        retVal[x] = new Window(display, win);
+                        retVal[x] = new Window(display, new X11.Window(windows[x]));
                     }
                 }
 
