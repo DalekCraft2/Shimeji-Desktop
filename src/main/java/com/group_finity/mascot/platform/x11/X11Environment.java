@@ -212,14 +212,6 @@ class X11Environment extends AbstractEnvironment {
                 workAreaRects.put(id, bounds);
             } else {
                 Insets insets = toolkit.getScreenInsets(gc);
-                System.out.println("Toolkit insets: " + insets);
-                try {
-                    Insets insets2 = display.getInsets(display.getRootWindow());
-                    System.out.println("X11 insets: " + insets2);
-                } catch (X11Exception e) {
-                    // throw new RuntimeException(e);
-                    System.err.println("Failed to get X11 insets");
-                }
 
                 Rectangle workAreaRect;
                 if (insets.left == 0 && insets.top == 0 && insets.right == 0 && insets.bottom == 0) {
