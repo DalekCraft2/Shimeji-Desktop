@@ -16,19 +16,30 @@ import java.awt.event.HierarchyEvent;
  */
 public class VirtualContentPanel extends JPanel {
     /**
-     * An optional image to display in the background of this content pane.
+     * The unscaled instance of this content pane's background image.
+     * If {@code null}, no image will be displayed.
      *
-     * @see #resizeImage(Image)
+     * @see #updateResizedImage()
+     * @see #setBackgroundImage(Image)
+     */
+    private Image backgroundImage;
+
+    /**
+     * A copy of {@link #backgroundImage} that has been scaled according
+     * to the {@linkplain #resizeMode resize mode} and dimensions of this content pane.
+     *
+     * @see #updateResizedImage()
      */
     private Image resizedImage;
 
     /**
      * The type of behavior to use when scaling this content pane's background image,
-     * if {@link #resizedImage} is not {@code null}.
+     * if {@link #backgroundImage} is not {@code null}.
      *
-     * @see #resizeImage(Image)
+     * @see #updateResizedImage()
+     * @see #setResizeMode(ResizeMode)
      */
-    private final ResizeMode mode;
+    private ResizeMode resizeMode;
 
     /**
      * Enumeration of the type of behavior to use when scaling the content panel's background image.
@@ -60,23 +71,23 @@ public class VirtualContentPanel extends JPanel {
      *
      * @param preferredSize the initial dimensions of this content pane
      * @param background the background color of this content pane
-     * @param image an optional image to display in the background of this content pane
-     * @param mode the type of behavior to use when scaling this content pane's background image,
-     * if {@code image} is not {@code null}
+     * @param backgroundImage an optional image to display in the background of this content pane
+     * @param resizeMode the type of behavior to use when scaling this content pane's background image,
+     * if {@code backgroundImage} is not {@code null}
      */
-    VirtualContentPanel(Dimension preferredSize, Color background, final Image image, final ResizeMode mode) {
+    VirtualContentPanel(Dimension preferredSize, Color background, final Image backgroundImage, final ResizeMode resizeMode) {
         setLayout(null);
         setPreferredSize(preferredSize);
         setBackground(background);
-        resizedImage = image;
-        this.mode = mode;
+        this.backgroundImage = backgroundImage;
+        this.resizeMode = resizeMode;
 
         /* Add a listener to resize the image as soon as the window is made visible,
         because resizing it in the constructor without using a listener would
         have no effect due to getWidth() and getHeight() returning 0 at that point. */
         addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
-                resizeImage(image);
+                updateResizedImage();
             }
         });
 
@@ -84,7 +95,7 @@ public class VirtualContentPanel extends JPanel {
         addComponentListener(new ComponentListener() {
             @Override
             public void componentResized(ComponentEvent e) {
-                resizeImage(image);
+                updateResizedImage();
             }
 
             @Override
@@ -102,28 +113,71 @@ public class VirtualContentPanel extends JPanel {
     }
 
     /**
-     * Updates {@link #resizedImage} by setting it to a scaled instance of the specified image.
-     * Scaling is done based on the {@linkplain #mode resize mode} and dimensions of this content pane.
+     * Sets the image to display in the background of this content pane.
      *
-     * @param image the image from which to create a scaled instance
+     * @param backgroundImage the background image to display, or {@code null} to display no image
      */
-    private void resizeImage(Image image) {
-        if (image != null) {
-            switch (mode) {
-                case CENTRE -> {
-                }
+    void setBackgroundImage(Image backgroundImage) {
+        if (this.backgroundImage != null) {
+            this.backgroundImage.flush();
+        }
+        if (resizedImage != null && resizedImage != this.backgroundImage) {
+            resizedImage.flush();
+            resizedImage = null;
+        }
+        this.backgroundImage = backgroundImage;
+    }
+
+    /**
+     * Sets the type of behavior to use when scaling this content pane's background image,
+     * if the background image is not {@code null}.
+     *
+     * @param resizeMode the scaling behavior to use
+     */
+    void setResizeMode(ResizeMode resizeMode) {
+        this.resizeMode = resizeMode;
+    }
+
+    /**
+     * Updates {@link #resizedImage} by setting it to a scaled instance of this content pane's current background image.
+     * Scaling is done based on the {@linkplain #resizeMode resize mode} and dimensions of this content pane.
+     */
+    void updateResizedImage() {
+        if (backgroundImage != null) {
+            if (resizedImage != null && !resizedImage.equals(backgroundImage)) {
+                resizedImage.flush();
+            }
+
+            switch (resizeMode) {
+                case CENTRE -> resizedImage = backgroundImage;
                 case FILL, FIT -> {
-                    double widthRatio = getWidth() / (double) image.getWidth(null);
-                    double heightRatio = getHeight() / (double) image.getHeight(null);
-                    double factor = mode == ResizeMode.FIT ?
+                    int panelWidth = getWidth();
+                    int panelHeight = getHeight();
+                    if (panelWidth == 0 || panelHeight == 0) {
+                        // Can't create a scaled image instance with 0 width or height
+                        break;
+                    }
+
+                    double widthRatio = panelWidth / (double) backgroundImage.getWidth(null);
+                    double heightRatio = panelHeight / (double) backgroundImage.getHeight(null);
+                    double factor = resizeMode == ResizeMode.FIT ?
                             Math.min(widthRatio, heightRatio) :
                             Math.max(widthRatio, heightRatio);
 
-                    resizedImage = image.getScaledInstance((int) (factor * image.getWidth(null)),
-                            (int) (factor * image.getHeight(null)),
+                    resizedImage = backgroundImage.getScaledInstance((int) (factor * backgroundImage.getWidth(null)),
+                            (int) (factor * backgroundImage.getHeight(null)),
                             Image.SCALE_SMOOTH);
                 }
-                case STRETCH -> resizedImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+                case STRETCH -> {
+                    int panelWidth = getWidth();
+                    int panelHeight = getHeight();
+                    if (panelWidth == 0 || panelHeight == 0) {
+                        // Can't create a scaled image instance with 0 width or height
+                        break;
+                    }
+
+                    resizedImage = backgroundImage.getScaledInstance(panelWidth, panelHeight, Image.SCALE_SMOOTH);
+                }
             }
         }
     }
@@ -132,7 +186,7 @@ public class VirtualContentPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (resizedImage != null) {
-            switch (mode) {
+            switch (resizeMode) {
                 case CENTRE -> g.drawImage(resizedImage,
                         resizedImage.getWidth(null) > getWidth() ?
                                 (resizedImage.getWidth(null) - getWidth()) / -2 :

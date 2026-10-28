@@ -133,6 +133,23 @@ public interface Environment {
     void refreshCache();
 
     /**
+     * Updates the virtual environment's display window in response to the specified changes to the program's settings.
+     * Does nothing if this environment is not an instance of {@code VirtualEnvironment}.
+     *
+     * @param windowSizeChanged {@code true} if the {@link com.group_finity.mascot.Settings#windowSize windowSize}
+     * setting was changed
+     * @param backgroundColorChanged {@code true} if the {@link com.group_finity.mascot.Settings#backgroundColor backgroundColor}
+     * setting was changed
+     * @param backgroundImageChanged {@code true} if the {@link com.group_finity.mascot.Settings#backgroundImage backgroundImage}
+     * setting was changed
+     * @param resizeModeChanged {@code true} if the {@link com.group_finity.mascot.Settings#backgroundMode backgroundMode}
+     * setting was changed
+     */
+    default void windowedModeSettingsChanged(boolean windowSizeChanged, boolean backgroundColorChanged,
+                                             boolean backgroundImageChanged, boolean resizeModeChanged) {
+    }
+
+    /**
      * Releases any native resources held by this environment.
      */
     void dispose();

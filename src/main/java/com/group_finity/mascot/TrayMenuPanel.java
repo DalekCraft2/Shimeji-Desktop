@@ -723,6 +723,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
             boolean environmentReloadRequired = dialog.isEnvironmentReloadRequired();
             boolean imageReloadRequired = dialog.isImageReloadRequired();
             boolean interactiveWindowReloadRequired = dialog.isInteractiveWindowReloadRequired();
+            int windowedModeChangeFlags = dialog.getWindowedModeChangeFlags();
 
             TrayMenu trayMenu = Main.getInstance().getTrayMenu();
 
@@ -752,6 +753,13 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
                     NativeFactory.resetInstance();
                     NativeFactory.getInstance().getEnvironment().init();
                 }
+            } else if (windowedMode && windowedModeChangeFlags != 0) {
+                // Only call this if the environment hasn't been reloaded and we're in windowed mode
+                NativeFactory.getInstance().getEnvironment().windowedModeSettingsChanged(
+                        (windowedModeChangeFlags & SettingsWindow.WINDOWSIZE_CHANGED) != 0,
+                        (windowedModeChangeFlags & SettingsWindow.BACKGROUNDCOLOR_CHANGED) != 0,
+                        (windowedModeChangeFlags & SettingsWindow.BACKGROUNDIMAGE_CHANGED) != 0,
+                        (windowedModeChangeFlags & SettingsWindow.RESIZEMODE_CHANGED) != 0);
             }
 
             /*

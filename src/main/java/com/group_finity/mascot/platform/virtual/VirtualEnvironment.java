@@ -1,6 +1,7 @@
 package com.group_finity.mascot.platform.virtual;
 
 import com.group_finity.mascot.Main;
+import com.group_finity.mascot.Settings;
 import com.group_finity.mascot.environment.AbstractEnvironment;
 import com.group_finity.mascot.environment.Area;
 import com.group_finity.mascot.environment.ComplexArea;
@@ -130,22 +131,25 @@ class VirtualEnvironment extends AbstractEnvironment {
                 }
             });
             display.setAutoRequestFocus(false);
-            String title = Main.getInstance().getSettings().shimejiEeNameOverride;
+
+            Settings settings = Main.getInstance().getSettings();
+
+            String title = settings.shimejiEeNameOverride;
             if (title.isEmpty()) {
                 title = Main.getInstance().getLanguageBundle().getString("ShimejiEE");
             }
             display.setTitle(title);
 
             BufferedImage image = null;
-            Path backgroundImage = Main.getInstance().getSettings().backgroundImage;
+            Path backgroundImage = settings.backgroundImage;
             if (backgroundImage != null) {
                 try (InputStream input = Files.newInputStream(backgroundImage)) {
                     image = ImageUtils.toCompatibleImage(ImageIO.read(input));
                 } catch (IOException ignored) {
                 }
             }
-            display.setContentPane(new VirtualContentPanel(new Dimension(Main.getInstance().getSettings().windowSize),
-                    Main.getInstance().getSettings().backgroundColor, image, Main.getInstance().getSettings().backgroundMode));
+            display.setContentPane(new VirtualContentPanel(new Dimension(settings.windowSize),
+                    settings.backgroundColor, image, settings.backgroundMode));
             display.setBackground(display.getContentPane().getBackground());
 
             display.setIconImage(Main.getIcon());
@@ -240,6 +244,41 @@ class VirtualEnvironment extends AbstractEnvironment {
         // I feel so refreshed
 
         // good for you buddy
+    }
+
+    @Override
+    public void windowedModeSettingsChanged(boolean windowSizeChanged, boolean backgroundColorChanged,
+                                            boolean backgroundImageChanged, boolean resizeModeChanged) {
+        Settings settings = Main.getInstance().getSettings();
+        VirtualContentPanel contentPane = (VirtualContentPanel) display.getContentPane();
+
+        if (windowSizeChanged) {
+            contentPane.setPreferredSize(new Dimension(settings.windowSize));
+            display.pack();
+        }
+        if (backgroundColorChanged) {
+            contentPane.setBackground(settings.backgroundColor);
+            display.setBackground(contentPane.getBackground());
+        }
+        if (backgroundImageChanged) {
+            BufferedImage image = null;
+            Path backgroundImage = settings.backgroundImage;
+            if (backgroundImage != null) {
+                try (InputStream input = Files.newInputStream(backgroundImage)) {
+                    image = ImageUtils.toCompatibleImage(ImageIO.read(input));
+                } catch (IOException ignored) {
+                }
+            }
+            contentPane.setBackgroundImage(image);
+        }
+        if (resizeModeChanged) {
+            contentPane.setResizeMode(settings.backgroundMode);
+        }
+
+        if (!windowSizeChanged && (backgroundImageChanged || resizeModeChanged)) {
+            contentPane.updateResizedImage();
+            contentPane.repaint();
+        }
     }
 
     @Override

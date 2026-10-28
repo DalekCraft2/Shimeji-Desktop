@@ -38,6 +38,23 @@ import java.util.stream.IntStream;
 public class SettingsWindow extends JDialog implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(SettingsWindow.class);
 
+    /**
+     * A flag for {@link #getWindowedModeChangeFlags()} that indicates that the window size setting has changed.
+     */
+    public static final int WINDOWSIZE_CHANGED = 0x1;
+    /**
+     * A flag for {@link #getWindowedModeChangeFlags()} that indicates that the background color setting has changed.
+     */
+    public static final int BACKGROUNDCOLOR_CHANGED = 0x2;
+    /**
+     * A flag for {@link #getWindowedModeChangeFlags()} that indicates that the background image setting has changed.
+     */
+    public static final int BACKGROUNDIMAGE_CHANGED = 0x4;
+    /**
+     * A flag for {@link #getWindowedModeChangeFlags()} that indicates that the resize mode setting has changed.
+     */
+    public static final int RESIZEMODE_CHANGED = 0x8;
+
     // General settings
     /** @see Settings#showTrayIcon */
     private boolean showTrayIcon = true;
@@ -110,6 +127,17 @@ public class SettingsWindow extends JDialog implements Localizable {
      * @see #isTrayMenuReloadRequired()
      */
     private boolean trayMenuReloadRequired = false;
+
+    /**
+     * A bitmask that indicates which changes have been made to the settings for windowed mode, if any were made.
+     *
+     * @see #WINDOWSIZE_CHANGED
+     * @see #BACKGROUNDCOLOR_CHANGED
+     * @see #BACKGROUNDIMAGE_CHANGED
+     * @see #RESIZEMODE_CHANGED
+     * @see #getWindowedModeChangeFlags()
+     */
+    private int windowedModeChangeFlags = 0;
 
     /**
      * Creates new form SettingsWindow
@@ -338,6 +366,19 @@ public class SettingsWindow extends JDialog implements Localizable {
      */
     public boolean isTrayMenuReloadRequired() {
         return trayMenuReloadRequired;
+    }
+
+    /**
+     * Gets a bitmask that indicates which changes have been made to the settings for windowed mode, if any were made.
+     *
+     * @return the bitmask, or 0 if no changes were made to the windowed mode settings
+     * @see #WINDOWSIZE_CHANGED
+     * @see #BACKGROUNDCOLOR_CHANGED
+     * @see #BACKGROUNDIMAGE_CHANGED
+     * @see #RESIZEMODE_CHANGED
+     */
+    public int getWindowedModeChangeFlags() {
+        return windowedModeChangeFlags;
     }
 
     /**
@@ -954,15 +995,19 @@ public class SettingsWindow extends JDialog implements Localizable {
         // done button
         Settings settings = Main.getInstance().getSettings();
 
-        environmentReloadRequired = settings.windowedMode != windowedMode ||
-                windowedMode && (!settings.windowSize.equals(windowSize) ||
-                        !settings.backgroundColor.equals(backgroundColor) ||
-                        settings.backgroundMode != backgroundMode ||
-                        !Objects.equals(settings.backgroundImage, backgroundImage));
+        environmentReloadRequired = settings.windowedMode != windowedMode;
         imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
         interactiveWindowReloadRequired = !settings.interactiveWindows.equals(interactiveWindows) ||
                 !settings.interactiveWindowsBlacklist.equals(interactiveWindowsBlacklist);
         trayMenuReloadRequired = settings.showTrayIcon != showTrayIcon;
+        if (!settings.windowSize.equals(windowSize))
+            windowedModeChangeFlags |= WINDOWSIZE_CHANGED;
+        if (!settings.backgroundColor.equals(backgroundColor))
+            windowedModeChangeFlags |= BACKGROUNDCOLOR_CHANGED;
+        if (!Objects.equals(settings.backgroundImage, backgroundImage))
+            windowedModeChangeFlags |= BACKGROUNDIMAGE_CHANGED;
+        if (settings.backgroundMode != backgroundMode)
+            windowedModeChangeFlags |= RESIZEMODE_CHANGED;
 
         settings.showTrayIcon = showTrayIcon;
         settings.alwaysShowShimejiChooser = alwaysShowShimejiChooser;
