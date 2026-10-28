@@ -183,6 +183,70 @@ class X11Environment extends AbstractEnvironment {
     }
 
     @Override
+    protected void updateScreenRect() {
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gs = ge.getScreenDevices();
+
+        Rectangle unionBounds = new Rectangle();
+        Map<String, Rectangle> screenRects = new HashMap<>(gs.length);
+        Map<String, Rectangle> workAreaRects = new HashMap<>(gs.length);
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+        for (final GraphicsDevice gd : gs) {
+            GraphicsConfiguration gc = gd.getDefaultConfiguration();
+            String id = gd.getIDstring();
+
+            Rectangle bounds = gc.getBounds();
+            unionBounds = unionBounds.union(bounds);
+            screenRects.put(id, bounds);
+
+            /*
+            BUG: X11's _NET_WORKAREA atom, which is used by Toolkit.getScreenInsets() on X11, does not contain
+            reliable information about the work area bounds when there is more than one screen. And besides,
+            _NET_WORKAREA is meant to describe the work area bounds for each desktop rather than for each screen.
+            I am not sure that there is a workaround for this, so I have to resort to using the screen bounds
+            as the work area bounds whenever there is more than one screen.
+            */
+            if (gs.length > 1) {
+                workAreaRects.put(id, bounds);
+            } else {
+                Insets insets = toolkit.getScreenInsets(gc);
+                System.out.println("Toolkit insets: " + insets);
+                try {
+                    Insets insets2 = display.getInsets(display.getRootWindow());
+                    System.out.println("X11 insets: " + insets2);
+                } catch (X11Exception e) {
+                    // throw new RuntimeException(e);
+                    System.err.println("Failed to get X11 insets");
+                }
+
+                Rectangle workAreaRect;
+                if (insets.left == 0 && insets.top == 0 && insets.right == 0 && insets.bottom == 0) {
+                    // Reuse the same Rectangle instance if the insets are all 0
+                    workAreaRect = bounds;
+                } else {
+                    workAreaRect = new Rectangle(bounds);
+                    workAreaRect.x += insets.left;
+                    workAreaRect.y += insets.top;
+                    workAreaRect.width -= insets.left + insets.right;
+                    workAreaRect.height -= insets.top + insets.bottom;
+                }
+                workAreaRects.put(id, workAreaRect);
+            }
+        }
+
+        screenRectLock.writeLock().lock();
+        try {
+            screenRect = unionBounds;
+            this.screenRects = screenRects;
+            this.workAreaRects = workAreaRects;
+        } finally {
+            screenRectLock.writeLock().unlock();
+        }
+    }
+
+    @Override
     public void tick() {
         super.tick();
 

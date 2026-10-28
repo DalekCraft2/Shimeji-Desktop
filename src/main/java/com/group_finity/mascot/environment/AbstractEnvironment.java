@@ -101,7 +101,7 @@ public abstract class AbstractEnvironment implements Environment {
      * Recalculates the bounds of all active displays and the union of those bounds, and assigns the values to
      * {@link #screenRects} and {@link #screenRect} respectively.
      */
-    private void updateScreenRect() {
+    protected void updateScreenRect() {
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final GraphicsDevice[] gs = ge.getScreenDevices();
 
@@ -119,10 +119,6 @@ public abstract class AbstractEnvironment implements Environment {
             unionBounds = unionBounds.union(bounds);
             screenRects.put(id, bounds);
 
-            // BUG: On X11, the return value of the below method call does not return the correct insets when
-            // there are multiple active displays. I suspect that the implementation of getScreenInsets() on X11
-            // uses the _NET_WORKAREA atom, which doesn't return the correct work area bounds when there are
-            // multiple active displays.
             Insets insets = toolkit.getScreenInsets(gc);
 
             Rectangle workAreaRect;
