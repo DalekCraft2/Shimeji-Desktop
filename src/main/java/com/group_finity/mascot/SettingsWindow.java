@@ -40,17 +40,17 @@ public class SettingsWindow extends JDialog implements Localizable {
 
     // Mascot image change flags
     /**
-     * A flag for {@link #getMascotImageChangeFlags()} that indicates that the filter setting has changed.
-     */
-    public static final int FILTER_CHANGED = 0x1;
-    /**
      * A flag for {@link #getMascotImageChangeFlags()} that indicates that the opacity setting has changed.
      */
-    public static final int OPACITY_CHANGED = 0x2;
+    public static final int OPACITY_CHANGED = 0x1;
     /**
      * A flag for {@link #getMascotImageChangeFlags()} that indicates that the scaling setting has changed.
      */
-    public static final int SCALING_CHANGED = 0x4;
+    public static final int SCALING_CHANGED = 0x2;
+    /**
+     * A flag for {@link #getMascotImageChangeFlags()} that indicates that the filter setting has changed.
+     */
+    public static final int FILTER_CHANGED = 0x4;
 
     // Windowed mode change flags
     /**
@@ -73,18 +73,18 @@ public class SettingsWindow extends JDialog implements Localizable {
     // General settings
     /** @see Settings#showTrayIcon */
     private boolean showTrayIcon = true;
-    /** @see Settings#alwaysShowInformationScreen */
+    /** @see Settings#alwaysShowShimejiChooser */
     private boolean alwaysShowShimejiChooser = false;
     /** @see Settings#alwaysShowInformationScreen */
     private boolean alwaysShowInformationScreen = false;
     /** @see Settings#drawShimejiBounds */
     private boolean drawShimejiBounds = false;
-    /** @see Settings#filter */
-    private Filter filter = Filter.NEAREST_NEIGHBOUR;
-    /** @see Settings#scaling */
-    private double scaling = 1.0;
     /** @see Settings#opacity */
     private double opacity = 1.0;
+    /** @see Settings#scaling */
+    private double scaling = 1.0;
+    /** @see Settings#filter */
+    private Filter filter = Filter.NEAREST_NEIGHBOUR;
 
     // Interactive window settings
     /** @see Settings#interactiveWindows */
@@ -99,10 +99,10 @@ public class SettingsWindow extends JDialog implements Localizable {
     private Dimension windowSize = new Dimension(600, 500);
     /** @see Settings#backgroundColor */
     private Color backgroundColor = new Color(0, 255, 0);
-    /** @see Settings#backgroundMode */
-    private VirtualContentPanel.ResizeMode backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
     /** @see Settings#backgroundImage */
     private Path backgroundImage = null;
+    /** @see Settings#backgroundMode */
+    private VirtualContentPanel.ResizeMode backgroundMode = VirtualContentPanel.ResizeMode.CENTRE;
     /**
      * Array containing the constants of the {@link VirtualContentPanel.ResizeMode} enum, to avoid calling the
      * {@link VirtualContentPanel.ResizeMode#values()} method multiple times.
@@ -140,9 +140,9 @@ public class SettingsWindow extends JDialog implements Localizable {
      * A bitmask that indicates which changes, if any, have been made to the settings
      * for how mascot images are drawn.
      *
-     * @see #FILTER_CHANGED
      * @see #OPACITY_CHANGED
      * @see #SCALING_CHANGED
+     * @see #FILTER_CHANGED
      * @see #getMascotImageChangeFlags()
      */
     private int mascotImageChangeFlags = 0;
@@ -196,9 +196,9 @@ public class SettingsWindow extends JDialog implements Localizable {
         alwaysShowShimejiChooser = settings.alwaysShowShimejiChooser;
         alwaysShowInformationScreen = settings.alwaysShowInformationScreen;
         drawShimejiBounds = settings.drawShimejiBounds;
-        filter = settings.filter;
         opacity = settings.opacity;
         scaling = settings.scaling;
+        filter = settings.filter;
         windowedMode = settings.windowedMode;
         windowSize = new Dimension(settings.windowSize);
         backgroundColor = settings.backgroundColor;
@@ -208,6 +208,8 @@ public class SettingsWindow extends JDialog implements Localizable {
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
         chkDrawShimejiBounds.setSelected(drawShimejiBounds);
+        sldOpacity.setValue((int) (opacity * 100));
+        sldScaling.setValue((int) (scaling * 10));
         radFilterHqx.setEnabled(scaling % 2 == 0 || scaling % 3 == 0);
         if (filter == Filter.BICUBIC) {
             radFilterBicubic.setSelected(true);
@@ -216,9 +218,6 @@ public class SettingsWindow extends JDialog implements Localizable {
         } else {
             radFilterNearest.setSelected(true);
         }
-        sldOpacity.setValue((int) (opacity * 100));
-        sldScaling.setValue((int) (scaling * 10));
-
 
         if (!settings.interactiveWindows.isEmpty()) {
             for (String item : settings.interactiveWindows) {
@@ -277,8 +276,8 @@ public class SettingsWindow extends JDialog implements Localizable {
         lblScaling.setText(languageBundle.getString("Scaling"));
         lblFilter.setText(languageBundle.getString("FilterOptions"));
         radFilterNearest.setText(languageBundle.getString("NearestNeighbour"));
-        radFilterHqx.setText(languageBundle.getString("Filter"));
         radFilterBicubic.setText(languageBundle.getString("BicubicFilter"));
+        radFilterHqx.setText(languageBundle.getString("Filter"));
         pnlInteractiveTabs.setTitleAt(0, languageBundle.getString("Whitelist"));
         pnlInteractiveTabs.setTitleAt(1, languageBundle.getString("Blacklist"));
         btnAddInteractiveWindow.setText(languageBundle.getString("Add"));
@@ -381,9 +380,9 @@ public class SettingsWindow extends JDialog implements Localizable {
      * for how mascot images are drawn.
      *
      * @return the bitmask, or 0 if no changes were made to the mascot image settings
-     * @see #FILTER_CHANGED
      * @see #OPACITY_CHANGED
      * @see #SCALING_CHANGED
+     * @see #FILTER_CHANGED
      */
     public int getMascotImageChangeFlags() {
         return mascotImageChangeFlags;
@@ -1020,12 +1019,13 @@ public class SettingsWindow extends JDialog implements Localizable {
         interactiveWindowReloadRequired = !settings.interactiveWindows.equals(interactiveWindows) ||
                 !settings.interactiveWindowsBlacklist.equals(interactiveWindowsBlacklist);
         trayMenuReloadRequired = settings.showTrayIcon != showTrayIcon;
-        if (settings.filter != filter)
-            mascotImageChangeFlags |= FILTER_CHANGED;
+
         if (settings.opacity != opacity)
             mascotImageChangeFlags |= OPACITY_CHANGED;
         if (settings.scaling != scaling)
             mascotImageChangeFlags |= SCALING_CHANGED;
+        if (settings.filter != filter)
+            mascotImageChangeFlags |= FILTER_CHANGED;
 
         if (!settings.windowSize.equals(windowSize))
             windowedModeChangeFlags |= WINDOWSIZE_CHANGED;
@@ -1039,17 +1039,17 @@ public class SettingsWindow extends JDialog implements Localizable {
         settings.showTrayIcon = showTrayIcon;
         settings.alwaysShowShimejiChooser = alwaysShowShimejiChooser;
         settings.alwaysShowInformationScreen = alwaysShowInformationScreen;
+        settings.drawShimejiBounds = drawShimejiBounds;
         settings.opacity = opacity;
         settings.scaling = scaling;
         settings.filter = filter;
-        settings.drawShimejiBounds = drawShimejiBounds;
         settings.interactiveWindows = interactiveWindows;
         settings.interactiveWindowsBlacklist = interactiveWindowsBlacklist;
         settings.windowedMode = windowedMode;
         settings.windowSize = new Dimension(windowSize);
         settings.backgroundColor = backgroundColor;
-        settings.backgroundMode = backgroundMode;
         settings.backgroundImage = backgroundImage;
+        settings.backgroundMode = backgroundMode;
 
         selectionConfirmed = true;
 
@@ -1059,6 +1059,76 @@ public class SettingsWindow extends JDialog implements Localizable {
     private void btnCancelActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnWebsiteActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnWebsiteActionPerformed
+        browseToUrl("https://kilkakon.com/");
+    }//GEN-LAST:event_btnWebsiteActionPerformed
+
+    private void btnDiscordActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnDiscordActionPerformed
+        browseToUrl("https://discord.gg/NBq3zqfA2B");
+    }//GEN-LAST:event_btnDiscordActionPerformed
+
+    private void btnPatreonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnPatreonActionPerformed
+        browseToUrl("https://patreon.com/kilkakon");
+    }//GEN-LAST:event_btnPatreonActionPerformed
+
+    private void chkShowTrayIconItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkShowTrayIconItemStateChanged
+        showTrayIcon = evt.getStateChange() == ItemEvent.SELECTED;
+    }//GEN-LAST:event_chkShowTrayIconItemStateChanged
+
+    private void chkAlwaysShowShimejiChooserItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkAlwaysShowShimejiChooserItemStateChanged
+        alwaysShowShimejiChooser = evt.getStateChange() == ItemEvent.SELECTED;
+    }//GEN-LAST:event_chkAlwaysShowShimejiChooserItemStateChanged
+
+    private void chkAlwaysShowInformationScreenItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkAlwaysShowInformationScreenItemStateChanged
+        alwaysShowInformationScreen = evt.getStateChange() == ItemEvent.SELECTED;
+    }//GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
+
+    private void chkDrawShimejiBoundsItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkDrawShimejiBoundsItemStateChanged
+        drawShimejiBounds = evt.getStateChange() == ItemEvent.SELECTED;
+    }//GEN-LAST:event_chkDrawShimejiBoundsItemStateChanged
+
+    private void sldOpacityStateChanged(ChangeEvent evt) {//GEN-FIRST:event_sldOpacityStateChanged
+        if (!sldOpacity.getValueIsAdjusting()) {
+            if (sldOpacity.getValue() == 0) {
+                sldOpacity.setValue(5);
+            } else {
+                opacity = sldOpacity.getValue() / 100.0;
+            }
+        }
+    }//GEN-LAST:event_sldOpacityStateChanged
+
+    private void sldScalingStateChanged(ChangeEvent evt) {//GEN-FIRST:event_sldScalingStateChanged
+        if (!sldScaling.getValueIsAdjusting()) {
+            if (sldScaling.getValue() == 0) {
+                sldScaling.setValue(5);
+            } else {
+                scaling = sldScaling.getValue() / 10.0;
+                if (scaling % 2 == 0 || scaling % 3 == 0) {
+                    radFilterHqx.setEnabled(true);
+                } else {
+                    radFilterHqx.setEnabled(false);
+                    if (filter == Filter.HQX) {
+                        radFilterNearest.setSelected(true);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_sldScalingStateChanged
+
+    private void radFilterItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_radFilterItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            Object source = evt.getItemSelectable();
+
+            if (source == radFilterBicubic) {
+                filter = Filter.BICUBIC;
+            } else if (source == radFilterHqx) {
+                filter = Filter.HQX;
+            } else {
+                filter = Filter.NEAREST_NEIGHBOUR;
+            }
+        }
+    }//GEN-LAST:event_radFilterItemStateChanged
 
     private void btnAddInteractiveWindowActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnAddInteractiveWindowActionPerformed
         String inputValue = JOptionPane.showInputDialog(rootPane, Main.getInstance().getLanguageBundle().getString("InteractiveWindowHintMessage"), Main.getInstance().getLanguageBundle().getString(pnlInteractiveTabs.getSelectedIndex() == 0 ? "AddInteractiveWindow" : "BlacklistInteractiveWindow"), JOptionPane.QUESTION_MESSAGE);
@@ -1088,79 +1158,24 @@ public class SettingsWindow extends JDialog implements Localizable {
         }
     }//GEN-LAST:event_btnRemoveInteractiveWindowActionPerformed
 
-    private void chkShowTrayIconItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkShowTrayIconItemStateChanged
-        showTrayIcon = evt.getStateChange() == ItemEvent.SELECTED;
-    }//GEN-LAST:event_chkShowTrayIconItemStateChanged
-
-    private void chkAlwaysShowShimejiChooserItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkAlwaysShowShimejiChooserItemStateChanged
-        alwaysShowShimejiChooser = evt.getStateChange() == ItemEvent.SELECTED;
-    }//GEN-LAST:event_chkAlwaysShowShimejiChooserItemStateChanged
-
-    private void chkDrawShimejiBoundsItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkDrawShimejiBoundsItemStateChanged
-        drawShimejiBounds = evt.getStateChange() == ItemEvent.SELECTED;
-    }//GEN-LAST:event_chkDrawShimejiBoundsItemStateChanged
-
-    private void radFilterItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_radFilterItemStateChanged
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            Object source = evt.getItemSelectable();
-
-            if (source == radFilterNearest) {
-                filter = Filter.NEAREST_NEIGHBOUR;
-            } else if (source == radFilterHqx) {
-                filter = Filter.HQX;
-            } else {
-                filter = Filter.BICUBIC;
-            }
-        }
-    }//GEN-LAST:event_radFilterItemStateChanged
-
-    private void sldScalingStateChanged(ChangeEvent evt) {//GEN-FIRST:event_sldScalingStateChanged
-        if (!sldScaling.getValueIsAdjusting()) {
-            if (sldScaling.getValue() == 0) {
-                sldScaling.setValue(5);
-            } else {
-                scaling = sldScaling.getValue() / 10.0;
-                if (scaling % 2 == 0 || scaling % 3 == 0) {
-                    radFilterHqx.setEnabled(true);
-                } else {
-                    radFilterHqx.setEnabled(false);
-                    if (filter == Filter.HQX) {
-                        radFilterNearest.setSelected(true);
-                    }
-                }
-            }
-        }
-    }//GEN-LAST:event_sldScalingStateChanged
-
-    private void btnWebsiteActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnWebsiteActionPerformed
-        browseToUrl("https://kilkakon.com/");
-    }//GEN-LAST:event_btnWebsiteActionPerformed
-
-    private void btnDiscordActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnDiscordActionPerformed
-        browseToUrl("https://discord.gg/NBq3zqfA2B");
-    }//GEN-LAST:event_btnDiscordActionPerformed
-
-    private void btnPatreonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnPatreonActionPerformed
-        browseToUrl("https://patreon.com/kilkakon");
-    }//GEN-LAST:event_btnPatreonActionPerformed
-
-    private void sldOpacityStateChanged(ChangeEvent evt) {//GEN-FIRST:event_sldOpacityStateChanged
-        if (!sldOpacity.getValueIsAdjusting()) {
-            if (sldOpacity.getValue() == 0) {
-                sldOpacity.setValue(5);
-            } else {
-                opacity = sldOpacity.getValue() / 100.0;
-            }
-        }
-    }//GEN-LAST:event_sldOpacityStateChanged
-
-    private void spnWindowHeightStateChanged(ChangeEvent evt) {//GEN-FIRST:event_spnWindowHeightStateChanged
-        windowSize.height = ((SpinnerNumberModel) spnWindowHeight.getModel()).getNumber().intValue();
-    }//GEN-LAST:event_spnWindowHeightStateChanged
+    private void chkWindowModeEnabledItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkWindowModeEnabledItemStateChanged
+        windowedMode = evt.getStateChange() == ItemEvent.SELECTED;
+        spnWindowWidth.setEnabled(windowedMode);
+        spnWindowHeight.setEnabled(windowedMode);
+        txtBackgroundColor.setEnabled(windowedMode);
+        btnBackgroundColorChange.setEnabled(windowedMode);
+        btnBackgroundImageChange.setEnabled(windowedMode);
+        cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
+        btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
+    }//GEN-LAST:event_chkWindowModeEnabledItemStateChanged
 
     private void spnWindowWidthStateChanged(ChangeEvent evt) {//GEN-FIRST:event_spnWindowWidthStateChanged
         windowSize.width = ((SpinnerNumberModel) spnWindowWidth.getModel()).getNumber().intValue();
     }//GEN-LAST:event_spnWindowWidthStateChanged
+
+    private void spnWindowHeightStateChanged(ChangeEvent evt) {//GEN-FIRST:event_spnWindowHeightStateChanged
+        windowSize.height = ((SpinnerNumberModel) spnWindowHeight.getModel()).getNumber().intValue();
+    }//GEN-LAST:event_spnWindowHeightStateChanged
 
     private void txtBackgroundColorPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtBackgroundColorPropertyChange
         if (evt.getPropertyName().equals("value")) {
@@ -1175,17 +1190,6 @@ public class SettingsWindow extends JDialog implements Localizable {
     private void btnBackgroundColorChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundColorChangeActionPerformed
         backgroundColor = chooseColor(backgroundColor, txtBackgroundColor, pnlBackgroundPreview, "ChooseBackgroundColour");
     }//GEN-LAST:event_btnBackgroundColorChangeActionPerformed
-
-    private void chkWindowModeEnabledItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkWindowModeEnabledItemStateChanged
-        windowedMode = evt.getStateChange() == ItemEvent.SELECTED;
-        spnWindowWidth.setEnabled(windowedMode);
-        spnWindowHeight.setEnabled(windowedMode);
-        txtBackgroundColor.setEnabled(windowedMode);
-        btnBackgroundColorChange.setEnabled(windowedMode);
-        btnBackgroundImageChange.setEnabled(windowedMode);
-        cmbBackgroundImageMode.setEnabled(windowedMode && backgroundImage != null);
-        btnBackgroundImageRemove.setEnabled(windowedMode && backgroundImage != null);
-    }//GEN-LAST:event_chkWindowModeEnabledItemStateChanged
 
     private void btnBackgroundImageChangeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundImageChangeActionPerformed
         final JFileChooser dialog = new JFileChooser();
@@ -1205,13 +1209,6 @@ public class SettingsWindow extends JDialog implements Localizable {
         }
     }//GEN-LAST:event_btnBackgroundImageChangeActionPerformed
 
-    private void btnBackgroundImageRemoveActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundImageRemoveActionPerformed
-        backgroundImage = null;
-        lblBackgroundImage.setIcon(null);
-        cmbBackgroundImageMode.setEnabled(false);
-        btnBackgroundImageRemove.setEnabled(false);
-    }//GEN-LAST:event_btnBackgroundImageRemoveActionPerformed
-
     private void cmbBackgroundImageModeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cmbBackgroundImageModeActionPerformed
         if (cmbBackgroundImageMode.getSelectedIndex() > -1) {
             backgroundMode = backgroundModes[cmbBackgroundImageMode.getSelectedIndex()];
@@ -1224,9 +1221,12 @@ public class SettingsWindow extends JDialog implements Localizable {
         }
     }//GEN-LAST:event_cmbBackgroundImageModeActionPerformed
 
-    private void chkAlwaysShowInformationScreenItemStateChanged(ItemEvent evt) {//GEN-FIRST:event_chkAlwaysShowInformationScreenItemStateChanged
-        alwaysShowInformationScreen = evt.getStateChange() == ItemEvent.SELECTED;
-    }//GEN-LAST:event_chkAlwaysShowInformationScreenItemStateChanged
+    private void btnBackgroundImageRemoveActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnBackgroundImageRemoveActionPerformed
+        backgroundImage = null;
+        lblBackgroundImage.setIcon(null);
+        cmbBackgroundImageMode.setEnabled(false);
+        btnBackgroundImageRemove.setEnabled(false);
+    }//GEN-LAST:event_btnBackgroundImageRemoveActionPerformed
 
     /**
      * Displays a color chooser dialog and applies information about the selected color to the

@@ -143,11 +143,6 @@ public class Settings {
     public boolean drawShimejiBounds = false;
 
     /**
-     * The type of filter to use when scaling mascot images.
-     */
-    public Filter filter = Filter.NEAREST_NEIGHBOUR;
-
-    /**
      * The opacity factor by which to premultiply mascot images.
      * 0 makes the images completely transparent, and 1 leaves the images' opacity unchanged.
      */
@@ -157,6 +152,11 @@ public class Settings {
      * The factor by which to scale mascot images.
      */
     public double scaling = 1.0;
+
+    /**
+     * The type of filter to use when scaling mascot images.
+     */
+    public Filter filter = Filter.NEAREST_NEIGHBOUR;
 
     // Interactive window settings
 
@@ -257,6 +257,8 @@ public class Settings {
         alwaysShowShimejiChooser = getBooleanProperty(properties, "AlwaysShowShimejiChooser", false);
         alwaysShowInformationScreen = getBooleanProperty(properties, "AlwaysShowInformationScreen", false);
         drawShimejiBounds = getBooleanProperty(properties, "DrawShimejiBounds", false);
+        opacity = getDoubleProperty(properties, "Opacity", 1.0);
+        scaling = getDoubleProperty(properties, "Scaling", 1.0);
         String filterText = properties.getProperty("Filter", "false");
         if (filterText.equalsIgnoreCase("true") || filterText.equalsIgnoreCase("hqx")) {
             filter = Filter.HQX;
@@ -265,8 +267,6 @@ public class Settings {
         } else {
             filter = Filter.NEAREST_NEIGHBOUR;
         }
-        opacity = getDoubleProperty(properties, "Opacity", 1.0);
-        scaling = getDoubleProperty(properties, "Scaling", 1.0);
 
         // Interactive window settings
         interactiveWindows = getStringListProperty(properties, "InteractiveWindows", "/", new ArrayList<>());
@@ -442,6 +442,8 @@ public class Settings {
         properties.setProperty("AlwaysShowShimejiChooser", String.valueOf(alwaysShowShimejiChooser));
         properties.setProperty("AlwaysShowInformationScreen", String.valueOf(alwaysShowInformationScreen));
         properties.setProperty("DrawShimejiBounds", String.valueOf(drawShimejiBounds));
+        properties.setProperty("Opacity", String.valueOf(opacity));
+        properties.setProperty("Scaling", String.valueOf(scaling));
         /*
         BUG: Using switch statements in this method seems to sometimes cause NoClassDefFoundError (likely related to the
         fact that this method is only called when the program is shutting down), so we have to use if statements instead.
@@ -454,8 +456,6 @@ public class Settings {
         } else if (filter == Filter.HQX) {
             properties.setProperty("Filter", "hqx");
         }
-        properties.setProperty("Opacity", String.valueOf(opacity));
-        properties.setProperty("Scaling", String.valueOf(scaling));
 
         // Interactive window settings
         properties.setProperty("InteractiveWindows", String.join("/", interactiveWindows));
