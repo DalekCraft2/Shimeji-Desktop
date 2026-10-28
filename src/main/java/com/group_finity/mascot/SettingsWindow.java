@@ -204,6 +204,7 @@ public class SettingsWindow extends JDialog implements Localizable {
         backgroundColor = settings.backgroundColor;
         backgroundImage = settings.backgroundImage;
         backgroundMode = settings.backgroundMode;
+
         chkShowTrayIcon.setSelected(showTrayIcon);
         chkAlwaysShowShimejiChooser.setSelected(alwaysShowShimejiChooser);
         chkAlwaysShowInformationScreen.setSelected(alwaysShowInformationScreen);
