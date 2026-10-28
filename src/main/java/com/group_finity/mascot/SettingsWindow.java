@@ -38,6 +38,21 @@ import java.util.stream.IntStream;
 public class SettingsWindow extends JDialog implements Localizable {
     private static final Logger log = LoggerFactory.getLogger(SettingsWindow.class);
 
+    // Mascot image change flags
+    /**
+     * A flag for {@link #getMascotImageChangeFlags()} that indicates that the filter setting has changed.
+     */
+    public static final int FILTER_CHANGED = 0x1;
+    /**
+     * A flag for {@link #getMascotImageChangeFlags()} that indicates that the opacity setting has changed.
+     */
+    public static final int OPACITY_CHANGED = 0x2;
+    /**
+     * A flag for {@link #getMascotImageChangeFlags()} that indicates that the scaling setting has changed.
+     */
+    public static final int SCALING_CHANGED = 0x4;
+
+    // Windowed mode change flags
     /**
      * A flag for {@link #getWindowedModeChangeFlags()} that indicates that the window size setting has changed.
      */
@@ -107,13 +122,6 @@ public class SettingsWindow extends JDialog implements Localizable {
     private boolean environmentReloadRequired = false;
 
     /**
-     * Whether any settings that were changed require the mascots' images to be reloaded for the changes to take effect.
-     *
-     * @see #isImageReloadRequired()
-     */
-    private boolean imageReloadRequired = false;
-
-    /**
      * Whether any settings that were changed require the environment's cached interactive window data to be cleared
      * for the changes to take effect.
      *
@@ -129,7 +137,18 @@ public class SettingsWindow extends JDialog implements Localizable {
     private boolean trayMenuReloadRequired = false;
 
     /**
-     * A bitmask that indicates which changes have been made to the settings for windowed mode, if any were made.
+     * A bitmask that indicates which changes, if any, have been made to the settings
+     * for how mascot images are drawn.
+     *
+     * @see #FILTER_CHANGED
+     * @see #OPACITY_CHANGED
+     * @see #SCALING_CHANGED
+     * @see #getMascotImageChangeFlags()
+     */
+    private int mascotImageChangeFlags = 0;
+
+    /**
+     * A bitmask that indicates which changes, if any, have been made to the settings for windowed mode.
      *
      * @see #WINDOWSIZE_CHANGED
      * @see #BACKGROUNDCOLOR_CHANGED
@@ -336,17 +355,6 @@ public class SettingsWindow extends JDialog implements Localizable {
     }
 
     /**
-     * Gets whether any settings that were changed require the mascots' images to be reloaded for the changes
-     * to take effect.
-     *
-     * @return {@code true} if the mascots' images needs to be reloaded for changes to take effect;
-     * {@code false} otherwise
-     */
-    public boolean isImageReloadRequired() {
-        return imageReloadRequired;
-    }
-
-    /**
      * Gets whether any settings that were changed require the environment's cached interactive window data to be
      * cleared for the changes to take effect.
      *
@@ -369,7 +377,20 @@ public class SettingsWindow extends JDialog implements Localizable {
     }
 
     /**
-     * Gets a bitmask that indicates which changes have been made to the settings for windowed mode, if any were made.
+     * Gets a bitmask that indicates which changes, if any, have been made to the settings
+     * for how mascot images are drawn.
+     *
+     * @return the bitmask, or 0 if no changes were made to the mascot image settings
+     * @see #FILTER_CHANGED
+     * @see #OPACITY_CHANGED
+     * @see #SCALING_CHANGED
+     */
+    public int getMascotImageChangeFlags() {
+        return mascotImageChangeFlags;
+    }
+
+    /**
+     * Gets a bitmask that indicates which changes, if any, have been made to the settings for windowed mode.
      *
      * @return the bitmask, or 0 if no changes were made to the windowed mode settings
      * @see #WINDOWSIZE_CHANGED
@@ -996,10 +1017,16 @@ public class SettingsWindow extends JDialog implements Localizable {
         Settings settings = Main.getInstance().getSettings();
 
         environmentReloadRequired = settings.windowedMode != windowedMode;
-        imageReloadRequired = settings.filter != filter || settings.scaling != scaling || settings.opacity != opacity;
         interactiveWindowReloadRequired = !settings.interactiveWindows.equals(interactiveWindows) ||
                 !settings.interactiveWindowsBlacklist.equals(interactiveWindowsBlacklist);
         trayMenuReloadRequired = settings.showTrayIcon != showTrayIcon;
+        if (settings.filter != filter)
+            mascotImageChangeFlags |= FILTER_CHANGED;
+        if (settings.opacity != opacity)
+            mascotImageChangeFlags |= OPACITY_CHANGED;
+        if (settings.scaling != scaling)
+            mascotImageChangeFlags |= SCALING_CHANGED;
+
         if (!settings.windowSize.equals(windowSize))
             windowedModeChangeFlags |= WINDOWSIZE_CHANGED;
         if (!settings.backgroundColor.equals(backgroundColor))

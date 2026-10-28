@@ -711,18 +711,15 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         // Needed to stop the guys from potentially throwing away the settings window
         manager.setEnabled(false);
 
-        double prevScaling = Main.getInstance().getSettings().scaling;
-
         SettingsWindow dialog = new SettingsWindow(Main.getFrame(), true);
         // Set the icon so the window can display it in the "About" tab
         dialog.setIconImage(Main.getIcon());
         dialog.init();
         // Only do the following code if the settings window wasn't canceled
         if (dialog.display()) {
-            boolean scalingChanged = prevScaling != Main.getInstance().getSettings().scaling;
             boolean environmentReloadRequired = dialog.isEnvironmentReloadRequired();
-            boolean imageReloadRequired = dialog.isImageReloadRequired();
             boolean interactiveWindowReloadRequired = dialog.isInteractiveWindowReloadRequired();
+            int mascotImageChangeFlags = dialog.getMascotImageChangeFlags();
             int windowedModeChangeFlags = dialog.getWindowedModeChangeFlags();
 
             TrayMenu trayMenu = Main.getInstance().getTrayMenu();
@@ -790,7 +787,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
                         NativeFactory.getInstance().getEnvironment().refreshCache();
                     }
 
-                    if (scalingChanged) {
+                    if ((mascotImageChangeFlags & SettingsWindow.SCALING_CHANGED) != 0) {
                         /*
                          * Reload the image sets if the scaling changed and
                          * create one mascot for each active image set.
@@ -800,7 +797,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
                          */
                         Main.getInstance().reloadAllImageSets();
                     } else {
-                        if (imageReloadRequired) {
+                        if (mascotImageChangeFlags != 0) {
                             /*
                              * If the scaling setting was not changed but the opacity/filter
                              * settings were, reload only the image pairs instead completely
