@@ -14,7 +14,7 @@ import com.group_finity.mascot.image.ImagePairs;
  * @param duration the duration of this pose, in ticks
  * @param soundKey the key of an optional sound to play when this pose becomes active
  */
-public record Pose(String imageKey, int dx, int dy, int duration, String soundKey) {
+public record Pose(ImagePairs.ImageKey imageKey, int dx, int dy, int duration, String soundKey) {
     /**
      * Applies this pose to the given mascot. The mascot will be moved by the amount specified
      * in the pose's {@link #dx} and {@link #dy} values, its image will be set to the

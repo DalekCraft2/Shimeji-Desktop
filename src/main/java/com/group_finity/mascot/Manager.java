@@ -445,6 +445,22 @@ public class Manager {
     }
 
     /**
+     * Marks all mascots as dirty, meaning they will be repainted as soon as possible.
+     *
+     * @see Mascot#markDirty()
+     */
+    public void markAllDirty() {
+        mascotLock.writeLock().lock();
+        try {
+            for (Mascot mascot : mascots) {
+                mascot.markDirty();
+            }
+        } finally {
+            mascotLock.writeLock().unlock();
+        }
+    }
+
+    /**
      * Disposes all mascots in this {@code Manager}.
      */
     public void disposeAll() {

@@ -21,16 +21,30 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Shimeji-ee Group
  */
 public final class ImagePairs {
+
+    /**
+     * A key used for retrieving an {@link ImagePair} from {@link #get(ImageKey)}.
+     * Implemented as a record rather than as a string so it is easier to access the information that is used
+     * to reload the images without reloading the image set configurations that use them.
+     *
+     * @param anchorX the x-coordinate of the point on the image that aligns with the mascot's anchor
+     * @param anchorY the y-coordinate of the point on the image that aligns with the mascot's anchor
+     * @param path file path of the left-facing image
+     * @param rightPath file path of the right-facing image, or {@code null} if there is no dedicated right-facing image
+     */
+    public record ImageKey(int anchorX, int anchorY, String path, String rightPath) {
+    }
+
     /**
      * A map of keys and image pairs.
      * An image pair's key is returned by {@link #load} when that image pair is loaded.
      */
-    private static final Map<String, ImagePair> imagePairs = new ConcurrentHashMap<>();
+    private static final Map<ImageKey, ImagePair> imagePairs = new ConcurrentHashMap<>();
 
     /**
      * A map that stores which image pairs are used by the given image set.
      */
-    private static final Map<String, List<String>> IMAGESETS_TO_IMAGEPAIRS = new ConcurrentHashMap<>();
+    private static final Map<String, List<ImageKey>> IMAGESETS_TO_IMAGEPAIRS = new ConcurrentHashMap<>();
 
     private ImagePairs() {
         throw new UnsupportedOperationException("ImagePairs is a static class and cannot be instantiated");
@@ -39,9 +53,9 @@ public final class ImagePairs {
     /**
      * Loads an image pair.
      *
-     * @param path file path of left-facing image to load
-     * @param rightPath file path of right-facing image to load. If {@code null}, the left-facing image will be copied
-     * and horizontally flipped.
+     * @param path file path of the left-facing image to load
+     * @param rightPath file path of the right-facing image to load. If {@code null}, the left-facing image will be
+     * copied and horizontally flipped.
      * @param anchorX the x-coordinate of the point on the image that aligns with the mascot's anchor
      * @param anchorY the y-coordinate of the point on the image that aligns with the mascot's anchor
      * @param scaling the scale factor of the image
@@ -50,12 +64,10 @@ public final class ImagePairs {
      * @return a key to access the loaded image pair
      * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
      */
-    public static String load(final Path path, final Path rightPath, final int anchorX, final int anchorY,
-                              final double scaling, final Filter filter, final double opacity) throws IOException {
-        String key = anchorX + ',' + anchorY + ':' + path.toString();
-        if (rightPath != null) {
-            key += ':' + rightPath.toString();
-        }
+    public static ImageKey load(final Path path, final Path rightPath, final int anchorX, final int anchorY,
+                                final double scaling, final Filter filter, final double opacity) throws IOException {
+        ImageKey key = new ImageKey(anchorX, anchorY,
+                path.toString(), rightPath == null ? null : rightPath.toString());
 
         if (imagePairs.containsKey(key)) {
             return key;
@@ -90,12 +102,80 @@ public final class ImagePairs {
     }
 
     /**
+     * Reloads all image pairs that are used by the specified image set.
+     *
+     * @param imageSet the image set whose image pairs are to be reloaded
+     * @param scaling the scale factor of the images
+     * @param filter the type of filter to use to generate the images
+     * @param opacity the opacity of the images
+     * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
+     */
+    public static void reloadAll(final String imageSet, final double scaling, final Filter filter,
+                                 final double opacity) throws IOException {
+        if (!IMAGESETS_TO_IMAGEPAIRS.containsKey(imageSet)) {
+            return;
+        }
+
+        List<ImageKey> usedImagePairs = IMAGESETS_TO_IMAGEPAIRS.get(imageSet);
+
+        for (ImageKey key : usedImagePairs) {
+            ImagePair oldPair = imagePairs.get(key);
+            // Flush all images to clear up memory sooner instead of waiting for the garbage collector to do it
+            oldPair.leftImage().getImage().flush();
+            oldPair.rightImage().getImage().flush();
+            reload(key, scaling, filter, opacity);
+        }
+    }
+
+    /**
+     * Reloads the image pair with the specified key.
+     *
+     * @param key the key of the image pair to reload
+     * @param scaling the scale factor of the image
+     * @param filter the type of filter to use to generate the image
+     * @param opacity the opacity of the image
+     * @throws IOException if an error occurs when reading the image files or when creating an {@code InputStream}
+     */
+    public static void reload(final ImageKey key, final double scaling, final Filter filter,
+                              final double opacity) throws IOException {
+        final int anchorX = key.anchorX;
+        final int anchorY = key.anchorY;
+        final Path path = Path.of(key.path);
+        final Path rightPath = key.rightPath == null ? null : Path.of(key.rightPath);
+
+        BufferedImage leftImage;
+        try (InputStream input = Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(path))) {
+            leftImage = ImageUtils.toCompatibleImage(ImageIO.read(input));
+        }
+        // Premultiply after scaling to prevent artifacts when using the hqx filter with an opacity less than 1.0
+        leftImage = ImageUtils.premultiply(ImageUtils.scale(leftImage, scaling, filter), opacity);
+
+        BufferedImage rightImage;
+        if (rightPath == null) {
+            rightImage = ImageUtils.flip(leftImage);
+        } else {
+            try (InputStream input = Files.newInputStream(Main.IMAGE_DIRECTORY.resolve(rightPath))) {
+                rightImage = ImageUtils.toCompatibleImage(ImageIO.read(input));
+            }
+            rightImage = ImageUtils.premultiply(ImageUtils.scale(rightImage, scaling, filter), opacity);
+        }
+
+        int scaledAnchorX = (int) Math.round(anchorX * scaling);
+        int scaledAnchorY = (int) Math.round(anchorY * scaling);
+        ImagePair ip = new ImagePair(
+                new MascotImage(leftImage, new Point(scaledAnchorX, scaledAnchorY)),
+                new MascotImage(rightImage, new Point(rightImage.getWidth() - scaledAnchorX, scaledAnchorY))
+        );
+        imagePairs.put(key, ip);
+    }
+
+    /**
      * Checks whether there is an image pair associated with the given key.
      *
      * @param key the key whose presence is to be checked
      * @return whether the key has an associated image pair
      */
-    public static boolean contains(String key) {
+    public static boolean contains(ImageKey key) {
         return imagePairs.containsKey(key);
     }
 
@@ -105,7 +185,7 @@ public final class ImagePairs {
      * @param key the key whose associated image pair is to be returned
      * @return the key's associated image pair
      */
-    public static ImagePair get(String key) {
+    public static ImagePair get(ImageKey key) {
         return key == null ? null : imagePairs.get(key);
     }
 
@@ -115,7 +195,7 @@ public final class ImagePairs {
      * @param imagePair the key of an image pair
      * @param imageSet the name of the image set that uses the image pair
      */
-    public static void addUsage(String imagePair, String imageSet) {
+    public static void addUsage(ImageKey imagePair, String imageSet) {
         if (!IMAGESETS_TO_IMAGEPAIRS.containsKey(imageSet)) {
             IMAGESETS_TO_IMAGEPAIRS.put(imageSet, new ArrayList<>());
         }
@@ -134,7 +214,7 @@ public final class ImagePairs {
             return;
         }
 
-        for (String imagePair : IMAGESETS_TO_IMAGEPAIRS.get(imageSet)) {
+        for (ImageKey imagePair : IMAGESETS_TO_IMAGEPAIRS.get(imageSet)) {
             imagePairs.remove(imagePair);
         }
 

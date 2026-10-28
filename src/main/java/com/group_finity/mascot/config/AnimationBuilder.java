@@ -162,7 +162,7 @@ public class AnimationBuilder {
         final double scaling = Main.getInstance().getSettings().scaling;
 
         // Only try loading an image pair if the Image attribute is present
-        String imageKey = null;
+        ImagePairs.ImageKey imageKey = null;
         if (poseNode.hasAttribute(schema.getString("Image"))) {
             final Path imagePath = Path.of(imageSet, poseNode.getAttribute(schema.getString("Image")));
             // The ImageRight attribute is optional

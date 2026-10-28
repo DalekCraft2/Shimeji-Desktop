@@ -711,12 +711,15 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
         // Needed to stop the guys from potentially throwing away the settings window
         manager.setEnabled(false);
 
+        double prevScaling = Main.getInstance().getSettings().scaling;
+
         SettingsWindow dialog = new SettingsWindow(Main.getFrame(), true);
         // Set the icon so the window can display it in the "About" tab
         dialog.setIconImage(Main.getIcon());
         dialog.init();
         // Only do the following code if the settings window wasn't canceled
         if (dialog.display()) {
+            boolean scalingChanged = prevScaling != Main.getInstance().getSettings().scaling;
             boolean environmentReloadRequired = dialog.isEnvironmentReloadRequired();
             boolean imageReloadRequired = dialog.isImageReloadRequired();
             boolean interactiveWindowReloadRequired = dialog.isInteractiveWindowReloadRequired();
@@ -779,12 +782,29 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
                         NativeFactory.getInstance().getEnvironment().refreshCache();
                     }
 
-                    if (imageReloadRequired) {
-                        // Reload the image sets if the scaling, filter, or opacity settings were changed
+                    if (scalingChanged) {
+                        /*
+                         * Reload the image sets if the scaling changed and
+                         * create one mascot for each active image set.
+                         * We need to reload the image sets if the scaling changed
+                         * because the scaling affects the mascots' bounds and speed,
+                         * unlike the other graphical settings like opacity and filter.
+                         */
                         Main.getInstance().reloadAllImageSets();
-                    } else if (environmentReloadRequired) {
-                        // Create a mascot for each active image set
-                        Main.getInstance().createActiveImageSetMascots();
+                    } else {
+                        if (imageReloadRequired) {
+                            /*
+                             * If the scaling setting was not changed but the opacity/filter
+                             * settings were, reload only the image pairs instead completely
+                             * reloading the image set configurations.
+                             */
+                            Main.getInstance().reloadAllImagePairs();
+                        }
+
+                        if (environmentReloadRequired) {
+                            // Create a mascot for each active image set
+                            Main.getInstance().createActiveImageSetMascots();
+                        }
                     }
 
                     // Reset this to what its value was before

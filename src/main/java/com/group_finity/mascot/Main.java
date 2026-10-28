@@ -10,6 +10,7 @@ import com.group_finity.mascot.config.BehaviorInstantiationException;
 import com.group_finity.mascot.config.Configuration;
 import com.group_finity.mascot.config.ConfigurationException;
 import com.group_finity.mascot.config.Entry;
+import com.group_finity.mascot.image.Filter;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.image.ImageUtils;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
@@ -337,8 +338,9 @@ public class Main {
             } catch (InterruptedException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-        } else
+        } else {
             NativeFactory.getInstance().getEnvironment().init();
+        }
 
         // Create a mascot for each active image set
         createActiveImageSetMascots();
@@ -710,6 +712,7 @@ public class Main {
 
     /**
      * Clears all loaded configuration, image, and sound data and reloads all active image sets.
+     * One mascot is created for each active image set after the configurations have been loaded.
      */
     void reloadAllImageSets() {
         boolean isExit = manager.isExitOnLastRemoved();
@@ -728,6 +731,35 @@ public class Main {
         createActiveImageSetMascots();
 
         manager.setExitOnLastRemoved(isExit);
+    }
+
+    /**
+     * Reloads all loaded image data without reloading mascot configurations.
+     */
+    void reloadAllImagePairs() {
+        final double scaling = settings.scaling;
+        final Filter filter = settings.filter;
+        final double opacity = settings.opacity;
+        for (String imageSet : configurations.keySet()) {
+            try {
+                ImagePairs.reloadAll(imageSet, scaling, filter, opacity);
+            } catch (IOException e) {
+                log.error("Failed to reload image pairs for image set \"{}\"", imageSet, e);
+                showError(String.format(languageBundle.getString("FailedLoadConfigErrorMessage"), imageSet), e);
+                manager.remainNone(imageSet);
+                failedConfigurations.add(imageSet);
+            }
+        }
+        manager.markAllDirty();
+
+        if (!failedConfigurations.isEmpty()) {
+            // Use setActiveImageSets to unload the data of all image sets whose images failed to be reloaded,
+            // as well as any of their dependencies that are not active image sets
+            Collection<String> newActiveImageSets = new ArrayList<>(activeImageSets);
+            newActiveImageSets.removeAll(failedConfigurations);
+            failedConfigurations.clear();
+            setActiveImageSets(newActiveImageSets);
+        }
     }
 
     /**

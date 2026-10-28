@@ -259,6 +259,8 @@ public class Mascot {
      * Whether the window of this {@code Mascot} needs to be repainted.
      * This may be set to {@code true} for various reasons (for instance, if {@link #image} is changed),
      * and set to {@code false} after {@link #apply()} has been called.
+     *
+     * @see #markDirty()
      */
     private boolean needsRepaint = true;
 
@@ -1329,6 +1331,13 @@ public class Mascot {
         } else {
             refreshCursor(cursor);
         }
+    }
+
+    /**
+     * Marks this {@code Mascot} as dirty, meaning it will be repainted as soon as possible.
+     */
+    void markDirty() {
+        needsRepaint = true;
     }
 
     /**
