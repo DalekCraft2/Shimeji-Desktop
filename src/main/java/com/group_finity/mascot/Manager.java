@@ -27,11 +27,11 @@ public class Manager {
 
     /**
      * The minimum interval between calls to {@link #tick()}, in milliseconds.
-     * This specifies the duration between the start of one tick and the start of
-     * the next, rather than the end of one tick and the start of the next.
+     * This specifies the duration between the <i>start</i> of one tick and the start of
+     * the next, rather than the <i>end</i> of one tick and the start of the next.
      * <p>
      * It is possible for the intervals between some ticks to be longer than this
-     * value if this {@code Manager} contains many {@link Mascot} objects through
+     * value if a {@code Manager} contains many {@link Mascot} objects through
      * which it needs to iterate.
      */
     public static final int TICK_INTERVAL = 40;
