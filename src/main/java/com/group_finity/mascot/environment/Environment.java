@@ -19,7 +19,8 @@ public interface Environment {
     void init();
 
     /**
-     * Advances this environment by one frame. Called every 40 milliseconds by {@link Manager}.
+     * Advances this environment by one frame. Called every {@value Manager#TICK_INTERVAL}
+     * milliseconds by {@link Manager}.
      */
     void tick();
 
