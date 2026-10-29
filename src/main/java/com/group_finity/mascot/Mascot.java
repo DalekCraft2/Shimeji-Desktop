@@ -272,6 +272,23 @@ public class Mascot {
     private boolean prevDrawShimejiBounds = false;
 
     /**
+     * A nullable boolean representing whether the cursor should be updated to use
+     * the hand graphic or default graphic when hovering over the mascot.
+     * <p>
+     * A value of {@code true} indicates that the cursor should be updated to use
+     * the hand graphic, and is assigned to this field when the cursor is hovering
+     * over a hotspot.
+     * <br>
+     * A value of {@code false} indicates that the cursor should be updated to use
+     * the default graphic, and is assigned to this field when the cursor is hovering
+     * over any other part of the mascot.
+     * <br>
+     * A value of {@code null} indicates that the cursor does not need to be updated,
+     * and is assigned to this field after {@link #apply()} has been called.
+     */
+    private Boolean useHandCursor = false;
+
+    /**
      * A map that can be used by scripts to store and access custom variables.
      * This field is not accessed by the program itself.
      * <p>
@@ -435,10 +452,13 @@ public class Mascot {
         if (event.isPopupTrigger()) {
             showPopup(event.getX(), event.getY());
         } else {
+            // In case the behavior field gets reassigned between the null check and the call
+            // to behavior.mousePressed(), store the current behavior in a local variable
+            Behavior behavior1 = behavior;
             // Switch to drag animation when mouse is pressed
-            if (!paused && behavior != null) {
+            if (!paused && behavior1 != null) {
                 try {
-                    behavior.mousePressed(event);
+                    behavior1.mousePressed(event);
                 } catch (final BehaviorExecutionException e) {
                     log.error("Severe error in mouse press handler for mascot \"{}\"", this, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
@@ -460,9 +480,12 @@ public class Mascot {
         if (event.isPopupTrigger()) {
             showPopup(event.getX(), event.getY());
         } else {
-            if (!paused && behavior != null) {
+            // In case the behavior field gets reassigned between the null check and the call
+            // to behavior.mousePressed(), store the current behavior in a local variable
+            Behavior behavior1 = behavior;
+            if (!paused && behavior1 != null) {
                 try {
-                    behavior.mouseReleased(event);
+                    behavior1.mouseReleased(event);
                 } catch (final BehaviorExecutionException e) {
                     log.error("Severe error in mouse release handler for mascot \"{}\"", this, e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
@@ -625,35 +648,6 @@ public class Mascot {
 
                 time++;
             }
-
-            SwingUtilities.invokeLater(() -> {
-                if (debugWindow != null) {
-                    // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
-                    // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
-                    // debugWindow.setTitle(toString());
-
-                    if (behavior instanceof UserBehavior userBehavior) {
-                        debugWindow.setBehavior(userBehavior.getName().replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " "));
-                    } else {
-                        debugWindow.setBehavior("");
-                    }
-                    debugWindow.setShimejiX(anchor.x);
-                    debugWindow.setShimejiY(anchor.y);
-
-                    Area activeWindow = environment.getActiveIE();
-                    debugWindow.setWindowTitle(environment.getActiveIETitle());
-                    debugWindow.setWindowX(activeWindow.getLeft());
-                    debugWindow.setWindowY(activeWindow.getTop());
-                    debugWindow.setWindowWidth(activeWindow.getWidth());
-                    debugWindow.setWindowHeight(activeWindow.getHeight());
-
-                    Area workArea = environment.getWorkArea();
-                    debugWindow.setEnvironmentX(workArea.getLeft());
-                    debugWindow.setEnvironmentY(workArea.getTop());
-                    debugWindow.setEnvironmentWidth(workArea.getWidth());
-                    debugWindow.setEnvironmentHeight(workArea.getHeight());
-                }
-            });
         }
     }
 
@@ -662,19 +656,68 @@ public class Mascot {
      * {@code null} and refers to a sound clip that is not already playing.
      */
     public void apply() {
-        // Make sure to repaint the mascot if the Draw Shimeji Bounds setting has changed since the last tick
         boolean drawShimejiBounds = Main.getInstance().getSettings().drawShimejiBounds;
-        if (prevDrawShimejiBounds != drawShimejiBounds)
+        if (prevDrawShimejiBounds != drawShimejiBounds) {
+            // Repaint the mascot if the Draw Shimeji Bounds setting has changed since the last tick
             needsRepaint = true;
+        }
         prevDrawShimejiBounds = drawShimejiBounds;
 
-        if (!isAnimating() && !needsRepaint) {
+        if (!isAnimating() && !needsRepaint && useHandCursor == null) {
             return;
         }
 
+        boolean neededRepaint = needsRepaint;
+        Boolean useHandCursor1 = useHandCursor;
+
         SwingUtilities.invokeLater(() -> {
+            Rectangle bounds;
+            MascotImage image1;
+
+            String behaviorName = null;
+            int anchorX = 0;
+            int anchorY = 0;
+
+            String activeWindowTitle = null;
+            int activeWindowX = 0;
+            int activeWindowY = 0;
+            int activeWindowWidth = 0;
+            int activeWindowHeight = 0;
+
+            int environmentX = 0;
+            int environmentY = 0;
+            int environmentWidth = 0;
+            int environmentHeight = 0;
+
+            synchronized (this) {
+                // getBounds() always returns a new Rectangle instance, so it's not necessary to wrap the call
+                // in "new Rectangle()" to make sure the returned value doesn't get modified later
+                bounds = getBounds();
+                image1 = image;
+
+                if (debugWindow != null) {
+                    if (behavior instanceof UserBehavior userBehavior) {
+                        behaviorName = userBehavior.getName();
+                    }
+                    anchorX = anchor.x;
+                    anchorY = anchor.y;
+
+                    Area activeWindow = environment.getActiveIE();
+                    activeWindowTitle = environment.getActiveIETitle();
+                    activeWindowX = activeWindow.getLeft();
+                    activeWindowY = activeWindow.getTop();
+                    activeWindowWidth = activeWindow.getWidth();
+                    activeWindowHeight = activeWindow.getHeight();
+
+                    Area workArea = environment.getWorkArea();
+                    environmentX = workArea.getLeft();
+                    environmentY = workArea.getTop();
+                    environmentWidth = workArea.getWidth();
+                    environmentHeight = workArea.getHeight();
+                }
+            }
+
             final Component windowComponent = window.asComponent();
-            Rectangle bounds = getBounds();
             /* Compare each value individually instead of using windowComponent.getBounds().equals(),
             to avoid heap allocations caused by Component.getBounds() */
             if (windowComponent.getX() != bounds.x || windowComponent.getY() != bounds.y ||
@@ -682,9 +725,10 @@ public class Mascot {
                 // Set the bounds of the window to the mascot's bounds
                 windowComponent.setBounds(bounds);
             }
-            if (needsRepaint) {
+            if (neededRepaint) {
                 // If Draw Shimeji Bounds is enabled, always keep the window visible so we can actually see the bounds
-                boolean shouldBeVisible = image != null || Main.getInstance().getSettings().drawShimejiBounds;
+                boolean shouldBeVisible = image1 != null || drawShimejiBounds;
+                window.setImage(image1 == null ? null : image1.getImage());
                 if (windowComponent.isVisible() == shouldBeVisible) {
                     window.updateImage(); // Redraw
                 } else {
@@ -694,9 +738,44 @@ public class Mascot {
                      */
                     windowComponent.setVisible(shouldBeVisible);
                 }
-                needsRepaint = false;
+            }
+            if (useHandCursor1 != null) {
+                int newType = useHandCursor1 ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR;
+                if (windowComponent.getCursor().getType() != newType) {
+                    windowComponent.setCursor(Cursor.getPredefinedCursor(newType));
+                }
+            }
+
+            if (debugWindow != null) {
+                if (behaviorName != null) {
+                    behaviorName = behaviorName.replaceAll("([a-z])(IE)?([A-Z])", "$1 $2 $3").replaceAll(" {2}", " ");
+                } else {
+                    behaviorName = "";
+                }
+
+                // This sets the title of the actual debug window--not the "Window Title" field--to the mascot's ID
+                // Unfortunately, doing this makes it possible to select it as the activeIE because it no longer has an empty name, so I have commented it out
+                // debugWindow.setTitle(toString());
+
+                debugWindow.setBehavior(behaviorName);
+                debugWindow.setShimejiX(anchorX);
+                debugWindow.setShimejiY(anchorY);
+
+                debugWindow.setWindowTitle(activeWindowTitle);
+                debugWindow.setWindowX(activeWindowX);
+                debugWindow.setWindowY(activeWindowY);
+                debugWindow.setWindowWidth(activeWindowWidth);
+                debugWindow.setWindowHeight(activeWindowHeight);
+
+                debugWindow.setEnvironmentX(environmentX);
+                debugWindow.setEnvironmentY(environmentY);
+                debugWindow.setEnvironmentWidth(environmentWidth);
+                debugWindow.setEnvironmentHeight(environmentHeight);
             }
         });
+
+        needsRepaint = false;
+        useHandCursor = null;
 
         // play sound if requested
         if (Sounds.isEnabled() && sound != null && Sounds.contains(sound)) {
@@ -761,14 +840,16 @@ public class Mascot {
      * {@code false} to apply the default graphic to the cursor
      */
     private void refreshCursor(boolean useHand) {
-        if (!SwingUtilities.isEventDispatchThread()) {
-            SwingUtilities.invokeLater(() -> refreshCursor(useHand));
-            return;
-        }
-        int newType = useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR;
-        Component windowComponent = window.asComponent();
-        if (windowComponent.getCursor().getType() != newType) {
-            windowComponent.setCursor(Cursor.getPredefinedCursor(newType));
+        if (SwingUtilities.isEventDispatchThread()) {
+            // If we're on the EDT, just set the cursor now
+            int newType = useHand ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR;
+            Component windowComponent = window.asComponent();
+            if (windowComponent.getCursor().getType() != newType) {
+                windowComponent.setCursor(Cursor.getPredefinedCursor(newType));
+            }
+        } else {
+            // If we're not on the EDT, set useHandCursor so we update the cursor on the next apply() call
+            useHandCursor = useHand;
         }
     }
 
@@ -851,14 +932,7 @@ public class Mascot {
             }
         }
 
-        SwingUtilities.invokeLater(() -> {
-            if (image != null) {
-                window.setImage(image.getImage());
-            } else {
-                window.setImage(null);
-            }
-            needsRepaint = true;
-        });
+        needsRepaint = true;
     }
 
     /**
