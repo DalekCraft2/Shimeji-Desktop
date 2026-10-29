@@ -10,6 +10,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -64,7 +65,9 @@ public class ScanInteract extends BorderedAction {
         // cannot broadcast while scanning for an affordance
         getMascot().getAffordances().clear();
 
-        if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
+        Point anchor = getMascot().getAnchor();
+
+        if (getBorder() != null && !getBorder().isOn(anchor)) {
             throw new LostGroundException("Mascot is not on border");
         }
 
@@ -74,14 +77,15 @@ public class ScanInteract extends BorderedAction {
             target = getMascot().getManager().getMascotWithAffordance(getAffordance());
             targetMascot = target == null ? null : target.get();
         }
-        putVariable(getSchema().getString("TargetX"), targetMascot != null ? targetMascot.getAnchor().x : null);
-        putVariable(getSchema().getString("TargetY"), targetMascot != null ? targetMascot.getAnchor().y : null);
+        Point targetAnchor = targetMascot != null ? targetMascot.getAnchor() : null;
+        putVariable(getSchema().getString("TargetX"), targetAnchor != null ? targetAnchor.x : null);
+        putVariable(getSchema().getString("TargetY"), targetAnchor != null ? targetAnchor.y : null);
 
         if (targetMascot != null && targetMascot.getAffordances().contains(getAffordance())) {
-            if (getMascot().getAnchor().x != targetMascot.getAnchor().x) {
+            if (anchor.x != targetAnchor.x) {
                 // Activate turning animation if we change directions
-                turning = hasTurningAnimation() && (turning || getMascot().getAnchor().x < targetMascot.getAnchor().x != getMascot().isLookRight());
-                getMascot().setLookRight(getMascot().getAnchor().x < targetMascot.getAnchor().x);
+                turning = hasTurningAnimation() && (turning || anchor.x < targetAnchor.x != getMascot().isLookRight());
+                getMascot().setLookRight(anchor.x < targetAnchor.x);
             }
 
             // Check whether turning animation has finished

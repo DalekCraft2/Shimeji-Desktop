@@ -6,6 +6,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -46,19 +47,23 @@ public class Move extends BorderedAction {
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
+        final Point anchor = getMascot().getAnchor();
+
         /* Return true if the mascot has not reached the position (TargetX, TargetY).
         If TargetX has its default value, we only check the mascot's y-coordinate,
         and if TargetY has its default value, we only check the mascot's x-coordinate.
         If both TargetX and TargetY have their default values, return false. */
-        return targetX != DEFAULT_TARGETX && getMascot().getAnchor().x != targetX ||
-                targetY != DEFAULT_TARGETY && getMascot().getAnchor().y != targetY;
+        return targetX != DEFAULT_TARGETX && anchor.x != targetX ||
+                targetY != DEFAULT_TARGETY && anchor.y != targetY;
     }
 
     @Override
     protected void tick() throws LostGroundException, VariableException {
         super.tick();
 
-        if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
+        Point anchor = getMascot().getAnchor();
+
+        if (getBorder() != null && !getBorder().isOn(anchor)) {
             throw new LostGroundException("Mascot is not on border");
         }
 
@@ -68,14 +73,14 @@ public class Move extends BorderedAction {
         boolean down = false;
 
         if (targetX != DEFAULT_TARGETX) {
-            if (getMascot().getAnchor().x != targetX) {
+            if (anchor.x != targetX) {
                 // Activate turning animation if we change directions
-                turning = hasTurningAnimation() && (turning || getMascot().getAnchor().x < targetX != getMascot().isLookRight());
-                getMascot().setLookRight(getMascot().getAnchor().x < targetX);
+                turning = hasTurningAnimation() && (turning || anchor.x < targetX != getMascot().isLookRight());
+                getMascot().setLookRight(anchor.x < targetX);
             }
         }
         if (targetY != DEFAULT_TARGETY) {
-            down = getMascot().getAnchor().y < targetY;
+            down = anchor.y < targetY;
         }
 
         // Check whether turning animation has finished
@@ -90,16 +95,16 @@ public class Move extends BorderedAction {
 
         if (targetX != DEFAULT_TARGETX) {
             // If we went past the target, set ourselves to the target position
-            if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX
-                    || !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
-                getMascot().getAnchor().x = targetX;
+            if (getMascot().isLookRight() && anchor.x >= targetX
+                    || !getMascot().isLookRight() && anchor.x <= targetX) {
+                anchor.x = targetX;
             }
         }
         if (targetY != DEFAULT_TARGETY) {
             // If we went past the target, set ourselves to the target position
-            if (down && getMascot().getAnchor().y >= targetY ||
-                    !down && getMascot().getAnchor().y <= targetY) {
-                getMascot().getAnchor().y = targetY;
+            if (down && anchor.y >= targetY ||
+                    !down && anchor.y <= targetY) {
+                anchor.y = targetY;
             }
         }
     }

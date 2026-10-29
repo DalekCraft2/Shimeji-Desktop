@@ -8,6 +8,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -50,15 +51,17 @@ public class FallWithIE extends Fall {
         final int offsetX = getIEOffsetX();
         final int offsetY = getIEOffsetY();
 
+        final Point anchor = getMascot().getAnchor();
+
         // Check whether the mascot has the window properly
         if (getMascot().isLookRight()) {
-            if (getMascot().getAnchor().x - offsetX != activeIE.getLeft()
-                    || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
+            if (anchor.x - offsetX != activeIE.getLeft()
+                    || anchor.y + offsetY != activeIE.getBottom()) {
                 throw new LostGroundException("Mascot is not holding window");
             }
         } else {
-            if (getMascot().getAnchor().x + offsetX != activeIE.getRight()
-                    || getMascot().getAnchor().y + offsetY != activeIE.getBottom()) {
+            if (anchor.x + offsetX != activeIE.getRight()
+                    || anchor.y + offsetY != activeIE.getBottom()) {
                 throw new LostGroundException("Mascot is not holding window");
             }
         }
@@ -69,13 +72,13 @@ public class FallWithIE extends Fall {
         if (activeIE.isVisible()) {
             if (getMascot().isLookRight()) {
                 getEnvironment().moveActiveIE(
-                        getMascot().getAnchor().x - offsetX,
-                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()
+                        anchor.x - offsetX,
+                        anchor.y + offsetY - activeIE.getHeight()
                 );
             } else {
                 getEnvironment().moveActiveIE(
-                        getMascot().getAnchor().x + offsetX - activeIE.getWidth(),
-                        getMascot().getAnchor().y + offsetY - activeIE.getHeight()
+                        anchor.x + offsetX - activeIE.getWidth(),
+                        anchor.y + offsetY - activeIE.getHeight()
                 );
             }
         }

@@ -90,7 +90,8 @@ public class Fall extends ActionBase {
             return false;
         }
 
-        Point anchor = getMascot().getAnchor();
+        final Point anchor = getMascot().getAnchor();
+
         /* Return true if the mascot is not on a floor or wall.
         However, ignore whether the mascot is on a floor if they have upward velocity; this allows mascots to start
         the Fall action on the ground with an upward initial velocity and not have the action be canceled immediately. */

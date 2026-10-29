@@ -10,6 +10,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -83,8 +84,9 @@ public class ComplexMove extends BorderedAction {
                 target = getMascot().getManager().getMascotWithAffordance(getAffordance());
             }
             Mascot targetMascot = target == null ? null : target.get();
-            putVariable(getSchema().getString("TargetX"), targetMascot != null ? targetMascot.getAnchor().x : null);
-            putVariable(getSchema().getString("TargetY"), targetMascot != null ? targetMascot.getAnchor().y : null);
+            Point targetAnchor = targetMascot != null ? targetMascot.getAnchor() : null;
+            putVariable(getSchema().getString("TargetX"), targetAnchor != null ? targetAnchor.x : null);
+            putVariable(getSchema().getString("TargetY"), targetAnchor != null ? targetAnchor.y : null);
         }
     }
 
@@ -109,12 +111,14 @@ public class ComplexMove extends BorderedAction {
             final int targetX = getTargetX();
             final int targetY = getTargetY();
 
+            final Point anchor = getMascot().getAnchor();
+
             /* Return true if the mascot has not reached the position (TargetX, TargetY).
             If TargetX has its default value, we only check the mascot's y-coordinate,
             and if TargetY has its default value, we only check the mascot's x-coordinate.
             If both TargetX and TargetY have their default values, return false. */
-            return targetX != DEFAULT_TARGETX && getMascot().getAnchor().x != targetX ||
-                    targetY != DEFAULT_TARGETY && getMascot().getAnchor().y != targetY;
+            return targetX != DEFAULT_TARGETX && anchor.x != targetX ||
+                    targetY != DEFAULT_TARGETY && anchor.y != targetY;
         }
     }
 
@@ -127,7 +131,9 @@ public class ComplexMove extends BorderedAction {
             getMascot().getAffordances().clear();
         }
 
-        if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
+        Point anchor = getMascot().getAnchor();
+
+        if (getBorder() != null && !getBorder().isOn(anchor)) {
             throw new LostGroundException("Mascot is not on border");
         }
 
@@ -140,8 +146,9 @@ public class ComplexMove extends BorderedAction {
                 return;
             }
 
-            targetX = targetMascot.getAnchor().x;
-            targetY = targetMascot.getAnchor().y;
+            Point targetAnchor = targetMascot.getAnchor();
+            targetX = targetAnchor.x;
+            targetY = targetAnchor.y;
 
             putVariable(getSchema().getString("TargetX"), targetX);
             putVariable(getSchema().getString("TargetY"), targetY);
@@ -150,12 +157,12 @@ public class ComplexMove extends BorderedAction {
             targetY = getTargetY();
         }
 
-        if (getMascot().getAnchor().x != targetX) {
+        if (anchor.x != targetX) {
             // Activate turning animation if we change directions
-            turning = hasTurningAnimation() && (turning || getMascot().getAnchor().x < targetX != getMascot().isLookRight());
-            getMascot().setLookRight(getMascot().getAnchor().x < targetX);
+            turning = hasTurningAnimation() && (turning || anchor.x < targetX != getMascot().isLookRight());
+            getMascot().setLookRight(anchor.x < targetX);
         }
-        boolean down = getMascot().getAnchor().y < targetY;
+        boolean down = anchor.y < targetY;
 
         // Check whether turning animation has finished
         Animation animation = getAnimation();
@@ -169,16 +176,16 @@ public class ComplexMove extends BorderedAction {
 
         if (targetX != DEFAULT_TARGETX || scanEnabled) {
             // If we went past the target, set ourselves to the target position
-            if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX ||
-                    !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
-                getMascot().getAnchor().x = targetX;
+            if (getMascot().isLookRight() && anchor.x >= targetX ||
+                    !getMascot().isLookRight() && anchor.x <= targetX) {
+                anchor.x = targetX;
             }
         }
         if (targetY != DEFAULT_TARGETY || scanEnabled) {
             // If we went past the target, set ourselves to the target position
-            if (down && getMascot().getAnchor().y >= targetY ||
-                    !down && getMascot().getAnchor().y <= targetY) {
-                getMascot().getAnchor().y = targetY;
+            if (down && anchor.y >= targetY ||
+                    !down && anchor.y <= targetY) {
+                anchor.y = targetY;
             }
         }
 
@@ -187,7 +194,7 @@ public class ComplexMove extends BorderedAction {
             delegate.breed();
         }
 
-        if (!turning && getMascot().getAnchor().x == targetX && getMascot().getAnchor().y == targetY) {
+        if (!turning && anchor.x == targetX && anchor.y == targetY) {
             boolean setFirstBehavior = false;
             try {
                 getMascot().setBehavior(Main.getInstance().getConfiguration(getMascot().getImageSet()).buildBehavior(getBehavior(), getMascot()));

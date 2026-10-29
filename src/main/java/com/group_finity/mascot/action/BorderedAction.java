@@ -8,6 +8,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -52,8 +53,9 @@ public abstract class BorderedAction extends ActionBase {
     @Override
     protected void tick() throws LostGroundException, VariableException {
         if (getBorder() != null) {
+            final Point anchor = getMascot().getAnchor();
             // The frame may be moving
-            getMascot().getAnchor().setLocation(getBorder().move(getMascot().getAnchor()));
+            anchor.setLocation(getBorder().move(anchor));
         }
     }
 

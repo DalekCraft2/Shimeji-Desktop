@@ -9,6 +9,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -78,7 +79,9 @@ public class Dragged extends ActionBase {
             offsetY = getMascot().getImage().getCenter().y - offsetY;
         }
 
-        if (Math.abs(cursor.getX() + offsetX - getMascot().getAnchor().x) >= 5) {
+        final Point anchor = getMascot().getAnchor();
+
+        if (Math.abs(cursor.getX() + offsetX - anchor.x) >= 5) {
             setTime(0);
         }
 
@@ -100,7 +103,7 @@ public class Dragged extends ActionBase {
         getAnimation().apply(getMascot(), getTime());
 
         // Align the mascot position to the mouse cursor
-        getMascot().getAnchor().setLocation(cursor.getX() + offsetX, cursor.getY() + offsetY);
+        anchor.setLocation(cursor.getX() + offsetX, cursor.getY() + offsetY);
 
         // If the action's time is one less than timeToResist, there is a 90% chance that
         // we increase timeToResist by 1, which will make the next hasNext() call not return false.

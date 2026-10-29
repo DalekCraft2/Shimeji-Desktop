@@ -8,6 +8,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -57,8 +58,9 @@ public class Jump extends ActionBase {
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
-        final double distanceX = targetX - getMascot().getAnchor().x;
-        final double distanceY = targetY - getMascot().getAnchor().y - Math.abs(distanceX) / 2;
+        final Point anchor = getMascot().getAnchor();
+        final double distanceX = targetX - anchor.x;
+        final double distanceY = targetY - anchor.y - Math.abs(distanceX) / 2;
 
         final double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
@@ -70,12 +72,14 @@ public class Jump extends ActionBase {
         final int targetX = getTargetX();
         final int targetY = getTargetY();
 
-        if (getMascot().getAnchor().x != targetX) {
-            getMascot().setLookRight(getMascot().getAnchor().x < targetX);
+        final Point anchor = getMascot().getAnchor();
+
+        if (anchor.x != targetX) {
+            getMascot().setLookRight(anchor.x < targetX);
         }
 
-        final double distanceX = targetX - getMascot().getAnchor().x;
-        final double distanceY = targetY - getMascot().getAnchor().y - Math.abs(distanceX) / 2;
+        final double distanceX = targetX - anchor.x;
+        final double distanceY = targetY - anchor.y - Math.abs(distanceX) / 2;
 
         final double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
@@ -88,12 +92,12 @@ public class Jump extends ActionBase {
             putVariable(getSchema().getString(VARIABLE_VELOCITYX), velocityX);
             putVariable(getSchema().getString(VARIABLE_VELOCITYY), velocityY);
 
-            getMascot().getAnchor().translate((int) Math.round(velocityX), (int) Math.round(velocityY));
+            anchor.translate((int) Math.round(velocityX), (int) Math.round(velocityY));
             getAnimation().apply(getMascot(), getTime());
         }
 
         if (distance <= velocity) {
-            getMascot().getAnchor().setLocation(targetX, targetY);
+            anchor.setLocation(targetX, targetY);
         }
     }
 

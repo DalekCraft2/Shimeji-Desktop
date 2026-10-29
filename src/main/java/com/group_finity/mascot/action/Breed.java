@@ -10,6 +10,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -71,27 +72,30 @@ public class Breed extends Animate {
         }
 
         void breed() throws VariableException {
-            String childType = Main.getInstance().getConfiguration(getBornMascot()) != null ? getBornMascot() : action.getMascot().getImageSet();
+            final Mascot mascot = action.getMascot();
+            String childType = Main.getInstance().getConfiguration(getBornMascot()) != null ? getBornMascot() : mascot.getImageSet();
 
             for (int index = 0; index < getBornCount(); index++) {
                 // Create a mascot
                 final Mascot newMascot = new Mascot(childType);
 
-                log.info("Breed Mascot ({},{},{})", action.getMascot(), action, newMascot);
+                log.info("Breed Mascot ({},{},{})", mascot, action, newMascot);
+
+                final Point anchor = mascot.getAnchor();
 
                 // Start outside the range
-                if (action.getMascot().isLookRight()) {
-                    newMascot.getAnchor().setLocation(action.getMascot().getAnchor().x - (int) Math.round(getBornX() * scaling),
-                            action.getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling));
+                if (mascot.isLookRight()) {
+                    newMascot.getAnchor().setLocation(anchor.x - (int) Math.round(getBornX() * scaling),
+                            anchor.y + (int) Math.round(getBornY() * scaling));
                 } else {
-                    newMascot.getAnchor().setLocation(action.getMascot().getAnchor().x + (int) Math.round(getBornX() * scaling),
-                            action.getMascot().getAnchor().y + (int) Math.round(getBornY() * scaling));
+                    newMascot.getAnchor().setLocation(anchor.x + (int) Math.round(getBornX() * scaling),
+                            anchor.y + (int) Math.round(getBornY() * scaling));
                 }
-                newMascot.setLookRight(action.getMascot().isLookRight());
+                newMascot.setLookRight(mascot.isLookRight());
 
                 try {
-                    newMascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehavior(), action.getMascot()));
-                    action.getMascot().getManager().add(newMascot);
+                    newMascot.setBehavior(Main.getInstance().getConfiguration(childType).buildBehavior(getBornBehavior(), mascot));
+                    mascot.getManager().add(newMascot);
                 } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
                     log.error("Failed to create mascot \"{}\" with behavior \"{}\"", newMascot, getBornBehavior(), e);
                     Main.showError(Main.getInstance().getLanguageBundle().getString("FailedCreateNewShimejiErrorMessage"), e);

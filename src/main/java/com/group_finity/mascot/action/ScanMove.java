@@ -10,6 +10,7 @@ import com.group_finity.mascot.script.VariableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -52,8 +53,9 @@ public class ScanMove extends BorderedAction {
             target = getMascot().getManager().getMascotWithAffordance(getAffordance());
         }
         Mascot targetMascot = target == null ? null : target.get();
-        putVariable(getSchema().getString("TargetX"), targetMascot != null ? targetMascot.getAnchor().x : null);
-        putVariable(getSchema().getString("TargetY"), targetMascot != null ? targetMascot.getAnchor().y : null);
+        Point targetAnchor = targetMascot != null ? targetMascot.getAnchor() : null;
+        putVariable(getSchema().getString("TargetX"), targetAnchor != null ? targetAnchor.x : null);
+        putVariable(getSchema().getString("TargetY"), targetAnchor != null ? targetAnchor.y : null);
     }
 
     @Override
@@ -77,7 +79,9 @@ public class ScanMove extends BorderedAction {
         // cannot broadcast while scanning for an affordance
         getMascot().getAffordances().clear();
 
-        if (getBorder() != null && !getBorder().isOn(getMascot().getAnchor())) {
+        Point anchor = getMascot().getAnchor();
+
+        if (getBorder() != null && !getBorder().isOn(anchor)) {
             throw new LostGroundException("Mascot is not on border");
         }
 
@@ -86,18 +90,19 @@ public class ScanMove extends BorderedAction {
             return;
         }
 
-        int targetX = targetMascot.getAnchor().x;
-        int targetY = targetMascot.getAnchor().y;
+        Point targetAnchor = targetMascot.getAnchor();
+        int targetX = targetAnchor.x;
+        int targetY = targetAnchor.y;
 
         putVariable(getSchema().getString("TargetX"), targetX);
         putVariable(getSchema().getString("TargetY"), targetY);
 
-        if (getMascot().getAnchor().x != targetX) {
+        if (anchor.x != targetX) {
             // Activate turning animation if we change directions
-            turning = hasTurningAnimation() && (turning || getMascot().getAnchor().x < targetX != getMascot().isLookRight());
-            getMascot().setLookRight(getMascot().getAnchor().x < targetX);
+            turning = hasTurningAnimation() && (turning || anchor.x < targetX != getMascot().isLookRight());
+            getMascot().setLookRight(anchor.x < targetX);
         }
-        boolean down = getMascot().getAnchor().y < targetY;
+        boolean down = anchor.y < targetY;
 
         // Check whether turning animation has finished
         Animation animation = getAnimation();
@@ -108,17 +113,17 @@ public class ScanMove extends BorderedAction {
 
         animation.apply(getMascot(), getTime());
 
-        if (getMascot().isLookRight() && getMascot().getAnchor().x >= targetX ||
-                !getMascot().isLookRight() && getMascot().getAnchor().x <= targetX) {
-            getMascot().getAnchor().x = targetX;
+        if (getMascot().isLookRight() && anchor.x >= targetX ||
+                !getMascot().isLookRight() && anchor.x <= targetX) {
+            anchor.x = targetX;
         }
-        if (down && getMascot().getAnchor().y >= targetY ||
-                !down && getMascot().getAnchor().y <= targetY) {
-            getMascot().getAnchor().y = targetY;
+        if (down && anchor.y >= targetY ||
+                !down && anchor.y <= targetY) {
+            anchor.y = targetY;
         }
 
-        boolean noMoveX = getMascot().getAnchor().x == targetX;
-        boolean noMoveY = getMascot().getAnchor().y == targetY;
+        boolean noMoveX = anchor.x == targetX;
+        boolean noMoveY = anchor.y == targetY;
 
         if (!turning && noMoveX && noMoveY) {
             boolean setFirstBehavior = false;
