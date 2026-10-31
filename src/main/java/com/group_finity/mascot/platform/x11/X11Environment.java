@@ -131,13 +131,6 @@ class X11Environment extends AbstractEnvironment {
     private final X11.Atom fullscreenValue;
 
     /**
-     * The {@code _NET_WM_WINDOW_TYPE_DOCK} atom, which represents the window type used for dock/panel features.
-     *
-     * @see #getDockValue()
-     */
-    private final X11.Atom dockValue;
-
-    /**
      * Enumeration of the possible return statuses from {@link #getWindowStatus(Window)}.
      * Each status specifies whether a given window is interactive, whether it prevents
      * other windows from being interactive, and whether it intersects with the bounds of the screen.
@@ -172,9 +165,8 @@ class X11Environment extends AbstractEnvironment {
                 display.getAtom("_NET_WM_STATE_MODAL"),
                 display.getAtom("_NET_WM_STATE_ABOVE"));
 
-        dockValue = display.getAtom("_NET_WM_WINDOW_TYPE_DOCK");
         badTypes = Set.of(
-                dockValue,
+                display.getAtom("_NET_WM_WINDOW_TYPE_DOCK"),
                 display.getAtom("_NET_WM_WINDOW_TYPE_DESKTOP"),
                 display.getAtom("_NET_WM_WINDOW_TYPE_MENU"),
                 display.getAtom("_NET_WM_WINDOW_TYPE_SPLASH"),
@@ -622,14 +614,5 @@ class X11Environment extends AbstractEnvironment {
      */
     Display getDisplay() {
         return display;
-    }
-
-    /**
-     * Gets the atom representing the window type used for dock/panel features.
-     *
-     * @return the atom representing the dock window type
-     */
-    X11.Atom getDockValue() {
-        return dockValue;
     }
 }

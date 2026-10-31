@@ -42,10 +42,8 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      * Initializes a new {@code X11TranslucentWindow}.
      *
      * @param dpy the display used to access the native X11 window of this {@code X11TranslucentWindow}
-     * @param dockValue the {@code _NET_WM_WINDOW_TYPE_DOCK} atom, which represents the window type
-     * used for dock/panel features
      */
-    X11TranslucentWindow(X11.Display dpy, X11.Atom dockValue) {
+    X11TranslucentWindow(X.Display dpy) {
         super();
 
         setContentPane(new JPanel() {
@@ -72,8 +70,8 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
                 X11 x11 = X11.INSTANCE;
 
                 // Set the window type of the window to "dock" so it can move past the bounds of the screen
-                NativeLongByReference dockAtom = new NativeLongByReference(dockValue);
-                x11.XChangeProperty(dpy, win, x11.XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", false),
+                NativeLongByReference dockAtom = new NativeLongByReference(dpy.getAtom("_NET_WM_WINDOW_TYPE_DOCK"));
+                x11.XChangeProperty(dpy.getX11Display(), win, dpy.getAtom("_NET_WM_WINDOW_TYPE"),
                         X11.XA_ATOM, 32, X11.PropModeReplace, dockAtom.getPointer(), 1);
             }
         });

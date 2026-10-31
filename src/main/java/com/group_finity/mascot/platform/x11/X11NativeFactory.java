@@ -29,6 +29,6 @@ public class X11NativeFactory extends NativeFactory {
 
     @Override
     public TranslucentWindow newTranslucentWindow() {
-        return new X11TranslucentWindow(environment.getDisplay().getX11Display(), environment.getDockValue());
+        return new X11TranslucentWindow(environment.getDisplay());
     }
 }
