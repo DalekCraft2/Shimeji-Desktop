@@ -731,8 +731,8 @@ public class X {
          * @return an array of hints describing the state of this window
          * @throws X11Exception if an X11 window error occurred
          */
-        public int[] getState() throws X11Exception {
-            return getIntArrayProperty(X11.XA_ATOM, "_NET_WM_STATE");
+        public X11.Atom[] getState() throws X11Exception {
+            return getAtomArrayProperty(X11.XA_ATOM, "_NET_WM_STATE");
         }
 
         /**
@@ -741,8 +741,8 @@ public class X {
          * @return an array of atoms indicating the functional type of this window
          * @throws X11Exception if an X11 window error occurred
          */
-        public int[] getType() throws X11Exception {
-            return getIntArrayProperty(X11.XA_ATOM, "_NET_WM_WINDOW_TYPE");
+        public X11.Atom[] getType() throws X11Exception {
+            return getAtomArrayProperty(X11.XA_ATOM, "_NET_WM_WINDOW_TYPE");
         }
 
         /**
@@ -1001,6 +1001,50 @@ public class X {
          */
         public int[] getIntArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
             return getIntArrayProperty(xaPropType, display.getAtom(xaPropName));
+        }
+
+        /**
+         * Gets the value of the specified property as an atom array.
+         *
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as an atom array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
+         */
+        public X11.Atom[] getAtomArrayProperty(X11.Atom xaPropType, X11.Atom xaPropName) throws X11Exception {
+            byte[] property = getProperty(xaPropType, xaPropName, 32);
+            if (property == null) {
+                return null;
+            }
+            if (property.length == 0) {
+                return new X11.Atom[0];
+            }
+            X11.Atom atom = new X11.Atom(); // Used for calling fromNative()
+            X11.Atom[] array = new X11.Atom[property.length / X11.Atom.SIZE];
+            for (int i = 0; i < array.length; i++) {
+                if (X11.Atom.SIZE == 8) {
+                    array[i] = (X11.Atom) atom.fromNative(bytesToLong(property, i * X11.Atom.SIZE), null);
+                } else {
+                    array[i] = (X11.Atom) atom.fromNative(bytesToInt(property, i * X11.Atom.SIZE), null);
+                }
+            }
+            return array;
+        }
+
+        /**
+         * Gets the value of the specified property as an atom array.
+         *
+         * @param xaPropType the property type
+         * @param xaPropName the property name
+         * @return the value of the property as an atom array,
+         * or {@code null} if the specified property does not exist for this window
+         * @throws X11Exception if the operation failed, or if the specified type
+         * does not match the actual type of the property
+         */
+        public X11.Atom[] getAtomArrayProperty(X11.Atom xaPropType, String xaPropName) throws X11Exception {
+            return getAtomArrayProperty(xaPropType, display.getAtom(xaPropName));
         }
 
         /**

@@ -15,7 +15,6 @@ import com.sun.jna.platform.unix.X11;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * An implementation of {@link AbstractEnvironment} that provides access to the X11 native environment via JNA.
@@ -112,7 +111,7 @@ class X11Environment extends AbstractEnvironment {
      *
      * @see #isStateGood(Collection)
      */
-    private final Collection<Number> badStates;
+    private final Collection<X11.Atom> badStates;
 
     /**
      * A collection of "bad" window type atoms. If any of these are present on a window,
@@ -120,23 +119,23 @@ class X11Environment extends AbstractEnvironment {
      *
      * @see #isStateGood(Collection)
      */
-    private final Collection<Number> badTypes;
+    private final Collection<X11.Atom> badTypes;
 
     /** The atom representing the window state of being maximized vertically. */
-    private final int maximizedVertValue;
+    private final X11.Atom maximizedVertValue;
     /** The atom representing the window state of being maximized horizontally. */
-    private final int maximizedHorzValue;
+    private final X11.Atom maximizedHorzValue;
     /** The atom representing the window state of being hidden. This applies to both minimized and invisible windows. */
-    private final int minimizedValue;
+    private final X11.Atom minimizedValue;
     /** The atom representing the window state of being in fullscreen mode. */
-    private final int fullscreenValue;
+    private final X11.Atom fullscreenValue;
 
     /**
      * The atom representing the window type used for dock/panel features.
      *
      * @see #getDockValue()
      */
-    private final int dockValue;
+    private final X11.Atom dockValue;
 
     /**
      * Enumeration of the possible return statuses from {@link #getWindowStatus(Window)}.
@@ -164,22 +163,22 @@ class X11Environment extends AbstractEnvironment {
      * Initializes a new {@code X11Environment}.
      */
     X11Environment() {
-        maximizedVertValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_VERT").intValue();
-        maximizedHorzValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_HORZ").intValue();
-        minimizedValue = display.getAtom("_NET_WM_STATE_HIDDEN").intValue();
-        fullscreenValue = display.getAtom("_NET_WM_STATE_FULLSCREEN").intValue();
+        maximizedVertValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_VERT");
+        maximizedHorzValue = display.getAtom("_NET_WM_STATE_MAXIMIZED_HORZ");
+        minimizedValue = display.getAtom("_NET_WM_STATE_HIDDEN");
+        fullscreenValue = display.getAtom("_NET_WM_STATE_FULLSCREEN");
         badStates = Set.of(
                 minimizedValue,
-                display.getAtom("_NET_WM_STATE_MODAL").intValue(),
-                display.getAtom("_NET_WM_STATE_ABOVE").intValue());
+                display.getAtom("_NET_WM_STATE_MODAL"),
+                display.getAtom("_NET_WM_STATE_ABOVE"));
 
-        dockValue = display.getAtom("_NET_WM_WINDOW_TYPE_DOCK").intValue();
+        dockValue = display.getAtom("_NET_WM_WINDOW_TYPE_DOCK");
         badTypes = Set.of(
                 dockValue,
-                display.getAtom("_NET_WM_WINDOW_TYPE_DESKTOP").intValue(),
-                display.getAtom("_NET_WM_WINDOW_TYPE_MENU").intValue(),
-                display.getAtom("_NET_WM_WINDOW_TYPE_SPLASH").intValue(),
-                display.getAtom("_NET_WM_WINDOW_TYPE_DIALOG").intValue());
+                display.getAtom("_NET_WM_WINDOW_TYPE_DESKTOP"),
+                display.getAtom("_NET_WM_WINDOW_TYPE_MENU"),
+                display.getAtom("_NET_WM_WINDOW_TYPE_SPLASH"),
+                display.getAtom("_NET_WM_WINDOW_TYPE_DIALOG"));
     }
 
     @Override
@@ -348,8 +347,8 @@ class X11Environment extends AbstractEnvironment {
     private WindowStatus getWindowStatus(Window window) {
         Integer curDesktop;
         Integer desktop;
-        List<Integer> state;
-        List<Integer> type;
+        List<X11.Atom> state;
+        List<X11.Atom> type;
         try {
              /*
             NOTE: Because X11 window managers remove windows' desktop ID and state properties whenever those windows are
@@ -361,8 +360,8 @@ class X11Environment extends AbstractEnvironment {
              */
             curDesktop = display.getActiveDesktopNumber();
             desktop = window.getDesktop();
-            state = IntStream.of(window.getState()).boxed().toList();
-            type = IntStream.of(window.getType()).boxed().toList();
+            state = List.of(window.getState());
+            type = List.of(window.getType());
         } catch (X11Exception e) {
             return WindowStatus.IGNORED;
         }
@@ -501,7 +500,7 @@ class X11Environment extends AbstractEnvironment {
      * @param state the window state collection to check
      * @return {@code true} if the window state collection is good; {@code false} otherwise
      */
-    private boolean isStateGood(Collection<Integer> state) {
+    private boolean isStateGood(Collection<X11.Atom> state) {
         if (state == null || state.isEmpty()) {
             return false;
         }
@@ -517,7 +516,7 @@ class X11Environment extends AbstractEnvironment {
      * @param type the window type collection to check
      * @return {@code true} if the window type collection is good; {@code false} otherwise
      */
-    private boolean isTypeGood(Collection<Integer> type) {
+    private boolean isTypeGood(Collection<X11.Atom> type) {
         if (type == null || type.isEmpty()) {
             return false;
         }
@@ -630,7 +629,7 @@ class X11Environment extends AbstractEnvironment {
      *
      * @return the atom representing the dock window type
      */
-    int getDockValue() {
+    X11.Atom getDockValue() {
         return dockValue;
     }
 }

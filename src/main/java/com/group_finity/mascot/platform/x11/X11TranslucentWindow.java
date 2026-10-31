@@ -8,7 +8,7 @@ import com.group_finity.mascot.platform.TranslucentWindow;
 import com.sun.jna.Native;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.unix.X11;
-import com.sun.jna.ptr.IntByReference;
+import com.sun.jna.ptr.NativeLongByReference;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +40,12 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
     /**
      * Initializes a new {@code X11TranslucentWindow}.
+     *
+     * @param dpy the display used to access the native X11 window of this {@code X11TranslucentWindow}
+     * @param dockValue the {@code _NET_WM_WINDOW_TYPE_DOCK} atom, which represents the window type
+     * used for dock/panel features
      */
-    X11TranslucentWindow(X11.Display dpy, int dockValue) {
+    X11TranslucentWindow(X11.Display dpy, X11.Atom dockValue) {
         super();
 
         setContentPane(new JPanel() {
@@ -68,7 +72,7 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
                 X11 x11 = X11.INSTANCE;
 
                 // Set the window type of the window to "dock" so it can move past the bounds of the screen
-                IntByReference dockAtom = new IntByReference(dockValue);
+                NativeLongByReference dockAtom = new NativeLongByReference(dockValue);
                 x11.XChangeProperty(dpy, win, x11.XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", false),
                         X11.XA_ATOM, 32, X11.PropModeReplace, dockAtom.getPointer(), 1);
             }
