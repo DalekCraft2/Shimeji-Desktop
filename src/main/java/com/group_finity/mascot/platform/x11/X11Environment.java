@@ -121,17 +121,17 @@ class X11Environment extends AbstractEnvironment {
      */
     private final Collection<X11.Atom> badTypes;
 
-    /** The atom representing the window state of being maximized vertically. */
+    /** The {@code _NET_WM_STATE_MAXIMIZED_VERT} atom, which represents the window state of being maximized vertically. */
     private final X11.Atom maximizedVertValue;
-    /** The atom representing the window state of being maximized horizontally. */
+    /** The {@code _NET_WM_STATE_MAXIMIZED_HORZ} atom, which represents the window state of being maximized horizontally. */
     private final X11.Atom maximizedHorzValue;
-    /** The atom representing the window state of being hidden. This applies to both minimized and invisible windows. */
+    /** The {@code _NET_WM_STATE_HIDDEN} atom, which represents the window state of being hidden. This applies to both minimized and invisible windows. */
     private final X11.Atom minimizedValue;
-    /** The atom representing the window state of being in fullscreen mode. */
+    /** The {@code _NET_WM_STATE_FULLSCREEN} atom, which represents the window state of being in fullscreen mode. */
     private final X11.Atom fullscreenValue;
 
     /**
-     * The atom representing the window type used for dock/panel features.
+     * The {@code _NET_WM_WINDOW_TYPE_DOCK} atom, which represents the window type used for dock/panel features.
      *
      * @see #getDockValue()
      */
