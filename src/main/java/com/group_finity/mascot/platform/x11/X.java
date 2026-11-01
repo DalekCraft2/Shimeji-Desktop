@@ -1555,7 +1555,7 @@ public class X {
             X11.XEvent e = new X11.XEvent();
             e.setTypedValue(event);
 
-            if (x11.XSendEvent(display.x11Display, display.getRootWindow().x11Window, 0, mask, e) == 0) {
+            if (x11.XSendEvent(display.x11Display, getXWindowAttributes().root, 0, mask, e) == 0) {
                 throw new X11Exception("Cannot send " + msg + " event.");
             }
         }
