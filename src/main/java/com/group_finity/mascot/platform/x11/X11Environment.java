@@ -182,9 +182,37 @@ class X11Environment extends AbstractEnvironment {
         Map<String, Rectangle> screenRects = new HashMap<>(gs.length);
         Map<String, Rectangle> workAreaRects = new HashMap<>(gs.length);
 
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        /*
+        On X11, the root window of a given screen will have the _NET_WORKAREA property, which describes the work area
+        bounds for each desktop for that screen. This property is used by Toolkit.getScreenInsets() on X11. However,
+        _NET_WORKAREA does not contain reliable information about the work area bounds when there is more than one
+        screen.
 
-        for (final GraphicsDevice gd : gs) {
+        Systems that use GNOME will support an alternative property, _GTK_WORKAREAS_Dn, which describes more reliable
+        work area bounds for each screen for the specified desktop index `n`. If this property is supported on the
+        current platform, we should always use it instead of Toolkit.getScreenInsets().
+        */
+        Rectangle[] gtkWorkAreas = null;
+        try {
+            Integer currentDesktop = display.getActiveDesktopNumber();
+            // GNOME on XWayland doesn't seem to support _NET_CURRENT_DESKTOP, but it does support _GTK_WORKAREAS_Dn,
+            // so we'll just assume that the current desktop index is 0 in that case.
+            int[] workAreaInts = display.getRootWindow().getIntArrayProperty(X11.XA_CARDINAL,
+                    "_GTK_WORKAREAS_D" + (currentDesktop == null ? 0 : currentDesktop));
+
+            if (workAreaInts != null) {
+                gtkWorkAreas = new Rectangle[workAreaInts.length / 4];
+
+                for (int i = 0; i < gtkWorkAreas.length; i++) {
+                    gtkWorkAreas[i] = new Rectangle(workAreaInts[i * 4], workAreaInts[i * 4 + 1],
+                            workAreaInts[i * 4 + 2], workAreaInts[i * 4 + 3]);
+                }
+            }
+        } catch (X11Exception e) {
+        }
+
+        for (int i = 0; i < gs.length; i++) {
+            GraphicsDevice gd = gs[i];
             GraphicsConfiguration gc = gd.getDefaultConfiguration();
             String id = gd.getIDstring();
 
@@ -192,16 +220,17 @@ class X11Environment extends AbstractEnvironment {
             unionBounds = unionBounds.union(bounds);
             screenRects.put(id, bounds);
 
-            /*
-            BUG: X11's _NET_WORKAREA atom, which is used by Toolkit.getScreenInsets() on X11, does not contain
-            reliable information about the work area bounds when there is more than one screen. And besides,
-            _NET_WORKAREA is meant to describe the work area bounds for each desktop rather than for each screen.
-            I am not sure that there is a workaround for this, so I have to resort to using the screen bounds
-            as the work area bounds whenever there is more than one screen.
-            */
-            if (gs.length > 1) {
+            if (gtkWorkAreas != null) {
+                // Always use the work area bounds retrieved from _GTK_WORKAREAS_Dn if that property is supported
+                workAreaRects.put(id, gtkWorkAreas[i]);
+            } else if (gs.length > 1) {
+                // _GTK_WORKAREAS_Dn isn't supported and there's more than one screen, so use the screen bounds
+                // as the work area bounds to avoid odd collision behavior
                 workAreaRects.put(id, bounds);
             } else {
+                // _GTK_WORKAREAS_Dn isn't supported, but there's only one screen,
+                // so we can use Toolkit.getScreenInsets() because it should be reliable in this scenario
+                Toolkit toolkit = Toolkit.getDefaultToolkit();
                 Insets insets = toolkit.getScreenInsets(gc);
 
                 Rectangle workAreaRect;
