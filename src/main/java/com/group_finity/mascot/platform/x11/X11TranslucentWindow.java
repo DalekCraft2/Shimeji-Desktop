@@ -6,7 +6,6 @@ package com.group_finity.mascot.platform.x11;
 
 import com.group_finity.mascot.platform.TranslucentWindow;
 import com.sun.jna.Native;
-import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.unix.X11;
 import com.sun.jna.ptr.NativeLongByReference;
 
@@ -27,16 +26,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
      * @see #setImage(BufferedImage)
      */
     private BufferedImage image;
-
-    /**
-     * Whether this window is currently visible.
-     * <p>
-     * This field exists as a workaround to a bug involving {@link JWindow#setVisible(boolean)} on X11.
-     *
-     * @see #isVisible()
-     * @see #setVisible(boolean)
-     */
-    private boolean visible;
 
     /**
      * Initializes a new {@code X11TranslucentWindow}.
@@ -64,15 +53,23 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
 
         // Add a listener for when the window becomes visible, because the native window will not be null by then
         addHierarchyListener(e -> {
-            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
-                // Get the handle of the native window for this JWindow
-                X11.Window win = new X11.Window(Native.getWindowID(this));
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && e.getComponent().isShowing()) {
                 X11 x11 = X11.INSTANCE;
 
-                // Set the window type of the window to "dock" so it can move past the bounds of the screen
-                NativeLongByReference dockAtom = new NativeLongByReference(dpy.getAtom("_NET_WM_WINDOW_TYPE_DOCK"));
+                // Get the handle of the native window for this JWindow
+                X11.Window win = new X11.Window(Native.getWindowID(this));
+
+                // Set the window type of the window to "dock" so the window can move past the bounds of the work area
+                NativeLongByReference dockTypeRef = new NativeLongByReference(dpy.getAtom("_NET_WM_WINDOW_TYPE_DOCK"));
                 x11.XChangeProperty(dpy.getX11Display(), win, dpy.getAtom("_NET_WM_WINDOW_TYPE"),
-                        X11.XA_ATOM, 32, X11.PropModeReplace, dockAtom.getPointer(), 1);
+                        X11.XA_ATOM, 32, X11.PropModeReplace, dockTypeRef.getPointer(), 1);
+
+                // Hide the native window and wait for all events to be processed before showing it again.
+                // This fixes the issue in which the JWindow sometimes displays a taskbar icon after being made visible,
+                // invisible, and then visible again.
+                x11.XUnmapWindow(dpy.getX11Display(), win);
+                x11.XSync(dpy.getX11Display(), false);
+                x11.XMapWindow(dpy.getX11Display(), win);
             }
         });
     }
@@ -84,30 +81,6 @@ class X11TranslucentWindow extends JWindow implements TranslucentWindow {
                 ",y=" + getY() +
                 ",width=" + getWidth() +
                 ",height=" + getHeight();
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public void setVisible(final boolean b) {
-        /*
-         * On Linux, setting the window to visible, then invisible, and then visible again will make an icon for the
-         * window appear in the taskbar, which should not happen. The workaround is to simply never call
-         * super.setVisible(false), and use WindowUtils.setWindowAlpha() to hide the window instead.
-         */
-        if (b) {
-            if (!super.isVisible()) {
-                super.setVisible(true);
-            }
-            WindowUtils.setWindowAlpha(this, 1.0f);
-            visible = true;
-        } else {
-            WindowUtils.setWindowAlpha(this, 0.0f);
-            visible = false;
-        }
     }
 
     @Override
