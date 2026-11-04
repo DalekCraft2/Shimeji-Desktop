@@ -86,6 +86,12 @@ public class Manager {
     private boolean enabled = true;
 
     /**
+     * Lock used to ensure that calls to {@link #setEnabled(boolean)} only return
+     * once the current {@linkplain tick} has finished.
+     */
+    private final ReadWriteLock enabledLock = new ReentrantReadWriteLock();
+
+    /**
      * Thread that calls {@link #tick()} every {@value #TICK_INTERVAL} milliseconds.
      */
     private Thread thread;
@@ -166,13 +172,17 @@ public class Manager {
                         } else {
                             prev = cur;
                         }
-                        if (enabled) {
-                            try {
+                        // Use enabledLock to only allow setEnabled() calls to return once the current tick has finished
+                        enabledLock.readLock().lock();
+                        try {
+                            if (enabled) {
                                 // Move the mascots.
                                 tick();
-                            } catch (RuntimeException e) {
-                                log.error("An error occurred while running the tick method.", e);
                             }
+                        } catch (RuntimeException e) {
+                            log.error("An error occurred while running the tick method.", e);
+                        } finally {
+                            enabledLock.readLock().unlock();
                         }
                         continue;
                     }
@@ -520,7 +530,12 @@ public class Manager {
      * @return {@code true} if this {@code Manager} is enabled; {@code false} otherwise
      */
     public boolean isEnabled() {
-        return enabled;
+        enabledLock.readLock().lock();
+        try {
+            return enabled;
+        } finally {
+            enabledLock.readLock().unlock();
+        }
     }
 
     /**
@@ -530,7 +545,13 @@ public class Manager {
      * @param enabled {@code true} to enable this {@code Manager}; {@code false} to disable it
      */
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        // Only allow setEnabled() calls to return once the current tick has finished
+        enabledLock.writeLock().lock();
+        try {
+            this.enabled = enabled;
+        } finally {
+            enabledLock.writeLock().unlock();
+        }
     }
 
     /**
