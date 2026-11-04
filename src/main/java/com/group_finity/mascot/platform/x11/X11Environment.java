@@ -381,8 +381,10 @@ class X11Environment extends AbstractEnvironment {
              */
             curDesktop = display.getActiveDesktopNumber();
             desktop = window.getDesktop();
-            state = List.of(window.getState());
-            type = List.of(window.getType());
+            X11.Atom[] stateArray = window.getState();
+            state = stateArray == null ? null : List.of(stateArray);
+            X11.Atom[] typeArray = window.getType();
+            type = typeArray == null ? null : List.of(typeArray);
         } catch (X11Exception e) {
             return WindowStatus.IGNORED;
         }
@@ -503,10 +505,13 @@ class X11Environment extends AbstractEnvironment {
         if (window == null) {
             return "";
         }
-        String title;
+        String title = null;
         try {
             title = window.getTitle();
         } catch (X11Exception e) {
+        }
+        if (title == null) {
+            // Default to empty string to match WindowUtils.getWindowTitle()
             title = "";
         }
         return title;
