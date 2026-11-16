@@ -537,82 +537,53 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCallShimejiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallShimejiActionPerformed
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                Main.getInstance().createMascot();
-                return null;
+        Main.getInstance().createMascot();
+        // Update the pause text on the EDT after the manager adds the newly created mascot to its list
+        Main.getInstance().getManager().enqueueTask(() -> SwingUtilities.invokeLater(() -> {
+            if (useSystemTray) {
+                return;
             }
-
-            @Override
-            protected void done() {
-                if (useSystemTray) {
-                    return;
-                }
-                refreshPauseText();
-            }
-        };
-        worker.execute();
+            refreshPauseText();
+        }));
         if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
         }
     }//GEN-LAST:event_btnCallShimejiActionPerformed
 
     private void btnFollowCursorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFollowCursorActionPerformed
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                Main.getInstance().getManager().setBehaviorAll(UserBehavior.BEHAVIORNAME_CHASEMOUSE);
-                return null;
+        Manager manager = Main.getInstance().getManager();
+        manager.setBehaviorAll(UserBehavior.BEHAVIORNAME_CHASEMOUSE);
+        // Update the pause text on the EDT after the manager executes the above task
+        manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> {
+            if (useSystemTray) {
+                return;
             }
-
-            @Override
-            protected void done() {
-                if (useSystemTray) {
-                    return;
-                }
-                // Refresh the pause text in case any mascots had to be disposed
-                // because the behavior failed to initialize for them
-                refreshPauseText();
-            }
-        };
-        worker.execute();
+            // Refresh the pause text, in case the behavior failed to initialize
+            // for any mascots and those mascots had to be disposed
+            refreshPauseText();
+        }));
         if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
         }
     }//GEN-LAST:event_btnFollowCursorActionPerformed
 
     private void btnReduceToOneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReduceToOneActionPerformed
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                Main.getInstance().getManager().remainOne();
-                return null;
+        Manager manager = Main.getInstance().getManager();
+        manager.remainOne();
+        // Update the pause text on the EDT after the manager executes the above task
+        manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> {
+            if (useSystemTray) {
+                return;
             }
-
-            @Override
-            protected void done() {
-                if (useSystemTray) {
-                    return;
-                }
-                refreshPauseText();
-            }
-        };
-        worker.execute();
+            refreshPauseText();
+        }));
         if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
         }
     }//GEN-LAST:event_btnReduceToOneActionPerformed
 
     private void btnRestoreWindowsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestoreWindowsActionPerformed
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                NativeFactory.getInstance().getEnvironment().restoreWindows();
-                return null;
-            }
-        };
-        worker.execute();
+        Main.getInstance().getManager().enqueueTask(() -> NativeFactory.getInstance().getEnvironment().restoreWindows());
         if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
         }
@@ -939,25 +910,17 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_itmJapaneseActionPerformed
 
     private void btnPauseAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseAllActionPerformed
+        Main.getInstance().getManager().togglePauseAll();
+        // Update the pause text on the EDT after the manager executes the above task
+        Main.getInstance().getManager().enqueueTask(() -> SwingUtilities.invokeLater(() -> {
+            if (useSystemTray) {
+                return;
+            }
+            refreshPauseText();
+        }));
         if (useSystemTray) {
             ((Window) getTopLevelAncestor()).dispose();
         }
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() {
-                Main.getInstance().getManager().togglePauseAll();
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                if (useSystemTray) {
-                    return;
-                }
-                refreshPauseText();
-            }
-        };
-        worker.execute();
     }//GEN-LAST:event_btnPauseAllActionPerformed
 
     private void btnDismissAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDismissAllActionPerformed

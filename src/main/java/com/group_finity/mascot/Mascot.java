@@ -524,17 +524,17 @@ public class Mascot {
         final JMenuItem callAnotherItem = new JMenuItem(languageBundle.getString("CallAnother"));
         callAnotherItem.addActionListener(event -> {
             Main.getInstance().createMascot(imageSet);
-            Main.getInstance().getTrayMenu().refreshPauseText();
+            manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> Main.getInstance().getTrayMenu().refreshPauseText()));
         });
 
         final JMenuItem followCursorItem = new JMenuItem(languageBundle.getString("FollowCursor"));
         followCursorItem.addActionListener(event -> {
             manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), UserBehavior.BEHAVIORNAME_CHASEMOUSE, imageSet);
-            Main.getInstance().getTrayMenu().refreshPauseText();
+            manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> Main.getInstance().getTrayMenu().refreshPauseText()));
         });
 
         final JMenuItem restoreWindowsItem = new JMenuItem(languageBundle.getString("RestoreWindows"));
-        restoreWindowsItem.addActionListener(event -> environment.restoreIE());
+        restoreWindowsItem.addActionListener(event -> manager.enqueueTask(environment::restoreIE));
 
         final JMenuItem debugMenuItem = new JMenuItem(languageBundle.getString("RevealStatistics"));
         debugMenuItem.addActionListener(event -> {
@@ -595,19 +595,19 @@ public class Mascot {
         final JMenuItem disposeMenu = new JMenuItem(languageBundle.getString("Dismiss"));
         disposeMenu.addActionListener(e -> {
             dispose();
-            Main.getInstance().getTrayMenu().refreshPauseText();
+            manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> Main.getInstance().getTrayMenu().refreshPauseText()));
         });
 
         final JMenuItem remainOneItem = new JMenuItem(languageBundle.getString("DismissOthers"));
         remainOneItem.addActionListener(event -> {
             manager.remainOne(imageSet, this);
-            Main.getInstance().getTrayMenu().refreshPauseText();
+            manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> Main.getInstance().getTrayMenu().refreshPauseText()));
         });
 
         final JMenuItem remainOnlyOneItem = new JMenuItem(languageBundle.getString("DismissAllOthers"));
         remainOnlyOneItem.addActionListener(event -> {
             manager.remainOne(this);
-            Main.getInstance().getTrayMenu().refreshPauseText();
+            manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> Main.getInstance().getTrayMenu().refreshPauseText()));
         });
 
         final JMenuItem closeMenu = new JMenuItem(languageBundle.getString("DismissAll"));

@@ -9,8 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -42,27 +46,18 @@ public class Manager {
     private final List<Mascot> mascots = new ArrayList<>();
 
     /**
-     * The {@link Mascot} objects that should be added to this {@code Manager}.
-     * To prevent {@link ConcurrentModificationException}, {@link Mascot} additions are reflected all at once
-     * whenever {@link #tick()} is called.
-     *
-     * @see #add(Mascot)
-     */
-    private final Set<Mascot> added = new LinkedHashSet<>();
-
-    /**
-     * The {@link Mascot} objects that should be removed from this {@code Manager}.
-     * To prevent {@link ConcurrentModificationException}, {@link Mascot} removals are reflected all at once
-     * whenever {@link #tick()} is called.
-     *
-     * @see #remove(Mascot)
-     */
-    private final Set<Mascot> removed = new LinkedHashSet<>();
-
-    /**
      * A lock used to allow concurrent access to {@link #mascots}.
      */
     private final ReadWriteLock mascotLock = new ReentrantReadWriteLock();
+
+    /**
+     * A queue of tasks that will be run by this {@code Manager} when {@link #tick()} is next called.
+     *
+     * @see #runPendingTasks()
+     * @see #enqueueTask(Runnable)
+     * @see #enqueueTask(Runnable, boolean)
+     */
+    private final ConcurrentLinkedDeque<Runnable> tasks = new ConcurrentLinkedDeque<>();
 
     /**
      * Whether the program should exit when the last {@link Mascot} is removed from this {@code Manager}.
@@ -212,30 +207,22 @@ public class Manager {
      * and advances all {@link Mascot} objects by one tick.
      */
     private void tick() {
-        // Update the environmental information first
+        mascotLock.writeLock().lock();
+        try {
+            // There may be tasks that perform write operations, so run them whilst holding the write lock
+            runPendingTasks();
+        } finally {
+            mascotLock.writeLock().unlock();
+        }
+
+        // Update the environmental information before iterating through the mascots
         NativeFactory.getInstance().getEnvironment().tick();
 
         boolean noMascots;
 
         mascotLock.writeLock().lock();
         try {
-            synchronized (added) {
-                // Add the mascots that should be added
-                if (!added.isEmpty()) {
-                    mascots.addAll(added);
-                    added.clear();
-                }
-
-                // Remove the mascots that should be removed
-                if (!removed.isEmpty()) {
-                    mascots.removeAll(removed);
-                    removed.clear();
-                }
-            }
-
-            noMascots = mascots.isEmpty();
-
-            if (!noMascots) {
+            if (!mascots.isEmpty()) {
                 // Advance the mascots' time
                 for (final Mascot mascot : mascots) {
                     mascot.tick();
@@ -246,6 +233,11 @@ public class Manager {
                     mascot.apply();
                 }
             }
+
+            // There may be tasks that perform write operations, so run them whilst holding the write lock
+            runPendingTasks();
+
+            noMascots = mascots.isEmpty();
         } finally {
             mascotLock.writeLock().unlock();
         }
@@ -257,8 +249,59 @@ public class Manager {
     }
 
     /**
+     * Runs all currently enqueued tasks.
+     */
+    private void runPendingTasks() {
+        while (!tasks.isEmpty()) {
+            tasks.removeFirst().run();
+        }
+    }
+
+    /**
+     * Adds the specified runnable to this {@code Manager} object's queue of tasks, and runs it on this
+     * {@code Manager} object's thread after all previous tasks have been run.
+     * <p>
+     * If this {@code Manager} is disabled or has not been started, the specified task will be run immediately.
+     *
+     * @param task the task to execute on this {@code Manager} object's thread
+     */
+    public void enqueueTask(Runnable task) {
+        enqueueTask(task, false);
+    }
+
+    /**
+     * Adds the specified runnable to this {@code Manager} object's queue of tasks, and runs it on this
+     * {@code Manager} object's thread after all previous tasks have been run.
+     * <p>
+     * If this {@code Manager} is disabled or has not been started, or if {@code bypassQueue} is {@code true}
+     * and this method is being invoked from this {@code Manager} object's thread, the specified task
+     * will be run immediately.
+     *
+     * @param task the task to execute on this {@code Manager} object's thread
+     * @param bypassQueue whether to run {@code task} immediately if this method is being invoked from this
+     * {@code Manager} object's thread, regardless of whether this {@code Manager} is enabled and currently running.
+     * This is mainly used when performing read-only operations which have no risk of throwing
+     * {@code ConcurrentModificationException} or causing other unexpected behavior.
+     */
+    private void enqueueTask(Runnable task, boolean bypassQueue) {
+        enabledLock.readLock().lock();
+        try {
+            if (!enabled || thread == null || bypassQueue && Thread.currentThread() == thread) {
+                task.run();
+                return;
+            }
+        } finally {
+            enabledLock.readLock().unlock();
+        }
+
+        tasks.add(task);
+    }
+
+    /**
      * Adds a {@link Mascot} to this {@code Manager}.
-     * Addition is done during the next call to {@link #tick()}.
+     * <p>
+     * If this {@code Manager} is disabled or has not started running, then the addition
+     * will be done during the next call to {@link #tick()}.
      *
      * @param mascot the {@code Mascot} to add
      */
@@ -274,25 +317,42 @@ public class Manager {
             oldManager.remove(mascot);
         }
 
-        synchronized (added) {
-            added.add(mascot);
-            removed.remove(mascot);
-        }
-        mascot.setManager(this);
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                mascot.setManager(this);
+                if (!mascots.contains(mascot)) {
+                    mascots.add(mascot);
+                }
+            } finally {
+                mascotLock.writeLock().unlock();
+            }
+        });
     }
 
     /**
      * Removes a {@link Mascot} from this {@code Manager}.
-     * Removal is done during the next call to {@link #tick()}.
+     * <p>
+     * If this {@code Manager} is disabled or has not started running, then the removal
+     * will be done during the next call to {@link #tick()}.
      *
      * @param mascot the {@code Mascot} to remove
      */
     public void remove(final Mascot mascot) {
-        synchronized (added) {
-            added.remove(mascot);
-            removed.add(mascot);
-        }
-        mascot.setManager(null);
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                // Don't do anything if the mascot is not managed by this manager
+                if (!equals(mascot.getManager())) {
+                    return;
+                }
+
+                mascot.setManager(null);
+                mascots.remove(mascot);
+            } finally {
+                mascotLock.writeLock().unlock();
+            }
+        });
     }
 
     /**
@@ -302,24 +362,26 @@ public class Manager {
      * @param name the name of the behavior to apply to all mascots
      */
     public void setBehaviorAll(final String name) {
-        mascotLock.writeLock().lock();
-        try {
-            if (mascots.isEmpty()) {
-                return;
-            }
-            for (final Mascot mascot : mascots) {
-                Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
-                try {
-                    mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
-                } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
-                    log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
-                    Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
-                    mascot.dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                if (mascots.isEmpty()) {
+                    return;
                 }
+                for (final Mascot mascot : mascots) {
+                    Configuration configuration = Main.getInstance().getConfiguration(mascot.getImageSet());
+                    try {
+                        mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
+                    } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
+                        log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
+                        Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
+                        mascot.dispose();
+                    }
+                }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        });
     }
 
     /**
@@ -331,25 +393,27 @@ public class Manager {
      * @param imageSet the name of the image set for which to check
      */
     public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
-        mascotLock.writeLock().lock();
-        try {
-            if (mascots.isEmpty()) {
-                return;
-            }
-            for (final Mascot mascot : mascots) {
-                try {
-                    if (mascot.getImageSet().equals(imageSet)) {
-                        mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
-                    }
-                } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
-                    log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
-                    Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
-                    mascot.dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                if (mascots.isEmpty()) {
+                    return;
                 }
+                for (final Mascot mascot : mascots) {
+                    try {
+                        if (mascot.getImageSet().equals(imageSet)) {
+                            mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(name), mascot));
+                        }
+                    } catch (final BehaviorInstantiationException | BehaviorExecutionException e) {
+                        log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", name, mascot, e);
+                        Main.showError(String.format(Main.getInstance().getLanguageBundle().getString("FailedSetBehaviourErrorMessage"), name, mascot), e);
+                        mascot.dispose();
+                    }
+                }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        });
     }
 
     /**
@@ -357,15 +421,17 @@ public class Manager {
      * The remaining mascot will be the first mascot in this {@code Manager} object's internal list of mascots.
      */
     public void remainOne() {
-        mascotLock.writeLock().lock();
-        try {
-            int totalMascots = mascots.size();
-            for (int i = totalMascots - 1; i > 0; i--) {
-                mascots.get(i).dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                int totalMascots = mascots.size();
+                for (int i = totalMascots - 1; i > 0; i--) {
+                    mascots.get(i).dispose();
+                }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        });
     }
 
     /**
@@ -374,18 +440,20 @@ public class Manager {
      * @param mascot the mascot to retain
      */
     public void remainOne(Mascot mascot) {
-        mascotLock.writeLock().lock();
-        try {
-            int totalMascots = mascots.size();
-            for (int i = totalMascots - 1; i >= 0; i--) {
-                Mascot m = mascots.get(i);
-                if (!m.equals(mascot)) {
-                    m.dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                int totalMascots = mascots.size();
+                for (int i = totalMascots - 1; i >= 0; i--) {
+                    Mascot m = mascots.get(i);
+                    if (!m.equals(mascot)) {
+                        m.dispose();
+                    }
                 }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        }, true);
     }
 
     /**
@@ -396,21 +464,23 @@ public class Manager {
      * @param imageSet the name of the image set whose mascots should be disposed
      */
     public void remainOne(String imageSet) {
-        mascotLock.writeLock().lock();
-        try {
-            int totalMascots = mascots.size();
-            boolean isFirst = true;
-            for (int i = totalMascots - 1; i >= 0; i--) {
-                Mascot m = mascots.get(i);
-                if (m.getImageSet().equals(imageSet) && isFirst) {
-                    isFirst = false;
-                } else if (m.getImageSet().equals(imageSet) && !isFirst) {
-                    m.dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                int totalMascots = mascots.size();
+                boolean isFirst = true;
+                for (int i = totalMascots - 1; i >= 0; i--) {
+                    Mascot m = mascots.get(i);
+                    if (m.getImageSet().equals(imageSet) && isFirst) {
+                        isFirst = false;
+                    } else if (m.getImageSet().equals(imageSet) && !isFirst) {
+                        m.dispose();
+                    }
                 }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        }, true);
     }
 
     /**
@@ -420,18 +490,20 @@ public class Manager {
      * @param mascot the mascot to retain
      */
     public void remainOne(String imageSet, Mascot mascot) {
-        mascotLock.writeLock().lock();
-        try {
-            int totalMascots = mascots.size();
-            for (int i = totalMascots - 1; i >= 0; i--) {
-                Mascot m = mascots.get(i);
-                if (m.getImageSet().equals(imageSet) && !m.equals(mascot)) {
-                    m.dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                int totalMascots = mascots.size();
+                for (int i = totalMascots - 1; i >= 0; i--) {
+                    Mascot m = mascots.get(i);
+                    if (m.getImageSet().equals(imageSet) && !m.equals(mascot)) {
+                        m.dispose();
+                    }
                 }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        }, true);
     }
 
     /**
@@ -440,18 +512,20 @@ public class Manager {
      * @param imageSet the image set for which to check
      */
     public void remainNone(String imageSet) {
-        mascotLock.writeLock().lock();
-        try {
-            int totalMascots = mascots.size();
-            for (int i = totalMascots - 1; i >= 0; i--) {
-                Mascot m = mascots.get(i);
-                if (m.getImageSet().equals(imageSet)) {
-                    m.dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                int totalMascots = mascots.size();
+                for (int i = totalMascots - 1; i >= 0; i--) {
+                    Mascot m = mascots.get(i);
+                    if (m.getImageSet().equals(imageSet)) {
+                        m.dispose();
+                    }
                 }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        }, true);
     }
 
     /**
@@ -460,28 +534,32 @@ public class Manager {
      * @see Mascot#markDirty()
      */
     public void markAllDirty() {
-        mascotLock.writeLock().lock();
-        try {
-            for (Mascot mascot : mascots) {
-                mascot.markDirty();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                for (Mascot mascot : mascots) {
+                    mascot.markDirty();
+                }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        }, true);
     }
 
     /**
      * Disposes all mascots in this {@code Manager}.
      */
     public void disposeAll() {
-        mascotLock.writeLock().lock();
-        try {
-            for (int i = mascots.size() - 1; i >= 0; i--) {
-                mascots.get(i).dispose();
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                for (int i = mascots.size() - 1; i >= 0; i--) {
+                    mascots.get(i).dispose();
+                }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        });
     }
 
     /**
@@ -492,14 +570,22 @@ public class Manager {
      * or if this {@code Manager} has no mascots
      */
     public boolean isPaused() {
-        mascotLock.readLock().lock();
-        try {
-            if (mascots.isEmpty()) {
-                return false;
+        RunnableFuture<Boolean> future = new FutureTask<>(() -> {
+            mascotLock.readLock().lock();
+            try {
+                if (mascots.isEmpty()) {
+                    return false;
+                }
+                return mascots.stream().allMatch(Mascot::isPaused);
+            } finally {
+                mascotLock.readLock().unlock();
             }
-            return mascots.stream().allMatch(Mascot::isPaused);
-        } finally {
-            mascotLock.readLock().unlock();
+        });
+        enqueueTask(future, true);
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -507,20 +593,22 @@ public class Manager {
      * Toggles the paused state of all mascots in this {@code Manager}.
      */
     public void togglePauseAll() {
-        mascotLock.writeLock().lock();
-        try {
-            if (mascots.isEmpty()) {
-                return;
-            }
+        enqueueTask(() -> {
+            mascotLock.writeLock().lock();
+            try {
+                if (mascots.isEmpty()) {
+                    return;
+                }
 
-            boolean isPaused = mascots.stream().allMatch(Mascot::isPaused);
+                boolean isPaused = mascots.stream().allMatch(Mascot::isPaused);
 
-            for (final Mascot mascot : mascots) {
-                mascot.setPaused(!isPaused);
+                for (final Mascot mascot : mascots) {
+                    mascot.setPaused(!isPaused);
+                }
+            } finally {
+                mascotLock.writeLock().unlock();
             }
-        } finally {
-            mascotLock.writeLock().unlock();
-        }
+        });
     }
 
     /**
@@ -572,19 +660,27 @@ public class Manager {
      * @return the number of mascots that use the specified image set
      */
     public int getCount(String imageSet) {
-        mascotLock.readLock().lock();
-        try {
-            if (mascots.isEmpty()) {
-                return 0;
-            }
+        RunnableFuture<Integer> future = new FutureTask<>(() -> {
+            mascotLock.readLock().lock();
+            try {
+                if (mascots.isEmpty()) {
+                    return 0;
+                }
 
-            if (imageSet == null) {
-                return mascots.size();
-            } else {
-                return (int) mascots.stream().filter(m -> m.getImageSet().equals(imageSet)).count();
+                if (imageSet == null) {
+                    return mascots.size();
+                } else {
+                    return (int) mascots.stream().filter(m -> m.getImageSet().equals(imageSet)).count();
+                }
+            } finally {
+                mascotLock.readLock().unlock();
             }
-        } finally {
-            mascotLock.readLock().unlock();
+        });
+        enqueueTask(future, true);
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -596,20 +692,28 @@ public class Manager {
      * or {@code null} if none was found
      */
     public WeakReference<Mascot> getMascotWithAffordance(String affordance) {
-        mascotLock.readLock().lock();
-        try {
-            if (!mascots.isEmpty()) {
-                for (final Mascot mascot : mascots) {
-                    if (mascot.getAffordances().contains(affordance)) {
-                        return new WeakReference<>(mascot);
+        RunnableFuture<WeakReference<Mascot>> future = new FutureTask<>(() -> {
+            mascotLock.readLock().lock();
+            try {
+                if (!mascots.isEmpty()) {
+                    for (final Mascot mascot : mascots) {
+                        if (mascot.getAffordances().contains(affordance)) {
+                            return new WeakReference<>(mascot);
+                        }
                     }
                 }
+            } finally {
+                mascotLock.readLock().unlock();
             }
-        } finally {
-            mascotLock.readLock().unlock();
-        }
 
-        return null;
+            return null;
+        });
+        enqueueTask(future, true);
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -619,24 +723,32 @@ public class Manager {
      * @return whether there are at least two mascots whose anchors are at the specified point
      */
     public boolean hasOverlappingMascotsAtPoint(Point anchor) {
-        int count = 0;
+        RunnableFuture<Boolean> future = new FutureTask<>(() -> {
+            int count = 0;
 
-        mascotLock.readLock().lock();
-        try {
-            if (!mascots.isEmpty()) {
-                for (final Mascot mascot : mascots) {
-                    if (mascot.getAnchor().equals(anchor)) {
-                        count++;
-                    }
-                    if (count > 1) {
-                        return true;
+            mascotLock.readLock().lock();
+            try {
+                if (!mascots.isEmpty()) {
+                    for (final Mascot mascot : mascots) {
+                        if (mascot.getAnchor().equals(anchor)) {
+                            count++;
+                        }
+                        if (count > 1) {
+                            return true;
+                        }
                     }
                 }
+            } finally {
+                mascotLock.readLock().unlock();
             }
-        } finally {
-            mascotLock.readLock().unlock();
-        }
 
-        return false;
+            return false;
+        });
+        enqueueTask(future, true);
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
