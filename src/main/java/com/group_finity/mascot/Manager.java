@@ -637,6 +637,11 @@ public class Manager {
         enabledLock.writeLock().lock();
         try {
             this.enabled = enabled;
+
+            if (!enabled) {
+                // Run any pending tasks just in case any were enqueued after the last runPendingTasks() call in tick()
+                runPendingTasks();
+            }
         } finally {
             enabledLock.writeLock().unlock();
         }
