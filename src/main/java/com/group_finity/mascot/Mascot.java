@@ -169,7 +169,6 @@ public class Mascot {
      *
      * @see #isPaused()
      * @see #setPaused(boolean)
-     * @see #setPausedNoCallback(boolean)
      */
     private boolean paused = false;
 
@@ -523,10 +522,16 @@ public class Mascot {
         });
 
         final JMenuItem callAnotherItem = new JMenuItem(languageBundle.getString("CallAnother"));
-        callAnotherItem.addActionListener(event -> Main.getInstance().createMascot(imageSet));
+        callAnotherItem.addActionListener(event -> {
+            Main.getInstance().createMascot(imageSet);
+            Main.getInstance().getTrayMenu().refreshPauseText();
+        });
 
         final JMenuItem followCursorItem = new JMenuItem(languageBundle.getString("FollowCursor"));
-        followCursorItem.addActionListener(event -> manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), UserBehavior.BEHAVIORNAME_CHASEMOUSE, imageSet));
+        followCursorItem.addActionListener(event -> {
+            manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), UserBehavior.BEHAVIORNAME_CHASEMOUSE, imageSet);
+            Main.getInstance().getTrayMenu().refreshPauseText();
+        });
 
         final JMenuItem restoreWindowsItem = new JMenuItem(languageBundle.getString("RestoreWindows"));
         restoreWindowsItem.addActionListener(event -> environment.restoreIE());
@@ -582,16 +587,28 @@ public class Mascot {
         MenuScroller.setScrollerFor(allowedBehaviorsMenu, 30, 125);
 
         final JMenuItem pauseItem = new JMenuItem(isPaused() ? languageBundle.getString("ResumeAnimations") : languageBundle.getString("PauseAnimations"));
-        pauseItem.addActionListener(event -> setPaused(!isPaused()));
+        pauseItem.addActionListener(event -> {
+            setPaused(!isPaused());
+            Main.getInstance().getTrayMenu().refreshPauseText();
+        });
 
         final JMenuItem disposeMenu = new JMenuItem(languageBundle.getString("Dismiss"));
-        disposeMenu.addActionListener(e -> dispose());
+        disposeMenu.addActionListener(e -> {
+            dispose();
+            Main.getInstance().getTrayMenu().refreshPauseText();
+        });
 
         final JMenuItem remainOneItem = new JMenuItem(languageBundle.getString("DismissOthers"));
-        remainOneItem.addActionListener(event -> manager.remainOne(imageSet, this));
+        remainOneItem.addActionListener(event -> {
+            manager.remainOne(imageSet, this);
+            Main.getInstance().getTrayMenu().refreshPauseText();
+        });
 
         final JMenuItem remainOnlyOneItem = new JMenuItem(languageBundle.getString("DismissAllOthers"));
-        remainOnlyOneItem.addActionListener(event -> manager.remainOne(this));
+        remainOnlyOneItem.addActionListener(event -> {
+            manager.remainOne(this);
+            Main.getInstance().getTrayMenu().refreshPauseText();
+        });
 
         final JMenuItem closeMenu = new JMenuItem(languageBundle.getString("DismissAll"));
         closeMenu.addActionListener(e -> Main.getInstance().exit());
@@ -1303,43 +1320,19 @@ public class Mascot {
      *
      * @return {@code true} if this {@code Mascot} is paused; {@code false} if it is unpaused
      * @see #setPaused(boolean)
-     * @see #setPausedNoCallback(boolean)
      */
     public boolean isPaused() {
         return paused;
     }
 
     /**
-     * Sets whether this {@code Mascot} is paused, and notifies the program's tray menu to update the text
-     * of its "Pause/Resume Animations" button.
-     * When a {@code Mascot} is paused, {@link #tick()} and {@link #apply()} will do nothing.
-     *
-     * @param paused {@code true} to pause this {@code Mascot}; {@code false} to unpause it
-     * @see #isPaused()
-     * @see #setPausedNoCallback(boolean)
-     * @see TrayMenu#refreshPauseText()
-     */
-    public void setPaused(final boolean paused) {
-        if (this.paused == paused) {
-            return;
-        }
-
-        this.paused = paused;
-        Main.getInstance().getTrayMenu().refreshPauseText();
-    }
-
-    /**
      * Sets whether this {@code Mascot} is paused.
      * When a {@code Mascot} is paused, {@link #tick()} and {@link #apply()} will do nothing.
-     * <p>
-     * Unlike {@link #setPaused(boolean)}, this method does not notify the program's {@link TrayMenu tray menu}
-     * to update the text of its "Pause/Resume Animations" button.
      *
      * @param paused {@code true} to pause this {@code Mascot}; {@code false} to unpause it
      * @see #isPaused()
-     * @see #setPaused(boolean)
      */
-    void setPausedNoCallback(final boolean paused) {
+    public void setPaused(final boolean paused) {
         this.paused = paused;
     }
 

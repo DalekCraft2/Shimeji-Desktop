@@ -113,9 +113,11 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
      * @see TrayMenu#refreshPauseText()
      */
     void refreshPauseText() {
-        ResourceBundle language = Main.getInstance().getLanguageBundle();
-        Manager manager = Main.getInstance().getManager();
-        btnPauseAll.setText(manager.isPaused() ? language.getString("ResumeAnimations") : language.getString("PauseAnimations"));
+        if (!useSystemTray) {
+            ResourceBundle language = Main.getInstance().getLanguageBundle();
+            Manager manager = Main.getInstance().getManager();
+            btnPauseAll.setText(manager.isPaused() ? language.getString("ResumeAnimations") : language.getString("PauseAnimations"));
+        }
     }
 
     /**
@@ -825,9 +827,7 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
                 @Override
                 protected void done() {
                     trayMenu.setMascotOperationsEnabled(true);
-                    if (!useSystemTray) {
-                        refreshPauseText();
-                    }
+                    trayMenu.refreshPauseText();
                 }
             };
             worker.execute();

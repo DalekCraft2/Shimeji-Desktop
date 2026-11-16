@@ -123,6 +123,7 @@ public class TrayMenu {
                 if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger()) {
                     // Create a mascot when the icon is left-clicked
                     Main.getInstance().createMascot();
+                    refreshPauseText();
                 } else if (SwingUtilities.isMiddleMouseButton(e) && e.getClickCount() == 2) {
                     // When the icon is double-middle-clicked, dispose of all mascots, but do not close the program
                     /* BUG: On Windows 11, Java seems to think the middle mouse button is the left mouse button, so this code never gets executed.
@@ -136,6 +137,7 @@ public class TrayMenu {
                         Main.getInstance().createActiveImageSetMascots();
                         manager.setExitOnLastRemoved(true);
                     }
+                    refreshPauseText();
                 }
             }
 
