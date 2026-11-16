@@ -608,35 +608,42 @@ public class TrayMenuPanel extends javax.swing.JPanel implements Localizable {
     }//GEN-LAST:event_btnAllowedBehaviorsMouseReleased
 
     private void chkBreedingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkBreedingItemStateChanged
-        Main.getInstance().getSettings().breeding = evt.getStateChange() == ItemEvent.SELECTED;
+        boolean isSelected = evt.getStateChange() == ItemEvent.SELECTED;
+        Main.getInstance().getManager().enqueueTask(() -> Main.getInstance().getSettings().breeding = isSelected);
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkBreedingItemStateChanged
 
     private void chkTransientItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransientItemStateChanged
-        Main.getInstance().getSettings().transients = evt.getStateChange() == ItemEvent.SELECTED;
+        boolean isSelected = evt.getStateChange() == ItemEvent.SELECTED;
+        Main.getInstance().getManager().enqueueTask(() -> Main.getInstance().getSettings().transients = isSelected);
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransientItemStateChanged
 
     private void chkTransformationItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransformationItemStateChanged
-        Main.getInstance().getSettings().transformation = evt.getStateChange() == ItemEvent.SELECTED;
+        boolean isSelected = evt.getStateChange() == ItemEvent.SELECTED;
+        Main.getInstance().getManager().enqueueTask(() -> Main.getInstance().getSettings().transformation = isSelected);
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkTransformationItemStateChanged
 
     private void chkThrowingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkThrowingItemStateChanged
-        Main.getInstance().getSettings().throwing = evt.getStateChange() == ItemEvent.SELECTED;
+        boolean isSelected = evt.getStateChange() == ItemEvent.SELECTED;
+        Main.getInstance().getManager().enqueueTask(() -> Main.getInstance().getSettings().throwing = isSelected);
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkThrowingItemStateChanged
 
     private void chkSoundsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSoundsItemStateChanged
-        boolean selected = evt.getStateChange() == ItemEvent.SELECTED;
-        Main.getInstance().getSettings().sounds = selected;
-        if (!selected)
-            Sounds.stopAll();
+        boolean isSelected = evt.getStateChange() == ItemEvent.SELECTED;
+        Main.getInstance().getManager().enqueueTask(() -> {
+            Main.getInstance().getSettings().sounds = isSelected;
+            if (!isSelected)
+                Sounds.stopAll();
+        });
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkSoundsItemStateChanged
 
     private void chkMultiscreenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkMultiscreenItemStateChanged
-        Main.getInstance().getSettings().multiscreen = evt.getStateChange() == ItemEvent.SELECTED;
+        boolean isSelected = evt.getStateChange() == ItemEvent.SELECTED;
+        Main.getInstance().getManager().enqueueTask(() -> Main.getInstance().getSettings().multiscreen = isSelected);
         btnAllowedBehaviors.setEnabled(true);
     }//GEN-LAST:event_chkMultiscreenItemStateChanged
 
