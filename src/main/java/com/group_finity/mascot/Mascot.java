@@ -526,7 +526,7 @@ public class Mascot {
 
         final JMenuItem followCursorItem = new JMenuItem(languageBundle.getString("FollowCursor"));
         followCursorItem.addActionListener(event -> {
-            manager.setBehaviorAll(Main.getInstance().getConfiguration(imageSet), UserBehavior.BEHAVIORNAME_CHASEMOUSE, imageSet);
+            manager.setBehaviorAll(UserBehavior.BEHAVIORNAME_CHASEMOUSE, imageSet);
             manager.enqueueTask(() -> SwingUtilities.invokeLater(() -> Main.getInstance().getTrayMenu().refreshPauseText()));
         });
 

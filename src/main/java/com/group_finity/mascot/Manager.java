@@ -388,17 +388,17 @@ public class Manager {
      * Applies the specified behavior to all mascots in this {@code Manager} that use the specified image set.
      * If the specified behavior fails to be applied to a mascot, that mascot is disposed.
      *
-     * @param configuration the configuration to use to build the behavior with the specified name
      * @param name the name of the behavior to apply to all mascots with the specified image set
      * @param imageSet the name of the image set for which to check
      */
-    public void setBehaviorAll(final Configuration configuration, final String name, String imageSet) {
+    public void setBehaviorAll(final String name, String imageSet) {
         enqueueTask(() -> {
             mascotLock.writeLock().lock();
             try {
                 if (mascots.isEmpty()) {
                     return;
                 }
+                Configuration configuration = Main.getInstance().getConfiguration(imageSet);
                 for (final Mascot mascot : mascots) {
                     try {
                         if (mascot.getImageSet().equals(imageSet)) {
