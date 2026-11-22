@@ -157,11 +157,12 @@ public class UserBehavior implements Behavior {
             if (mascot.isHotspotClicked()) {
                 // activate any hotspots that emerge while mouse is held down
                 if (!mascot.getHotspots().isEmpty()) {
+                    Point cursorPos = mascot.getCursorPosition();
                     for (final Hotspot hotspot : mascot.getHotspots()) {
-                        if (hotspot.contains(mascot, mascot.getCursorPosition())) {
+                        if (hotspot.contains(mascot, cursorPos)) {
                             // activate hotspot
                             hotspotState = HotspotState.ACTIVE_NULL;
-                            // no need to set cursor position, it's already set
+                            // no need to call setHotspotClicked(); it's already set to true
                             if (hotspot.getBehaviour() != null) {
                                 hotspotState = HotspotState.ACTIVE;
                                 try {
@@ -176,7 +177,7 @@ public class UserBehavior implements Behavior {
                 }
 
                 if (hotspotState == HotspotState.INACTIVE) {
-                    mascot.setCursorPosition(null);
+                    mascot.setHotspotClicked(false);
                 }
             }
 
@@ -219,7 +220,7 @@ public class UserBehavior implements Behavior {
                 log.info("Lost ground ({}, {})", mascot, this);
             }
 
-            mascot.setCursorPosition(null);
+            mascot.setHotspotClicked(false);
             mascot.setDragging(false);
             try {
                 mascot.setBehavior(configuration.buildBehavior(configuration.getSchema().getString(BEHAVIORNAME_FALL)));
@@ -249,12 +250,12 @@ public class UserBehavior implements Behavior {
 
             // check for hotspots
             if (!mascot.getHotspots().isEmpty()) {
+                Point cursorPos = event.getPoint();
                 for (final Hotspot hotspot : mascot.getHotspots()) {
-                    if (hotspot.contains(mascot, event.getPoint()) &&
-                            Main.getInstance().getConfiguration(mascot.getImageSet()).isBehaviorEnabled(hotspot.getBehaviour(), mascot)) {
+                    if (hotspot.contains(mascot, cursorPos) && configuration.isBehaviorEnabled(hotspot.getBehaviour(), mascot)) {
                         // activate hotspot
                         handled = true;
-                        mascot.setCursorPosition(event.getPoint());
+                        mascot.setHotspotClicked(true);
                         if (hotspot.getBehaviour() != null) {
                             try {
                                 mascot.setBehavior(configuration.buildBehavior(hotspot.getBehaviour(), mascot));
@@ -301,9 +302,7 @@ public class UserBehavior implements Behavior {
         }
 
         if (SwingUtilities.isLeftMouseButton(event)) {
-            if (mascot.isHotspotClicked()) {
-                mascot.setCursorPosition(null);
-            }
+            mascot.setHotspotClicked(false);
 
             // check if we are in the middle of a drag, otherwise we do nothing
             if (mascot.isDragging()) {

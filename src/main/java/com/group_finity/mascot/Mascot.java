@@ -181,6 +181,18 @@ public class Mascot {
     private boolean dragging = false;
 
     /**
+     * Whether any hotspots are being clicked on this {@code Mascot}.
+     * <p>
+     * This is set by behaviors when the user triggers a hotspot on this {@code Mascot},
+     * so that this {@code Mascot} knows to check for any new hotspots that emerge while
+     * the mouse is pressed.
+     *
+     * @see #isHotspotClicked()
+     * @see #setHotspotClicked(boolean)
+     */
+    private boolean hotspotClicked;
+
+    /**
      * The key of the sound that is currently being played by this {@code Mascot}.
      * When this value is {@code null}, no sound is played.
      *
@@ -221,13 +233,7 @@ public class Mascot {
 
     /**
      * The position of the mouse cursor, relative to the window of this {@code Mascot}.
-     * <p>
-     * This is set by behaviors when the user triggers a hotspot on this {@code Mascot},
-     * so that this {@code Mascot} knows to check for any new hotspots that emerge while
-     * the mouse is pressed.
-     * When this value is {@code null}, it indicates that no hotspots are being clicked.
      *
-     * @see #isHotspotClicked()
      * @see #getCursorPosition()
      * @see #setCursorPosition(Point)
      */
@@ -316,8 +322,7 @@ public class Mascot {
 
             Component windowComponent = window.asComponent();
 
-            // Register the mouse handler
-            windowComponent.addMouseListener(new MouseAdapter() {
+            MouseAdapter mouseAdapter = new MouseAdapter() {
                 @Override
                 public void mousePressed(final MouseEvent e) {
                     Mascot.this.mousePressed(e);
@@ -327,34 +332,22 @@ public class Mascot {
                 public void mouseReleased(final MouseEvent e) {
                     Mascot.this.mouseReleased(e);
                 }
-            });
-            windowComponent.addMouseMotionListener(new MouseMotionListener() {
-                @Override
-                public void mouseMoved(final MouseEvent e) {
-                    if (paused) {
-                        refreshCursor(false);
-                    } else {
-                        if (isHotspotClicked()) {
-                            setCursorPosition(e.getPoint());
-                        } else {
-                            refreshCursor(e.getPoint());
-                        }
-                    }
-                }
 
                 @Override
                 public void mouseDragged(final MouseEvent e) {
-                    if (paused) {
-                        refreshCursor(false);
-                    } else {
-                        if (isHotspotClicked()) {
-                            setCursorPosition(e.getPoint());
-                        } else {
-                            refreshCursor(e.getPoint());
-                        }
-                    }
+                    Point eventPoint = e.getPoint();
+                    manager.enqueueTask(() -> setCursorPosition(eventPoint));
                 }
-            });
+
+                @Override
+                public void mouseMoved(final MouseEvent e) {
+                    Point eventPoint = e.getPoint();
+                    manager.enqueueTask(() -> setCursorPosition(eventPoint));
+                }
+            };
+            // Register the mouse handler
+            windowComponent.addMouseListener(mouseAdapter);
+            windowComponent.addMouseMotionListener(mouseAdapter);
 
             // For drawing the outlines of hotspots and the mascot's bounds, for debugging purposes
             JComponent debugComp = new JComponent() {
@@ -446,24 +439,26 @@ public class Mascot {
      * @see MouseListener#mousePressed(MouseEvent)
      */
     private void mousePressed(final MouseEvent event) {
+        Point eventPoint = event.getPoint();
+        manager.enqueueTask(() -> setCursorPosition(eventPoint));
+
         // Check for popup triggers in both mousePressed and mouseReleased
         // because popup menus are triggered differently on different systems
         if (event.isPopupTrigger()) {
-            showPopup(event.getX(), event.getY());
+            showPopup(eventPoint.x, eventPoint.y);
         } else {
-            // In case the behavior field gets reassigned between the null check and the call
-            // to behavior.mousePressed(), store the current behavior in a local variable
-            Behavior behavior1 = behavior;
-            // Switch to drag animation when mouse is pressed
-            if (!paused && behavior1 != null) {
-                try {
-                    behavior1.mousePressed(event);
-                } catch (final BehaviorExecutionException e) {
-                    log.error("Severe error in mouse press handler for mascot \"{}\"", this, e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
-                    dispose();
+            manager.enqueueTask(() -> {
+                // Switch to drag animation when mouse is pressed
+                if (!paused && behavior != null) {
+                    try {
+                        behavior.mousePressed(event);
+                    } catch (final BehaviorExecutionException e) {
+                        log.error("Severe error in mouse press handler for mascot \"{}\"", this, e);
+                        Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
+                        dispose();
+                    }
                 }
-            }
+            });
         }
     }
 
@@ -474,23 +469,25 @@ public class Mascot {
      * @see MouseListener#mousePressed(MouseEvent)
      */
     private void mouseReleased(final MouseEvent event) {
+        Point eventPoint = event.getPoint();
+        manager.enqueueTask(() -> setCursorPosition(eventPoint));
+
         // Check for popup triggers in both mousePressed and mouseReleased
         // because popup menus are triggered differently on different systems
         if (event.isPopupTrigger()) {
-            showPopup(event.getX(), event.getY());
+            showPopup(eventPoint.x, eventPoint.y);
         } else {
-            // In case the behavior field gets reassigned between the null check and the call
-            // to behavior.mousePressed(), store the current behavior in a local variable
-            Behavior behavior1 = behavior;
-            if (!paused && behavior1 != null) {
-                try {
-                    behavior1.mouseReleased(event);
-                } catch (final BehaviorExecutionException e) {
-                    log.error("Severe error in mouse release handler for mascot \"{}\"", this, e);
-                    Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
-                    dispose();
+            manager.enqueueTask(() -> {
+                if (!paused && behavior != null) {
+                    try {
+                        behavior.mouseReleased(event);
+                    } catch (final BehaviorExecutionException e) {
+                        log.error("Severe error in mouse release handler for mascot \"{}\"", this, e);
+                        Main.showError(Main.getInstance().getLanguageBundle().getString("SevereShimejiErrorErrorMessage"), e);
+                        dispose();
+                    }
                 }
-            }
+            });
         }
     }
 
@@ -564,12 +561,14 @@ public class Mascot {
                     item.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(final ActionEvent e) {
-                            try {
-                                setBehavior(config.buildBehavior(behaviorName));
-                            } catch (BehaviorInstantiationException | BehaviorExecutionException ex) {
-                                log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorName, this, ex);
-                                Main.showError(String.format(languageBundle.getString("FailedSetBehaviourErrorMessage"), behaviorName, this), ex);
-                            }
+                            manager.enqueueTask(() -> {
+                                try {
+                                    setBehavior(config.buildBehavior(behaviorName));
+                                } catch (BehaviorInstantiationException | BehaviorExecutionException ex) {
+                                    log.error("Failed to set behavior to \"{}\" for mascot \"{}\"", behaviorName, this, ex);
+                                    Main.showError(String.format(languageBundle.getString("FailedSetBehaviourErrorMessage"), behaviorName, this), ex);
+                                }
+                            });
                         }
                     });
                     setBehaviorMenu.add(item);
@@ -834,6 +833,11 @@ public class Mascot {
      * @param position the point to check when determining which graphic to apply to the cursor
      */
     private void refreshCursor(Point position) {
+        if (paused || position == null) {
+            refreshCursor(false);
+            return;
+        }
+
         hotspotLock.readLock().lock();
         try {
             if (hotspots.isEmpty()) {
@@ -1227,6 +1231,10 @@ public class Mascot {
         if (Main.getInstance().getSettings().drawShimejiBounds) {
             needsRepaint = true;
         }
+
+        // Set the cursor graphic to the default, in case the cursor was previously hovering over
+        // a hotspot and had the hand graphic
+        refreshCursor(false);
     }
 
     /**
@@ -1260,7 +1268,9 @@ public class Mascot {
      * @see #clearHotspots()
      */
     public void setHotspots(Collection<Hotspot> hotspots) {
-        if (this.hotspots.isEmpty() && hotspots.isEmpty()) {
+        // TODO: Consider an alternative to using the ArrayList.equals() method;
+        //  it may not be as efficient when there are many hotspots in the collections
+        if (this.hotspots.isEmpty() && hotspots.isEmpty() || this.hotspots.equals(hotspots)) {
             return;
         }
         this.hotspots.clear();
@@ -1270,6 +1280,9 @@ public class Mascot {
         if (Main.getInstance().getSettings().drawShimejiBounds) {
             needsRepaint = true;
         }
+
+        // Update the cursor graphic, in case the cursor is now hovering over a hotspot
+        refreshCursor(cursor);
     }
 
     /**
@@ -1333,7 +1346,16 @@ public class Mascot {
      * @see #isPaused()
      */
     public void setPaused(final boolean paused) {
+        if (this.paused == paused) {
+            return;
+        }
+
         this.paused = paused;
+
+        // The cursor always uses the default graphic when the mascot is paused,
+        // so we need to update the graphic whenever the paused state is changed
+        // in case the cursor is on top of a hotspot (though, this will rarely happen if at all).
+        refreshCursor(cursor);
     }
 
     /**
@@ -1361,9 +1383,21 @@ public class Mascot {
      * Gets whether any hotspots are being clicked on this {@code Mascot}.
      *
      * @return {@code true} if any hotspots are being clicked on this {@code Mascot}; {@code false} otherwise
+     * @see #setHotspotClicked(boolean)
      */
     public boolean isHotspotClicked() {
-        return cursor != null;
+        return hotspotClicked;
+    }
+
+    /**
+     * Sets whether any hotspots are being clicked on this {@code Mascot}.
+     *
+     * @param hotspotClicked {@code true} to mark this {@code Mascot} as having hotspots that are being clicked;
+     * {@code false} to mark it as having no hotspots that are being clicked
+     * @see #isHotspotClicked()
+     */
+    public void setHotspotClicked(boolean hotspotClicked) {
+        this.hotspotClicked = hotspotClicked;
     }
 
     /**
@@ -1393,11 +1427,7 @@ public class Mascot {
 
         this.cursor = cursor;
 
-        if (this.cursor == null) {
-            refreshCursor(false);
-        } else {
-            refreshCursor(cursor);
-        }
+        refreshCursor(this.cursor);
     }
 
     /**
